@@ -1,0 +1,26 @@
+type Query {
+    listPets: [Pet]
+}
+
+type Pet {
+    id: String
+    name: String
+    age: Int
+}
+
+type Mutation{
+    addPet(name: String!, age: Int): Result
+    deletePet(id: String!): Result
+    updatePet(id: String!, name: String!, age:Int): Pet
+    addPetByInput(input: AddPetInput): Pet
+}
+
+type Result{
+    respCode: Int!
+    msg: String
+}
+
+input AddPetInput{
+    name: String
+    age: Int
+}

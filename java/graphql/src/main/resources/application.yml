@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+#
+graphql:
+  servlet:
+    mapping: /graphql-api
+    enabled: true
+    corsEnabled: true
+
+graphiql:
+  mapping: /graphql-Jane-demo
+  endpoint: /graphql-api
+  enabled: true
+  pageTitle: Jane's demo using GraphiQL
+

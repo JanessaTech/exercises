@@ -4,7 +4,7 @@ How to run( Using IntelliJ IDE):
 
 1. Configure tomcat as following:
 
-   ![][image-20211113185309580]
+   ![Screenshot](pics/image-20211113185309580)
 
    ![image-20211113185356656](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20211113185356656.png)
 

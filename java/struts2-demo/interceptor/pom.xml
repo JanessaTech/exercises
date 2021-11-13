@@ -9,14 +9,14 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>helloworld</artifactId>
-    <name>helloworld demo</name>
-    <description>Hello world example application for the Struts 2 Getting Started tutorials</description>
+    <artifactId>interceptor</artifactId>
+    <name>interceptor demo</name>
+    <description>An Example Application to show how intercetpr works</description>
 
     <packaging>war</packaging>
 
     <build>
-        <finalName>hello-world</finalName>
+        <finalName>interceptor-demo</finalName>
     </build>
 
 </project>

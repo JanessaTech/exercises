@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+    <constant name="struts.devMode" value="true" />
+
+    <package name="basicstruts2" extends="struts-default">
+        
+        <!-- If no class attribute is specified the framework will assume success and
+        render the result index.jsp -->
+        <!-- If no name value for the result node is specified the success value is the default -->
+        <interceptors>
+            <interceptor name="myInterceptor1" class="com.example.interceptor.MyInterceptor1"></interceptor>
+            <interceptor name="myInterceptor2" class="com.example.interceptor.MyInterceptor2"></interceptor>
+            <interceptor-stack name="basicStack">
+                <interceptor-ref name="myInterceptor1"></interceptor-ref>
+                <interceptor-ref name="myInterceptor2"></interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+        <action name="index">
+            <result>/index.jsp</result>
+        </action>
+        <action name = "hello"
+                class = "com.example.helloworld.HelloWorldAction"
+                method = "execute">
+            <interceptor-ref name = "params"/>
+            <interceptor-ref name="basicStack"/>
+            <result name = "success">/HelloWorld.jsp</result>
+            <result name="error">/AccessDenied.jsp</result>
+        </action>
+
+    </package>
+
+</struts>

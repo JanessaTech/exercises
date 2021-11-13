@@ -1,11 +1,20 @@
-<!DOCTYPE html>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language = "java" contentType = "text/html; charset = ISO-8859-1"
+         pageEncoding = "ISO-8859-1"%>
+<%@ taglib prefix = "s" uri = "/struts-tags"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Basic Struts 2 Application - Welcome</title>
+    <title>Hello World</title>
 </head>
+
 <body>
-<h1>Welcome To Struts 2!</h1>
+<h1>Hello World From Struts2</h1>
+<form action = "hello">
+    <label >Please enter your name</label><br/>
+    <input type = "text" name = "name"/>
+    <input type = "submit" value = "Say Hello"/>
+</form>
 </body>
 </html>

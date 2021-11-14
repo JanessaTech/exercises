@@ -2,15 +2,15 @@ How to run:
 1. Configure Intellij
    Similar as helloword example. Application context is: /valueStack_war
 2. Run the new configuration
-3. http://localhost:8080/valueStack_war/index.action will be launched automatically
-   Input anything in text saying "Juan", click [Say Hello],
+3. http://localhost:8080/valueStack_war/index.action will be launched automatically<br>
+   Input anything in text saying "Juan", click [Say Hello],<br>
    we will see HelloWorld.jsp with content: <br>
    ```
       Entered value : Juan
       Value of key 1 : This is key1
       Value of key 2 : This is key2
    ```
-   In the console, we will see message:
+   In the console, we will see message: <br>
     ```
    Size of the valueStack: 3
    ```

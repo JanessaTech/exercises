@@ -13,6 +13,7 @@
         <module>interceptor</module>
         <module>resultType</module>
         <module>valueStack</module>
+        <module>validation</module>
     </modules>
 
     <properties>

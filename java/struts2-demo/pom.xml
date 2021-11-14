@@ -12,6 +12,7 @@
         <module>helloworld</module>
         <module>interceptor</module>
         <module>resultType</module>
+        <module>valueStack</module>
     </modules>
 
     <properties>

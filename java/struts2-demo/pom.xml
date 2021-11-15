@@ -15,6 +15,8 @@
         <module>valueStack</module>
         <module>validation</module>
         <module>typeConvert</module>
+        <module>exceptionHanding</module>
+        <module>controltag</module>
     </modules>
 
     <properties>

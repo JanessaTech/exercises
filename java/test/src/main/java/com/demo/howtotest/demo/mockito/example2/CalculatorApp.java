@@ -25,7 +25,7 @@ public class CalculatorApp {
         return calculatorService.multiply(a, b);
     }
 
-    public double divide(double a, double b) {
+    public double divide(double a, double b) throws DivideZeroException {
         return calculatorService.divide(a, b);
     }
 }

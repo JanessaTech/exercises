@@ -1,4 +1,4 @@
-package com.demo.howtotest.demo.springboot;
+package com.example.basic;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -10,11 +10,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc  // it must be imported to enable MockMvc
 @SpringBootTest
-class DemoApplicationTests {
+class BasicApplicationTests {
     @Autowired
     private MockMvc mockMvc;
 
@@ -23,10 +24,9 @@ class DemoApplicationTests {
         mockMvc.perform(get("/employee")).andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.name").value("Jane"))
-                .andExpect(jsonPath("$.designation").value("freeLancer"))
+                .andExpect(jsonPath("$.designation").value("manager"))
                 .andExpect(jsonPath("$.empId").value("1"))
                 .andExpect(jsonPath("$.salary").value(3000));
 
     }
-
 }

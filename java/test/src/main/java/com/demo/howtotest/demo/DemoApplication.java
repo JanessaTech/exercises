@@ -1,13 +1,13 @@
-package com.example.mockitodemo;
+package com.demo.howtotest.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MockitoDemoApplication {
+public class DemoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MockitoDemoApplication.class, args);
+        SpringApplication.run(DemoApplication.class, args);
     }
 
 }

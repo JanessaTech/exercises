@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * we don't start web server at all when using @AutoConfigureMockMvc
  * However, the way we handle all incoming  HTTP requests is  exactly the same way as if we were processing
- * real incoming HTTP requests with web server started
+ * real incoming HTTP requests with a web server started
  */
 //@RunWith(SpringRunner.class)
 @AutoConfigureMockMvc  // it must be imported to enable MockMvc

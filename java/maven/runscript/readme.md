@@ -2,7 +2,7 @@ About this demo: </br>
 This demo is to show how to run script by maven </br>
 
 How to run it:</br>
-1. Go this this directory and run 'mvn clean'. You will something like this:
+1. Go this this directory and run 'mvn clean'. You will get something like this:
 ```
 [INFO] Scanning for projects...
 [INFO]

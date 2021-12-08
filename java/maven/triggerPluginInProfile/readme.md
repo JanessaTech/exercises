@@ -1,6 +1,6 @@
 About this demo:</br>
-This demo is to show how to use a profile to trigger a profile.</br>
-This profile is to run a script. </br>
+This demo is to show how to use a profile to trigger a plugin.</br>
+This plugin is to run a script. </br>
 How to run it:</br>
 1. Go this this directory and run 'mvn clean -Pintegration'. You will get something like this:
 ```

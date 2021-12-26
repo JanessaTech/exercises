@@ -5,6 +5,10 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/springbootest/basic/pom.xml" />
+        <option value="$PROJECT_DIR$/springbootest/pom.xml" />
+        <option value="$PROJECT_DIR$/mockito/pom.xml" />
+        <option value="$PROJECT_DIR$/springbootest/WebMvcTestdemo/pom.xml" />
       </list>
     </option>
   </component>

@@ -1,6 +1,5 @@
 package com.demo.basic;
 
-import javax.swing.plaf.synth.SynthEditorPaneUI;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -13,10 +12,10 @@ public class Basics {
         List<Person> personList = new ArrayList<Person>();
         personList.add(new Person("Tom", 8900, 23, "male", "New York"));
         personList.add(new Person("Jack", 7000, 25, "male", "Washington"));
-        personList.add(new Person("Lily", 7800, 21, "female", "Washington"));
+        personList.add(new Person("Lily", 7800, 30, "female", "Washington"));
         personList.add(new Person("Anni", 8200, 24, "female", "New York"));
         personList.add(new Person("Owen", 9500, 25, "male", "New York"));
-        personList.add(new Person("Alisa", 7900, 26, "female", "New York"));
+        personList.add(new Person("Alisa", 7800, 26, "female", "New York"));
 
         return personList;
     }
@@ -171,8 +170,39 @@ public class Basics {
         System.out.println("string = " + string);
     }
 
+    public static void sort() {
+        List<Person> personList = getPersonList();
+        List<String> list1 = personList.stream().sorted(Comparator.comparing(Person::getSalary)).map(Person::getName).collect(Collectors.toList());
+        System.out.println(list1);
+        List<String> list2 = personList.stream().sorted(Comparator.comparing(Person::getSalary).reversed()).map(Person::getName).collect(Collectors.toList());
+        System.out.println(list2);
+        List<String> list3 = personList.stream().sorted(Comparator.comparing(Person::getSalary).thenComparing(Person::getAge)).map(Person::getName).collect(Collectors.toList());
+        System.out.println(list3);
+        List<String> list4 = personList.stream().sorted((p1, p2) -> {
+            if (p1.getSalary() == p2.getSalary()) {
+                return p1.getAge() - p2.getAge();
+            } else {
+                return p1.getSalary() - p2.getSalary();
+            }
+        }).map(Person::getName).collect(Collectors.toList());
+        System.out.println(list4);
+    }
 
+    public static void distinct_limit_skip(){
+        String[] arr1 = { "a", "b", "c", "d" };
+        String[] arr2 = { "d", "e", "f", "g" };
 
+        Stream<String> stream1 = Stream.of(arr1);
+        Stream<String> stream2 = Stream.of(arr2);
+
+        List<String> list1 = Stream.concat(stream1, stream2).distinct().collect(Collectors.toList());
+        List<Integer> list2 = Stream.iterate( 1, x -> x + 2).limit(5).collect(Collectors.toList());
+        List<Integer> list3 = Stream.iterate(1, x -> x + 2).skip(3).limit(5).collect(Collectors.toList());
+
+        System.out.println(list1);
+        System.out.println(list2);
+        System.out.println(list3);
+    }
 
 
     public static void main(String[] args) {
@@ -185,7 +215,27 @@ public class Basics {
         //reduce(); learn more about reduce
         //collect();
         //statics();
-        partitioningBy_groupingBy();
+        //partitioningBy_groupingBy();
+        //sort();
+        distinct_limit_skip();
+
+        /**
+         *  Terminal opertions:
+         *    - forEach
+         *    - find
+         *    - match
+         *    - max, min, count
+         *    - reduce?
+         *    - collect (toList, toSet, toMap, joining, partitioningBy, groupingBy, reduce?)
+         *
+         *  Nonterminal operations:
+         *    - filter
+         *    - map, flatMap
+         *    - sorted
+         *    - skip, limit, distinct
+         *
+         *    See details: https://mp.weixin.qq.com/s/V4dTOx5G3DZoxNXwxwosEw
+         */
     }
 
 }

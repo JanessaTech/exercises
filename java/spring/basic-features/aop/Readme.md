@@ -10,3 +10,6 @@ In order to make better use of AOP, some knowledge about java reflection is a mu
  - Method.getAnnotation        // get annotation of the method by the parameter 
  - Method.parameterAnnotations  // get the list of annotations on parameters
  - Method.isAnnotationPresent, Field.isAnnotationPresent, class.isAnnotationPresent  // identify if an annotation exists for method, field and class
+
+
+See more detais about AOP, see link : https://dzone.com/articles/implementing-aop-with-spring-boot-and-aspectj

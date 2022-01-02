@@ -16,7 +16,7 @@ public class MethodExecutionCalculationAspect {
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
 
-        Object res = joinPoint.proceed();
+        Object res = joinPoint.proceed();  // we should return res, otherwise, the method annotated with TrackTime cannot return the correct result
 
         long timeTaken = System.currentTimeMillis() - startTime;
         logger.info("Time Taken by {} is {}", joinPoint, timeTaken);

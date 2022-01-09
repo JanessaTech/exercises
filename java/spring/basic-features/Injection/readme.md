@@ -1,6 +1,6 @@
 This demo shows how to inject object in different ways. </br>
 
-Typically, there are three widely used way to inject beans: </br>
+Basically, there are three widely used ways to inject beans: </br>
 * Field injection
 * Setting injection
 * Constructor injection

@@ -111,11 +111,20 @@ public class Basics {
         System.out.println("set:" + set);
 
         List<Person> personList = getPersonList();
-        Map<String, Person> map = personList.stream().collect(Collectors.toMap(Person::getName, Function.identity()));
+        Map<String, Person> map = personList.stream().collect(Collectors.toMap(Person::getName, Function.identity(), (a, b) -> a));
         for(Map.Entry<String, Person> personEntry : map.entrySet()) {
             System.out.println("key: " + personEntry.getKey());
             System.out.println("value:" + personEntry);
         }
+    }
+
+    public static void joining() {
+        List<Person> personList = getPersonList();
+        String names = personList.stream().map(Person::getName).collect(Collectors.joining(","));
+        System.out.println("All names :" + names);
+        List<String> chars = Arrays.asList("A", "B", "C");
+        String string = chars.stream().collect(Collectors.joining("-"));
+        System.out.println("string = " + string);
     }
 
     public static void statics() {
@@ -161,14 +170,7 @@ public class Basics {
 
     }
 
-    public static void joining() {
-        List<Person> personList = getPersonList();
-        String names = personList.stream().map(Person::getName).collect(Collectors.joining(","));
-        System.out.println("All names :" + names);
-        List<String> chars = Arrays.asList("A", "B", "C");
-        String string = chars.stream().collect(Collectors.joining("-"));
-        System.out.println("string = " + string);
-    }
+
 
     public static void sort() {
         List<Person> personList = getPersonList();

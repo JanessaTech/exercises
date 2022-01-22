@@ -8,7 +8,7 @@ public class Client {
         agg.add(new Person("lulu", 8));
 
         Iterator<Person> it = agg.getIterator();
-        
+
         while (it.hasNext()) {
             Person person = it.next();
             System.out.println(person);

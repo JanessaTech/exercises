@@ -27,7 +27,8 @@ public class Myservice {
     void init(){
         Map<String, Object> map = applicationContext.getBeansWithAnnotation(ConfigContainer.class);
 
-
+/*
+        It doesn't work because getBeansWithAnnotation cannot get the bean which is annotated with container annotation
 
         for(Map.Entry<String, Object> entry : map.entrySet()) {
             Object bean = entry.getValue();
@@ -47,6 +48,6 @@ public class Myservice {
 
         for(MyInfo myInfo : infoList) {
             log.info(myInfo.toString());
-        }
+        }*/
     }
 }

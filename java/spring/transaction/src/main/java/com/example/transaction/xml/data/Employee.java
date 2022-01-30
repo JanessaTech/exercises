@@ -1,7 +1,5 @@
 package com.example.transaction.xml.data;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -31,4 +29,7 @@ public class Employee implements Serializable {
     @Column(name = "age")
     Integer age;
 
+    public Employee() {
+
+    }
 }

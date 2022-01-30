@@ -12,18 +12,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 class TransactionApplicationTests {
     @Autowired
     private EmployeeService employeeService;
-    @Autowired
-    private SessionFactory sessionFactory;
+
 
 
     @Test
     void getEmployee() {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
         Long id = 10L;
         Employee employee = employeeService.getEmployee(10L);
-        session.getTransaction().commit();
-        session.close();
         System.out.println(employee);
     }
 

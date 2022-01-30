@@ -1,10 +1,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/data/jpa
+    http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd
     http://www.springframework.org/schema/tx
     http://www.springframework.org/schema/tx/spring-tx.xsd
     http://www.springframework.org/schema/context
@@ -14,7 +17,12 @@
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource" />
-        <property name="packagesToScan" value="com.example.transaction.xml.*" />
+        <!-- Set base package of your entities- The class with @Entity-->
+        <property name="packagesToScan" value="com.example.transaction.xml.data" />
+        <!-- Set share cache mode -->
+        <property name="sharedCacheMode" value="ENABLE_SELECTIVE"/>
+        <!-- Set validation mode -->
+        <property name="validationMode" value="NONE"/>
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
                 <property name="generateDdl" value="true" />
@@ -30,8 +38,22 @@
         </property>
     </bean>
 
+    <!-- Configure the transaction manager bean -->
+    <bean id="transactionManager"
+          class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <!--
+    Configure Spring Data JPA and set the base package of the
+    repository interfaces
+  -->
+    <jpa:repositories base-package="com.example.transaction.xml.repository"/>
+
+    <!--
     <bean id="employeeService" class="com.example.transaction.xml.service.EmployeeServiceImpl"/>
-    <tx:advice id="txAdvice" transaction-manager="txManager">
+    -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
         <!-- the transactional semantics... -->
         <tx:attributes>
             <!-- all methods starting with 'get' are read-only -->
@@ -52,8 +74,12 @@
         <property name="username" value="${jdbc.username}"/>
         <property name="password" value="${jdbc.password}"/>
     </bean>
+    <!--  entityManagerFactory has the same function with txManager. Reserved one of them
     <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
+    -->
+    <context:annotation-config/>
+    <context:component-scan base-package="com.example.transaction.xml"/>
     <context:property-placeholder location="classpath:jdbc.properties"/>
 </beans>

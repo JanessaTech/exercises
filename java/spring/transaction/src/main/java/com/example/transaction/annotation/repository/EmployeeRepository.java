@@ -1,9 +1,9 @@
-package com.example.transaction.xml.repository;
+package com.example.transaction.annotation.repository;
 
-import com.example.transaction.xml.data.Employee;
+import com.example.transaction.annotation.data.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-//@Repository
-public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
+@Repository
+public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 }

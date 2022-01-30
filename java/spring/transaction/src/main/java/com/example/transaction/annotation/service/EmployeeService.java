@@ -1,10 +1,12 @@
-package com.example.transaction.xml.service;
+package com.example.transaction.annotation.service;
 
-import com.example.transaction.xml.data.Employee;
+import com.example.transaction.annotation.data.Employee;
+
+import java.util.List;
 
 public interface EmployeeService {
-    Employee getEmployee(Integer id);
-    void insertEmployee(Employee employee);
-    void updateEmployee(Employee employee);
-    void deleteEmployee(Integer id);
+    List<Employee> getAll();
+    Employee getEmployee(Long id);
+    Employee insertEmployee(Employee employee);
+    void deleteEmployee(Long id);
 }

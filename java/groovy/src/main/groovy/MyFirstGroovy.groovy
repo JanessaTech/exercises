@@ -7,10 +7,8 @@ class MyFirstGroovy {
     }
 
     static void main(def args){
-        def map = [:]
-        map.put(1, [1, 2, 3])
-        map.put(2, [2, 3, 4])
-        def values = map.values().flatten().unique(false) as List<Integer>
-        print(values)
+        ['a', 'b', 'c'].eachWithIndex { it, i -> // `it` is the current element, while `i` is the index
+            println "$i: $it"
+        }
     }
 }

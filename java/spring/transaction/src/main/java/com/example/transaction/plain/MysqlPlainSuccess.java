@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class MysqlPlainFailed {
+public class MysqlPlainSuccess {
     static String URL = "jdbc:mysql://192.168.1.107:3306/mydb?useSSL=false";
 
     public static void main(String[] args) throws SQLException {
@@ -15,7 +15,7 @@ public class MysqlPlainFailed {
             conn = DriverManager.getConnection(URL, "mysqluser", "mysqluser");
             conn.setAutoCommit(false);
             Statement stmt = conn.createStatement();
-            String sql = "INSERT INTO employee(name) VALUES ('Jane')";
+            String sql = "INSERT INTO employee(name, age) VALUES ('Jane', 20)";
             stmt.executeUpdate(sql);
             conn.commit();
             System.out.println("Inserted records into the table...");

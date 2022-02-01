@@ -5,13 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="60bf8a97-e92b-440d-a448-5d8ccf103dc9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../spring/transaction/src/main/java/com/example/transaction/annotation/controller/TransactionTestController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring/transaction/src/main/java/com/example/transaction/annotation/service/ServiceA.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../spring/transaction/src/main/java/com/example/transaction/annotation/service/ServiceB.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../spring/transaction/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../spring/transaction/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../spring/transaction/src/main/java/com/example/transaction/annotation/TransactionApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../spring/transaction/src/main/java/com/example/transaction/annotation/TransactionApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../spring/transaction/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../spring/transaction/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../spring/transaction/src/test/java/com/example/transaction/annotation/TransactionApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/../spring/transaction/src/test/java/com/example/transaction/annotation/TransactionApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../spring/transaction/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/../spring/transaction/readme.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -113,7 +107,7 @@
       <workItem from="1642940592493" duration="718000" />
       <workItem from="1643591242178" duration="231000" />
       <workItem from="1643592379734" duration="637000" />
-      <workItem from="1643594022807" duration="936000" />
+      <workItem from="1643594022807" duration="1579000" />
     </task>
     <servers />
   </component>

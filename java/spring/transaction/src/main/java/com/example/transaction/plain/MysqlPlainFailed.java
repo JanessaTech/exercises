@@ -13,7 +13,7 @@ public class MysqlPlainFailed {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(URL, "mysqluser", "mysqluser");
-            conn.setAutoCommit(false);
+            conn.setAutoCommit(false); // start a transaction manually
             Statement stmt = conn.createStatement();
             String sql = "INSERT INTO employee(name) VALUES ('Jane')";
             stmt.executeUpdate(sql);

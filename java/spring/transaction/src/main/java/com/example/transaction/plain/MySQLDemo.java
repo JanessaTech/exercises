@@ -7,7 +7,6 @@ import java.sql.Statement;
 
 /**
  * reference : https://en.wikipedia.org/wiki/Java_Database_Connectivity
- * https://www.marcobehler.com/guides/spring-transaction-management-transactional-in-depth
  */
 public class MySQLDemo {
     static String URL = "jdbc:mysql://192.168.1.107:3306/mydb?useSSL=false";

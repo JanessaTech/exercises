@@ -11,3 +11,4 @@ Jane says : good Afternoon
 
 Reference:
 https://www.baeldung.com/spring-boot-custom-starter
+https://docs.spring.io/spring-boot/docs/2.1.x/reference/html/boot-features-developing-auto-configuration.html

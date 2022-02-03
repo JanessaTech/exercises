@@ -9,33 +9,31 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>myservice-spring-boot-starter</artifactId>
+    <artifactId>greeter-spring-boot-sample-app</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>myservice</name>
-    <description>An example of how to use autoconfig</description>
+    <name>greeter-spring-boot-sample-app</name>
+    <description>greeter-spring-boot-sample-app</description>
     <properties>
         <java.version>1.8</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <greeter.version> 0.0.1-SNAPSHOT</greeter.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>greeter-spring-boot-starter</artifactId>
+            <version>${greeter.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
-<!--
+
     <build>
         <plugins>
             <plugin>
@@ -44,6 +42,5 @@
             </plugin>
         </plugins>
     </build>
-    -->
 
 </project>

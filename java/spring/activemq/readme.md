@@ -25,3 +25,6 @@ How to run it:
           }
 6. You could launch activemq console to check messages in queue:
     - http://your-activemq-server-ip:8161/admin/queues.jsp
+
+More example, see link below:</br>
+https://www.tomitribe.com/blog/5-minutes-or-less-activemq-with-jms-queues-and-topics/

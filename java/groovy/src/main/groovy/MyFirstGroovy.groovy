@@ -7,8 +7,8 @@ class MyFirstGroovy {
     }
 
     static void main(def args){
-        ['a', 'b', 'c'].eachWithIndex { it, i -> // `it` is the current element, while `i` is the index
-            println "$i: $it"
-        }
+         def list = [new Person(name: "a", age:10), new Person(name: "a", age:4), new Person(name: "a", age:7), new Person(name: "a", age:3)]
+        def res = list.findAll {it.age > 5}.each {it.age = 100}
+        println("ee")
     }
 }

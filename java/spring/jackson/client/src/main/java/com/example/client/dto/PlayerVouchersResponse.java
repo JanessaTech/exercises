@@ -1,11 +1,8 @@
 package com.example.client.dto;
 
-import com.example.client.util.VoucherDeserializer;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -22,17 +19,27 @@ public class PlayerVouchersResponse implements WithErrorResponse{
 
     private List<Voucher> vouchers = new ArrayList<>();
 
+    @JsonSubTypes({
+            @JsonSubTypes.Type(name = "promo", value = PromoBonusVoucher.class),
+            @JsonSubTypes.Type(name = "cash", value = CashBonusVoucher.class),
+            @JsonSubTypes.Type(name = "freeSpins", value = FreeSpinsVoucher.class),
+            @JsonSubTypes.Type(name = "bettingBonus", value = BettingBonusVoucher.class),
+            @JsonSubTypes.Type(name = "rebate", value = RebateVoucher.class)
+    })
+    @JsonTypeInfo(
+            use = JsonTypeInfo.Id.NAME,
+            include = JsonTypeInfo.As.EXISTING_PROPERTY,
+            property = "type",
+            visible = true
+    )
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
-
-    @JsonDeserialize(using = VoucherDeserializer.class)
     public static class Voucher {
         private Long voucherId;
         private Long campaignId;
         private Date createdTime;
         private Date claimedTime;
-        private Date endTime;
-        private String bonusType;
+        private Date freeSpinEndTime;
         private String status;
         private String slug;
         private String directMessage;
@@ -41,14 +48,11 @@ public class PlayerVouchersResponse implements WithErrorResponse{
         @JsonInclude(JsonInclude.Include.NON_NULL)
         private Long turnoverFactor;
 
+        private String type;
+
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        private VoucherDetails detail;
+        private Date endTime;
 
-    }
-
-    @Data
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class VoucherDetails {
         @JsonInclude(JsonInclude.Include.NON_NULL)
         private String currency;
 
@@ -64,23 +68,35 @@ public class PlayerVouchersResponse implements WithErrorResponse{
         @JsonInclude(JsonInclude.Include.NON_NULL)
         private Boolean includeToWithdrawalDeduction;
 
-        @JsonInclude(JsonInclude.Include.NON_NULL)
+    }
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class CashBonusVoucher extends Voucher{
         private BigDecimal maxCashLimit;
     }
 
+    @EqualsAndHashCode(callSuper = true)
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class BettingBonusDetails extends VoucherDetails{
+    public static class PromoBonusVoucher extends Voucher{
+        private BigDecimal maxPromoLimit;
+    }
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class BettingBonusVoucher extends Voucher{
         private String bonusType;
         private Integer bonusProvider;
         private String externalCampaignId;
     }
 
+    @EqualsAndHashCode(callSuper = true)
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class FreeSpinsDetails extends VoucherDetails {
-        @JsonInclude(JsonInclude.Include.NON_NULL)
-        private Date freeSpinEndTime;
+    public static class FreeSpinsVoucher extends Voucher {
 
         private Integer freeSpinProvider;
         private Boolean freeSpinWinsAsCash;
@@ -97,12 +113,13 @@ public class PlayerVouchersResponse implements WithErrorResponse{
         private Integer durationAfterExpiration;
         private String licenseId;
         private String gameIdsType;
-        private String gameIds;
+        private Long[] games;
     }
 
+    @EqualsAndHashCode(callSuper = true)
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class RebateDetails extends VoucherDetails {
+    public static class RebateVoucher extends Voucher {
         private Long rebateTemplateId;
     }
 }

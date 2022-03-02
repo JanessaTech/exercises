@@ -22,9 +22,32 @@ public class ClientController {
         List<ProviderVoucher> list = new ArrayList<>();
 
         for( PlayerVouchersResponse.Voucher voucher : response.getVouchers()) {
-            ProviderVoucher item = new ProviderVoucher();
-            BeanUtils.copyProperties(voucher, item);
-            list.add(item);
+            ProviderVoucher providerVoucher = null;
+            switch (voucher.getType()) {
+                case "promo":
+                    providerVoucher = new ProviderVoucher.PromoBonusVoucher();
+                    BeanUtils.copyProperties(voucher, providerVoucher);
+                    break;
+                case "cash":
+                    providerVoucher = new ProviderVoucher.CashBonusVoucher();
+                    BeanUtils.copyProperties(voucher, providerVoucher);
+                    break;
+                case "freeSpins":
+                    providerVoucher = new ProviderVoucher.FreeSpinsVoucher();
+                    BeanUtils.copyProperties(voucher, providerVoucher);
+                    break;
+
+                case "bettingBonus":
+                    providerVoucher = new ProviderVoucher.BettingBonusVoucher();
+                    BeanUtils.copyProperties(voucher, providerVoucher);
+                    break;
+                case "rebate":
+                    providerVoucher = new ProviderVoucher.RebateVoucher();
+                    BeanUtils.copyProperties(voucher, providerVoucher);
+                    break;
+                default: break;
+            }
+            list.add(providerVoucher);
         }
 
         return list;

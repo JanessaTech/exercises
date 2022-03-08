@@ -36,6 +36,7 @@ public class PlayerVouchersResponse implements WithErrorResponse{
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Voucher {
         private Long voucherId;
+        private String bonusId;
         private Long campaignId;
         private Date createdTime;
         private Date claimedTime;
@@ -45,7 +46,7 @@ public class PlayerVouchersResponse implements WithErrorResponse{
         private String directMessage;
         private Boolean forfeit;
         private String validity;
-        @JsonInclude(JsonInclude.Include.NON_NULL)
+
         private Long turnoverFactor;
 
         private String type;
@@ -109,6 +110,7 @@ public class PlayerVouchersResponse implements WithErrorResponse{
         private String freeSpinsRuleType;
         private String freeSpinsRuleValue;
         private String freeSpinsRuleSubType;
+        private String freeSpinsValidityDuration;
         private String externalCampaignId;
         private Integer durationAfterExpiration;
         private String licenseId;

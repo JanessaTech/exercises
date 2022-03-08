@@ -14,6 +14,7 @@ public class ServerController {
                 "    \"vouchers\": [\n" +
                 "        {\n" +
                 "            \"voucherId\": 260,\n" +
+                "            \"bonusId\": null,\n" +
                 "            \"campaignId\": 4087,\n" +
                 "            \"createdTime\": 1645815432000,\n" +
                 "            \"claimedTime\": null,\n" +
@@ -33,6 +34,7 @@ public class ServerController {
                 "        },\n" +
                 "        {\n" +
                 "            \"voucherId\": 259,\n" +
+                "            \"bonusId\": \"100100\",\n" +
                 "            \"campaignId\": null,\n" +
                 "            \"createdTime\": 1645660026000,\n" +
                 "            \"claimedTime\": 1645660189000,\n" +
@@ -60,7 +62,7 @@ public class ServerController {
                 "            \"freeSpinsRuleType\": null,\n" +
                 "            \"freeSpinsRuleValue\": null,\n" +
                 "            \"freeSpinsRuleSubType\": null,\n" +
-                "            \"freeSpinsValidityDuration\": null,\n" +
+                "            \"freeSpinsValidityDuration\": \"PT15H\",\n" +
                 "            \"durationAfterExpiration\": 10,\n" +
                 "            \"licenseId\": null,\n" +
                 "            \"gameIdsType\": \"ENTERING\",\n" +
@@ -71,6 +73,7 @@ public class ServerController {
                 "        },\n" +
                 "        {\n" +
                 "            \"voucherId\": 254,\n" +
+                "            \"bonusId\": null,\n" +
                 "            \"campaignId\": null,\n" +
                 "            \"createdTime\": 1645411529000,\n" +
                 "            \"claimedTime\": null,\n" +
@@ -92,6 +95,7 @@ public class ServerController {
                 "        },\n" +
                 "        {\n" +
                 "            \"voucherId\": 253,\n" +
+                "            \"bonusId\": null,\n" +
                 "            \"campaignId\": 4085,\n" +
                 "            \"createdTime\": 1645409805000,\n" +
                 "            \"claimedTime\": null,\n" +
@@ -111,6 +115,7 @@ public class ServerController {
                 "        },\n" +
                 "        {\n" +
                 "            \"voucherId\": 248,\n" +
+                "            \"bonusId\": null,\n" +
                 "            \"campaignId\": null,\n" +
                 "            \"createdTime\": 1645377784000,\n" +
                 "            \"claimedTime\": null,\n" +
@@ -119,6 +124,7 @@ public class ServerController {
                 "            \"directMessage\": \"rebate-driect message\",\n" +
                 "            \"forfeit\": true,\n" +
                 "            \"validity\": \"PT13H\",\n" +
+                "            \"turnoverFactor\": null,\n" +
                 "            \"type\": \"rebate\",\n" +
                 "            \"endTime\": 1645977600000,\n" +
                 "            \"currency\": \"USD\",\n" +

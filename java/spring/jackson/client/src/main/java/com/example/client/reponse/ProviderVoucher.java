@@ -27,6 +27,7 @@ import java.util.Date;
 public class ProviderVoucher {
 
     private Long voucherId;
+    private String bonusId;
     private Long campaignId;
     private Date createdTime;
     private Date claimedTime;
@@ -38,7 +39,6 @@ public class ProviderVoucher {
     private Boolean forfeit;
     private String validity;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long turnoverFactor;
 
     private String type;
@@ -104,6 +104,7 @@ public class ProviderVoucher {
         private String freeSpinsRuleType;
         private String freeSpinsRuleValue;
         private String freeSpinsRuleSubType;
+        private String freeSpinsValidityDuration;
         private String externalCampaignId;
         private Integer durationAfterExpiration;
         private String licenseId;

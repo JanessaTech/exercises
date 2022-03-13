@@ -5,42 +5,56 @@ import java.util.stream.Collectors;
 
 public class Test {
 
-    public int shipWithinDays(int[] weights, int days) {
-        int lo = 1;
-        int hi = 500 * weights.length;
+    public boolean isPalindrome(String s) {
+        int lo = 0;
+        int hi = s.length() - 1;
 
-        while ( lo < hi) {
-            int mid = (lo + hi)/2;
-            if (isPossible(weights, days, mid)) hi = mid;
-            else lo = mid + 1;
-        }
-
-        return lo;
-    }
-
-    private boolean isPossible(int[] weights, int days, int w) {
-        int d = 0;
-        int left = w;
-        for (int i = 0; i < weights.length; ) {
-            int weight = weights[i];
-            if (weight > w) return false;
-            if (weight > left) {
-                d++;
-                left = w;
+        while (lo < hi) {
+            char l = s.charAt(lo);
+            char r = s.charAt(hi);
+            if (!isAlphanumeric(l)) {
+                lo++;
+                continue;
+            }
+            if (!isAlphanumeric(r)) {
+                hi--;
+                continue;
+            }
+            if(isNumeric(l) && isNumeric(r) && l - r == 0) {
+                lo++;
+                hi--;
+            } else if (isAlpha(l) && isAlpha(r) && Math.abs(l - r) == 0) {
+                lo++;
+                hi--;
             } else {
-                left -= weight;
-                i++;
+                return false;
             }
         }
-
-        d++;
-        if (d > days) return false;
         return true;
 
     }
 
+    private boolean isAlphanumeric(char ch) {
+        if (isAlpha(ch) || isNumeric(ch)) return true;
+        return false;
+    }
+
+    private boolean isAlpha(char ch) {
+        if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) return true;
+        return false;
+    }
+
+    private boolean isNumeric(char ch) {
+        if (ch >= '0' && ch <= '9') return true;
+        return false;
+    }
+
+
     public static void main(String[] args) {
-        List<Integer> list = new ArrayList<Integer>() {{add(1); add(2);}};
-        List<Integer> list2 = Arrays.asList(1, 2, 3);
+        Test test = new Test();
+        String s = "0P";
+        boolean res = test.isPalindrome(s);
+        System.out.println(res);
+
     }
 }

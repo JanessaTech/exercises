@@ -44,7 +44,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration.defaultCacheConfig().serializeValuesWith(pair);
 
         //设置默认超过时期
-        defaultCacheConfig.entryTtl(Duration.ofMinutes(5));
+        defaultCacheConfig.entryTtl(Duration.ofMinutes(1));
         //初始化RedisCacheManager
         return new RedisCacheManager(redisCacheWriter, defaultCacheConfig);
     }

@@ -47,12 +47,14 @@ public class EmployeeController {
     }
 
     private Employee voToDto(EmployeeVO employeeVO) {
+        if (employeeVO == null) return null;
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeVO, employee);
         return employee;
     }
 
     private EmployeeVO dtoToVo(Employee employee) {
+        if (employee == null) return null;
         EmployeeVO employeeVO = new EmployeeVO();
         BeanUtils.copyProperties(employee, employeeVO);
         return employeeVO;

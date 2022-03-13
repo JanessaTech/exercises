@@ -19,7 +19,7 @@ public class EmployeeServiceImpl implements EmployeeService{
     private EmployeeRepository employeeRepository;
 
     @Override
-    @Cacheable(value="emp", key="#id")
+    @Cacheable(value={"emp"}, key="#id")
     public Employee getEmp(Long id) {
         log.info("calling getEmp. id=" + id);
 
@@ -56,7 +56,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         log.info("calling updateEmp. employee=" + employee);
         Employee emp = null;
         try {
-            emp = employeeRepository.findById(employee.getId()).orElseThrow(() -> new Exception("Not found employee"));
+            emp = employeeRepository.findById(employee.getId()).orElseThrow(() -> new Exception("Not found employee " + employee.getId()));
             emp.setName(employee.getName());
             emp.setAge(employee.getAge());
         } catch (Exception e) {
@@ -72,12 +72,17 @@ public class EmployeeServiceImpl implements EmployeeService{
     public void deleteEmp(Long id) {
         log.info("Delete employee id:" +id);
         try {
-            employeeRepository.findById(id).orElseThrow(() -> new Exception("Not found employee"));
+            employeeRepository.findById(id).orElseThrow(() -> new Exception("Not found employee " + id));
 
         } catch (Exception e) {
             log.warn(e.getMessage());
             return;
         }
         employeeRepository.deleteById(id);
+    }
+
+    @Override
+    public String toString(){
+        return "EmployeeServiceImpl";
     }
 }

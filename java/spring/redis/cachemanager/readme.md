@@ -58,4 +58,5 @@ and run get your-key to check the corresponding content
 References:
  - https://www.cnblogs.com/fashflying/p/6908028.html
  - https://programming.vip/docs/detailed-tutorial-on-redis-caching-in-the-springboot-series.html
+ - https://www.jianshu.com/p/ad168cc3603e
 

@@ -83,4 +83,5 @@ How to run:
           }
    ```
 
-   
+Note: If you are using Altair GraphQLClient as GraphQl client, make sure that the url is http://localhost:8080/graphql-api
+and for query, use GET method, for mutation, use POST method

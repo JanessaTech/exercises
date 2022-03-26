@@ -1,4 +1,4 @@
-package com.example.useannotationinitatecomponent;
+package com.example.useannotationinitatecomponent.annotation;
 
 
 import java.lang.annotation.*;

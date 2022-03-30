@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.savedrequest.RequestCacheAwareFilter;
 
 @Configuration
-@EnableWebSecurity()
+@EnableWebSecurity(debug = true)
 /*@EnableGlobalMethodSecurity(
         prePostEnabled = true)
 
@@ -63,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/test/user").hasRole("USER")
                     .antMatchers("/api/test/mod").hasRole("MODERATOR")
                     .antMatchers("/api/test/admin").hasRole("ADMIN")
-                    .anyRequest().denyAll();
+                    .anyRequest().authenticated();
 
        http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }

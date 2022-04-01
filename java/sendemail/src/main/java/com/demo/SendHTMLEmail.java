@@ -50,7 +50,7 @@ public class SendHTMLEmail {
                 try {
 
                     send();
-                    
+
                     break;
                 } catch (EmailException e) {
                     e.printStackTrace();

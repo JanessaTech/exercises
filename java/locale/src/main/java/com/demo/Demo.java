@@ -7,12 +7,12 @@ public class Demo {
     public static void printlnMessage(Locale locale) {
         ResourceBundle bundle = null;
         if ( locale == null) {
-            bundle = ResourceBundle.getBundle("message");
+            bundle = ResourceBundle.getBundle("messages/message");
         } else {
-            bundle = ResourceBundle.getBundle("message", locale);
+            bundle = ResourceBundle.getBundle("messages/message", locale);
         }
 
-        String message = bundle.getString("label");
+        String message = bundle.getString("email.subject.verification");
         System.out.println(message);
     }
     public static void main(String[] args) {

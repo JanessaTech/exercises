@@ -2,8 +2,13 @@ In this demo, I added two classes extended from WebSecurityConfigurerAdapter. </
 Each one can be thought of as a spring security filter chain builder. </br>
 Here we have two builders. </br>
 
-For each builder, we could add custom filter and tells spring which requests could be accepted. </br>
-For example, for Custom1WebSecurityConfigurerAdapter, we tell spring this filter chain could 
-accept requests starting with "/match1"
+Each builder creates a filter chain, each chain contains several filters. we could also add custom </br>
+filter into filter chain </br>
+In this demo, we have two filter chains, one let's call chain1 created by Custom1WebSecurityConfigurerAdapter, </br>
+another let' call chain2 created by Custom1WebSecurityConfigurerAdapter. </br>
+
+<p></p>
+chain1 accepts requests starting with "/match1/", and a custom filter called Custom1Filter is added</br>
+chain2 accepts requests starting with "/match2/" , and a custom filter called Custom2Filter is added </br>
 
 

@@ -1,11 +1,12 @@
 package com.example.authticationservice.controller;
 
 import com.example.authticationservice.service.UserService;
-import com.example.authticationservice.util.JwtUtils;
 import com.example.authticationservice.vo.JwtReturn;
 import com.example.authticationservice.vo.ROLE;
 import com.example.authticationservice.vo.UserVo;
+import com.sso.jwt.example.common.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +23,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    @Value("${bezkoder.app.jwtSecret}")
+    private String jwtSecret;
+    @Value("${bezkoder.app.jwtExpirationMs}")
+    private int jwtExpirationMs;
+
     @Autowired
     AuthenticationManager authenticationManager;
 
@@ -31,16 +37,13 @@ public class AuthController {
     @Autowired
     PasswordEncoder encoder;
 
-    @Autowired
-    JwtUtils jwtUtils;
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam(name = "username", required = true) String username,
                                    @RequestParam(name = "password", required = true) String password) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password));
 
-        String jwt = jwtUtils.generateJwtToken(authentication);
+        String jwt = JwtUtils.generateJwtToken(authentication, jwtSecret, jwtExpirationMs);
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());

@@ -4,7 +4,7 @@ Prepare database
 ```
 CREATE database mydb;
 CREATE USER 'mysqluser'@'%' IDENTIFIED BY 'mysqluser';
-GRANT ALL PRIVILEGES ON mydb.* TO 'mysqluser'@'%' IDENTIFIED BY 'mysqluser';
+GRANT ALL ON mydb.* TO mysqluser@'%';
 ```
 2. Create table:
  ```

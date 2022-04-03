@@ -27,14 +27,10 @@ class MyFirstGroovy {
     }
 
     static void main(def args){
-        def list = [new Person(name: 'aaa', translation: ['en': new GameFamilyTranslation(lang: 'en', translation: 'en translation'), 'jp' : new GameFamilyTranslation(lang: 'jp', translation: 'jp translation')]), new Person(name: 'bb',  translation: ['en': new GameFamilyTranslation(lang: 'en', translation: 'en ffr'), 'jp' : new GameFamilyTranslation(lang: 'jp')])]
-        def text = 'dd'
-        def newList = list.findAll {
-            it.translation.values().any {
-                it.translation.contains(text)
-            }
-        }
-        print(newList)
+        def text = 'Hi, {nickname}, this is your verification code'
+        def map = ['nickname': 'Juan']
+        def res = build(null, text, map)
+        println(res)
 
     }
 }

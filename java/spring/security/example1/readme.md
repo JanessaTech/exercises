@@ -1,3 +1,17 @@
+This demo shows how to use jwt token.</br>
+It is better for you to be familiar with this example before start sso using jwt. </br>
+
+The overall process is:
+1. Register users with different role
+2. Authenticate with one user created above
+3. In authentication process, we used authenticationManager to authenticate user info
+4. We'v configurated authenticationManager in spring security to tell spring security which provider it will use to process authentication
+5. Once authentication passes, we create a jwt containing role information used to do authorization
+6. Launch http://127.0.0.1:8080/api/test/** apis with "Bearer" jwt token generated in #5
+7. The request is intercepted by AuthTokenFilter, which checks if "Bearer" jwt token  is valid. </br>
+If yes, create a UsernamePasswordAuthenticationToken using  username & role info contained in the token. UsernamePasswordAuthenticationToken  </br>
+will be used in the authorization filter. If no, the request is rejected. </br>
+
 Prepare database
 --------------------------------------
 1. Create database

@@ -17,6 +17,9 @@ public class UserInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         logger.info("preHandle in UserInterceptor:" +request.getContextPath());
         HttpSession session = request.getSession();
+        logger.info("sessionId: {}, ", session.getId());
+        // the sessionid is jsessionid created by tomcat, it will be stored as cookie in browser
+        // the cookie will be automatically taken by the next request, tomcat use this info to recognize different users
         if (session.getAttribute("user") != null){
             return true;
         }else {

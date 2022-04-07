@@ -39,9 +39,10 @@ ENGINE = InnoDB DEFAULT CHARSET=utf8;
 ```
 
 How to run this demo:
+----------------------------
 1. Run DefaultSecurityUsingDbApplication
 2. Register 3 users, one with user role, one with admin role, one with user and admin roles
- Launch http://127.0.0.1:8080/api/auth/register (POST method) </br>
+ Launch http://127.0.0.1:8080/demo/users (POST method) </br>
  For user with user role, </br>
  Set request body to be something like below, eg:</br>
 ```aidl
@@ -70,7 +71,7 @@ Set request body to be something like below, eg:</br>
     "roles" : ["ROLE_USER", "ROLE_ADMIN"]
 }
 ```
-3. Access business code
+3. Access business code </br>
  3.1   Access to http://127.0.0.1:8080/api/business/test1 (GET method)
     - With "oneUser"'s Authentication
       In authentication tab in postman, choose type to be Basic Auth, username is oneUser, password is 123456 </br>
@@ -104,7 +105,6 @@ Set request body to be something like below, eg:</br>
     In authentication tab in postman, choose type to be Basic Auth, username is useradmin, password is 124578 </br>
     You will see message: test3 is accessed by ROLE_ADMIN or ROLE_USER </br>
   
-
 
 More details about filters: </br>
   - Set breakpoint at line 24 in UserDetailService.java

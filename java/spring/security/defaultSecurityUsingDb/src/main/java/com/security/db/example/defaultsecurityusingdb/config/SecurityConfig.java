@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity(debug = false)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -39,10 +40,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-            http
+                http
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .csrf().disable().httpBasic().and()
+                .csrf().disable()
+                .httpBasic().and()
                 .authorizeRequests()
-                .antMatchers("/api/business/**").hasRole("USER");
+                    .antMatchers("/demo/**").permitAll()
+                    .antMatchers("/api/business/test1").hasRole("USER")
+                    .antMatchers("/api/business/test2").hasRole("ADMIN")
+                    .antMatchers("/api/business/test3").hasAnyRole("USER", "ADMIN")
+                    .anyRequest().denyAll();
     }
 }

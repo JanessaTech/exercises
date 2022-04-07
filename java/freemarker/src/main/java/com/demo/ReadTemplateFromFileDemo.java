@@ -13,7 +13,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class Demo {
+// read template from file
+public class ReadTemplateFromFileDemo {
     static Configuration create(final String basePath) throws IOException {
         Configuration cfg = new Configuration();
         cfg.setDefaultEncoding("UTF-8");

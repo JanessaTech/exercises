@@ -43,10 +43,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/demo/jwt/**").permitAll();
     }
-
-
-
-
-
-
 }

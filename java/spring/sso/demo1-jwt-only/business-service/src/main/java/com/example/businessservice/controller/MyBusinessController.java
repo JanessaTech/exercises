@@ -20,6 +20,6 @@ public class MyBusinessController {
 
     @GetMapping("/test3")
     public String admin_or_user() {
-        return "test3 is accessed by ROLE_ADMIN";
+        return "test3 is accessed by ROLE_USER or ROLE_ADMIN";
     }
 }

@@ -25,7 +25,7 @@ You will see session id returned if the request is successful: </br>
  session id looks like this: a889494c-6e65-4ec5-a596-bc86e89713df
 
 3. run SessionApplicationTests (optional)
-   You could run SessionApplicationTests you don't what to use postman </br>
+   You could run SessionApplicationTests you don't want to use postman </br>
    There are two test cases.
    1. testUnauthenticated </br>
    This is to test what would hanppen if you send request without authorization info attached

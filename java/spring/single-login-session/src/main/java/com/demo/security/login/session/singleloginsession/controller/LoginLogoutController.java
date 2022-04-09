@@ -27,7 +27,7 @@ public class LoginLogoutController {
     }
 
     @GetMapping(value = "/logout")
-    public String login(HttpServletRequest request,
+    public String logout(HttpServletRequest request,
                         @RequestParam(name = "username", required = true) String username
                         ) {
         String loginUserName= (String) request.getSession().getAttribute("user");

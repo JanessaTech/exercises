@@ -60,7 +60,7 @@ INSERT INTO ROLE(`NAME`) values ('ROLE_ADMIN');
 ```
 
 # How to run this demo
-## 1. Run AuthticationServiceApplication and BusinessServiceApplication
+## 1. Install common project then run AuthticationServiceApplication and BusinessServiceApplication
 ## 2. Register 3 users, one with user role, one with admin role, one with user and admin roles
 ### 2.1 Creat a user with a role ROLE_USER only
   - Launch http://127.0.0.1:8080/api/auth/register (POST method) </br>
@@ -93,7 +93,7 @@ INSERT INTO ROLE(`NAME`) values ('ROLE_ADMIN');
 }
 ```
 
-## 3.  Access business code
+## 3.  Access to business code
 In WebSecurityConfig under business-service project, we've configured permissions as below:
 ```aidl
  http.cors().and().csrf().disable()
@@ -216,7 +216,7 @@ test3 is accessed by ROLE_USER or ROLE_ADMIN
 
 The behaviors are what we expected
 
-Reference:
+#Reference:
 SpringBoot + JPA @ManyToMany 操作要点:
 对应的Entity的建立。此处注意不可使用lombok @Data 注解。使用@Setter 、@Getter注解。主要原因时要自己覆写hash() equals(),toString() 方法。《、不然》 </br>
 这样添加和删除的时候不会出现异常。否则出现循环的引用，不能删除或stackOver；</br>

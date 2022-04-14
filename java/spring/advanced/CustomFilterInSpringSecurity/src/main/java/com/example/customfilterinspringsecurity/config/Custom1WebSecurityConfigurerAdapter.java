@@ -16,7 +16,8 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class Custom1WebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.antMatcher("/match1/**").addFilterAfter(
-                new Custom1Filter(), BasicAuthenticationFilter.class);
+       /* http.antMatcher("/match1/**").addFilterAfter(
+                new Custom1Filter(), BasicAuthenticationFilter.class);*/
+        http.antMatcher("/match1/**");
     }
 }

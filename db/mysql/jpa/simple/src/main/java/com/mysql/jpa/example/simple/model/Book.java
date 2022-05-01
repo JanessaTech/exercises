@@ -1,4 +1,4 @@
-package com.mysql.jpa.example.jpa.model;
+package com.mysql.jpa.example.simple.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

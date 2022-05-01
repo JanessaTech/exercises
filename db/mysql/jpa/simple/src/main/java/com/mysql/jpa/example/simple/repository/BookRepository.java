@@ -1,8 +1,7 @@
-package com.mysql.jpa.example.jpa.repository;
+package com.mysql.jpa.example.simple.repository;
 
-import com.mysql.jpa.example.jpa.model.Book;
+import com.mysql.jpa.example.simple.model.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 //@Repository
 public interface BookRepository extends JpaRepository<Book, Long> {

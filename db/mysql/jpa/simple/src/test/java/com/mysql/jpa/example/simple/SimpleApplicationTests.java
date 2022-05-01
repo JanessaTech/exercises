@@ -1,10 +1,10 @@
-package com.mysql.jpa.example.jpa;
+package com.mysql.jpa.example.simple;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class JpaApplicationTests {
+class SimpleApplicationTests {
 
     @Test
     void contextLoads() {

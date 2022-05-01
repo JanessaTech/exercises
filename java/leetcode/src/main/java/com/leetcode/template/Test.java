@@ -1,7 +1,4 @@
-package com.leetcode;
-
-import java.util.*;
-import java.util.stream.Collectors;
+package com.leetcode.template;
 
 public class Test {
 

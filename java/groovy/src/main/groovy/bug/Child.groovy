@@ -1,0 +1,4 @@
+package bug
+
+class Child {
+}

@@ -26,11 +26,27 @@ class MyFirstGroovy {
         content
     }
 
+    static enum SocialType {
+        facebook,
+        google
+    }
+
+    static Object getEnumParam(String name, Class<Enum> enumClass) {
+        try {
+            return Enum.valueOf(enumClass, name)
+        } catch(IllegalArgumentException e) {
+            return null
+        }
+    }
+
+
     static void main(def args){
-        def text = 'Hi, {nickname}, this is your verification code'
-        def map = ['nickname': 'Juan']
-        def res = build(null, text, map)
-        println(res)
+        def mymap  = ['aa': 'cccccc', 'mykey': 1]
+        if (!mymap.mykey) {
+            println('not mykey')
+        } else {
+            println('yes mykey')
+        }
 
     }
 }

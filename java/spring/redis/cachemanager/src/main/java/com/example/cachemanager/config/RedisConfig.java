@@ -18,7 +18,7 @@ import java.time.Duration;
 @Configuration
 @EnableCaching
 public class RedisConfig extends CachingConfigurerSupport {
-
+/*
     @Bean(name="stringEmployeeRedisTemplate")
     public RedisTemplate<String, Employee> stringEmployeeRedisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, Employee> stringEmployeeRedisTemplate = new RedisTemplate<>();
@@ -31,7 +31,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         stringEmployeeRedisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
 
         return stringEmployeeRedisTemplate;
-    }
+    }*/
 
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {

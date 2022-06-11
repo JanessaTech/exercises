@@ -8,7 +8,7 @@ rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"
 rabbitmqctl set_user_tags admin administrator 
 ```
 2. Run "mvn install" for common project
-3. Start producer project. you will see that myexchange and myqueue are created automatically
+3. Start consumer project. you will see that myexchange and myqueue are created automatically
 4. Start producer project
 5. In postman, launch http://127.0.0.1:8180/send, send json as following using post method:
 ```aidl

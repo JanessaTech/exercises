@@ -41,11 +41,15 @@ class MyFirstGroovy {
 
 
     static void main(def args){
-        def mymap  = ['aa': 'cccccc', 'mykey': 1]
-        if (!mymap.mykey) {
-            println('not mykey')
-        } else {
-            println('yes mykey')
+        def taskConfiguration = 'cron:0 0 0/1 1/1 * ?'
+        switch (taskConfiguration) {
+            case ~/cron:(.*)/:
+                println(Matcher.lastMatcher.group(1))
+                break
+            case ~/fixed:(.*)/:
+                break
+            default:
+                break
         }
 
     }

@@ -41,6 +41,16 @@ public class Test {
         Optional<String> name2 = Optional.ofNullable(null);
         name2.ifPresent(name -> System.out.println(name));
     }
+
+    public static void test_map() {
+        Optional<String> userName1 = Optional.of("Jane");
+        String email1 = userName1.map(e -> e + "@gmail.com").orElse("");
+        Optional<String> userName2 = Optional.empty();
+        String email2 = userName2.map(e -> e + "@gmail.com").orElse("");
+        System.out.println(email1);
+        System.out.println(email2);
+
+    }
     public static void main(String[] agrs) {
         //test_orElse_orElseGet
         /*
@@ -49,6 +59,7 @@ public class Test {
         } catch (Exception e) {
             e.printStackTrace();
         }*/
-        test_ifPresent();
+        //test_ifPresent();
+        test_map();
     }
 }

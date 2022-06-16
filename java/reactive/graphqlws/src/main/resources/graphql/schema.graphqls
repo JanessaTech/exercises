@@ -1,0 +1,12 @@
+type Query {
+    greeting: String
+}
+
+type Subscription {
+    getStudent: Student!
+}
+
+type Student {
+    name: String
+    age: Int
+}

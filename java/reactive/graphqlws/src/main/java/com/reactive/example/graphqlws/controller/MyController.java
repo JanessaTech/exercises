@@ -22,7 +22,12 @@ public class MyController {
     }
 
     @SubscriptionMapping
+    public Flux<Student> getStudentJane() {
+       return rabbitMQService.getStudentJane();
+    }
+
+    @SubscriptionMapping
     public Flux<Student> getStudent() {
-       return rabbitMQService.getStudent();
+        return rabbitMQService.getStudent();
     }
 }

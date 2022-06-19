@@ -15,15 +15,25 @@ rabbitmqctl set_user_tags admin administrator
 6. In postman, launch http://127.0.0.1:8181/send POST
 ```aidl
 {
-"name": "wei",
+"name": "Jane",
+"age": 15
+}
+and 
+{
+"name": "Wei",
 "age": 15
 }
 ```
 7. You will see message received in chrome browser by launching http://localhost:8182/, opening developer tools, navigating console tab:
 ```aidl
-Subscription data: 
+Subscription data(Jane): 
                 data:
                 getStudent:
                     age: 15
-                    name: "wei"
+                    name: "Jane"
+Subscription data(not Jane): 
+                data:
+                getStudent:
+                    age: 15
+                    name: "Wei"
 ```

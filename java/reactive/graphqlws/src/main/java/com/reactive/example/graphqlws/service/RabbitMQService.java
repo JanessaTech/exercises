@@ -17,8 +17,12 @@ public class RabbitMQService {
     private Sinks.Many<Student> sink = Sinks.many().multicast().directBestEffort();
     private Flux<Student> publisher = sink.asFlux();
 
+    public Flux<Student> getStudentJane() {
+        return publisher.filter(it -> it.getName().equals("Jane"));
+    }
+
     public Flux<Student> getStudent() {
-        return publisher;
+        return publisher.filter(it -> !it.getName().equals("Jane"));
     }
 
     @RabbitListener(bindings = {

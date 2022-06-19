@@ -3,6 +3,7 @@ type Query {
 }
 
 type Subscription {
+    getStudentJane: Student!
     getStudent: Student!
 }
 

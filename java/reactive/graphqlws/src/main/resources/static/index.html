@@ -14,8 +14,30 @@
 
     // subscription
     (async () => {
+        const onNextJane = (data) => {
+            console.log("Subscription data(Jane):", data);
+        };
+
+        await new Promise((resolve, reject) => {
+            client.subscribe(
+                {
+                    query: 'subscription { getStudentJane {name age} }',
+                },
+                {
+                    next: onNextJane,
+                    error: reject,
+                    complete: resolve,
+                },
+            );
+        });
+
+    })();
+
+
+    // subscription
+    (async () => {
         const onNext = (data) => {
-            console.log("Subscription data:", data);
+            console.log("Subscription data(not Jane):", data);
         };
 
         await new Promise((resolve, reject) => {
@@ -29,7 +51,7 @@
                     complete: resolve,
                 },
             );
-        });
+        })
     })();
 
 </script>

@@ -1,4 +1,5 @@
 package example
 
-class Cat {
-}
+data class Cat (
+    var name: String? = null,
+)

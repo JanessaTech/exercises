@@ -1,4 +1,6 @@
 package example
 
-class Person {
-}
+data class Person (
+    var name: String? = null,
+    var age: Int? = 0
+)

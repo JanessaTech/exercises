@@ -1,0 +1,1 @@
+This demo shows how to put interfaces and implementations separately

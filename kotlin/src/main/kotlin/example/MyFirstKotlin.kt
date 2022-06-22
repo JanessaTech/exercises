@@ -1,8 +1,15 @@
 package example
 
+import com.fasterxml.jackson.databind.ObjectMapper
+
 class MyFirstKotlin
 fun main(args: Array<String>) {
-    val sessionId: String? = null
-    var active: Boolean = sessionId?.isNotEmpty() == true
-    println(active)
+    val a:Int = 1
+    var along= a.toLong()
+    println(along)
+
+
+
+
 }
+

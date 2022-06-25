@@ -1,0 +1,9 @@
+spring:
+  graphql:
+    graphiql:
+      enabled: true
+    path: /graphqldemo
+    schema:
+      locations: classpath:graphql/**
+      printer:
+        enabled: true

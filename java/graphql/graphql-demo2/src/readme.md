@@ -1,6 +1,6 @@
 How to run :
 1. run GraphqlDemo2Application in IDE
-2. Open Altair, launch http://localhost:8080/graphqldemo wtih POST method, execute the following commands:
+2. Open Altair, launch http://localhost:8080/graphqldemo with POST method, execute the following commands:
 ```aidl
 query allbooks {
   allBooks {

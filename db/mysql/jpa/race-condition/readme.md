@@ -19,6 +19,10 @@ INSERT INTO PAYMENT(STATUS) VALUES('pending');
 INSERT INTO PAYMENT(STATUS) VALUES('ok');
 INSERT INTO PAYMENT(STATUS) VALUES('error');
 
+How to login mysql for docker:
+docker exec -it mysql /bin/bash  # Here mysql is the container name
+mysql -udemouser -ppassword jpa_service
+
 ```
 
 This demo shows how to use jpa to call store procedure and how to use mysql pessimistic lock

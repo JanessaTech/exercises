@@ -13,22 +13,26 @@ public class AsyncService {
 
     @Async
     public void asyncMethodWithVoidReturnType() {
-        log.info("Execute void method asynchronously. "
-                + Thread.currentThread().getName());
+        log.info("Thread {} executing asyncMethodWithVoidReturnType", Thread.currentThread().getName());
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        log.info("Thread {} finished asyncMethodWithVoidReturnType", Thread.currentThread().getName());
     }
 
     @Async
     public Future<String> asyncMethodWithReturnType() {
-        System.out.println("Execute non void method asynchronously - "
-                + Thread.currentThread().getName());
+        log.info("Thread {} executing asyncMethodWithReturnType", Thread.currentThread().getName());
         try {
             Thread.sleep(5000);
-            return new AsyncResult<String>("hello world !!!!");
         } catch (InterruptedException e) {
-            //
+            e.printStackTrace();
         }
+        log.info("Thread {} finished asyncMethodWithReturnType", Thread.currentThread().getName());
 
-        return null;
+        return new AsyncResult<String>("hello world !!!!");
     }
 
 }

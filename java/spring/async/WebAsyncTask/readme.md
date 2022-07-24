@@ -1,6 +1,6 @@
 How to run this demo:
 - Run WebAsyncTaskApplication in you IDE
-- Launch http://127.0.0.1:8080/hello (GET) in postman, you will see logs on cosole like below: </br>
+- Launch http://127.0.0.1:8080/hello (GET) in postman, you will see logs on console like below: </br>
 ```aidl
 2022-07-24 15:40:40.398  INFO 11416 --- [nio-8080-exec-1] c.a.e.w.c.WebAsyncTaskController         : Thread http-nio-8080-exec-1 starts executing WebAsyncTaskController.sayHello
 2022-07-24 15:40:40.399  INFO 11416 --- [nio-8080-exec-1] c.a.e.w.c.WebAsyncTaskController         : Thread http-nio-8080-exec-1 is finihsed with executing WebAsyncTaskController.sayHello

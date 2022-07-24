@@ -22,6 +22,7 @@
     </build>
     <modules>
         <module>first</module>
+        <module>ThreadPoolExecutorDemo</module>
     </modules>
 
     <properties>

@@ -9,4 +9,4 @@ How to run this demo:
 2022-07-24 15:40:45.432  INFO 11416 --- [nio-8080-exec-2] c.a.e.w.c.WebAsyncTaskController         : Thread http-nio-8080-exec-2 is finished with the execution of webAsyncTask
 ```
 From the logs above, we know that :
- - The code in webAsyncTask.call() is executed by a thread named task1, which is different from the thread running WebAsyncTaskApplication (actually it is nio-8080-exec-1)
+ - The code in webAsyncTask.call() is executed by a thread named task1, which is different from the thread calling WebAsyncTaskController.sayHello() method

@@ -4,7 +4,6 @@ import java.util.concurrent.*;
 import java.util.logging.Logger;
 
 public class Demo {
-    Logger logger = Logger.getLogger(Demo.class.getName());
     class ThreadFactoryBuilder implements ThreadFactory {
         private String threadNamePrefix = "prefix";
         private int index = 0;

@@ -24,7 +24,7 @@ How to run this demo in an asynchronous way:
 - Run SpringEventApplication in your IDE
 - Launch http://127.0.0.1:8080/orders/1 (POST) in postman
   You will see logs in console like below:
-- ```aidl
+```aidl
 2022-07-24 22:06:23.638  INFO 18376 --- [nio-8080-exec-1] c.s.e.e.s.controller.EventController     : Thread http-nio-8080-exec-1 is running in EventController.buyOrder. orderId=1
 2022-07-24 22:06:23.638  INFO 18376 --- [nio-8080-exec-1] c.s.e.e.s.service.ProductOrderService    : Thread http-nio-8080-exec-1 starts to send ProductOrderEvent, orderId=1
 2022-07-24 22:06:23.639  INFO 18376 --- [nio-8080-exec-1] c.s.e.e.s.controller.EventController     : Thread http-nio-8080-exec-1 is finished in EventController.buyOrder. orderId=1

@@ -1,7 +1,6 @@
 package com.demo;
 
 import java.util.concurrent.*;
-import java.util.logging.Logger;
 
 public class Demo {
     class ThreadFactoryBuilder implements ThreadFactory {

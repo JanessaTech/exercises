@@ -24,6 +24,7 @@
         <module>first</module>
         <module>ThreadPoolExecutorDemo</module>
         <module>CountDownLatch</module>
+        <module>CompletableFuture</module>
     </modules>
 
     <properties>

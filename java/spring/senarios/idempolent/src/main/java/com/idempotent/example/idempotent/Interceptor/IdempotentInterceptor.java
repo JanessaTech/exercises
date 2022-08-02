@@ -5,6 +5,8 @@ import com.idempotent.example.idempotent.service.RedisService;
 import com.idempotent.example.idempotent.service.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -14,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 @Component
 @Slf4j
@@ -34,13 +37,25 @@ public class IdempotentInterceptor implements HandlerInterceptor {
         if (!(handler instanceof HandlerMethod)) return true;
         HandlerMethod handlerMethod = (HandlerMethod)handler;
         Method method = handlerMethod.getMethod();
+        String script = "if redis.call('get', KEYS[1]) == KEYS[2] then return redis.call('del', KEYS[1]) else return 0 end";
+        RedisScript<Long> redisScript = new DefaultRedisScript<>(script, Long.class);
         if (method.isAnnotationPresent(Idemponent.class)) {
             String token = getToken(request);
             if (token == null) return false;
             else {
+                /**
+                 * The code snippet below is problematic because checking and deleting are not done in an atomic way,
+                 * which could lead to an inconsistent issue
                 if (redisService.exists(token)) {
                     log.info("token {} is existing. It will be deleted", token);
                     redisService.remove(token);
+                } else {
+                    log.info("cannot find token {}", token);
+                    return false;
+                } **/
+                Long res = redisService.execute(Arrays.asList(token));
+                if ( res != null && res != 0L ) {
+                    log.info("token {} is deleted successfully", token);
                 } else {
                     log.info("cannot find token {}", token);
                     return false;

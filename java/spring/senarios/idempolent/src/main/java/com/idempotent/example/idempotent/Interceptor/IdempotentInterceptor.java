@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -37,8 +38,6 @@ public class IdempotentInterceptor implements HandlerInterceptor {
         if (!(handler instanceof HandlerMethod)) return true;
         HandlerMethod handlerMethod = (HandlerMethod)handler;
         Method method = handlerMethod.getMethod();
-        String script = "if redis.call('get', KEYS[1]) == KEYS[2] then return redis.call('del', KEYS[1]) else return 0 end";
-        RedisScript<Long> redisScript = new DefaultRedisScript<>(script, Long.class);
         if (method.isAnnotationPresent(Idemponent.class)) {
             String token = getToken(request);
             if (token == null) return false;
@@ -53,7 +52,7 @@ public class IdempotentInterceptor implements HandlerInterceptor {
                     log.info("cannot find token {}", token);
                     return false;
                 } **/
-                Long res = redisService.execute(Arrays.asList(token));
+                Long res = redisService.execute(List.of(token));
                 if ( res != null && res != 0L ) {
                     log.info("token {} is deleted successfully", token);
                 } else {

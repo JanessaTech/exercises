@@ -20,9 +20,6 @@ class RedisServiceImpl implements RedisService {
     @Autowired
     RedisTemplate<String, Object> redisTemplate;
 
-    String script = "if redis.call('get', KEYS[1]) == KEYS[2] then return redis.call('del', KEYS[1]) else return 0 end";
-    RedisScript<Long> redisScript = new DefaultRedisScript<>(script, Long.class);
-
     @Override
     public void put(String key, String value) {
         redisTemplate.opsForValue().set(key, value);

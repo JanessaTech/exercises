@@ -9,8 +9,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/mfa")
 public class MyBussiness {
 
-    @GetMapping("/demo")
-    public String demo() {
-        return "ok";
+    @GetMapping("/test1")
+    public String userOnly() {
+        return "test1 is accessed by ROLE_USER";
+    }
+
+    @GetMapping("/test2")
+    public String adminOnly() {
+        return "test2 is accessed by ROLE_ADMIN";
+    }
+
+    @GetMapping("/test3")
+    public String admin_or_user() {
+        return "test3 is accessed by ROLE_ADMIN or ROLE_USER";
     }
 }

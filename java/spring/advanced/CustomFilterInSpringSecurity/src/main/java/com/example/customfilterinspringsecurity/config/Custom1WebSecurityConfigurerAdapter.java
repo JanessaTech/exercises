@@ -8,7 +8,9 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.savedrequest.RequestCacheAwareFilter;
 
 @Configuration
 @EnableWebSecurity(debug = false)
@@ -16,8 +18,8 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class Custom1WebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-       /* http.antMatcher("/match1/**").addFilterAfter(
-                new Custom1Filter(), BasicAuthenticationFilter.class);*/
-        http.antMatcher("/match1/**");
+        http.antMatcher("/match1/**").addFilterAfter(
+                new Custom1Filter(), RequestCacheAwareFilter.class);
+        //http.antMatcher("/match1/**");
     }
 }

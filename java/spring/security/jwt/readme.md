@@ -25,5 +25,8 @@ verified
 
 Reference:
 ------------
-Run the command below to get public key from certificate.pem
+Run the command below to get public key from certificate.pem </br>
+```aidl
 openssl x509 -pubkey -noout -in certificate.pem  > newpubkey.pem
+```
+

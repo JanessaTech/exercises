@@ -102,14 +102,12 @@ public class JwtDemo {
 
     public static void main(String[] args) throws IOException {
         JwtDemo jwtDemo = new JwtDemo();
-        //verifyByPublicKey(jwtDemo);
+        verifyByPublicKey(jwtDemo);
 
-       try {
+       /*try {
             verifyByCertFile(jwtDemo);
         } catch (CertificateException e) {
             e.printStackTrace();
-        }
-
-
+        }*/
     }
 }

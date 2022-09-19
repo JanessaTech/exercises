@@ -8,7 +8,7 @@ This demo shows us how to generate a jwt token and how to verify it using public
 ```aidl
 openssl req -x509 -key private_key.pem -subj /CN=client.example.com -days 1000 > certificate.pem
 ```
-5. Copy the content of certificate.pem into resources/certificate.pem
+5. Copy the content of certificate.pem into resources/certificate.pem (empty the old content before pour the new content)
 6. Run JwtDemo. We will see a token generated based on the private_key.pem you just created. 
    Then immediately the token is verified by the public_key.pem you just created. You will see the output like this:
 ```aidl

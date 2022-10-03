@@ -42,9 +42,9 @@ public class Test {
         return head;
     }
     public static void main(String[] args) {
-        int[][] dirs = {{1, 0},{-1, 0},{0, 1},{0, -1}};
-        for (int[] dir : dirs) {
-            System.out.println(dir[0] + "," + dir[1]);
-        }
+        int n = 8 - 1;
+        n |= n >>> 1;
+        System.out.println(7 >>> 1);
+        System.out.println(n);
     }
 }

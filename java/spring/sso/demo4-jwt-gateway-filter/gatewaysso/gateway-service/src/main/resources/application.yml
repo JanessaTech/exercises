@@ -1,14 +1,36 @@
+server:
+  port: 8762
+
 spring:
   application:
     name: gateway-service
-server:
-  port: 8762
+  main:
+    web-application-type: reactive
+  cloud:
+    gateway:
+      routes:
+        - id: authentication-service
+          uri: lb://authentication-service
+          predicates:
+            - Path=/auth/**
+        - id: mybusiness-service
+          uri: lb://mybusiness-service
+          predicates:
+            - Path=/mybusiness/**
+      discovery:
+        locator:
+          enabled: true #turn on creating dynamic routings on register
+          lower-case-service-id: true # use lower-case service name which is upper-case by default
+
 eureka:
-  client:
-    serviceUrl:
-      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
   instance:
     preferIpAddress: true
+    hostname: localhost
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
 
 management:
   endpoints:

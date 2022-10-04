@@ -19,3 +19,8 @@ management:
     web:
       exposure:
         include: health, info
+
+jannessa:
+  app:
+    jwtSecret: jannessaSecretKey
+    jwtExpirationMs: 86400000

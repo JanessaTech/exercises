@@ -2,22 +2,15 @@ package com.sso.example.utils;
 
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class JwtUtils {
-    public static String generateJwtToken(Authentication authentication, String jwtSecret, int jwtExpirationMs) {
-        UserDetails userPrincipal = (UserDetails)authentication.getPrincipal();
-        List<String> roles = userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-
+    public static String generateJwtToken(String userName, List<String> roles, String jwtSecret, int jwtExpirationMs) {
         return Jwts.builder()
-                .setSubject((userPrincipal.getUsername()))
+                .setSubject(userName)
                 .claim("roles", roles) // add roles info into payload
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))

@@ -7,10 +7,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -32,7 +35,7 @@ public class AuthController {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(userName, password));
-            token = JwtUtils.generateJwtToken(authentication, jwtSecret, jwtExpirationMs);
+            token = JwtUtils.generateJwtToken(userName, authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()), jwtSecret, jwtExpirationMs);
         } catch (Exception ex) {
             ex.printStackTrace();
             return "error";

@@ -16,7 +16,7 @@ spring:
         - id: mybusiness-service
           uri: lb://mybusiness-service
           predicates:
-            - Path=/mybusiness/**
+            - Path=/business/**
       discovery:
         locator:
           enabled: true #turn on creating dynamic routings on register
@@ -37,3 +37,8 @@ management:
     web:
       exposure:
         include: health, info
+
+jannessa:
+  app:
+    jwtSecret: jannessaSecretKey
+    jwtExpirationMs: 86400000

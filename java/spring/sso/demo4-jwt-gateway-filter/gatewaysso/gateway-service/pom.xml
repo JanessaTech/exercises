@@ -16,6 +16,7 @@
     <properties>
         <java.version>17</java.version>
         <spring-cloud.version>2021.0.4</spring-cloud.version>
+        <com.sso.example-common>0.0.1-SNAPSHOT</com.sso.example-common>
     </properties>
     <dependencies>
         <dependency>
@@ -43,6 +44,28 @@
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
         <!-- Enable SpringCloud gateway END-->
+
+        <!-- import common dependencies defined in commmon project -->
+        <dependency>
+            <groupId>com.sso.example</groupId>
+            <artifactId>common</artifactId>
+            <version>${com.sso.example-common}</version>
+        </dependency>
+        <!-- import common dependencies defined in commmon project END-->
+
+        <!-- fix bug: java.lang.NoClassDefFoundError: javax/xml/bind/DatatypeConverter -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+        <!-- fix bug: java.lang.NoClassDefFoundError: javax/xml/bind/DatatypeConverter END-->
 
         <dependency>
             <groupId>org.projectlombok</groupId>

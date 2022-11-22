@@ -26,16 +26,25 @@ public class GameController {
         Session session = entityManager.unwrap(Session.class);
         //StatelessSession session = ((Session) entityManager.getDelegate()).getSessionFactory().openStatelessSession();
         Transaction t=session.beginTransaction();
+
+        /*
         for (int i = 0; i < 100000; i++) {
             Game game = new Game();
             game.setName(name + i);
+            game.setAddr("addr1");
             // session.insert(game);  //StatelessSession
+            session.save(game);
             if ( i % 100 == 0) {
                 session.flush();
                 session.clear();
             }
+        }*/
 
-        }
+        String hqlInsert = "insert into Game(name, addr) select name," + "'Default ADD'" + " from Game";
+        session.createQuery(hqlInsert);
+        int createdEntities = session.createQuery( hqlInsert ).executeUpdate();
+
+
         t.commit();//transaction is committed
         session.close();
         long end = System.currentTimeMillis();

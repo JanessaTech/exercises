@@ -24,7 +24,6 @@ public class Tutorial {
     private boolean published;
 
     @OneToMany(mappedBy = "tutorial", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-
     private Set<Comment> comments;
 
     @Override

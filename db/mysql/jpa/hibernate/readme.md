@@ -8,16 +8,23 @@ GRANT ALL on jpa_service.* TO 'demouser'@'%';
 CREATE TABLE IF NOT EXISTS `GAME` (
 	`GAME_ID`      		    BIGINT NOT NULL AUTO_INCREMENT,
 	`NAME`    			    VARCHAR(50) NOT NULL,
+	`FK_GAME_GROUP_ID`    	BIGINT NOT NULL,
 	`ADDR`                  VARCHAR(50) NULL,
-	PRIMARY KEY (`GAME_ID`)
+	`TIME`                  TIMESTAMP NULL,
+	`SITE_ID`               INT NULL,
+	`NEW_GAME`              TINYINT NULL,
+	`RATIO`                 DECIMAL(17,2) NULL,	
+	 PRIMARY KEY (`GAME_ID`)
  )
 ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `GAME_SEQ` (
-  `next_val` bigint(20) DEFAULT NULL
-);
+CREATE TABLE IF NOT EXISTS `GAME_GROUP` (
+	`GAME_GROUP_ID`      		    BIGINT NOT NULL AUTO_INCREMENT,
+	`NAME`    			    VARCHAR(50) NOT NULL,
+	PRIMARY KEY (`GAME_GROUP_ID`)
+ )
+ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `GAME_SEQ` (`next_val`) VALUES(1);
 ```
 
 Test how session works

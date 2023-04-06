@@ -6,3 +6,5 @@ class Greeting {
 
 var obj = new Greeting();
 obj.greet();
+
+console.log("this is a test")

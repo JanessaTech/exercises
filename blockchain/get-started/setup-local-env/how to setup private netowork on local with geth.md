@@ -37,4 +37,7 @@ Make sure to fill in the  `ACCOUNT_ID1`  and `ACCOUNT_ID2`with the real account 
 ### Interact with the testnet
 Make sure to fill in the  `ACCOUNT_ID1`  and `ACCOUNT_ID2`with the real account address you created above
 
-`geth --identity "HelloWorldNode" --http --http.port "8545" --http.api "web3,net,eth,admin,personal" --http.corsdomain "*" --datadir E:\\code\\geth\\testnet\\datadi --metrics --allow-insecure-unlock --nodiscover --unlock 'ACCOUNT_ID1,ACCOUNT_ID2' console`
+`geth --identity "HelloWorldNode" --http --http.port "8545" --http.api "web3,net,eth,admin,personal" --http.corsdomain "*" --datadir E:\\code\\geth\\testnet\\datadi --metrics --rpc.enabledeprecatedpersonal --allow-insecure-unlock --nodiscover --unlock 'ACCOUNT_ID1,ACCOUNT_ID2' console`
+
+### Check exsiting accounts
+`eth.accounts`

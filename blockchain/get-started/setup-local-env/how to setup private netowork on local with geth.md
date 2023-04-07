@@ -24,7 +24,7 @@ Make sure to fill in the  `ACCOUNT_ID1`  and `ACCOUNT_ID2`with the real account 
 	"parentHash" : "0x0000000000000000000000000000000000000000000000000000000000000000",
     "alloc": {
         "ACCOUNT_ID1": { "balance": "30000" },
-		"ACCOUNT_ID2": { "balance": "40000" }
+        "ACCOUNT_ID2": { "balance": "40000" }
     }
 }
 

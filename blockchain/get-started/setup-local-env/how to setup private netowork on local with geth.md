@@ -49,6 +49,7 @@ Once all account are unlocked, try the below command to get list of accounts:
 Open a new terminal, input command: `geth attach http://127.0.0.1:8545`
 
 Try commands to check accounts:
-    eth.accounts
-    eth.getBalance(eth.accounts[0])
-    eth.getBalance(eth.accounts[1])
+    
+	`eth.accounts`
+    `eth.getBalance(eth.accounts[0])`
+    `eth.getBalance(eth.accounts[1])`

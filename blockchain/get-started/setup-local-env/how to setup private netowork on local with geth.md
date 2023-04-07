@@ -15,7 +15,7 @@ Make sure to fill in the  `ACCOUNT_ID1`  and `ACCOUNT_ID2`with the real account 
     "config": {
         "chainId": 12345,
         "homesteadBlock": 0,
-		"eip150Block": 0,
+        "eip150Block": 0,
         "eip155Block": 0,
         "eip158Block": 0
     },

@@ -26,7 +26,7 @@ public class Subsets_II_90 {
     }
 
     public  static void main(String[] args) {
-        int[] nums = new int[]{1, 1, 2};
+        int[] nums = new int[]{1, 2, 2};
         Subsets_II_90 test = new Subsets_II_90();
         List<List<Integer>> res = test.subsetsWithDup(nums);
 

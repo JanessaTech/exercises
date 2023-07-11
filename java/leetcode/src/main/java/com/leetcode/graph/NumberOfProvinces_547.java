@@ -1,26 +1,26 @@
 package com.leetcode.graph;
 
 public class NumberOfProvinces_547 {
+    int n = 0;
     public int findCircleNum(int[][] isConnected) {
-        boolean[] visited = new boolean[isConnected.length];
-
-        int group = 0;
-
-        for (int i = 0; i < isConnected.length; i++) {
+        n = isConnected.length;
+        boolean[] visited = new boolean[n];
+        int cnt = 0;
+        for (int i = 0; i < n; i++) {
             if (!visited[i]) {
-                dfs(i, isConnected, visited);
-                group++;
-
+                dfs(isConnected, i, visited);
+                cnt++;
             }
         }
-        return group;
+        return cnt;
     }
 
-    private void dfs(int city, int[][] isConnected, boolean[] visited) {
-        visited[city] = true;
-        for (int j = 0; j < isConnected.length; j++) {
-            if (!visited[j] && isConnected[city][j] == 1 && city != j)
-                dfs(j, isConnected, visited);
+    void dfs(int[][] isConnected, int i, boolean[] visited) {
+        visited[i] = true;
+        for (int j = 0; j < n; j++) {
+            if (j != i && !visited[j] && isConnected[i][j] == 1) {
+                dfs(isConnected, j, visited);
+            }
         }
     }
 }

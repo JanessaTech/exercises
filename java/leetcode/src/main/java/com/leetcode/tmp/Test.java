@@ -42,9 +42,8 @@ public class Test {
         return head;
     }
     public static void main(String[] args) {
-        int n = 8 - 1;
-        n |= n >>> 1;
-        System.out.println(7 >>> 1);
-        System.out.println(n);
+        Map<Node, Node> map = new HashMap<>();
+        Node v = map.get(null);
+        System.out.println(v);
     }
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class BinaryTreeInorderTraversal {
+public class Binary_Tree_Inorder_Traversal_94 {
     public List<Integer> inorderTraversal(TreeNode root) {
 
         //List<Integer> res = solution1(root);

@@ -5,15 +5,40 @@
     <title>React Application</title>
 </head>
 <body>
-<div id="react-app"></div>
+<div id="greeting"></div>
+<div id="curTime"></div>
+<div id="curTime1"></div>
 <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+    .red { color: red }
+</style>
 <script type="text/babel">
+    function getCurrentTime() {
+        return new Date().toTimeString()
+    }
+
     function Greeting() {
         return <div><h1>Hello JSX!</h1></div>
     }
-    ReactDOM.render(<Greeting />, document.getElementById('react-app') );
+    ReactDOM.render(<Greeting />, document.getElementById('greeting') );
+
+    ReactDOM.render(
+        <div>
+            <p> The current time is <span className="red">{getCurrentTime()}</span></p>
+        </div>,
+        document.getElementById("curTime")
+    );
+
+    var className = "red"
+
+    ReactDOM.render(
+        <div>
+            <p> The current time is <span className={className}>{getCurrentTime()}</span></p>
+        </div>,
+        document.getElementById("curTime1")
+    );
 </script>
 </body>
 </html>

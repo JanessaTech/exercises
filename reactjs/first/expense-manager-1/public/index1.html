@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>React application :: ExpenseEntryItem component</title>
+</head>
+<body>
+<div id="react-app"></div>
+
+<script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+  class ExpenseEntryItem extends React.Component {
+    constructor(props) {
+      super(props);
+    }
+    render() {
+      return (
+              <div>
+                <div><b>Item</b> <em>{this.props.name}</em></div>
+                <div><b>Amount</b> <em>{this.props.amount}</em></div>
+                <div><b>Spend Date:</b>
+                  <em>{this.props.spendDate.toString()}</em></div>
+                <div><b>Category:</b> <em>{this.props.category}</em></div>
+              </div>
+      );
+    }
+  }
+
+  const name = "Grape Juice"
+  const amount = 30.00
+  const spendDate = new Date("2020-10-10")
+  const category = "Food1"
+
+  ReactDOM.render(
+          <ExpenseEntryItem
+                  name={name}
+                  amount={amount}
+                  spendDate={spendDate}
+                  category={category}
+          />,
+          document.getElementById('react-app') );
+</script>
+</body>
+</html>

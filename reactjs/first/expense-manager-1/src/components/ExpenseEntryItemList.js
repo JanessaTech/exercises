@@ -12,6 +12,40 @@ class ExpenseEntryItemList extends React.Component {
         }
     }
 
+    componentDidMount() {
+        console.log("ExpenseEntryItemList :: Initialize :: componentDidMount :: Component mounted");
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        console.log("ExpenseEntryItemList :: Update :: shouldComponentUpdate invoked :: Before update");
+        return true;
+    }
+
+    static getDerivedStateFromProps(props, state) {
+        // how do we use getDerivedStateFromProps??
+        console.log("ExpenseEntryItemList :: Initialize / Update :: getDerivedStateFromProps :: Before update");
+        let newState = {
+            items: props.items
+        }
+        if(props.onDelete != null) {
+            return newState;
+        }
+        return null;
+    }
+
+    getSnapshotBeforeUpdate(prevProps, prevState) {
+        console.log("ExpenseEntryItemList :: Update :: getSnapshotBeforeUpdate :: Before update");
+        return null;
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log("ExpenseEntryItemList :: Update :: componentDidUpdate :: Component updated");
+    }
+
+    componentWillUnmount() {
+        console.log("ExpenseEntryItemList :: Remove :: componentWillUnmount :: Component unmounted");
+    }
+
     handleMouseEnter(e) {
         e.target.parentNode.classList.add("highlight");
     }
@@ -26,9 +60,10 @@ class ExpenseEntryItemList extends React.Component {
 
     handleDelete = (id, e) => {
         e.preventDefault();
-        console.log(id);
-
-        this.setState((state, props) => {
+        if(this.props.onDelete != null) {
+            this.props.onDelete(id, e);
+        } else {
+            this.setState((state, props) => {
             let items = [];
 
             state.items.forEach((item, idx) => {
@@ -39,6 +74,8 @@ class ExpenseEntryItemList extends React.Component {
                 items: items
             };
         })
+        }
+        console.log(id);
     }
 
     getTotal() {
@@ -60,26 +97,27 @@ class ExpenseEntryItemList extends React.Component {
             </tr>
         );
         return (
-            <table onMouseOver={this.handleMouseOver}>
-                <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Amount</th>
-                    <th>Date</th>
-                    <th>Category</th>
-                    <th>Remove</th>
-                </tr>
-                </thead>
-                <tbody>
-                {list}
-                <tr>
-                    <td colSpan="1" style={{ textAlign: "right" }}>Total Amount</td>
-                    <td colSpan="4" style={{ textAlign: "left" }}>
-                        {this.getTotal()}
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                <table onMouseOver={this.handleMouseOver}>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Category</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {list}
+                        <tr>
+                            <td colSpan="1" style={{ textAlign: "right" }}>Total Amount</td>
+                            <td colSpan="4" style={{ textAlign: "left" }}>
+                                {this.getTotal()}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
         );
     }
 }

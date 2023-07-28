@@ -8,3 +8,12 @@ ReactDOM.render(
     </React.StrictMode>,
     document.getElementById('root')
 );
+
+setTimeout(() => {
+    ReactDOM.render(
+        <React.StrictMode>
+            <div><p>Clock is removed from the DOM.</p></div>
+        </React.StrictMode>,
+        document.getElementById('root')
+    );
+}, 5000);

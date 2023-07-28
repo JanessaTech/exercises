@@ -4,6 +4,9 @@ import ExpenseEntryItem from "./components/ExpenseEntryItem";
 //import HelloWorld from './components/HelloWorld';
 import ExpenseEntryItemList from './components/ExpenseEntryItemList'
 import MessageWithEvent from './components/MessageWithEvent'
+import ExpenseEntryItemListFn from "./components/ExpenseEntryItemListFn";
+import RichTextMessage from "./components/RichTextMessage";
+import Pager from "./components/Pager";
 
 function Greeting() {
     var cTime = new Date().toTimeString()
@@ -82,7 +85,7 @@ const items = [
 const itemList = ReactDOM.createRoot(document.getElementById("itemList"));
 itemList.render(
     <React.StrictMode>
-        <ExpenseEntryItemList items={items} />
+        <ExpenseEntryItemList items={items}/>
     </React.StrictMode>
 );
 
@@ -93,5 +96,39 @@ event.render(
             <MessageWithEvent name="React" />
             <MessageWithEvent name="React developer" />
         </div>
+    </React.StrictMode>
+);
+
+const ItemListFn = ReactDOM.createRoot(document.getElementById("ItemListFn"));
+ItemListFn.render(
+    <React.StrictMode>
+        <ExpenseEntryItemListFn  items={items} />
+    </React.StrictMode>
+);
+
+
+const Containment = ReactDOM.createRoot(document.getElementById("Containment"));
+Containment.render(
+    <React.StrictMode>
+        <RichTextMessage>
+            <h1>Containment is really a cool feature.</h1>
+        </RichTextMessage>
+    </React.StrictMode>
+);
+
+const pageCount = 3;
+const itemListPage = ReactDOM.createRoot(document.getElementById("itemListPage"));
+itemListPage.render(
+    <React.StrictMode>
+        <Pager
+            items={items}
+            pageCount={pageCount}
+            render={
+                pagerState => (<div>
+                    <ExpenseEntryItemList items={pagerState.items}
+                                          onDelete={pagerState.deleteHandler} />
+                </div>)
+            }
+        />
     </React.StrictMode>
 );

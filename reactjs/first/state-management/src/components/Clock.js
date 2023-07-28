@@ -6,7 +6,14 @@ class Clock extends React.Component {
         this.state = {
             date: new Date()
         }
-        setInterval( () => this.setTime(), 1000);
+        //setInterval( () => this.setTime(), 1000);
+    }
+    componentDidMount() {
+        this.setTimeRef = setInterval(() => this.setTime(), 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.setTimeRef)
     }
 
     setTime() {

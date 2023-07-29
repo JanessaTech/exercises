@@ -96,3 +96,5 @@ class ExpenseEntryItemList extends React.Component {
         );
     }
 }
+
+export default ExpenseEntryItemList;

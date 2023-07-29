@@ -1,0 +1,10 @@
+function SquareFn(props) {
+    return (
+        <button className="square" onClick={props.onClick}>
+            {props.value}
+        </button>
+    );
+}
+
+export default  SquareFn
+

@@ -46,7 +46,7 @@ class Account extends React.Component {
                     <p/>
                     <label>User Name: </label> <input name="name" value={this.state.name} readOnly={true}/>
                     <p/>
-                    <input name="password" value={this.state.password} type={"password"} onChange={this.handleChange}/>
+                    <label>Password: </label> <input name="password" value={this.state.password} type={"password"} onChange={this.handleChange}/>
                     <p/>
                     <label>Age: </label><input name="age" value={this.state.age} onChange={this.handleChange}/>
                     <p/>

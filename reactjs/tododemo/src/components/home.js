@@ -22,7 +22,11 @@ class Home extends React.Component {
     }
 
     handleAccount = (event) => {
-        this.setState({isLoadAcc: true})
+        const user = localStorage.getItem('user')
+        this.setState({
+            isLoadAcc: true,
+            user: JSON.parse(user)
+        })
     }
 
     handleTodo = (event) => {
@@ -30,7 +34,6 @@ class Home extends React.Component {
     }
 
     handleLogout = (event) => {
-        localStorage.removeItem('user')
         this.setState({
             isAuth : false,
             user: null

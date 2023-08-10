@@ -1,0 +1,9 @@
+#board .row .square { float: left; height: 100px; width: 100px; border: 3px solid #F96; }
+#bts { width: 324px; margin-right: auto; margin-left: auto; margin-top: 10px; height: 25px; }
+#board .row { height: 106px; width: 318px; }
+#board { height: 318px; width: 318px; border: 3px solid #F96; margin-right: auto; margin-left: auto; }
+#info { padding: 15px 20px 10px; height: 30px; width: 284px; margin-right: auto; margin-left: auto; font-size: 18px; font-weight: bolder; vertical-align: middle; text-align: center; }
+#steps { padding: 0px; height: 300px; width: 324px; margin-right: auto; margin-left: auto; }
+#steps ul { margin-top: 5px; }
+#gametitle { background: #F39; height: 100px; width: 324px; margin-right: auto; margin-left: auto; font-size: 50px; font-weight: bolder; color: #FFF; text-align: center; padding-top: 30px; }
+#bts button { float: right; width: 100px; margin-left: 5px; }

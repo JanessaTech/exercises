@@ -16,6 +16,3 @@ const newConfig = {
 
 const mergedConfig = _.merge(defaultConfig, newConfig)
 console.log(mergedConfig)
-
-
-

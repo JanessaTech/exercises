@@ -1,7 +1,5 @@
-# This is the template using express.js
+# Install dependencies
+ - npm install --save express
+ - npm install --save lodash
 
-## Install dependencies
-
-## Start app
-
-## Operations
+# Start app

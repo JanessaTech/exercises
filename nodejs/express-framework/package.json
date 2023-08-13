@@ -1,0 +1,15 @@
+{
+  "name": "express-framework",
+  "version": "1.0.0",
+  "description": "This is the template framework using express for the purpose of deliverying features in a fast way. This framework should be maintained and updated or refactored if necessarily on regular basis to make sure this framework grows more robust and takes best practices from outside. It is a long term commitment.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "JanessaTech",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "lodash": "^4.17.21"
+  }
+}

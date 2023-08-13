@@ -1,3 +1,11 @@
+# About the codes
+This repository is about the basic usage on how use express to build a small restful web server
+It acts as a quick starter for the one who is not familiar with expressjs
+The main features used in the codes:
+ - Router
+ - restful
+ - middleware
+
 # Install dependencies
 -  npm install --save express
 -  npm i --save lodash

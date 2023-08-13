@@ -1,0 +1,11 @@
+{
+  "name": "algrithm",
+  "version": "1.0.0",
+  "description": "This repository contains all implementation for the algrithms discussed in https://www.youtube.com/playlist?list=PLRdD1c6QbAqJn0606RlOR6T3yUqFWKwmX",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Janessa",
+  "license": "ISC"
+}

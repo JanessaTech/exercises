@@ -1,4 +1,5 @@
 
+console.log('Initialized serverConfig')
 const serverConfig = {
     port : 3000
 }

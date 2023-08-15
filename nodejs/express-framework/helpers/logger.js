@@ -1,7 +1,8 @@
 const winston = require("winston");
 const {format} = require("winston");
+const logLevel = getLogLevel(process.env.NODE_ENV)
 const logger = winston.createLogger({
-    level: "info",
+    level: logLevel,  // log levels are : error , warn, info, verbose, debug, silly. If we set te level to be info, logs which are error/warn/info will be printed out
     format: winston.format.combine(
         format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
         format.printf(
@@ -13,4 +14,13 @@ const logger = winston.createLogger({
         new winston.transports.File({ filename: "logs/app.log" }),
     ],
 });
+
+function getLogLevel(env) {
+    switch (env) {
+        case 'production' : return 'error'
+        case 'dev' : return 'info'
+        case 'test' : return 'debug'
+        default: return 'info'
+    }
+}
 module.exports = logger

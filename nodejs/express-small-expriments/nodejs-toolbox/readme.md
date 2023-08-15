@@ -3,7 +3,8 @@
  It works as a tool box I could use directly in future
 # Install dependence
  -  npm install --save express
- -  npm i --save lodash
+ -  npm install --save lodash
+ -  npm install --save prompt-sync
 
 # Run codes
 
@@ -15,4 +16,17 @@
 ```
  node .\config\config.js 
 ```
-3. ddd
+3. How to use AbortController to abort some asynchronous processes
+```
+node .\abortController.js
+```
+4. How to input/out message from console
+```
+node .\input-output.js
+```
+5. Some tips and tricks which includes the following features (under high-freq-usage-in-javascript)
+  - How to use promise
+  - How to yse async and await
+  - how to use try-catch-finally
+  - How to merge array, truncate array, shuffle array, remove duplicated elements in array etc. See tip-1.js
+6. ddd

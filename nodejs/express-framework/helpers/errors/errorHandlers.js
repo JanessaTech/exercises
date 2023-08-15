@@ -1,7 +1,6 @@
 const errorClass = require('./ErrorClasses')
 const response = require('../reponseHandler')
 module.exports = (app) => {
-    console.log('config exception handlers')
     function handleUserNotfoundError() {
         return (error, req, res, next) => {
             if (error instanceof errorClass.UserError) {

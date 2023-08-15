@@ -7,7 +7,7 @@
 # Start app
   - On windows:  
 ```
- npm run start_windows
+ npm run start_win_dev
 ```
 
   - On linux: 

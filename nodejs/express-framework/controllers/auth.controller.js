@@ -5,7 +5,6 @@ const logger = require('../helpers/logger')
 class AuthController {
     async login(req, res, next) {
         logger.info('in login method ...')
-        logger.info(`request body ${req.body}`)
         try {
             let payload = await authService.login(req.body)
             console.log(payload)

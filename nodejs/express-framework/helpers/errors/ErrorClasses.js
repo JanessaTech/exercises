@@ -4,6 +4,13 @@ class UserError extends Error {
         this.code = type.code
     }
 }
+class InvalidRequest extends Error {
+    constructor(type, errors) {
+        super(type.message)
+        this.code = type.code
+        this.errors = errors
+    }
+}
 
 class DefaultError extends Error {
     constructor(type) {
@@ -14,5 +21,6 @@ class DefaultError extends Error {
 
 module.exports = {
     UserError : UserError,
-    DefaultError : DefaultError
+    DefaultError : DefaultError,
+    InvalidRequest : InvalidRequest
 }

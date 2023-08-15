@@ -8,11 +8,12 @@ module.exports = class Response {
         })
     }
 
-    static error(res, message, code = 500) {
+    static error(res, message, code = 500,  errors = undefined) {
         res.status(code).json({
             success: false,
             code: code,
             message: message,
+            errors: errors
         })
     }
 }

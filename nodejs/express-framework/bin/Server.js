@@ -17,7 +17,19 @@ const onListening = () => {
     logger.info('Server is listening on ' + bind)
 }
 
-logger.info('Start server...')
-server.listen(port);
+
 logger.info('Register listening event handler')
 server.on('listening', onListening)
+
+const start = (port) => {
+    try {
+        logger.info('Start server...')
+        server.listen(port);
+    } catch (e) {
+        logger.error(`Failed to start server due to : ${e.message}`)
+        process.exit()
+    }
+}
+
+start(port)
+

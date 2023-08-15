@@ -11,6 +11,16 @@ module.exports = (app) => {
         }
     }
 
+    function handleInvalidRequest() {
+        return (error, req, res, next) => {
+            if (error instanceof errorClass.InvalidRequest) {
+                response.error(res, error.message, error.code, error.errors)
+            } else {
+                return next(error)
+            }
+        }
+    }
+
     function handleDefaultError() {
         return (error, req, res, next) => {
             response.error(res, error.message, 500)
@@ -18,5 +28,6 @@ module.exports = (app) => {
     }
 
     app.use(handleUserNotfoundError())
+    app.use(handleInvalidRequest())
     app.use(handleDefaultError())
 }

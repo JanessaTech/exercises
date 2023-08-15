@@ -3,6 +3,7 @@
  - npm install --save lodash
  - npm install --save cookie-parser
  - npm install --save winston
+ - npm install --save yup
 
 # Start app
   - On windows:  

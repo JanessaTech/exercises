@@ -1,8 +1,3 @@
-const serverConfig = require('./serverConfig')
-const templateConfig = require('./templateConfig')
-
-console.log('Initialized all configuration')
-module.exports = {
-    serverConfig : serverConfig,
-    templateConfig : templateConfig
-}
+var env = process.env.NODE_ENV || 'development',
+    cfg = require('./config.' + env)
+module.exports = cfg

@@ -1,9 +1,13 @@
 {
   "name": "express-framework",
   "version": "1.0.0",
-  "description": "This is the template framework using express for the purpose of deliverying features in a fast way. This framework should be maintained and updated or refactored if necessarily on regular basis to make sure this framework grows more robust and takes best practices from outside. It is a long term commitment.",
+  "description": "This is the template framework using express for the purpose of delivering features in a fast way. This framework should be maintained and updated or refactored if necessarily on regular basis to make sure this framework grows more robust and takes best practices from outside. It is a long term commitment.",
   "main": "index.js",
   "scripts": {
+    "start": "node .\\bin\\Server.js",
+    "start_win_pro": "set NODE_ENV=production&&node .\\bin\\Server.js",
+    "start_win_dev": "set NODE_ENV=dev&&node .\\bin\\Server.js",
+    "start_win_test": "set NODE_ENV=test&&node .\\bin\\Server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "JanessaTech",
@@ -11,7 +15,6 @@
   "dependencies": {
     "cookie-parser": "^1.4.6",
     "express": "^4.18.2",
-    "http-errors": "^2.0.0",
-    "lodash": "^4.17.21"
+    "winston": "^3.10.0"
   }
 }

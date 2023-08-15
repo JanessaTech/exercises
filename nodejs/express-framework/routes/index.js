@@ -1,22 +1,8 @@
-const errorBuilder = require('../helpers/ErrorBuilder')
-const exceptions = require('../helpers/Exceptions')
+const authRouter = require('./auth.route')
+const userRouter = require('./user.route')
 const routes = app => {
-    app.get('/:id', function (req, res, next) {
-        const id = parseInt(req.params.id)
-        if (id === 1) {
-            res.status(200).json({
-                success: true,
-                code: 200,
-                message: 'ok'
-            })
-        } else if (id === 2){
-            const err = errorBuilder(exceptions.USER_NOT_FOUND)
-            next(err)
-        } else {
-            const err = errorBuilder(exceptions.DEFAULT_ERROR)
-            next(err)
-        }
-
-    })
+    const apiPrefix = '/apis/v1';
+    app.use(apiPrefix + '/auth', authRouter)
+    app.use(apiPrefix + '/users', userRouter)
 }
 module.exports = routes

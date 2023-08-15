@@ -1,19 +1,21 @@
-// dependencies
 const http = require('http');
 const app = require('../app')
 const config = require('../config')
+const logger = require('../helpers/logger')
 
-let port = config.serverConfig.port
+let port = config.port
+logger.info(`Server Port : ${port}`, port)
+logger.info(`Environment type: ${config.env}`)
 // Create a web server
 const server = http.createServer(app)
-console.log('Server is created')
+logger.info('Server is created')
 const onListening = () => {
     const address = server.address()
     const bind = typeof address === 'string' ? `pipe ${address}` : `port: ${address.port}`;
-    console.log('Server is listening on ' + bind)
+    logger.info('Server is listening on ' + bind)
 }
 
-console.log('Start server...')
+logger.info('Start server...')
 server.listen(port);
-console.log('Register listening event handler')
+logger.info('Register listening event handler')
 server.on('listening', onListening)

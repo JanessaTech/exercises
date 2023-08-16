@@ -1,4 +1,5 @@
 
+const messages = require('./message_en')
 function bing_console_log() {
     const logger = {}
     const log = console.log.bind(logger)
@@ -101,6 +102,15 @@ function removeDuplicatedNumber() {
 
 }
 
+function msg_template(key, ...params) {
+    let message = messages.sub
+    for(let i = 0; i < params.length; i++) {
+        const ph = `{${i}}`
+        message = message.replace(ph, params[i])
+    }
+    console.log(message); //
+}
+
 //bing_console_log()
 //merge_two_array()
 //merge_two_object()
@@ -109,4 +119,5 @@ function removeDuplicatedNumber() {
 //verify_isNum()
 //verifyStr()
 //verifyIsNull()
-removeDuplicatedNumber()
+//removeDuplicatedNumber()
+msg_template('sub', 'hello', 'janessa')

@@ -1,38 +1,28 @@
 const codes = require("../helpers/errors/errorCodes");
 const {userError, defaultError} = require('../helpers/errors/errorClasses')
-const logger = require('../helpers/logger')
-const {object} = require("yup");
-class AuthService {
+class UserService {
     userMap = new Map()
     cnt = 0
-    async login(param) {
-        logger.info('AuthService.login...')
-        let res = Array.from(this.userMap.values()).filter(value => value.name === param.name && value.password === param.password)
-        if (res.length !== 0) {
-            return res[0]
-        } else {
-            throw new userError(codes.USER_NOT_FOUND)
-        }
-    }
-    async register(param) {
-        logger.info('AuthService.register...')
-        param.id = this.cnt.toString()
-        this.userMap.set(this.cnt.toString(), param)
-        this.cnt++
-        return param
-    }
-
     async getAllUsers() {
         return Object.fromEntries(this.userMap)
     }
 
     async getUserById(id) {
         if (this.userMap.has(id)) {
-            return this.userMap.get(id)
+            let value = this.userMap.get(id)
+            value.id = id
+            return value
         } else {
             throw new userError(codes.USER_NOT_FOUND)
         }
     }
+
+    async createUser(param) {
+        this.userMap.set(this.cnt++, param)
+        param.id = this.cnt
+        return param
+    }
+
     async updateUser(param) {
         if (this.userMap.has(param.id)) {
             this.userMap.set(param.id, param)
@@ -51,5 +41,5 @@ class AuthService {
     }
 }
 
-const authService = new AuthService()
-module.exports = authService
+const userService = new UserService()
+module.exports = userService

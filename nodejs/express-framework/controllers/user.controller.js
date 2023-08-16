@@ -1,47 +1,56 @@
+const userService = require('../services/user.service')
+const logger = require('../helpers/logger')
+const {sendSuccess} = require('../helpers/reponseHandler')
+const messageHelper = require('../helpers/internationaliztion/messageHelper')
 class UserController {
-    getAllUsers(req, res, next) {
-        console.log('getAllUsers')
-        res.status(200).json({
-            success: true,
-            code: 200,
-            message: 'ok'
-        })
+    async getAllUsers(req, res, next) {
+        logger.info('getAllUsers')
+        try {
+            let payload = await userService.getAllUsers()
+            sendSuccess(res, messageHelper.getMessage('getAllUser'), payload)
+        } catch (e) {
+            next(e)
+        }
     }
 
-    getUserById(req, res, next) {
-        console.log('getUserById:' + req.params.id)
-        res.status(200).json({
-            success: true,
-            code: 200,
-            message: 'ok'
-        })
+    async getUserById(req, res, next) {
+        logger.info('getUserById:' + req.params.id)
+        try {
+            let payload = await userService.getUserById(req.params.id)
+            sendSuccess(res, messageHelper.getMessage('getUserById', req.params.id), payload)
+        } catch (e) {
+            next(e)
+        }
     }
 
-    createUser(req, res, next) {
-        console.log('createUser')
-        res.status(200).json({
-            success: true,
-            code: 200,
-            message: 'ok'
-        })
+    async createUser(req, res, next) {
+        logger.info('createUser')
+        try {
+            let payload = await userService.createUser(req.body)
+            sendSuccess(res, messageHelper.getMessage('createUser', payload.name))
+        } catch (e) {
+            next(e)
+        }
     }
 
-    updateUser(req, res, next) {
-        console.log('updateUser')
-        res.status(200).json({
-            success: true,
-            code: 200,
-            message: 'ok'
-        })
+    async updateUser(req, res, next) {
+        logger.info('updateUser')
+        try {
+            let payload = await userService.updateUser(req.body)
+            sendSuccess(res, messageHelper.getMessage('updateUser', payload.name))
+        } catch (e) {
+            next(e)
+        }
     }
 
-    deleteUserById(req, res, next) {
-        console.log('deleteUserById:' + req.params.id)
-        res.status(200).json({
-            success: true,
-            code: 200,
-            message: 'ok'
-        })
+    async deleteUserById(req, res, next) {
+        logger.info('deleteUserById:' + req.params.id)
+        try {
+            await userService.deleteUserById(req.params.id)
+
+        } catch (e) {
+             next(e)
+        }
     }
 }
 

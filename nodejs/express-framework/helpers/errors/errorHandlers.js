@@ -1,10 +1,10 @@
 const errorClass = require('./errorClasses')
-const response = require('../reponseHandler')
+const {sendError} = require('../reponseHandler')
 module.exports = (app) => {
     function handleUserNotfoundError() {
         return (error, req, res, next) => {
             if (error instanceof errorClass.userError) {
-                response.error(res, error.message, error.code)
+                sendError(res, error.message, error.code)
             } else {
                 return next(error)
             }
@@ -14,7 +14,7 @@ module.exports = (app) => {
     function handleInvalidRequest() {
         return (error, req, res, next) => {
             if (error instanceof errorClass.invalidRequestError) {
-                response.error(res, error.message, error.code, error.errors)
+                sendError(res, error.message, error.code, error.errors)
             } else {
                 return next(error)
             }
@@ -23,7 +23,7 @@ module.exports = (app) => {
 
     function handleDefaultError() {
         return (error, req, res, next) => {
-            response.error(res, error.message, 500)
+            sendError(res, error.message, 500)
         }
     }
 

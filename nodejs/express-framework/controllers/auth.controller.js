@@ -1,5 +1,5 @@
 const authService = require('../services/auth.service')
-const Response = require('../helpers/reponseHandler')
+const {sendSuccess} = require('../helpers/reponseHandler')
 const logger = require('../helpers/logger')
 const messageHelper = require('../helpers/internationaliztion/messageHelper')
 
@@ -10,7 +10,7 @@ class AuthController {
             let payload = await authService.login(req.body)
             logger.info(JSON.stringify(payload))  // to-do: check where to configure so that winston could print json directly
             let message = messageHelper.getMessage('login_success', payload.name)
-            Response.success(res, message, payload)
+            sendSuccess(res, message, payload)
         } catch (e){
             next(e)
         }

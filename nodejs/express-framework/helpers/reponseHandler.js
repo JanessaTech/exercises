@@ -1,5 +1,5 @@
 module.exports = class Response {
-    static success(res, message, data = undefined, code = 200) {
+    static sendSuccess(res, message, data = undefined, code = 200) {
         res.status(code).json({
             success: true,
             code: code,
@@ -8,7 +8,7 @@ module.exports = class Response {
         })
     }
 
-    static error(res, message, code = 500,  errors = undefined) {
+    static sendError(res, message, code = 500, errors = undefined) {
         res.status(code).json({
             success: false,
             code: code,

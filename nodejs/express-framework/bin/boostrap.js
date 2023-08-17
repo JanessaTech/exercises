@@ -1,10 +1,12 @@
-const http = require('http');
+const http = require('http')
+require('dotenv').config()
 const app = require('../app')
 const config = require('../config')
 const logger = require('../helpers/logger')
 const banner = require('../helpers/banner')
 
 let port = config.port
+//logger.info(process.env.API_SECRET)
 logger.info(banner)
 logger.info(`Server Port : ${port}`, port)
 logger.info(`Environment type: ${config.env}`)

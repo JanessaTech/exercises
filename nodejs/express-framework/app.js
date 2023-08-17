@@ -2,14 +2,13 @@ const express = require('express')
 const app = express()
 const cookieParser = require('cookie-parser')
 const initRoutes = require('./routes')
-const initExceptionHandlers = require('./helpers/errors/errorHandlers')
-
+const initGlobalErrorHandlers = require('./helpers/errors/globleErrorHandlers')
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 
 initRoutes(app)
-initExceptionHandlers(app)
+initGlobalErrorHandlers(app)
 
 module.exports = app
 

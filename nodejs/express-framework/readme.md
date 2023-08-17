@@ -4,6 +4,9 @@
  - npm install --save cookie-parser
  - npm install --save winston
  - npm install --save yup
+ - npm install --save dotenv 
+ - npm install --save bcrypt
+ - npm install --save jsonwebtoken
 
 # Start app
   - On windows:  

@@ -1,14 +1,11 @@
 module.exports = {
-    USER_NOT_FOUND : {
-        code : 404,
-        message: 'user not find error'
-    },
-    INVALID_REQUEST : {
-        code : 400,
-        message: 'invalid request'
-    },
-    DEFAULT_ERROR : {
-        code : 500,
-        message: 'internal server error'
-    }
+    //account
+    account_not_found : {code : 404},
+
+    // global
+    UnSupportedAuthError : {code : 401},
+    ValidationError: {code : 400},
+    JsonWebTokenError: {code : 400},
+    TokenExpiredError: {code : 400},
+    Error: {code: 500}
 }

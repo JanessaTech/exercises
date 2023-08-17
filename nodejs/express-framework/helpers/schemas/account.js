@@ -1,4 +1,4 @@
-const yup = require("yup")
+const yup = require('yup')
 
 const schemas = {
     loginSchema : yup.object({

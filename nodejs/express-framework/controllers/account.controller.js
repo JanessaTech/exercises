@@ -27,6 +27,7 @@ class AccountController {
             const acc = {
                 name: req.body.name,
                 password : bcrypt.hashSync(req.body.password,8),
+                roles: req.body.roles,
                 email: req.body.email
             }
             let payload = await accountService.register(acc)

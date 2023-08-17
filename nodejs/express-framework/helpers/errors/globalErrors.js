@@ -5,6 +5,11 @@ class UnSupportedAuthError extends BaseError {
         super(props);
     }
 }
+class UnauthorizedError extends BaseError {
+    constructor(props) {
+        super(props);
+    }
+}
 
 /**
  * This is an example of how to add new global custom error class
@@ -17,5 +22,6 @@ class GlobalDemoError extends BaseError {
 
 module.exports = {
     UnSupportedAuthError,
+    UnauthorizedError,
     GlobalDemoError
 }

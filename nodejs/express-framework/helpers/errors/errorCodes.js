@@ -4,6 +4,7 @@ module.exports = {
 
     // global
     UnSupportedAuthError : {code : 401},
+    UnauthorizedError : {code : 401},
     ValidationError: {code : 400},
     JsonWebTokenError: {code : 400},
     TokenExpiredError: {code : 400},

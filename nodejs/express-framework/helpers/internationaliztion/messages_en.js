@@ -12,6 +12,7 @@ module.exports = {
 
     // global
     UnSupportedAuthError : 'We only support Bearer token in Authorization',
+    UnauthorizedError : 'You do not have enough permission(s) to visit {0}',
     ValidationError: 'Request includes invalid parameter(s)',
     JsonWebTokenError: 'Invalid token',
     TokenExpiredError: 'Token expired',

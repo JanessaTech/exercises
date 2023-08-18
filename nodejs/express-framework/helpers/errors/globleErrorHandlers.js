@@ -78,6 +78,6 @@ module.exports = (app) => {
     app.use(handleTokenExpiredError())
     app.use(handleUnSupportedAuth())
     app.use(handleUnauthorizedError())
-    app.use(handleGlobalDemoError())
+    //app.use(handleGlobalDemoError())
     app.use(handleDefaultError())
 }

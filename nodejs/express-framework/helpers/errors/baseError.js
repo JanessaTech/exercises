@@ -23,6 +23,6 @@ module.exports = class BaseError extends Error {
         }
         this.key = props && props.key ? props.key : this.constructor.name
         this.errors = props.errors
-        this.params = props.params ? props.params : []
+        this.params = props.params || []
     }
 }

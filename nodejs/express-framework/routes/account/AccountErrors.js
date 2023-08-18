@@ -14,6 +14,6 @@ class AccountDemoError extends BaseError {
     }
 }
 module.exports = {
-    AccountError,
+    AccountError ,
     AccountDemoError
 }

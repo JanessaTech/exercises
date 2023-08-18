@@ -19,7 +19,7 @@ module.exports = (router) => {
      * Here is an example of how to deal with AccountDemoError locally
      * @returns {(function(*, *, *, *): void)|*}
      */
-    function handleAccountDemoError() {
+    /*function handleAccountDemoError() {
         return (error, req, res, next) => {
             if (error instanceof AccountErrors.AccountDemoError) {
                 logger.debug('error handing AccountDemoError')
@@ -29,7 +29,7 @@ module.exports = (router) => {
                 next(error)
             }
         }
-    }
+    }*/
 
     router.use(handleAccountError())
    // router.use(handleAccountDemoError())

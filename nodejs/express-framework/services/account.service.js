@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const logger = require('../helpers/logger')
-const {AccountError, AccountDemoError} = require("../routes/account/AccountErrors");
+const {AccountError} = require("../routes/account/AccountErrors");
 class AccountService {
     accountMap = new Map()
     cnt = 0

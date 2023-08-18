@@ -4,7 +4,7 @@
   "description": "This is the template framework using express for the purpose of delivering features in a fast way. This framework should be maintained and updated or refactored if necessarily on regular basis to make sure this framework grows more robust and takes best practices from outside. It is a long term commitment.",
   "main": "index.js",
   "scripts": {
-    "start": "node .\\bin\\boostrap.js",
+    "start": "set NODE_ENV=dev&&node .\\bin\\boostrap.js",
     "start_win_pro": "set NODE_ENV=production&&node .\\bin\\boostrap.js",
     "start_win_dev": "set NODE_ENV=dev&&node .\\bin\\boostrap.js",
     "start_win_test": "set NODE_ENV=test&&node .\\bin\\boostrap.js",

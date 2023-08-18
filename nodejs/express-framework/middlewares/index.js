@@ -55,8 +55,6 @@ const middlewares = {
                 let error = new globalErrors.UnauthorizedError({params: [req.originalUrl]})
                 next(error)
             }
-
-            next()
         }
     }
 }

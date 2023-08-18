@@ -6,7 +6,7 @@ class AccountError extends BaseError {
 }
 
 /**
- * Here is an example of how to add new local custom error under account
+ * Here is an example of how to add a new local custom error under account
  */
 class AccountDemoError extends BaseError {
     constructor(props) {

@@ -1,8 +1,9 @@
 const logger = require('../helpers/logger')
 const jwt = require("jsonwebtoken")
 const globalErrors = require('../helpers/errors/globalErrors')
-const urls = require('../config/urls')
 const urlHelper = require('../helpers/urlHelper')
+const accountService = require('../services/account.service')
+const {json} = require("express");
 
 const middlewares = {
     validate : (schema) => {
@@ -18,19 +19,31 @@ const middlewares = {
     authenticate :() => {
         return (req, res, next) => {
             logger.debug('authentication...')
-            if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') { // Bearer
-                jwt.verify(req.headers.authorization.split(' ')[1], process.env.API_SECRET, function (err, decode) {
+            if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {// Bearer
+                let token = req.headers.authorization.split(' ')[1]
+                jwt.verify(token, process.env.API_SECRET, function (err, decode) {
                     if (err) {
                         next(err)
                     } else {
                         let user = {
+                            id : decode.id,
                             name : decode.name,
                             roles : decode.roles,
                             email: decode.email
                         }
-                        res.locals.authenticated = true
                         res.locals.user = user
-                        next()
+                        try {
+                            let account = accountService.getAccountByIdInSyn(user.id)
+                            if (account.token !== token) {
+                                const error = new globalErrors.UnmatchedTokenError({params: [user.name]})
+                                next(error)
+                            } else {
+                                res.locals.authenticated = true
+                                next()
+                            }
+                        } catch (error) {
+                            next(error)
+                        }
                     }
                 })
             } else {

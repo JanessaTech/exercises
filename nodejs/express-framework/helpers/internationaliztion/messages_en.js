@@ -16,5 +16,6 @@ module.exports = {
     ValidationError: 'Request includes invalid parameter(s)',
     JsonWebTokenError: 'Invalid token',
     TokenExpiredError: 'Token expired',
+    UnmatchedTokenError: 'Token for user {0} is not matched',
     Error: 'Internal server error'
 }

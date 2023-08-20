@@ -8,5 +8,6 @@ module.exports = {
     ValidationError: {code : 400},
     JsonWebTokenError: {code : 400},
     TokenExpiredError: {code : 400},
+    UnmatchedTokenError: {code : 400},
     Error: {code: 500}
 }

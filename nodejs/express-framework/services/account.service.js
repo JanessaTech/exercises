@@ -42,6 +42,14 @@ class AccountService {
             throw new AccountError({key: 'account_not_found', params:[id]})
         }
     }
+
+    getAccountByIdInSyn(id) {
+        if (this.accountMap.has(id)) {
+            return this.accountMap.get(id)
+        } else {
+            throw new AccountError({key: 'account_not_found', params:[id]})
+        }
+    }
     async updateAccount(param) {
         if (this.accountMap.has(param.id)) {
             this.accountMap.set(param.id, param)

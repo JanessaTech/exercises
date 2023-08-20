@@ -52,6 +52,16 @@ module.exports = (app) => {
         }
     }
 
+    function handleUnmatchedTokenError() {
+        return (error, req, res, next) => {
+            if (error instanceof globalErrors.UnmatchedTokenError) {
+                sendError(res, error)
+            } else {
+                return next(error)
+            }
+        }
+    }
+
     /**
      * This is an example how to handle GlobalDemoError
      * @returns
@@ -78,6 +88,7 @@ module.exports = (app) => {
     app.use(handleTokenExpiredError())
     app.use(handleUnSupportedAuth())
     app.use(handleUnauthorizedError())
+    app.use(handleUnmatchedTokenError())
     //app.use(handleGlobalDemoError())
     app.use(handleDefaultError())
 }

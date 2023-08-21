@@ -111,6 +111,76 @@ function msg_template(key, ...params) {
     console.log(message); //
 }
 
+function convert_str_to_int() {
+    const str = '10'
+    const res = parseInt(str, 10)
+    console.log('type =' + typeof res + "  value =" + res)
+}
+
+function  myErrorClassName() {
+    class BaseError extends  Error {
+        constructor(props) {
+            super();
+            if (props === undefined) {
+                props = {}
+            }
+            this.key = props && props.key ? props.key : this.constructor.name
+            this.errors = props.errors
+        }
+    }
+    class MyError extends BaseError {
+        constructor(props) {
+            super(props);
+        }
+    }
+    try {
+        //throw new MyError('USER_NOT_FOUND',['a', 'b'])
+        //throw new MyError({key : 'USER_NOT_FOUND', errors : 'a'})
+        //throw new MyError({errors : 'a'})
+        //throw new MyError({})
+        throw new MyError()
+    } catch (e) {
+        console.log(e.key)
+        console.log(e.errors)
+    }
+}
+
+function arrayContains() {
+    let a = [1, 2, 3]
+    let config = [1, 4, 5]
+    let exits = config.some(r => a.includes(r))
+    console.log(exits)
+}
+
+function regex() {
+    let str = '/apis/v11/accounts/1'
+    let regex = '^/apis/v[0-9]+/accounts.*'
+    let res = str.match(regex)
+    console.log(res)
+}
+
+function regex1() {
+
+    let urls = {
+        '^/apis/v[0-9]+/accounts.*' : ['admin']
+    }
+    function getRoles(originalUrl) {
+        for(let prop in urls) {
+            let key = prop
+            let value = urls[key]
+            let matched = originalUrl.match(key)
+            if (matched) return value
+        }
+        return null
+    }
+
+
+    let originalUrl =  '/apis/v1/accounts/'
+    let roles = getRoles(originalUrl)
+    console.log(roles.join(' '))
+}
+
+
 //bing_console_log()
 //merge_two_array()
 //merge_two_object()
@@ -120,4 +190,10 @@ function msg_template(key, ...params) {
 //verifyStr()
 //verifyIsNull()
 //removeDuplicatedNumber()
-msg_template('sub', 'hello', 'janessa')
+//msg_template('sub', ...['hello', 'janessa'])
+//msg_template('sub', 'janessa', 'hello')
+//convert_str_to_int()
+//myErrorClassName()
+//arrayContains()
+//regex()
+regex1()

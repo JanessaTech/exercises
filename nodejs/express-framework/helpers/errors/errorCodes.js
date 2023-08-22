@@ -2,6 +2,13 @@ module.exports = {
     //account
     account_not_found : {code : 404},
 
+    user_login_wrong_password: {code:400},
+    user_not_found:{code:404},
+    user_register_duplicated_name: {code: 404},
+
+    //todo
+    todo_not_found: {code:400},
+
     // global
     UnSupportedAuthError : {code : 401},
     UnauthorizedError : {code : 401},

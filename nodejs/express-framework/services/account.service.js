@@ -4,31 +4,30 @@ const {AccountError} = require("../routes/account/AccountErrors");
 class AccountService {
     accountMap = new Map()
     cnt = 0
-    async login(param) {
+    async login(acc) {
         logger.info('AccountService.login...')
-        let users = this.findAccount(param.name)
+        let users = this.findAccount(acc.name)
         if (users.length !== 0) {
-            if (bcrypt.compareSync(param.password,users[0].password)) {
+            if (bcrypt.compareSync(acc.password,users[0].password)) {
                 return users[0]
             } else {
                 throw new AccountError({key: 'account_login_wrong_password'})
 
             }
         } else {
-            throw new AccountError({key: 'account_not_found', params:[param.name]})
+            throw new AccountError({key: 'account_not_found', params:[acc.name]})
         }
     }
 
     findAccount(name) {
         return Array.from(this.accountMap.values()).filter(value => value.name === name)
     }
-    async register(param) {
+    async register(acc) {
         logger.info('AccountService.register...')
-        param.id = this.cnt.toString()
-        this.accountMap.set(this.cnt.toString(), param)
+        acc.id = this.cnt.toString()
+        this.accountMap.set(this.cnt.toString(), acc)
         this.cnt++
-        return param
-
+        return acc
     }
 
     async getAllAccounts() {
@@ -43,19 +42,19 @@ class AccountService {
         }
     }
 
-    getAccountByIdInSyn(id) {
+    getUserByIdInSyn(id) {
         if (this.accountMap.has(id)) {
             return this.accountMap.get(id)
         } else {
             throw new AccountError({key: 'account_not_found', params:[id]})
         }
     }
-    async updateAccount(param) {
-        if (this.accountMap.has(param.id)) {
-            this.accountMap.set(param.id, param)
-            return param
+    async updateAccount(acc) {
+        if (this.accountMap.has(acc.id)) {
+            this.accountMap.set(acc.id, acc)
+            return acc
         } else {
-            throw new AccountError({key: 'account_not_found', params:[param.name]})
+            throw new AccountError({key: 'account_not_found', params:[acc.name]})
         }
     }
 

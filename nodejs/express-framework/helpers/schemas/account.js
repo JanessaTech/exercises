@@ -1,20 +1,20 @@
 const yup = require('yup')
 
 const schemas = {
-    loginSchema : yup.object({
+    login : yup.object({
         body: yup.object({
             name : yup.string().min(5).max(15).required(),
             password: yup.string().min(5).max(10).required()
         })
     }),
-    registerSchema : yup.object({
+    register : yup.object({
         body: yup.object({
             name : yup.string().min(5).max(15).required(),
             password: yup.string().min(5).max(10).required(),
             email: yup.string().email().optional()
         })
     }),
-    updateUserSchema : yup.object({
+    updateAccount : yup.object({
         body: yup.object({
             id : yup.number().required(),
             name : yup.string().min(5).max(15).required(),
@@ -22,12 +22,12 @@ const schemas = {
             email: yup.string().email().optional()
         })
     }),
-    deleteUserSchema :yup.object({
+    deleteAccount :yup.object({
         params: yup.object({
             id : yup.number().required()
         })
     }),
-    getByUserIdSchema :yup.object({
+    getByAccountId :yup.object({
         params: yup.object({
             id : yup.number().required()
         })

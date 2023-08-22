@@ -9,7 +9,7 @@ module.exports = (router) => {
                 logger.debug('error handing AccountError')
                 sendError(res, error)
             } else {
-                logger.debug('forward error handling from AccountError ')
+                logger.debug('forward error handling from handleAccountError ')
                 next(error)
             }
         }
@@ -25,7 +25,7 @@ module.exports = (router) => {
                 logger.debug('error handing AccountDemoError')
                 sendError(res, error)
             } else {
-                logger.debug('forward error handling from AccountDemoError ')
+                logger.debug('forward error handling from handleAccountDemoError ')
                 next(error)
             }
         }

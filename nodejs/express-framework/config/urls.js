@@ -24,4 +24,6 @@
  */
 module.exports = {
  '^/apis/v[0-9]+/accounts.*' : ['admin'], //  /apis/v1/accounts/*
+ '^/apis/v[0-9]+/users.*' : ['user'], //  /apis/v1/users/*
+ '^/apis/v[0-9]+/todos.*' : ['user'], //  /apis/v1/todos/*
 }

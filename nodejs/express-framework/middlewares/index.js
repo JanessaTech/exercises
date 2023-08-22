@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken")
 const globalErrors = require('../helpers/errors/globalErrors')
 const urlHelper = require('../helpers/urlHelper')
 const accountService = require('../services/account.service')
-const {json} = require("express");
 
 const middlewares = {
     validate : (schema) => {
@@ -16,7 +15,7 @@ const middlewares = {
             }
         }
     },
-    authenticate :() => {
+    authenticate :(userService) => {
         return (req, res, next) => {
             logger.debug('authentication...')
             if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {// Bearer
@@ -33,8 +32,8 @@ const middlewares = {
                         }
                         res.locals.user = user
                         try {
-                            let account = accountService.getAccountByIdInSyn(user.id)
-                            if (account.token !== token) {
+                            let u = userService.getUserByIdInSyn(user.id)
+                            if (u.token !== token) {
                                 const error = new globalErrors.UnmatchedTokenError({params: [user.name]})
                                 next(error)
                             } else {

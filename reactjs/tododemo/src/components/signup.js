@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Navigate} from "react-router-dom";
+import axios from 'axios';
 
 class Signup extends Component {
     constructor(props) {
@@ -9,7 +10,7 @@ class Signup extends Component {
             name : '',
             password: '',
             age: '',
-            addr: ''
+            email: ''
         }
         this.handleClick = this.handleClick.bind()
         this.handleChange = this.handleChange.bind()
@@ -17,15 +18,31 @@ class Signup extends Component {
 
     handleClick = (event) => {
         console.log('click signup button')
-        const data = {
-            id : 1,
+        const signup = {
             name : this.state.name,
             password : this.state.password,
             age: this.state.age,
-            addr : this.state.addr
+            roles: ["user"],
+            email : this.state.email
         }
-        console.log(data)
-        localStorage.setItem('user', JSON.stringify(data))
+        let options = {};
+        options = {
+            url: 'http://127.0.0.1:3100/apis/v1/users/register',
+            method: 'post',
+            data: signup
+        }
+        axios(options)
+            .then((response) => {
+                console.log('======ok=========')
+                console.log(response.data)
+            })
+            .catch((err) => {
+                console.log('=========error ============')
+                console.log(err.response.data)
+            })
+
+        console.log(signup)
+        localStorage.setItem('user', JSON.stringify(signup))
         this.setState({redirect : true})
     }
     handleChange = (event) => {
@@ -46,7 +63,7 @@ class Signup extends Component {
                     <p/>
                     <label>Age: </label> <input name={"age"} placeholder={"0"} onChange={this.handleChange}/>
                     <p/>
-                    <label>Address: </label><input name={"addr"} placeholder={"Please input address"} onChange={this.handleChange}/>
+                    <label>Email: </label><input name={"email"} placeholder={"Please input address"} onChange={this.handleChange}/>
                     <p/>
                     <button type={"button"} onClick={this.handleClick} disabled={this.state.name && this.state.password ? '' : 'disabled'}>Signup</button>
                 </form>

@@ -9,7 +9,7 @@ class Account extends React.Component {
             name : props.user.name,
             password : props.user.password,
             age : props.user.age,
-            addr : props.user.addr
+            email : props.user.email
         }
     }
 
@@ -50,7 +50,7 @@ class Account extends React.Component {
                     <p/>
                     <label>Age: </label><input name="age" value={this.state.age} onChange={this.handleChange}/>
                     <p/>
-                    <label>Address: </label><input name="addr" value={this.state.addr} onChange={this.handleChange}/>
+                    <label>Email: </label><input name="email" value={this.state.addr} onChange={this.handleChange}/>
                     <p/>
                     <button type="submit" disabled={this.state.name && this.state.password ? '' : 'disabled'}>Submit</button>
                 </form>

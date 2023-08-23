@@ -7,6 +7,7 @@
  - npm install --save dotenv 
  - npm install --save bcrypt
  - npm install --save jsonwebtoken
+ - npm install --save cors
 
 # Start app
   - On windows:  

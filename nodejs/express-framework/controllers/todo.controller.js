@@ -7,7 +7,7 @@ class TodoController {
     async getAllTodos(req, res, next) {
         logger.info('TodoController.getAllTodos')
         try {
-            let user = req.body.user
+            let user = parseInt(req.params.user)
             let payload = await todoService.getAllTodos(user)
             sendSuccess(res, messageHelper.getMessage('todo_getAll', user), payload)
         } catch (e) {
@@ -41,7 +41,7 @@ class TodoController {
     async deleteTodoById(req, res, next) {
         logger.info('TodoController.deleteUserById')
         try{
-            let user = req.body.user //user id
+            let user = parseInt(req.params.user) //user id
             await todoService.deleteTodoById(user, parseInt(req.params.id))
             sendSuccess(res, messageHelper.getMessage('todo_deleteById', req.params.id, user))
         } catch (e) {

@@ -6,10 +6,10 @@ const {todoSchema} = require('../../helpers/schemas')
 const {validate, authenticate, authorize} = require('../../middlewares')
 const userService = require('../../services/user.service')
 
-router.get('/', authenticate(userService), authorize(), validate(todoSchema.getAllTodos), controller.getAllTodos)
+router.get('/:user', authenticate(userService), authorize(), validate(todoSchema.getAllTodos), controller.getAllTodos)
 router.post('/', authenticate(userService), authorize(), validate(todoSchema.creatTodo), controller.creatTodo)
 router.put('/', authenticate(userService), authorize(), validate(todoSchema.updateTodo), controller.updateTodo)
-router.delete('/:id', authenticate(userService), authorize(), validate(todoSchema.deleteTodoById), controller.deleteTodoById)
+router.delete('/:user/:id', authenticate(userService), authorize(), validate(todoSchema.deleteTodoById), controller.deleteTodoById)
 
 initTodoErrorHandlers(router)
 

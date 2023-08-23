@@ -2,7 +2,7 @@ const yup = require('yup')
 
 const schemas = {
     getAllTodos: yup.object({
-        body: yup.object({
+        params: yup.object({
             user: yup.number().min(0).required()
         })
     }),
@@ -22,10 +22,8 @@ const schemas = {
         })
     }),
     deleteTodoById: yup.object({
-        body: yup.object({
-            user: yup.number().min(0).required()
-        }),
         params: yup.object({
+            user: yup.number().min(0).required(),
             id : yup.number().required()
         })
     })

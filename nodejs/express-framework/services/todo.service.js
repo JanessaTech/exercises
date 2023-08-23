@@ -9,7 +9,7 @@ class TodoService {
         if (this.todoMap.get(user)) {
             return Object.fromEntries(this.todoMap.get(user))
         }
-        return []
+        return {}
     }
 
     async creatTodo(user, todo) {

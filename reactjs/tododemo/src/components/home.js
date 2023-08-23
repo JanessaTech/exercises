@@ -3,13 +3,13 @@ import './home.css'
 import Account from "./account";
 import ToDo from "./todo";
 import {Navigate} from "react-router-dom";
+
 class Home extends React.Component {
     constructor(props) {
         super(props);
         const user = localStorage.getItem('user')
         this.state = {
             isLoadAcc : true,
-            isAuth: !!user,
             user: user ? JSON.parse(user) : null
         }
     }
@@ -22,11 +22,7 @@ class Home extends React.Component {
     }
 
     handleAccount = (event) => {
-        const user = localStorage.getItem('user')
-        this.setState({
-            isLoadAcc: true,
-            user: JSON.parse(user)
-        })
+        this.setState({isLoadAcc: true})
     }
 
     handleTodo = (event) => {
@@ -34,14 +30,12 @@ class Home extends React.Component {
     }
 
     handleLogout = (event) => {
-        this.setState({
-            isAuth : false,
-            user: null
-        })
+        localStorage.removeItem('user')
+        this.setState({user: null})
     }
 
     render() {
-        if (this.state.isAuth) {
+        if (this.state.user) {
             return (
                 <div id="home">
                     <div className="welcome">Hi, {this.state.user.name}
@@ -55,7 +49,7 @@ class Home extends React.Component {
                             </ul>
                         </div>
                         <div className="content">
-                            {this.state.isLoadAcc ? <Account user={this.state.user}/> : <ToDo/>}
+                            {this.state.isLoadAcc ? <Account user={this.state.user}/> : <ToDo user={this.state.user}/>}
                         </div>
                     </div>
                 </div>

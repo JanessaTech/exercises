@@ -10,7 +10,8 @@ class Signup extends Component {
             name : '',
             password: '',
             age: '',
-            email: ''
+            email: '',
+            error: ''
         }
         this.handleClick = this.handleClick.bind()
         this.handleChange = this.handleChange.bind()
@@ -33,17 +34,12 @@ class Signup extends Component {
         }
         axios(options)
             .then((response) => {
-                console.log('======ok=========')
-                console.log(response.data)
+                this.setState({redirect : true})
             })
             .catch((err) => {
-                console.log('=========error ============')
                 console.log(err.response.data)
+                this.setState({error: err.response.data.message})
             })
-
-        console.log(signup)
-        localStorage.setItem('user', JSON.stringify(signup))
-        this.setState({redirect : true})
     }
     handleChange = (event) => {
         console.log('The value of ' + [event.target.name] + " is changed to " + event.target.value)
@@ -54,6 +50,7 @@ class Signup extends Component {
     render() {
         return (
             <div>
+                <h3 style={{color:'red'}}>{this.state.error}</h3>
                 <form>
                     <label>User Name: </label>
                     <input name={"name"} placeholder={"Please input username"} onChange={this.handleChange}/>

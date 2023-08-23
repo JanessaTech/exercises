@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import {
     Link
 } from 'react-router-dom'
+import axios from "axios";
 class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -18,25 +19,32 @@ class Login extends React.Component {
     handleSubmit = (event) =>{
         event.preventDefault();
         console.log('click login button')
-        const user = localStorage.getItem('user')
-        console.log(user)
-        if (user) {
-            const userObj = JSON.parse(user)
-            if (this.state.name === userObj.name && this.state.password === userObj.password) {
-                this.setState({
-                    isAuth : true,
-                })
-            } else {
-                this.setState({
-                    error : 'Input wrong user name and password'
-                })
-            }
-        } else {
-            this.setState({
-                error: 'Please signup first'
-            })
+        //const user = localStorage.getItem('user')
+        const login = {
+            name : this.state.name,
+            password: this.state.password
         }
-
+        let options = {};
+        options = {
+            url: 'http://127.0.0.1:3100/apis/v1/users/login',
+            method: 'post',
+            data: login
+        }
+        axios(options)
+            .then((response) => {
+                const user = response.data.data
+                console.log('login ok')
+                console.log(user)
+                localStorage.setItem('user', JSON.stringify(user))
+                this.setState({ isAuth : true,})
+            })
+            .catch((err) => {
+                console.log('login error')
+                console.log(err.response.data)
+                this.setState({
+                    error: err.response.data.message || 'Please signup first'
+                })
+            })
     }
 
     handleChange = (event) =>{

@@ -25,16 +25,6 @@ class ToDo extends React.Component {
     }
 
     componentDidMount = () => {
-
-        this.setState({
-            todos : [
-                {id : 0, title : 'to do 1', body : 'This is the body of to-do 0'},
-                {id : 1, title : 'to do 1', body : 'This is the body of to-do 1'},
-                {id : 2, title : 'to do 2', body : 'This is the body of to-do 2'},
-                {id : 3, title : 'to do 3', body : 'This is the body of to-do 3'},
-                {id : 4, title : 'to do 4', body : 'This is the body of to-do 4'}
-            ]
-        })
         this.fetchTodos()
     }
 

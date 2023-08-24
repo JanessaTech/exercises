@@ -38,7 +38,7 @@ function throwErrorInPromise(n) {
         })
     }
 
-    let myPromise = getPromise(3)
+    let myPromise = getPromise(n)
     let myerror = undefined
     myPromise.then(
         function (value) {
@@ -53,6 +53,7 @@ function throwErrorInPromise(n) {
             throw error
         }
     ).catch(function (e) {
+        console.log(e.message)
         console.log('throw error from catch in promise')
         myerror = e
 
@@ -67,4 +68,5 @@ function throwErrorInPromise(n) {
 }
 
 
-throwErrorInPromise(3)
+//throwErrorInPromise(3)
+throwErrorInPromise(-1)

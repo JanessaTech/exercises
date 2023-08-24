@@ -180,6 +180,19 @@ function regex1() {
     console.log(roles.join(' '))
 }
 
+function isValueOrReference() {
+    let myMap = new Map()
+    myMap.set(1, {id: 1, name: 'wei', age: 12})
+    myMap.set(0, {id: 0, name: 'jane', age: 10})
+    myMap.set(3, {id: 3, name: 'jane', age: 13})
+    console.log(myMap)
+    let user = myMap.get(1)
+    user.age = 14
+    console.log(myMap)
+    myMap.delete(3)
+    console.log(myMap)
+}
+
 
 //bing_console_log()
 //merge_two_array()
@@ -196,4 +209,5 @@ function regex1() {
 //myErrorClassName()
 //arrayContains()
 //regex()
-regex1()
+//regex1()
+isValueOrReference()

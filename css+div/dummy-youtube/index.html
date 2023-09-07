@@ -19,29 +19,36 @@
                 <a href="#"><img src="./imgs/logo.png" height="50"></a>           
             </div>
             <div id="search">
-                <div>
-                    <input name="keyword" placeholder="Search" maxlength="200">
+                <div class="input">
+                    <input name="keyword" type="text"  placeholder="Search" maxlength="200">
                     <img src="./imgs/len.svg" width="25">
                     <div id="historywords">
                         <ul>
-                            <li>Javascript algorithm</li>
-                            <li>tailwind css tutorial</li>
-                            <li>defi dapp</li>
-                            <li>React js tips and tricks</li>
-                            <li>ps for beginner</li>
+                            <li><img src="./imgs/his.svg" width="30"><span>Javascript algorithm</span><span>Remove</span></li>
+                            <li><img src="./imgs/his.svg" width="30"><span>tailwind css tutorial</span><span>Remove</span></li>
+                            <li><img src="./imgs/his.svg" width="30"><span>defi dapp</span><span>Remove</span></li>
+                            <li><img src="./imgs/his.svg" width="30"><span>React js tips and tricks</span><span>Remove</span></li>
+                            <li><img src="./imgs/his.svg" width="30"><span>ps for beginner</span><span>Remove</span></li>
                         </ul>
                     </div>
                 </div>
-                <div>
+                <div class="len">
                     <img src="./imgs/len.svg" width="25">
+                    <span>Search</span>
                 </div>
-                <div><img src="./imgs/speaker.svg" width="25"></div>
+                <div class="voice">
+                    <img src="./imgs/speaker.svg" width="25">
+                    <span>Search with your voice</span>
+                </div>
             </div>
             <div id="me">
-                me
-                <div id="create"></div>
-                <div id="noti"></div>
-                <div id="profile"></div>
+                <div class="video-plus"><img src="./imgs/video-plus.svg"  width="30">
+                    <span>Create</span>
+                </div>
+                <div class="togzhi"><img src="./imgs/togzhi.svg"  width="30">
+                    <span>Notifications</span>
+                </div>
+                <div class="prof"><img src="./imgs/prof.png" width="40"></div>
             </div>
         </div>
         <div id="tabs">
@@ -58,36 +65,50 @@
         </div>  
     </div>
     <div id="menu">
-        <ul>
-            <li><a href="">Home</a></li>
-            <li><a href="">Short</a></li>
-            <li><a href="">Subscriptions</a></li>
-            <li><a href="">History</a></li>
-            <li><a href="">Your video</a></li>
-            <li><a href="">Watch later</a></li>
-            <li><a href="">Show more</a></li>
-            <li><a href="">test more</a></li>
+        <ul class="pri">
+            <li class="cur"><img src="./imgs/home-fill.svg" width="35"><a href="">Home</a></li>
+            <li><img src="./imgs/shorts.svg" width="35"><a href="">Short</a></li>
+            <li><img src="./imgs/reg.svg" width="35"><a href="">Subscriptions</a></li>
         </ul>
+        <div class="line"></div>
+        <ul class="pri">
+            <li><img src="./imgs/library-books.svg" width="35"><a href="">Library</a></li>
+            <li><img src="./imgs/his.svg" width="35"><a href="">History</a></li>
+            <li><img src="./imgs/video.svg" width="35"><a href="">Your video</a></li>
+            <li><img src="./imgs/watch.svg" width="35"><a href="">Watch later</a></li>
+            <li class="toHide hide"><img src="./imgs/bookmarker.svg" width="35"><a href="">FullStack Dev</a></li>
+            <li class="toHide hide"><img src="./imgs/bookmarker.svg" width="35"><a href="">Web3.0 Dev</a></li>
+            <li class="toHide hide"><img src="./imgs/bookmarker.svg" width="35"><a href="">Ethereum</a></li>
+            <li id="more" class=""><img src="./imgs/more.svg" width="35"><a href="">Show more</a></li>
+            <li id="less" class="hide"><img src="./imgs/less.svg" width="35"><a href="">Show less</a></li>
+        </ul>
+        <div class="line"></div>
         <span>Subscriptions</span>
-        <ul>
-            <li><a href="">Dw News1</a></li>
-            <li><a href="">Dw News2</a></li>
-            <li><a href="">Dw News3</a></li>
-            <li><a href="">Dw News1</a></li>
-            <li><a href="">Dw News2</a></li>
-            <li><a href="">Dw News3</a></li>
-            <li><a href="">Dw News1</a></li>
-            <li><a href="">Dw News2</a></li>
-            <li><a href="">Dw News3</a></li>
-            <li><a href="">Dw News1</a></li>
-            <li><a href="">Dw News2</a></li>
-            <li><a href="">Dw News3</a></li>
-            <li><a href="">Dw News1</a></li>
-            <li><a href="">Dw News2</a></li>
-            <li><a href="">Dw News3</a></li>
-            <li><a href="">Dw News1</a></li>
-            <li><a href="">Dw News2</a></li>
-            <li><a href="">Dw News3</a></li>
+        <ul class="subs">
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
+            <li><img src="./imgs/prof.png"><a href="">Janessa Tech</a></li>
         </ul>
     </div>
     <main>
@@ -136,4 +157,5 @@
         </section>
     </main>
     <script src="./js/index.js"></script>
+    
 </body>

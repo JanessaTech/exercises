@@ -1,6 +1,6 @@
 /* css global variables */
 :root {
-    --sideSize:200px
+    --sideSize:300px
 }
 
 body {
@@ -15,16 +15,20 @@ li, ul {
 }
 a {
     text-decoration: none;
+    color: #000;
 }
 input { outline: none; margin: 0; padding: 0;}
 
 #header{
     width: 100%;
     height: 140px;
-    margin-top: 10px;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 30px;
     position: fixed;
+    box-sizing: border-box;
     top: 0;
-    left: 10;
+    left: 0;
 }
 
 /* style for subheader */
@@ -35,24 +39,7 @@ input { outline: none; margin: 0; padding: 0;}
     display: flex;
     justify-content:space-between;
 }
-#spans {
-    position: relative;
-}
-#spans span {
-    display: inline-block;
-    position: absolute;
-    top:24px;
-    left:13px;
-    padding: 1px 0;
-    background-color: #5f5f5f;
-    width: 22px;
-}
-#spans span:nth-child(1) {
-    top:17px;
-}
-#spans span:nth-child(3) {
-    top:31px;
-}
+
 #burger {
     width: 250px;  
 }
@@ -69,6 +56,24 @@ input { outline: none; margin: 0; padding: 0;}
     background-color: #f2f2f2;
     height:50px;
 }
+#burger #spans {
+    position: relative;
+}
+#burger #spans span {
+    display: inline-block;
+    position: absolute;
+    top:24px;
+    left:13px;
+    padding: 1px 0;
+    background-color: #5f5f5f;
+    width: 22px;
+}
+#burger #spans span:nth-child(1) {
+    top:17px;
+}
+#burger #spans span:nth-child(3) {
+    top:31px;
+}
 #burger a {
     display: inline-block;
 }
@@ -78,7 +83,7 @@ input { outline: none; margin: 0; padding: 0;}
     width: 100%;
     display: flex;
     align-items: center;
-    padding-left: calc(var(--sideSize) + 20px);
+    padding-left: calc(var(--sideSize) + 40px);
 }
 #tabs span {
     display:inline-block;
@@ -114,25 +119,17 @@ input { outline: none; margin: 0; padding: 0;}
     display: inline-block;
     vertical-align: top;
 }
-#search div:nth-child(1) {
+#search .input {
     width: calc(100% - 135px);
     position: relative;
 }
-#search div:nth-child(1) img {
+#search .input img {
     position:absolute;
     top: 14px;
     left: 15px;
 }
-#search div:nth-child(1) #historywords {
-    position:absolute;
-    width: 100%;
-    height: 300px;
-    top:60px;
-    left:0;
-    border-radius: 25px;
-    background:chocolate;
-}
-#search div:nth-child(1) input {
+
+#search .input input {
     height: 100%;
     width: 100%;
     font-size:large;
@@ -141,70 +138,263 @@ input { outline: none; margin: 0; padding: 0;}
     border: 0.5px solid #dedee0;
     box-sizing: border-box; 
 }
-#search div:nth-child(1) input:focus{
+#search .input input:focus{
     outline: none;
+    border: 0.5px solid #3636e5;
 }
-#search div:nth-child(2) {
+#search .input #historywords {
+    position:absolute;
+    width: calc(100% + 100px);
+    height: 300px;
+    top:60px;
+    left:0;
+    border-radius: 25px;
+    box-shadow: 5px 7px 8px #5f5f5f;
+    background:#fff;
+    visibility:hidden;
+}
+
+#search .input #historywords ul {
+    padding: 10px 0px;
+    width: 100%;
+}
+#search .input #historywords ul li {
+    height:40px;
+    padding-left: 70px;
+    padding-right: 30px;
+    display: flex; 
+    justify-content: space-between;
+    position: relative;
+}
+#search .input #historywords ul li img {
+    position:absolute;
+    top: 6;
+    left: 20;
+}
+#search .input #historywords ul li span {
+    line-height: 40px;
+}
+
+#search .input #historywords ul li span:nth-of-type(1) {
+    font-weight: bold;
+    font-size: large;
+}
+#search .input #historywords ul li span:nth-of-type(2) {
+    color: rgb(84, 84, 238);
+}
+#search .input #historywords ul li span:nth-of-type(2):hover {
+    text-decoration: underline;
+}
+#search .input #historywords ul li:hover {
+    background: #dedee0;
+    cursor: pointer;
+}
+#search .input #historywords.active {
+    visibility:visible;
+}
+
+#search .len {
     width: 75px;
     background-color: #efefef;
     position: relative;
-    border: 0.5px solid #dedee0;
-    margin-left: -10px;
+    border: 0.5px 0.5px 0.5px 0 solid #dedee0;
+    margin-left: -4px;
     box-sizing: border-box;
     border-radius: 0 25px 25px 0;
     cursor: pointer;
 }
-#search div:nth-child(2) img {
+#search .len img {
     position:absolute;
     top: 14px;
     left: 20px;
 }
-#search div:nth-child(3) {
+#search .len:hover {
+    background-color: #e4e1e1;
+}
+#search .len span {
+    position:absolute;
+    padding: 0 10px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    background:rgba(74, 74, 74, 0.7);
+    border-radius: 5px;
+    color: #fff;
+    top: 60px;
+    left: 30px;
+    visibility: hidden;
+}
+#search .len:hover span {
+    visibility:visible;
+}
+/*for voice*/
+#search .voice {
     height: 100%;
     width: 50px;
     margin-left: 5px;
     border-radius: 25px;
-    background: #dedee0;
+    background: #efefef;
     position: relative;
-    cursor: pointer;
-    
+    cursor: pointer; 
 }
-#search div:nth-child(3) img {
+#search .voice img {
     position: absolute;
     top: 12px;
     left: 11px;
 }
-
-
+#search .voice span {
+    position:absolute;
+    width: 200px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    background:rgba(74, 74, 74, 0.7);
+    border-radius: 5px;
+    color: #fff;
+    top: 60px;
+    left: 30px;
+    visibility: hidden;  
+}
+#search .voice:hover {
+    background-color: #e4e1e1;
+}
+#search .voice:hover span {
+    visibility:visible;
+}
 
 /* styles for me */
 #me {
-    width: 20%;
+    width: 240px;
     height: 100%;
-    background-color: aquamarine;
+    display: flex;
+    justify-content: space-between;
 }
+#me div {
+    width: 50px;
+    height: 50px;   
+    border-radius: 25px;
+    position: relative;
+    cursor: pointer;
+}
+#me .video-plus {
+    position: relative;
+}
+#me .video-plus span {
+    position:absolute;
+    padding: 0 10px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    background:rgba(74, 74, 74, 0.7);
+    border-radius: 5px;
+    color: #fff;
+    top: 60px;
+    left: 30px;
+    visibility: hidden;  
+}
+#me .video-plus img, #me .togzhi img{
+    position: absolute;
+    top: 11px;
+    left: 9px;
+}
+#me .video-plus span {
+    position: absolute;
+}
+#me .video-plus:hover {
+    background-color: #e4e1e1;
+}
+#me .video-plus:hover span {
+    visibility: visible;  
+}
+#me .togzhi {
+    position: relative;
+}
+#me .togzhi:hover {
+    background-color: #e4e1e1; 
+}
+#me .togzhi span {
+    position: absolute;
+    padding: 0 10px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    background:rgba(74, 74, 74, 0.7);
+    border-radius: 5px;
+    color: #fff;
+    top: 60px;
+    left: -30px;
+    visibility:hidden;
+    
+}
+#me .togzhi:hover span {
+    visibility:visible; 
+}
+
+#me .prof img {
+    position: absolute;
+    width: 50px;
+    height: 50px;   
+    top: 0; 
+    left: 0;
+    border-radius: 25px; 
+}
+
 
 /* styles for menu */
 #menu {
     width: var(--sideSize);
     height: 1000px;
-    position:fixed;
+    position:absolute;
     top: 80px;
     padding-left: 10px;
     padding-right: 10px;
-    background-color: darkgray;
     height: 90%;
     box-sizing: border-box;
     overflow-y: scroll;
 }
 #menu ul li {
-    height: 40px;
+    height: 50px;
+    line-height: 50px;
+    padding-left: 70px;
+    font-size: large;
     border-radius: 10px;
-    display: flex;
-    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+#menu ul.pri li img {
+    position: absolute;
+    top: 7px;
+    left: 10px;
+}
+#menu ul.subs li img {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+    top: 7px;
+    left: 10px;
 }
 #menu ul li:hover {
     background-color: #f2f2f2;
+}
+#menu ul li.cur {
+    background-color: #f2f2f2;
+}
+#menu ul li.hide {
+    display: none;
+}
+#menu ul li.inactive {
+    display: none;
+}
+#menu .line {
+    padding: 0.5px 0;
+    background-color: #f2f2f2;
+}
+#menu span {
+    display: block;
+    padding-top: 20px;
+    font-size:large;
+    color: #000;
 }
 
 
@@ -213,7 +403,7 @@ main {
     width: calc(100% - var(--sideSize));
     margin-top: 150px;
     margin-left: var(--sideSize);
-    padding-left: 30px;
+    padding-left: 40px;
     padding-right: 30px;
     box-sizing: border-box;
     height: 80%;

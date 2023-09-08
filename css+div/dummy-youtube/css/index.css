@@ -21,7 +21,7 @@ input { outline: none; margin: 0; padding: 0;}
 
 #header{
     width: 100%;
-    height: 140px;
+    height: 70px;
     padding-top: 10px;
     padding-left: 10px;
     padding-right: 30px;
@@ -29,49 +29,18 @@ input { outline: none; margin: 0; padding: 0;}
     box-sizing: border-box;
     top: 0;
     left: 0;
+    z-index: 1;
 }
 
 /* style for subheader */
 #subheader {
-    height:70px;
+    height:100%;
     width: calc(100% - 300px);
     padding-left: 10%;
     box-sizing: border-box;
     margin-left: 300px;
     display: flex;
     justify-content: space-between;
-}
-
-
-/* style for tabs */
-#tabs {
-    height: 70px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    padding-left: calc(var(--sideSize) + 40px);
-}
-#tabs span {
-    display:inline-block;
-    height: 30px;
-    text-align: center;
-    background-color: #efefef;
-    padding: 2px 10px;
-    line-height: 30px;
-    margin-right: 15px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-#tabs span.cur {
-    background-color: #5f5f5f;
-    color: #f2f2f2;
-}
-#tabs span:hover {
-    background-color: #c8c8c8;
-}
-#tabs span.cur:hover{
-    background-color: #5f5f5f;
-    color: #f2f2f2;
 }
 
 /* styles for search */
@@ -207,7 +176,7 @@ input { outline: none; margin: 0; padding: 0;}
 #search .voice img {
     position: absolute;
     top: 12px;
-    left: 11px;
+    left: 12px;
 }
 #search .voice span {
     position:absolute;
@@ -233,6 +202,7 @@ input { outline: none; margin: 0; padding: 0;}
 #me {
     width: 20%;
     min-width: 150px;
+    max-width: 200px;
     height: 100%;
     display: flex;
     justify-content: space-between;
@@ -263,7 +233,7 @@ input { outline: none; margin: 0; padding: 0;}
 #me .video-plus img, #me .togzhi img{
     position: absolute;
     top: 11px;
-    left: 9px;
+    left: 10px;
 }
 #me .video-plus span {
     position: absolute;
@@ -309,7 +279,7 @@ input { outline: none; margin: 0; padding: 0;}
 /*style for left*/
 #left {
     position: fixed;
-    width: var(--sideSize);
+    width: 300px;
     height: 100%;
     background-color: #fff;
     top:0;
@@ -356,14 +326,14 @@ input { outline: none; margin: 0; padding: 0;}
 }
 /* styles for menu */
 #menu {
-    width: 100%;
+    width: var(--sideSize);
     height: 90%;
     position:absolute;
     padding-left: 10px;
     padding-right: 10px;
     top: 80px;
     box-sizing: border-box;
-    overflow-y: hidden;
+    overflow-y:hidden;
 }
 #menu ul li {
     height: 50px;
@@ -412,6 +382,7 @@ input { outline: none; margin: 0; padding: 0;}
 #menu:hover {
     overflow-y: scroll;
 }
+/*cutsom scroll style for chrome only*/
 ::-webkit-scrollbar{
     width:8px;
 }
@@ -427,16 +398,52 @@ input { outline: none; margin: 0; padding: 0;}
 
 
 /* styles for main */
-main {
+#right {
+    position: relative; 
+    top: 80px;
+    left: var(--sideSize);
     width: calc(100% - var(--sideSize));
-    margin-top: 150px;
-    margin-left: var(--sideSize);
+    overflow: hidden;
+}
+main {
+    width: 100%;
     padding-left: 40px;
     padding-right: 30px;
     box-sizing: border-box;
     height: 80%;
     overflow-y: scroll;
 }
+
+/* style for tabs */
+#tabs {
+    height: 70px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+#tabs span {
+    display:inline-block;
+    height: 30px;
+    text-align: center;
+    background-color: #efefef;
+    padding: 2px 10px;
+    line-height: 30px;
+    margin-right: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#tabs span.cur {
+    background-color: #5f5f5f;
+    color: #f2f2f2;
+}
+#tabs span:hover {
+    background-color: #c8c8c8;
+}
+#tabs span.cur:hover{
+    background-color: #5f5f5f;
+    color: #f2f2f2;
+}
+
 .primary {
     display: flex;
     flex-wrap: wrap;

@@ -5,63 +5,52 @@
   <title>Dummy YouTube</title>
 </head>
 <body>
-    <div id="header">
-        <div id="subheader">
-            <div id="burger">
-                <div>
-                     <div id="spans">
-                         <span></span>
-                         <span></span>
-                         <span></span>
-                     </div>
+    <div id="logo">
+        <div id="burger">
+            <div>
+                 <div id="spans">
+                     <span></span>
+                     <span></span>
+                     <span></span>
                  </div>
-                 <a href="#"><img src="./imgs/logo.png" height="50"></a>           
              </div>
-            <div id="search">
-                <div class="input">
-                    <input name="keyword" type="text"  placeholder="Search" maxlength="200">
-                    <img src="./imgs/len.svg" width="25">
-                    <div id="historywords">
-                        <ul>
-                            <li><img src="./imgs/his.svg" width="30"><span>Javascript algorithm</span><span>Remove</span></li>
-                            <li><img src="./imgs/his.svg" width="30"><span>tailwind css tutorial</span><span>Remove</span></li>
-                            <li><img src="./imgs/his.svg" width="30"><span>defi dapp</span><span>Remove</span></li>
-                            <li><img src="./imgs/his.svg" width="30"><span>React js tips and tricks</span><span>Remove</span></li>
-                            <li><img src="./imgs/his.svg" width="30"><span>ps for beginner</span><span>Remove</span></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="len">
-                    <img src="./imgs/len.svg" width="25">
-                    <span>Search</span>
-                </div>
-                <div class="voice">
-                    <img src="./imgs/speaker.svg" width="25">
-                    <span>Search with your voice</span>
+             <a href="#"><img src="./imgs/logo1.png" height="50"></a>           
+         </div>
+    </div>
+    <div id="header">
+        <div id="search">
+            <div class="input">
+                <input name="keyword" type="text"  placeholder="Search" maxlength="200">
+                <img src="./imgs/len.svg" width="25">
+                <div id="historywords">
+                    <ul>
+                        <li><img src="./imgs/his.svg" width="30"><span>Javascript algorithm</span><span>Remove</span></li>
+                        <li><img src="./imgs/his.svg" width="30"><span>tailwind css tutorial</span><span>Remove</span></li>
+                        <li><img src="./imgs/his.svg" width="30"><span>defi dapp</span><span>Remove</span></li>
+                        <li><img src="./imgs/his.svg" width="30"><span>React js tips and tricks</span><span>Remove</span></li>
+                        <li><img src="./imgs/his.svg" width="30"><span>ps for beginner</span><span>Remove</span></li>
+                    </ul>
                 </div>
             </div>
-            <div id="me">
-                <div class="video-plus"><img src="./imgs/video-plus.svg"  width="30">
-                    <span>Create</span>
-                </div>
-                <div class="togzhi"><img src="./imgs/togzhi.svg"  width="30">
-                    <span>Notifications</span>
-                </div>
-                <div class="prof"><img src="./imgs/prof.png" width="40"></div>
+            <div class="len">
+                <img src="./imgs/len.svg" width="25">
+                <span>Search</span>
             </div>
+            <div class="voice">
+                <img src="./imgs/speaker.svg" width="25">
+                <span>Search with your voice</span>
+            </div>
+        </div>
+        <div id="me">
+            <div class="video-plus"><img src="./imgs/video-plus.svg"  width="30">
+                <span>Create</span>
+            </div>
+            <div class="togzhi"><img src="./imgs/togzhi.svg"  width="30">
+                <span>Notifications</span>
+            </div>
+            <div class="prof"><img src="./imgs/prof.png" width="40"></div>
         </div> 
-        <div id="tabs">
-            <span class="cur">All</span>
-            <span>Study Skills</span>
-            <span>Thought</span>
-            <span>Computer Science</span>
-            <span>Pronunciation</span>
-            <span>Sales</span>
-            <span>Java</span>
-            <span>Recent uploaded</span>
-            <span>Watched</span>
-            <span>New to you</span>
-        </div> 
+        
     </div>
     <div id="menu" class="active">
         <ul class="pri">
@@ -120,20 +109,153 @@
         </ul>
     </div>
         
-    <main>    
+    <main>
+        <div id="tabs">
+            <span class="cur">All</span>
+            <span>Study Skills</span>
+            <span>Thought</span>
+            <span>Computer Science</span>
+            <span>Pronunciation</span>
+            <span>Sales</span>
+        </div> 
+        <div id="popup">
+            <ul>
+                <li><a><img src="./imgs/popups/add-to-list.svg">Add to queue</a></li>
+                <li><a><img src="./imgs/popups/watch.svg">Saved to Watch later</a></li>
+                <li><a><img src="./imgs/popups/category-add.svg">Saved to playlist</a></li>
+                <li><a><img src="./imgs/popups/share.svg">Share</a></li>
+                <li><a><img src="./imgs/popups/no-recomd.svg">Not interested</a></li>
+                <li><a><img src="./imgs/popups/uniE9D0.svg">Don't recommend channel</a></li>
+                <li><a><img src="./imgs/popups/report.svg">Report</a></li>
+            </ul>
+        </div>    
         <section>
             <div class="primary">
-                <div class="vedio">
-                    <div class="overview"></div>
-                    <div class="intro">
-                        
+                <div class="video">
+                    <div class="overview">
+                        <a href="./details.html">
+                            <video controls muted onmouseover="this.play()" onmouseout="this.pause()">
+                                <source src="./videos/20230529-210928.mp4" type="video/mp4"></source>
+                            </video>
+                        </a>
+                    </div>
+                    <div class="intro"> 
+                        <span>Without a Goal, you can't Score | from Ireland, the Ring of Kerry</span>
+                        <span>Janessa Tech
+                            <span>Janessa Tech</span>
+                        </span>
+                        <span>1.5K views • 5 days ago</span>
+                        <img src="./imgs/prof.png">
+                        <div class="actions">
+                            <img src="./imgs/more_android_light.svg">
+                            <div></div>
+                        </div>
                     </div>
                 </div>
-                <div class="vedio"></div>
-                <div class="vedio"></div>
-                <div class="vedio"></div>
-                <div class="vedio"></div>
-                <div class="vedio"></div>
+                <div class="video">
+                    <div class="overview">
+                        <a href="./details.html">
+                            <video controls muted controlsList="nodownload" onmouseover="this.play()" onmouseout="this.pause()">
+                                <source src="./videos/20230529-210928.mp4" type="video/mp4"></source>
+                            </video>
+                        </a>
+                    </div>
+                    <div class="intro"> 
+                        <span>Without a Goal, you can't Score | from Ireland, the Ring of Kerry</span>
+                        <span>Janessa Tech
+                            <span>Janessa Tech</span>
+                        </span>
+                        <span>1.5K views • 5 days ago</span>
+                        <img src="./imgs/prof.png">
+                        <div class="actions">
+                            <img src="./imgs/more_android_light.svg">
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="video">
+                    <div class="overview">
+                        <a href="./details.html">
+                            <video controls muted onmouseover="this.play()" onmouseout="this.pause()">
+                                <source src="./videos/20230529-210928.mp4" type="video/mp4"></source>
+                            </video>
+                        </a>
+                    </div>
+                    <div class="intro"> 
+                        <span>Without a Goal, you can't Score | from Ireland, the Ring of Kerry</span>
+                        <span>Janessa Tech
+                            <span>Janessa Tech</span>
+                        </span>
+                        <span>1.5K views • 5 days ago</span>
+                        <img src="./imgs/prof.png">
+                        <div class="actions">
+                            <img src="./imgs/more_android_light.svg">
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="video">
+                    <div class="overview">
+                        <a href="./details.html">
+                            <video controls muted onmouseover="this.play()" onmouseout="this.pause()">
+                                <source src="./videos/20230529-210928.mp4" type="video/mp4"></source>
+                            </video>
+                        </a>
+                    </div>
+                    <div class="intro"> 
+                        <span>Without a Goal, you can't Score | from Ireland, the Ring of Kerry</span>
+                        <span>Janessa Tech
+                            <span>Janessa Tech</span>
+                        </span>
+                        <span>1.5K views • 5 days ago</span>
+                        <img src="./imgs/prof.png">
+                        <div class="actions">
+                            <img src="./imgs/more_android_light.svg">
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="video">
+                    <div class="overview">
+                        <a href="./details.html">
+                            <video controls muted onmouseover="this.play()" onmouseout="this.pause()">
+                                <source src="./videos/20230529-210928.mp4" type="video/mp4"></source>
+                            </video>
+                        </a>
+                    </div>
+                    <div class="intro"> 
+                        <span>Without a Goal, you can't Score | from Ireland, the Ring of Kerry</span>
+                        <span>Janessa Tech
+                            <span>Janessa Tech</span>
+                        </span>
+                        <span>1.5K views • 5 days ago</span>
+                        <img src="./imgs/prof.png">
+                        <div class="actions">
+                            <img src="./imgs/more_android_light.svg">
+                        </div>
+                    </div>
+                </div>
+                <div class="video">
+                    <div class="overview">
+                        <a href="./details.html">
+                            <video controls muted onmouseover="this.play()" onmouseout="this.pause()">
+                                <source src="./videos/20230529-210928.mp4" type="video/mp4"></source>
+                            </video>
+                        </a>
+                    </div>
+                    <div class="intro"> 
+                        <span>Without a Goal, you can't Score | from Ireland, the Ring of Kerry</span>
+                        <span>Janessa Tech
+                            <span>Janessa Tech</span>
+                        </span>
+                        <span>1.5K views • 5 days ago</span>
+                        <img src="./imgs/prof.png">
+                        <div class="actions">
+                            <img src="./imgs/more_android_light.svg">
+                            
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="line"></div>
         </section>
@@ -151,22 +273,142 @@
                 </div>
             </div>
             <div class="short">
-                <div class="vedio"></div>
-                <div class="vedio"></div>
-                <div class="vedio"></div>
-                <div class="vedio"></div>
+                <div class="video"></div>
+                <div class="video"></div>
+                <div class="video"></div>
+                <div class="video"></div>
             </div>
             <div class="s_more"></div>
             <div class="line"></div>
         </section>
         <section>
             <div class="primary">
-                <div class="vedio"></div>
-                <div class="vedio"></div>
-                <div class="vedio"></div>
-                <div class="vedio"></div>
-                <div class="vedio"></div>
-                <div class="vedio"></div>
+                <div class="video">
+                    <div class="overview">
+                        <a href="./details.html">
+                            <video controls muted onmouseover="this.play()" onmouseout="this.pause()">
+                                <source src="./videos/20230529-210928.mp4" type="video/mp4"></source>
+                            </video>
+                        </a>
+                    </div>
+                    <div class="intro"> 
+                        <span>Without a Goal, you can't Score | from Ireland, the Ring of Kerry</span>
+                        <span>Janessa Tech
+                            <span>Janessa Tech</span>
+                        </span>
+                        <span>1.5K views • 5 days ago</span>
+                        <img src="./imgs/prof.png">
+                        <div class="actions">
+                            <img src="./imgs/more_android_light.svg">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="video">
+                    <div class="overview">
+                        <a href="./details.html">
+                            <video controls muted onmouseover="this.play()" onmouseout="this.pause()">
+                                <source src="./videos/20230529-210928.mp4" type="video/mp4"></source>
+                            </video>
+                        </a>
+                    </div>
+                    <div class="intro"> 
+                        <span>Without a Goal, you can't Score | from Ireland, the Ring of Kerry</span>
+                        <span>Janessa Tech
+                            <span>Janessa Tech</span>
+                        </span>
+                        <span>1.5K views • 5 days ago</span>
+                        <img src="./imgs/prof.png">
+                        <div class="actions">
+                            <img src="./imgs/more_android_light.svg">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="video">
+                    <div class="overview">
+                        <a href="./details.html">
+                            <video controls muted onmouseover="this.play()" onmouseout="this.pause()">
+                                <source src="./videos/20230529-210928.mp4" type="video/mp4"></source>
+                            </video>
+                        </a>
+                    </div>
+                    <div class="intro"> 
+                        <span>Without a Goal, you can't Score | from Ireland, the Ring of Kerry</span>
+                        <span>Janessa Tech
+                            <span>Janessa Tech</span>
+                        </span>
+                        <span>1.5K views • 5 days ago</span>
+                        <img src="./imgs/prof.png">
+                        <div class="actions">
+                            <img src="./imgs/more_android_light.svg">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="video">
+                    <div class="overview">
+                        <a href="./details.html">
+                            <video controls muted onmouseover="this.play()" onmouseout="this.pause()">
+                                <source src="./videos/20230529-210928.mp4" type="video/mp4"></source>
+                            </video>
+                        </a>
+                    </div>
+                    <div class="intro"> 
+                        <span>Without a Goal, you can't Score | from Ireland, the Ring of Kerry</span>
+                        <span>Janessa Tech
+                            <span>Janessa Tech</span>
+                        </span>
+                        <span>1.5K views • 5 days ago</span>
+                        <img src="./imgs/prof.png">
+                        <div class="actions">
+                            <img src="./imgs/more_android_light.svg">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="video">
+                    <div class="overview">
+                        <a href="./details.html">
+                            <video controls muted onmouseover="this.play()" onmouseout="this.pause()">
+                                <source src="./videos/20230529-210928.mp4" type="video/mp4"></source>
+                            </video>
+                        </a>
+                    </div>
+                    <div class="intro"> 
+                        <span>Without a Goal, you can't Score | from Ireland, the Ring of Kerry</span>
+                        <span>Janessa Tech
+                            <span>Janessa Tech</span>
+                        </span>
+                        <span>1.5K views • 5 days ago</span>
+                        <img src="./imgs/prof.png">
+                        <div class="actions">
+                            <img src="./imgs/more_android_light.svg">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="video">
+                    <div class="overview">
+                        <a href="./details.html">
+                            <video controls muted onmouseover="this.play()" onmouseout="this.pause()">
+                                <source src="./videos/20230529-210928.mp4" type="video/mp4"></source>
+                            </video>
+                        </a>
+                    </div>
+                    <div class="intro"> 
+                        <span>Without a Goal, you can't Score | from Ireland, the Ring of Kerry</span>
+                        <span>Janessa Tech
+                            <span>Janessa Tech</span>
+                        </span>
+                        <span>1.5K views • 5 days ago</span>
+                        <img src="./imgs/prof.png">
+                        <div class="actions">
+                            <img src="./imgs/more_android_light.svg">
+                            
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </main>

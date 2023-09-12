@@ -1,0 +1,26 @@
+/* css global variables */
+:root {
+    --sideSize:300px
+}
+
+body {
+  margin: 0 10px;
+  background: #f3f2f2;
+  font-family: "Roboto", "Arial", "sans-serif";
+  color: #4b4b4b;
+}
+li, ul {
+  list-style-type: none;
+  padding: 0;
+}
+a {
+    text-decoration: none;
+    color: #000;
+}
+input { outline: none; margin: 0; padding: 0;}
+
+#logo {
+    height:70px;
+    position: fixed;
+    top: 10;
+}

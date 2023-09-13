@@ -12,6 +12,8 @@ const burger = document.querySelector('#burger')
 var r = document.querySelector(':root');
 const actions = document.querySelectorAll('.actions')
 const popup = document.querySelector('#popup')
+const short_actions = document.querySelectorAll('.short_actions')
+const short_popup = document.querySelector('#short_popup')
 
 short_close.addEventListener('mouseenter', () => {
     short_hint.classList.toggle('active')
@@ -22,7 +24,6 @@ short_close.addEventListener('mouseleave', () => {
     short_close.classList.toggle('active')
 })
 search_input.addEventListener('focus', () => {
-    //historywords.classList.toggle('active')
     historywords.style.display = "block"
 });
 search_input.addEventListener('focusout', () => {
@@ -68,10 +69,22 @@ actions.forEach(e => e.addEventListener('click', (e)=> {
     popup.style.left = rect.left - 250;
     popup.style.display = "block";
 }))
+short_actions.forEach(e => e.addEventListener('click', (e)=> {
+    var p = e.target.parentElement
+    var rect = p.getBoundingClientRect();
+    short_popup.style.top = rect.top + 50;
+    short_popup.style.left = rect.left - 250;
+    short_popup.style.display = "block";
+}))
 
 document.addEventListener('click', e =>{
     var className = e.target.parentElement.className
-    if (className !== 'actions') {
+    if (className !== 'actions' && className !== 'short_actions') {
+        popup.style.display = "none";
+        short_popup.style.display = "none";
+    } else if (className === 'actions') {
+        short_popup.style.display = "none";
+    } else {
         popup.style.display = "none";
     }
 })

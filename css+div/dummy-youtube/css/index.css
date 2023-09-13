@@ -74,6 +74,44 @@
     left: 28px;
 }
 
+#short_popup {
+    width: 300px;
+    background-color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-radius: 10px;
+    box-shadow: 5px 7px 8px #5f5f5f;
+    display: none;
+    cursor: pointer;
+    z-index: 1;
+}
+#short_popup ul {
+    margin: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+#short_popup ul li {
+    height: 40px;
+    line-height: 40px;
+    width: 100%;
+    box-sizing: border-box;
+}
+#short_popup ul li:hover {
+    background-color: #c8c8c8;
+}
+#short_popup ul li a {
+    position: relative;
+    padding: 0 20px 0 80px;
+    display: block;
+}
+#short_popup ul li a img {
+    position: absolute;
+    width: 25px;
+    top: 7px;
+    left: 28px;
+}
+
 /* styles for main .primary */
 main {
     margin-top: 80px;
@@ -152,7 +190,7 @@ main {
     border-radius: 3px;
     color: #fff;
     position:absolute;
-    top: 30px;
+    top: 15px;
     left: 150px;
     display: none;
 }
@@ -222,7 +260,7 @@ div.hint{
     line-height: 40px;;
     text-align: center;
     color: #fff;
-    background-color: #969696;
+    background:rgba(74, 74, 74, 0.7);
     border-radius: 10px;
     visibility: hidden;
 }
@@ -238,7 +276,7 @@ div.close {
     cursor: pointer;
 }
 div.close.active {
-    background-color: #efefef;
+    background-color: #c8c8c8;
 }
 .close span {
     display: block;
@@ -265,11 +303,64 @@ div.close.active {
     min-width:300px; 
     height: 450px;
     min-height:450px;
-    background-color: blueviolet;
+    
     box-sizing: border-box;
     margin-right: 30px;
     margin-bottom: 50px;
 }
+.short .video .overview {
+    width: 100%;
+    height: calc(100% - 60px);
+    background-color: #000;
+    border-radius: 20px;
+    margin-bottom:  20px;
+}
+.short .video .intro {
+    height: 60px;
+    width: 100%;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    position: relative;
+    cursor: pointer;
+}
+.short .video .intro span {
+    display: block;
+}
+.short .video .intro span:nth-child(1) {
+    color: #000;
+    font-size: larger;
+}
+.short .video .intro span:nth-child(3) {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    border-radius: 10px;
+}
+.short .video .intro span:nth-child(3):hover {
+    background-color: #c8c8c8;
+}
+.short .video .intro span:nth-child(3) img {
+    position: absolute;
+    width: 16px;
+    top: 2px;
+    left: 2px;
+    display: none;
+}
+.short .video .overview a {
+    display: block;
+}
+.short .video .overview a video {
+    width: 300px;
+    height: 400px;
+    border-radius: 20px;
+    box-sizing: border-box;
+}
+.short .video .intro:hover .short_actions img {
+    display:block;
+}
+
 main .line {
     padding: 2px 0;
     background-color: #c6c4c4;

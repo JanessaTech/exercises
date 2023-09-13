@@ -260,7 +260,7 @@
 #me .togzhi:hover {
     background-color: #c8c8c8; 
 }
-#me .togzhi span {
+#me .togzhi span:nth-of-type(1) {
     position: absolute;
     padding: 0 10px;
     height: 35px;
@@ -274,8 +274,22 @@
     visibility:hidden;
     
 }
-#me .togzhi:hover span {
+#me .togzhi:hover span:nth-of-type(1) {
     visibility:visible; 
+}
+#me .togzhi span:nth-of-type(2) {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    font-size: small;
+    text-align: center;
+    line-height: 18px;
+    color: #fff;
+    font-weight: bolder;
+    background: rgb(218, 2, 2);
+    top: 7;
+    right: 7;
+    border-radius: 9px;
 }
 
 #me .prof img {

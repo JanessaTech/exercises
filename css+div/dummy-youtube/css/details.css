@@ -5,8 +5,9 @@
 
 #menu {
     background-color: #fff;
+    left: -400px;
 }
 
-#menu.hide {
-    left: -400px;
+#menu.show {
+    left: 10px;
 }

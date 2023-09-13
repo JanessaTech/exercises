@@ -1,15 +1,13 @@
 
+import {search_input, historywords, tohides, more, less} from "./common.js"
+
 const short_hint = document.querySelector('.hint')
 const short_close = document.querySelector('.close')
-const search_input = document.querySelector('#search input')
-const historywords = document.querySelector('#historywords')
-const tohides = document.querySelectorAll('.toHide')
-const more = document.querySelector('#more')
-const less = document.querySelector('#less')
+const burger = document.querySelector('#burger')
+const r = document.querySelector(':root');
 const menu = document.querySelector('#menu')
 const min_menu = document.querySelector('#min-menu')
-const burger = document.querySelector('#burger')
-var r = document.querySelector(':root');
+
 const actions = document.querySelectorAll('.actions')
 const popup = document.querySelector('#popup')
 const short_actions = document.querySelectorAll('.short_actions')
@@ -19,6 +17,7 @@ const short_popup = document.querySelector('#short_popup')
 var home = document.querySelector('#menu ul.pri li:nth-child(1)')
 home.classList.add('cur')
 
+/* close shorts */
 short_close.addEventListener('mouseenter', () => {
     short_hint.classList.toggle('active')
     short_close.classList.toggle('active')
@@ -27,28 +26,7 @@ short_close.addEventListener('mouseleave', () => {
     short_hint.classList.toggle('active')
     short_close.classList.toggle('active')
 })
-search_input.addEventListener('focus', () => {
-    historywords.style.display = "block"
-});
-search_input.addEventListener('focusout', () => {
-    historywords.style.display = "none"
-});
-more.addEventListener('click', () => {
-    console.log("more is clicked")
-    tohides.forEach(e => {
-        e.classList.remove('hide')
-    })
-    less.classList.remove('hide')
-    more.classList.add('hide')
-})
-less.addEventListener('click', () => {
-    console.log("less is clicked")
-    tohides.forEach(e => {
-        e.classList.add('hide')
-    })
-    less.classList.add('hide')
-    more.classList.remove('hide')
-})
+
 burger.addEventListener('click', () => {
     console.log('burger is clicked');
     var rs = getComputedStyle(r);

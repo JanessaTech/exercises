@@ -1,0 +1,12 @@
+@import url("./common.css");
+@import url("./header.css");
+@import url("./menu.css");
+
+
+#menu {
+    background-color: #fff;
+}
+
+#menu.hide {
+    left: -400px;
+}

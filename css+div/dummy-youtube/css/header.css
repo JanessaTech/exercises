@@ -1,3 +1,10 @@
+/* styles for logo*/
+#logo {
+    height:70px;
+    position: fixed;
+    top: 10;
+}
+/* styles for header*/
 #header{
     width: calc(100% - 340px);
     height:70px;

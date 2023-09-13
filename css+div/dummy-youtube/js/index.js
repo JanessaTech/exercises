@@ -15,6 +15,10 @@ const popup = document.querySelector('#popup')
 const short_actions = document.querySelectorAll('.short_actions')
 const short_popup = document.querySelector('#short_popup')
 
+/* set home as the working tab*/
+var home = document.querySelector('#menu ul.pri li:nth-child(1)')
+home.classList.add('cur')
+
 short_close.addEventListener('mouseenter', () => {
     short_hint.classList.toggle('active')
     short_close.classList.toggle('active')

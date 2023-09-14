@@ -6,9 +6,6 @@
     background-color: #fff;
     left: -400px;
 }
-body {
-    padding-top: 0.01em;
-}
 
 #menu.show {
     left: 0;
@@ -18,7 +15,7 @@ body {
     margin-top: 80px;
     padding: 0 80px;
     width: calc(100% - 160px);
-    height: 1400px;
+    margin-bottom: 20px;
     /* enable the y scroll of the content. 
     The scroll in y of body is disabled because the total height of body is less than the height of viewport*/
     /*height: 90%;
@@ -40,37 +37,45 @@ body {
     display: block;
 }
 /*styles for videos*/
-#videos{
+#videos {
     display: flex;
     flex-wrap: wrap;
 }
 /* styles for #videos #major*/
-#videos #major{
-    height: 500px;
+#videos #major {
     flex: 1 1 800px;
+    min-width: 300px;
     background-color: darkolivegreen;
     margin-right: 20px;
 }
-#videos #reds {
-    max-width: 100%;
-    flex: 1 0 300px;
+#videos #major #video {
+    width: 100%;
     height: 600px;
+}
+#videos #reds {
+    flex: 1 0 300px;
+    height: 1000px;
     background-color: cadetblue;
 }
 /* styles for comments*/
-#comments {
+.comments {
     width: 100%;
+    min-width: 300px;
     height: 400px;
     background-color: hotpink;
 }
-@media screen and (min-width: 1308px) {
-    #videos #reds {
-        max-width: 500px;
-    }
-}
+
+#c2 { display: none;}
 @media screen and (max-width: 1308px) {
-    #videos #major {
-        width: 100%;
-        margin-right: 0px;
+    #c1 {
+        display: none;
     }
+    #c2 {
+        display: block;
+        margin-right: 20px;
+    }
+    #videos #reds {
+        margin-right: 20px;
+    }
+
 }

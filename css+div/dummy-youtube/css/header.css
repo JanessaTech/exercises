@@ -17,7 +17,7 @@
     justify-content: space-between;
     top: 0;
     z-index: 1;
-    padding-top: 10px; /* fix bug of margin collapse*/
+    padding-top: 10px; 
 }
 
 /* styles for burger*/

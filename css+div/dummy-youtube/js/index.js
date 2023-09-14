@@ -3,8 +3,9 @@ import {search_input, historywords, tohides, more, less} from "./common.js"
 
 const short_hint = document.querySelector('.hint')
 const short_close = document.querySelector('.close')
-const burger = document.querySelector('#burger')
 const r = document.querySelector(':root');
+const header_burger = document.querySelector('#header .burger')
+const menu_burger = document.querySelector('#menu .burger')
 const menu = document.querySelector('#menu')
 const min_menu = document.querySelector('#min-menu')
 
@@ -27,8 +28,24 @@ short_close.addEventListener('mouseleave', () => {
     short_close.classList.toggle('active')
 })
 
-burger.addEventListener('click', () => {
-    console.log('burger is clicked');
+header_burger.addEventListener('click', () => {
+    console.log('header_burger is clicked');
+    var rs = getComputedStyle(r);
+    var ssv = rs.getPropertyValue('--sideSize')
+    if (ssv.trim() === '300px') {
+        console.log("=== 300px")
+        r.style.setProperty('--sideSize', '100px');
+        menu.classList.toggle('active')
+        min_menu.classList.toggle('active')        
+    } else {
+        console.log("!== 300px")
+        r.style.setProperty('--sideSize', '300px');
+        menu.classList.toggle('active')
+        min_menu.classList.toggle('active')
+    }
+})
+menu_burger.addEventListener('click', () => {
+    console.log('header_burger is clicked');
     var rs = getComputedStyle(r);
     var ssv = rs.getPropertyValue('--sideSize')
     if (ssv.trim() === '300px') {

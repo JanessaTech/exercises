@@ -10,16 +10,18 @@ search_input.addEventListener('focusout', () => {
 export const tohides = document.querySelectorAll('.toHide')
 export const more = document.querySelector('#more')
 export const less = document.querySelector('#less')
-more.addEventListener('click', () => {
+more.addEventListener('click', (e) => {
     console.log("more is clicked")
+    e.preventDefault()
     tohides.forEach(e => {
         e.classList.remove('hide')
     })
     less.classList.remove('hide')
     more.classList.add('hide')
 })
-less.addEventListener('click', () => {
+less.addEventListener('click', (e) => {
     console.log("less is clicked")
+    e.preventDefault()
     tohides.forEach(e => {
         e.classList.add('hide')
     })

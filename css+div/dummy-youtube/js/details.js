@@ -4,14 +4,18 @@ const header_burger = document.querySelector('#header .burger')
 const menu_burger = document.querySelector('#menu .burger')
 const menu  = document.querySelector('#menu')
 const mask = document.querySelector('#mask')
+const sub = document.querySelector('#sub')
+const subed = document.querySelector('#subed')
+const subaddedMesg = document.querySelector('#subaddedMesg')
+const subedPopup = document.querySelector('#subedPopup')
 
 header_burger.addEventListener('click', () => {
-    console.log('burger is clicked in details');
+    console.log('header_burger is clicked in details');
     menu.classList.toggle('show')
     mask.classList.toggle('show')
 })
 menu_burger.addEventListener('click', () => {
-    console.log('burger is clicked in details');
+    console.log('menu_burger is clicked in details');
     menu.classList.toggle('show')
     mask.classList.toggle('show')
 })
@@ -19,4 +23,26 @@ menu_burger.addEventListener('click', () => {
 mask.addEventListener('click', () => {
     menu.classList.toggle('show')
     mask.classList.toggle('show')
+})
+sub.addEventListener('click', (e) => {
+    e.preventDefault()
+    sub.classList.toggle('open')
+    subed.classList.toggle('open')
+})
+subed.addEventListener('click', (e) => {
+    e.preventDefault()
+    subedPopup.classList.add('active')
+})
+
+
+document.addEventListener('click', (e) => {
+    console.log(e.target)
+    console.log('document click')
+    console.log(e.target.id)
+    if (e.target.id !== 'subed') {
+        console.log('e.target.id !== subed')
+        subedPopup.classList.remove('active');
+    }else {
+        console.log('e.target.id == subed')
+    }
 })

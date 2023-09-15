@@ -48,16 +48,205 @@
     background-color: darkolivegreen;
     margin-right: 20px;
 }
+/* styles for video */
 #videos #major #video {
     width: 100%;
-    height: 600px;
 }
+#videos #major #video video {
+    object-fit: cover;
+    width: 100%;
+}
+/* styles for #intro */
+#videos #major #video #intro {
+    margin: 20px 0;
+    width: 100%;
+    height: 250px;
+}
+#intro > span {
+    color: #000;
+    font-size:x-large;
+}
+/* styles for #actions */
+#intro #actions {
+    margin: 15px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+#intro #actions > span {
+    width: 300px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    font-weight: bold;
+    color: #fff;
+    white-space: nowrap;
+    display: block;
+    background-color: #151515;
+    border-radius: 10px;
+    position: fixed;
+    left: 20px;
+    bottom: -50px;
+}
+
+#intro #actions #subme #sub.open {
+    display:none;
+}
+#intro #actions #subaddedMesg.open {
+    animation: subadded_show 0.3s 0.5s ease-in both,subadded_disappear 0.3s 6s ease-out forwards;
+}
+
+@keyframes subadded_show {
+    from {bottom: -50px;}
+    to {bottom: 20px;}
+}
+@keyframes subadded_disappear {
+    from {bottom: 20px;}
+    to {bottom: -50px;}
+}
+
+#intro #actions #subme {
+    height: 50px;
+    width: 400px;
+    line-height: 50px;
+    background-color: aquamarine;
+    display: flex;
+    justify-content: space-between;
+}
+#intro #actions #subme #who {
+    padding-left: 50px;
+    height: 100%;
+    flex: 0 1 150px;
+    min-width: 100px;
+    position: relative;
+}
+#intro #actions #subme #who span {
+    display:block;
+    height: 25px;
+    white-space: nowrap;
+    padding: 0 15px;
+    line-height: 25px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#intro #actions #subme #who span:first-of-type {
+    font-size: larger;
+}
+#intro #actions #subme #who span:last-of-type {
+    font-size:small;
+}
+#intro #actions #subme #who a {
+    position:absolute;
+    width: 50px;
+    height: 50px;
+    top: 0;
+    left: 0;
+    display: block;
+}
+#intro #actions #subme #who img {
+    width:100%;
+    height:100%;  
+    border-radius: 25px;
+}
+#intro #actions #subme #sub {
+    height: 100%;
+    width: 80px;
+    padding: 0 25px;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 25px;
+    background-color: #000;
+    display: block;
+    cursor: pointer;
+}
+#intro #actions #subme #sub:hover {
+    background-color: #323232;
+}
+
+
+#intro #actions #subme #subed {
+    height: 100%;
+    width: 100px;
+    padding: 0 50px;
+    color: #000;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 25px;
+    background: #dfdede;
+    cursor: pointer;
+    position: relative;
+    display: none;
+}
+#intro #actions #subme #subed.open {
+    display: block;
+}
+#intro #actions #subme #subed:hover {
+    background-color: #c8c8c8;
+}
+#intro #actions #subme #subed img {
+    width: 30px;
+    position: absolute;
+}
+#intro #actions #subme #subed > img:nth-of-type(1) {
+    top: 10;
+    left: 13;
+}
+#intro #actions #subme #subed > img:nth-of-type(2) {
+    top: 8;
+    right: 13;
+}
+#intro #actions #subme #subed > div {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    background-color: #fff;
+    width: 250px;
+    border-radius: 10px;
+    box-shadow: 5px 7px 8px #5f5f5f;
+    display: none;
+}
+#intro #actions #subme #subed > div.active {
+    display:block;
+}
+
+#intro #actions #subme #subed > div ul {
+    padding: 0;
+}
+#intro #actions #subme #subed > div ul li {
+    text-align:left;
+    font-weight:normal;
+    line-height: 40px;
+    padding-left: 65px;
+    cursor: pointer;
+    position: relative;
+}
+#intro #actions #subme #subed > div ul li:hover {
+    background-color: #c8c8c8;
+}
+#intro #actions #subme #subed > div ul li img {
+    position: absolute;
+    width: 25px;
+    top: 7px;
+    left: 15px;
+}
+
+
+#intro #actions #others {
+    height: 50px;
+    line-height: 50px;
+    flex: 0 0 400px;
+    background-color: aquamarine;
+}
+
+
+/* styles for reds */
 #videos #reds {
     flex: 1 0 300px;
     height: 1000px;
     background-color: cadetblue;
 }
-/* styles for comments*/
+/* styles for comments */
 .comments {
     width: 100%;
     min-width: 300px;

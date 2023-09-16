@@ -28,7 +28,7 @@
     width: 100%;
     height: 100%;
     top: 0;
-    left: 0px;
+    left: 0;
     z-index: 1;
     display: none;
 }
@@ -70,13 +70,14 @@
 /* styles for #actions */
 #intro #actions {
     margin: 15px 0;
+    height: 50px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
 }
 #intro #actions > span {
     width: 300px;
-    height: 50px;
+    height:50px;
     text-align: center;
     line-height: 50px;
     font-weight: bold;
@@ -107,7 +108,7 @@
 }
 
 #intro #actions #subme {
-    height: 50px;
+    height: 100%;
     flex: 0 1 400px;
     min-width: 150px;
     line-height: 50px;
@@ -140,7 +141,7 @@
 #intro #actions #subme #who a {
     position:absolute;
     width: 50px;
-    height: 50px;
+    height: 100%;
     top: 0;
     left: 0;
     display: block;
@@ -233,12 +234,98 @@
     left: 15px;
 }
 
-
+/* styles for #others*/
 #intro #actions #others {
-    height: 50px;
+    height: 100%;
     line-height: 50px;
     flex: 0 0 400px;
     background-color: aquamarine;
+}
+#intro #actions #others #like_dislike > div {
+    display: inline-block;
+    vertical-align: top;
+}
+
+/* styles for #like*/
+#intro #actions #others #like {
+    height: 100%;
+    padding-left: 50px;
+    background-color: #dfdede;
+    width:fit-content;
+    border-radius: 25px 0  0 25px;
+    border-right:1px solid #c3c3c3;
+    position: relative;
+    cursor: pointer;
+}
+#intro #actions #others #like:hover {
+    background-color: #c8c8c8;
+}
+#intro #actions #others #like > div {
+    display: inline-block;
+    height: 100%;
+    padding-right: 10px;
+}
+#intro #actions #others #like img {
+    position: absolute;
+    width: 25px;
+    top: 10px;
+    left: 15px;
+}
+
+#intro #actions #others #like span {
+    position: absolute;
+    padding: 5px 20px;
+    color: #fff;
+    background:rgba(74, 74, 74, 0.7);
+    white-space: nowrap;
+    height: 35px;
+    line-height: 35px;
+    border-radius: 6px;
+    top: 55px;
+    left: 0;
+    display: none;
+}
+#intro #actions #others #like:hover span {
+    display: inline-block;
+}
+
+/* styles for #dislike*/
+#intro #actions #others #dislike {
+    height: 100%;
+    padding-right: 50px;
+    background-color: #dfdede;
+    width:fit-content;
+    border-radius: 0 25px 25px 0;
+    border-left:1px solid #c3c3c3;
+    box-sizing: border-box;
+    margin-left: -0.5em;
+    position: relative;
+    cursor: pointer;
+}
+#intro #actions #others #dislike:hover {
+    background-color: #c8c8c8;
+}
+#intro #actions #others #dislike img {
+    position: absolute;
+    width: 25px;
+    top: 13px;
+    right: 15px;
+}
+#intro #actions #others #dislike span {
+    position: absolute;
+    padding: 5px 20px;
+    color: #fff;
+    background:rgba(74, 74, 74, 0.7);
+    white-space: nowrap;
+    height: 35px;
+    line-height: 35px;
+    border-radius: 6px;
+    top: 55px;
+    left: 0;
+    display: none;
+}
+#intro #actions #others #dislike:hover span {
+    display: inline-block;
 }
 
 

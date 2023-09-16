@@ -6,7 +6,7 @@
 
 /* styles for header*/
 #header{
-    width: 100%;
+    width: calc(100% - 10px);
     height:80px;
     background: #f3f2f2;
     padding-left: 0px;
@@ -16,6 +16,7 @@
     display: flex;
     justify-content: space-between;
     top: 0;
+    left: 10px;
     z-index: 1;
     padding-top: 10px; 
 }

@@ -8,28 +8,30 @@
 }
 
 #menu.show {
-    left: 0;
+    left: 10;
+}
+body {
+    margin:0
 }
 
 #content {
     margin-top: 80px;
-    padding: 0 80px;
-    width: calc(100% - 160px);
+    padding: 0 5%;
+    width: 90%;
     margin-bottom: 20px;
     /* enable the y scroll of the content. 
     The scroll in y of body is disabled because the total height of body is less than the height of viewport*/
     /*height: 90%;
     overflow-y: scroll;*/
-    background-color: coral;
 }
 /* styles for mask*/
 #mask {
     position: fixed;
     background:rgba(74, 74, 74, 0.5);
-    width: calc(100% - var(--sideSize));
+    width: calc(100% - 10px);
     height: 100%;
     top: 0;
-    left: var(--sideSize);
+    left: 10px;
     z-index: 1;
     display: none;
 }
@@ -40,11 +42,13 @@
 #videos {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
 /* styles for #videos #major*/
 #videos #major {
-    flex: 1 1 800px;
+    flex: 1 1 1000px;
     min-width: 300px;
+    max-width: 1200px;
     background-color: darkolivegreen;
     margin-right: 20px;
 }
@@ -90,7 +94,7 @@
 }
 
 #intro #actions #subme #sub.open {
-    display:none;
+    display:block;
 }
 #intro #actions #subaddedMesg.open {
     animation: subadded_show 0.3s 0.5s ease-in both,subadded_disappear 0.3s 6s ease-out forwards;
@@ -107,7 +111,8 @@
 
 #intro #actions #subme {
     height: 50px;
-    width: 400px;
+    flex: 0 1 400px;
+    min-width: 150px;
     line-height: 50px;
     background-color: aquamarine;
     display: flex;
@@ -150,14 +155,14 @@
 }
 #intro #actions #subme #sub {
     height: 100%;
-    width: 80px;
+    flex: 0 0 80px;
     padding: 0 25px;
     color: #fff;
     text-align: center;
     font-weight: bold;
     border-radius: 25px;
     background-color: #000;
-    display: block;
+    display: none;
     cursor: pointer;
 }
 #intro #actions #subme #sub:hover {
@@ -167,7 +172,7 @@
 
 #intro #actions #subme #subed {
     height: 100%;
-    width: 100px;
+    flex: 0 0 100px;
     padding: 0 50px;
     color: #000;
     text-align: center;
@@ -206,7 +211,7 @@
     box-shadow: 5px 7px 8px #5f5f5f;
     display: none;
 }
-#intro #actions #subme #subed > div.active {
+#intro #actions #subme #subed > div.open {
     display:block;
 }
 
@@ -243,19 +248,21 @@
 /* styles for reds */
 #videos #reds {
     flex: 1 0 300px;
+    max-width: 500px;
     height: 1000px;
     background-color: cadetblue;
 }
 /* styles for comments */
 .comments {
     width: 100%;
+    max-width: 1200px;
     min-width: 300px;
     height: 400px;
     background-color: hotpink;
 }
 
 #c2 { display: none;}
-@media screen and (max-width: 1308px) {
+@media screen and (max-width: 1474px) {
     #c1 {
         display: none;
     }
@@ -264,6 +271,7 @@
         margin-right: 20px;
     }
     #videos #reds {
+        max-width: 1200px;
         margin-right: 20px;
     }
 

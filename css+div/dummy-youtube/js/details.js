@@ -26,12 +26,13 @@ mask.addEventListener('click', () => {
 })
 sub.addEventListener('click', (e) => {
     e.preventDefault()
-    sub.classList.toggle('open')
-    subed.classList.toggle('open')
+    sub.classList.remove('open')
+    subed.classList.add('open')
+    subaddedMesg.classList.toggle('open')
 })
 subed.addEventListener('click', (e) => {
     e.preventDefault()
-    subedPopup.classList.add('active')
+    subedPopup.classList.add('open')
 })
 
 
@@ -41,7 +42,7 @@ document.addEventListener('click', (e) => {
     console.log(e.target.id)
     if (e.target.id !== 'subed') {
         console.log('e.target.id !== subed')
-        subedPopup.classList.remove('active');
+        subedPopup.classList.remove('open');
     }else {
         console.log('e.target.id == subed')
     }

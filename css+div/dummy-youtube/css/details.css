@@ -21,20 +21,8 @@
     /*height: 90%;
     overflow-y: scroll;*/
 }
-/* styles for mask*/
-#mask {
-    position: fixed;
-    background:rgba(74, 74, 74, 0.5);
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    display: none;
-}
-#mask.show {
-    display: block;
-}
+
+
 /*styles for videos*/
 #videos {
     display: flex;
@@ -44,10 +32,10 @@
 /* styles for #videos #major*/
 #videos #major {
     flex: 1 1 1000px;
-    min-width: 300px;
+    min-width: 400px;
     max-width: 1200px;
     background-color: darkolivegreen;
-    margin-right: 20px;
+    margin: 0 20px;
 }
 /* styles for video */
 #videos #major #video {
@@ -70,7 +58,6 @@
 /* styles for #actions */
 #intro #actions {
     margin: 15px 0;
-    height: 50px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -108,11 +95,11 @@
 }
 
 #intro #actions #subme {
-    height: 100%;
+    height:50px;
+    margin-bottom: 10px;
     flex: 0 1 400px;
     min-width: 150px;
     line-height: 50px;
-    background-color: aquamarine;
     display: flex;
     justify-content: space-between;
 }
@@ -134,6 +121,7 @@
 }
 #intro #actions #subme #who span:first-of-type {
     font-size: larger;
+    color: #000;
 }
 #intro #actions #subme #who span:last-of-type {
     font-size:small;
@@ -236,14 +224,41 @@
 
 /* styles for #others*/
 #intro #actions #others {
-    height: 100%;
+    height:50px;
     line-height: 50px;
-    flex: 0 0 400px;
-    background-color: aquamarine;
+    margin-bottom: 10px;
+    flex: 0 0 420px;
+    display: flex;
+    justify-content:space-between;
 }
-#intro #actions #others #like_dislike > div {
+#intro #actions #others div {
     display: inline-block;
     vertical-align: top;
+}
+#intro #actions #others .text {
+    display: inline-block;
+    height: 100%;
+    padding-right: 20px;
+    color: #000;
+}
+#intro #actions #others span {
+    position: absolute;
+    padding: 5px 20px;
+    color: #fff;
+    background:rgba(74, 74, 74, 0.7);
+    white-space: nowrap;
+    height: 35px;
+    line-height: 35px;
+    border-radius: 6px;
+    top: 55px;
+    left: 0;
+    display: none;
+}
+#intro #actions #others img {
+    position: absolute;
+    width: 25px;
+    top: 13px;
+    left: 13px;
 }
 
 /* styles for #like*/
@@ -260,33 +275,15 @@
 #intro #actions #others #like:hover {
     background-color: #c8c8c8;
 }
+#intro #actions #others #like:hover span {
+    display: inline-block;
+}
 #intro #actions #others #like > div {
     display: inline-block;
     height: 100%;
     padding-right: 10px;
-}
-#intro #actions #others #like img {
-    position: absolute;
-    width: 25px;
-    top: 10px;
-    left: 15px;
-}
-
-#intro #actions #others #like span {
-    position: absolute;
-    padding: 5px 20px;
-    color: #fff;
-    background:rgba(74, 74, 74, 0.7);
-    white-space: nowrap;
-    height: 35px;
-    line-height: 35px;
-    border-radius: 6px;
-    top: 55px;
-    left: 0;
-    display: none;
-}
-#intro #actions #others #like:hover span {
-    display: inline-block;
+    color: #000;
+    font-weight: bold;
 }
 
 /* styles for #dislike*/
@@ -305,33 +302,83 @@
 #intro #actions #others #dislike:hover {
     background-color: #c8c8c8;
 }
-#intro #actions #others #dislike img {
-    position: absolute;
-    width: 25px;
-    top: 13px;
-    right: 15px;
-}
-#intro #actions #others #dislike span {
-    position: absolute;
-    padding: 5px 20px;
-    color: #fff;
-    background:rgba(74, 74, 74, 0.7);
-    white-space: nowrap;
-    height: 35px;
-    line-height: 35px;
-    border-radius: 6px;
-    top: 55px;
-    left: 0;
-    display: none;
-}
 #intro #actions #others #dislike:hover span {
     display: inline-block;
 }
+#intro #actions #others #dislike img {
+    top: 15px;
+    right: 15px;
+}
 
+/* styles for #share*/
+#intro #actions #others #share {
+    height: 100%;
+    padding-left: 50px;
+    background-color: #dfdede;
+    width:fit-content;
+    border-radius: 25px;
+    position: relative;
+    cursor: pointer;
+}
+#intro #actions #others #share:hover {
+    background-color: #c8c8c8;
+}
+#intro #actions #others #share:hover span {
+    display: inline-block;
+}
+#intro #actions #others #share img {
+    position: absolute;
+    width: 25px;
+    top: 12px;
+    left: 13px;
+}
+
+/* styles for #save*/
+#intro #actions #others #save {
+    height: 100%;
+    padding-left: 50px;
+    background-color: #dfdede;
+    width:fit-content;
+    border-radius: 25px;
+    position: relative;
+    cursor: pointer;
+}
+#intro #actions #others #save:hover {
+    background-color: #c8c8c8;
+}
+#intro #actions #others #save:hover span {
+    display: inline-block;
+}
+#intro #actions #others #save img {
+    position: absolute;
+    width: 25px;
+    top: 12px;
+    left: 13px;
+}
+#intro #actions #others #more {
+    height: 100%;
+    width: 50px;
+    background-color: #dfdede;
+    border-radius: 25px;
+    position: relative;
+    cursor: pointer;
+}
+#intro #actions #others #more:hover {
+    background-color: #c8c8c8;
+}
+#intro #actions #others #more:hover span {
+    display: inline-block;
+}
+#intro #actions #others #more img {
+    position: absolute;
+    width: 25px;
+    top: 12px;
+    left: 13px;
+}
 
 /* styles for reds */
 #videos #reds {
-    flex: 1 0 300px;
+    flex: 1 0 400px;
     max-width: 500px;
     height: 1000px;
     background-color: cadetblue;
@@ -340,23 +387,55 @@
 .comments {
     width: 100%;
     max-width: 1200px;
-    min-width: 300px;
+    min-width: 400px;
     height: 400px;
     background-color: hotpink;
 }
 
 #c2 { display: none;}
-@media screen and (max-width: 1474px) {
+@media screen and (max-width: 1607px) {
     #c1 {
         display: none;
     }
     #c2 {
         display: block;
-        margin-right: 20px;
+        margin: 0 20px;
     }
     #videos #reds {
         max-width: 1200px;
-        margin-right: 20px;
+        margin: 0 20px;
     }
 
+}
+
+/* styles for mask*/
+#mask {
+    position: fixed;
+    background:rgba(74, 74, 74, 0.5);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    display: none;
+}
+#mask.show {
+    display: block;
+}
+/* styles for popups*/
+#sharePopup {
+    width: 500px;
+    height: 300px;
+    background-color: #fff;
+    position: fixed;
+    top: 30%;
+    left: 30%;
+    border-radius: 10px;
+    box-shadow: 5px 7px 8px #5f5f5f;
+    display: none;
+    cursor: pointer;
+}
+#sharePopup.show {
+    display: block;
+    z-index: 1;
 }

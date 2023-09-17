@@ -8,21 +8,25 @@ const sub = document.querySelector('#sub')
 const subed = document.querySelector('#subed')
 const subaddedMesg = document.querySelector('#subaddedMesg')
 const subedPopup = document.querySelector('#subedPopup')
+const sharePopup = document.querySelector('#sharePopup')
+const share = document.querySelector('#share')
+
 
 header_burger.addEventListener('click', () => {
     console.log('header_burger is clicked in details');
-    menu.classList.toggle('show')
-    mask.classList.toggle('show')
+    menu.classList.add('show')
+    mask.classList.add('show')
 })
 menu_burger.addEventListener('click', () => {
     console.log('menu_burger is clicked in details');
-    menu.classList.toggle('show')
-    mask.classList.toggle('show')
+    menu.classList.remove('show')
+    mask.classList.remove('show')
 })
 
 mask.addEventListener('click', () => {
-    menu.classList.toggle('show')
-    mask.classList.toggle('show')
+    menu.classList.remove('show')
+    mask.classList.remove('show')
+    sharePopup.classList.remove('show')
 })
 sub.addEventListener('click', (e) => {
     e.preventDefault()
@@ -33,6 +37,11 @@ sub.addEventListener('click', (e) => {
 subed.addEventListener('click', (e) => {
     e.preventDefault()
     subedPopup.classList.add('open')
+})
+share.addEventListener('click', (e) => {
+    e.preventDefault()
+    mask.classList.add('show')
+    sharePopup.classList.add('show')
 })
 
 

@@ -10,6 +10,10 @@ const subaddedMesg = document.querySelector('#subaddedMesg')
 const subedPopup = document.querySelector('#subedPopup')
 const sharePopup = document.querySelector('#sharePopup')
 const share = document.querySelector('#share')
+const closeSharePopup = document.querySelector('#sharePopup #close')
+const moreAction = document.querySelector('#others #more')
+const moreActionPopup = document.querySelector('#moreActionPopup')
+
 
 
 header_burger.addEventListener('click', () => {
@@ -36,19 +40,37 @@ sub.addEventListener('click', (e) => {
 })
 subed.addEventListener('click', (e) => {
     e.preventDefault()
-    subedPopup.classList.add('open')
+    var p = e.target.parentElement
+    var rect = p.getBoundingClientRect();
+    subedPopup.style.top = rect.top + 60;
+    subedPopup.style.left = rect.left;
+    subedPopup.style.display = "block";
 })
 share.addEventListener('click', (e) => {
     e.preventDefault()
     mask.classList.add('show')
     sharePopup.classList.add('show')
 })
+closeSharePopup.addEventListener('click', (e) => {
+    e.preventDefault();
+    mask.classList.remove('show')
+    sharePopup.classList.remove('show')
+})
+moreAction.addEventListener('click', (e) => {
+    var p = e.target.parentElement
+    var rect = p.getBoundingClientRect();
+    moreActionPopup.style.top = rect.top + 60;
+    moreActionPopup.style.left = rect.left;
+    moreActionPopup.style.display = "block";
+})
 
 
 document.addEventListener('click', (e) => {
-    console.log(e.target)
     console.log('document click')
-    console.log(e.target.id)
+    var id = e.target.parentElement.id
+    if (id !== 'more') {
+        moreActionPopup.style.display = "none";
+    }
     if (e.target.id !== 'subed') {
         console.log('e.target.id !== subed')
         subedPopup.classList.remove('open');

@@ -13,6 +13,9 @@ const share = document.querySelector('#share')
 const closeSharePopup = document.querySelector('#sharePopup #close')
 const moreAction = document.querySelector('#others #more')
 const moreActionPopup = document.querySelector('#moreActionPopup')
+const summary = document.querySelector('#intro #summary span')
+const summary_showMore = document.querySelector("#intro #summary #showMore")
+const summary_showLess = document.querySelector("#intro #summary #showLess")
 
 
 
@@ -40,8 +43,7 @@ sub.addEventListener('click', (e) => {
 })
 subed.addEventListener('click', (e) => {
     e.preventDefault()
-    var p = e.target.parentElement
-    var rect = p.getBoundingClientRect();
+    var rect = subed.getBoundingClientRect()
     subedPopup.style.top = rect.top + 60;
     subedPopup.style.left = rect.left;
     subedPopup.style.display = "block";
@@ -62,18 +64,39 @@ moreAction.addEventListener('click', (e) => {
     moreActionPopup.style.top = rect.top + 60;
     moreActionPopup.style.left = rect.left;
     moreActionPopup.style.display = "block";
+}) 
+summary.addEventListener('click', (e) => {
+    e.preventDefault();
+    summary.style.cursor = 'default'
+    summary.style.height = 'fit-content'
+    summary_showMore.style.display = 'none'
+    summary_showLess.style.display = 'block'
+})
+summary_showMore.addEventListener('click', (e) => {
+    e.preventDefault();
+    summary.style.height = 'fit-content'
+    summary_showMore.style.display = 'none'
+    summary_showLess.style.display = 'block'
+})
+summary_showLess.addEventListener('click', (e) => {
+    e.preventDefault();
+    summary.style.height = '200px'
+    summary.style.cursor = 'pointer'
+    summary_showMore.style.display = 'block'
+    summary_showLess.style.display = 'none'
 })
 
 
 document.addEventListener('click', (e) => {
     console.log('document click')
-    var id = e.target.parentElement.id
-    if (id !== 'more') {
+    console.log(e.target)
+    var parentId = e.target.parentElement.id
+    if (parentId !== 'more') {
         moreActionPopup.style.display = "none";
     }
     if (e.target.id !== 'subed') {
         console.log('e.target.id !== subed')
-        subedPopup.classList.remove('open');
+        subedPopup.style.display = "none";
     }else {
         console.log('e.target.id == subed')
     }

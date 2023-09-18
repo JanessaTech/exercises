@@ -35,7 +35,6 @@
     flex: 1 1 1000px;
     min-width: 400px;
     max-width: 1200px;
-    background-color: darkolivegreen;
     margin: 0 20px;
 }
 /* styles for video */
@@ -50,7 +49,7 @@
 #videos #major #video #intro {
     margin: 20px 0;
     width: 100%;
-    height: 250px;
+    height:fit-content;
 }
 #intro > span {
     color: #000;
@@ -343,6 +342,49 @@
     left: 13px;
 }
 
+/* styles for #summary*/
+#intro #summary {
+    position: relative;
+    color: #000;
+}
+#intro #summary span {
+    display:inline-block;
+    width: 100%;
+    overflow: hidden;
+    padding: 10px;
+    padding-bottom: 30px;
+    background-color: #dfdede;
+    height:200px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    cursor:pointer;
+}
+#intro #summary > div {
+    position: absolute;
+    bottom: 0;
+    cursor: pointer;
+    color:blue;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+#intro #summary #showMore {
+    right: 0px;
+}
+#intro #summary #showLess {
+    left: 0px;
+    display: none;
+}
+#intro #summary #showMore:hover {
+    background-color: #c8c8c8;
+}
+#intro #summary #showLess:hover {
+    background-color: #c8c8c8;
+}
+
+
+
+
+
 /* styles for reds */
 #videos #reds {
     flex: 1 0 400px;
@@ -372,7 +414,6 @@
         max-width: 1200px;
         margin: 0 20px;
     }
-
 }
 
 /* styles for mask*/
@@ -389,7 +430,8 @@
 #mask.show {
     display: block;
 }
-/* styles for popups*/
+
+/* styles for #sharePopup*/
 #sharePopup {
     width: 500px;
     padding: 20px 30px;

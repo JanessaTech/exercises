@@ -19,6 +19,8 @@ const summary_showLess = document.querySelector("#intro #summary #showLess")
 
 
 
+
+
 header_burger.addEventListener('click', () => {
     console.log('header_burger is clicked in details');
     menu.classList.add('show')
@@ -89,7 +91,6 @@ summary_showLess.addEventListener('click', (e) => {
 
 document.addEventListener('click', (e) => {
     console.log('document click')
-    console.log(e.target)
     var parentId = e.target.parentElement.id
     if (parentId !== 'more') {
         moreActionPopup.style.display = "none";

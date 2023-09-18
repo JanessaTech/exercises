@@ -2,7 +2,10 @@
 @import url("./header.css");
 @import url("./menu.css");
 @import url("./popup.css");
-
+@import url("./comment/main.css");
+body {
+    color: #000;
+}
 #menu {
     background-color: #fff;
     left: -400px;
@@ -76,6 +79,7 @@
     position: fixed;
     left: 20px;
     bottom: -50px;
+    z-index: 1;
 }
 
 #intro #actions #subme #sub.open {
@@ -121,10 +125,10 @@
 }
 #intro #actions #subme #who span:first-of-type {
     font-size: larger;
-    color: #000;
 }
 #intro #actions #subme #who span:last-of-type {
     font-size:small;
+    color: #4b4b4b;
 }
 #intro #actions #subme #who a {
     position:absolute;
@@ -160,9 +164,7 @@
     height: 100%;
     flex: 0 0 100px;
     padding: 0 50px;
-    color: #000;
     text-align: center;
-    font-weight: bold;
     border-radius: 25px;
     background: #dfdede;
     cursor: pointer;
@@ -205,7 +207,6 @@
     display: inline-block;
     height: 100%;
     padding-right: 20px;
-    color: #000;
 }
 #intro #actions #others span {
     position: absolute;
@@ -219,6 +220,7 @@
     top: 55px;
     left: 0;
     display: none;
+    z-index: 1;
 }
 #intro #actions #others img {
     position: absolute;
@@ -248,8 +250,6 @@
     display: inline-block;
     height: 100%;
     padding-right: 10px;
-    color: #000;
-    font-weight: bold;
 }
 
 /* styles for #dislike*/
@@ -345,7 +345,6 @@
 /* styles for #summary*/
 #intro #summary {
     position: relative;
-    color: #000;
 }
 #intro #summary span {
     display:inline-block;
@@ -364,8 +363,9 @@
     bottom: 0;
     cursor: pointer;
     color:blue;
+    background-color: #dfdede;
     padding: 5px 10px;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 #intro #summary #showMore {
     right: 0px;
@@ -381,16 +381,12 @@
     background-color: #c8c8c8;
 }
 
-
-
-
-
 /* styles for reds */
 #videos #reds {
     flex: 1 0 400px;
     max-width: 500px;
     height: 1000px;
-    background-color: cadetblue;
+    background-color:brown;
 }
 /* styles for comments */
 .comments {
@@ -398,7 +394,7 @@
     max-width: 1200px;
     min-width: 400px;
     height: 400px;
-    background-color: hotpink;
+    background-color:cornflowerblue;
 }
 
 #c2 { display: none;}

@@ -381,19 +381,20 @@ body {
     background-color: #c8c8c8;
 }
 
-/* styles for reds */
+/* styles for reds  container*/
 #videos #reds {
     flex: 1 0 400px;
     max-width: 500px;
     height: 1000px;
     background-color:brown;
 }
-/* styles for comments */
+/* styles for comments container*/
 .comments {
     width: 100%;
     max-width: 1024px;
     min-width: 400px;
     height: 400px;
+    margin-bottom: 50px;
     background-color:cornflowerblue;
 }
 

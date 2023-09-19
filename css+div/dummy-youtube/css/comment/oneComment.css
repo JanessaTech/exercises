@@ -1,0 +1,22 @@
+.comments .oneComment {
+    width: 100%;
+    height:fit-content;
+    padding-left: 70px;
+    margin-bottom: 30px;
+    box-sizing: border-box;
+    background-color: darkkhaki;
+    position: relative;
+}
+
+.comments .oneComment a {
+    width: fit-content;
+    height: fit-content;
+}
+
+.comments .oneComment img {
+    position: absolute;
+    width: 50px;
+    border-radius: 25px;
+    top: 0;
+    left: 0;
+}

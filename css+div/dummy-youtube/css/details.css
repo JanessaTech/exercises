@@ -35,9 +35,9 @@ body {
 }
 /* styles for #videos #major*/
 #videos #major {
-    flex: 1 1 1000px;
+    flex: 1 1 600px;
     min-width: 400px;
-    max-width: 1200px;
+    max-width: 1024px;
     margin: 0 20px;
 }
 /* styles for video */
@@ -391,14 +391,14 @@ body {
 /* styles for comments */
 .comments {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1024px;
     min-width: 400px;
     height: 400px;
     background-color:cornflowerblue;
 }
 
 #c2 { display: none;}
-@media screen and (max-width: 1607px) {
+@media screen and (max-width: 1206px) {
     #c1 {
         display: none;
     }
@@ -407,7 +407,7 @@ body {
         margin: 0 20px;
     }
     #videos #reds {
-        max-width: 1200px;
+        max-width: 1024px;
         margin: 0 20px;
     }
 }

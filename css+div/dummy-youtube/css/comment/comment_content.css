@@ -13,7 +13,7 @@
 }
 
 .comments .comment_content > div:nth-of-type(3) {
-    margin-top: 10px;
+    margin: 10px 0;
 }
 .comments .comment_content > div:nth-of-type(3) > div { 
     display: inline-block; 
@@ -80,7 +80,8 @@
 .comments .comment_content > div:nth-of-type(3) > div:nth-of-type(3):hover {
     background-color: #c8c8c8;
 }
-.comments .comment_content > div:nth-of-type(4) {
+
+.comments .comment_content > div:nth-of-type(5) {
     height: 40px;
     padding-left: 50px;
     padding-right: 10px;
@@ -93,10 +94,10 @@
     position: relative;
     cursor: pointer;
 }
-.comments .comment_content > div:nth-of-type(4):hover {
+.comments .comment_content > div:nth-of-type(5):hover {
     background-color:#b6e2fa;
 }
-.comments .comment_content > div:nth-of-type(4) img {
+.comments .comment_content > div:nth-of-type(5) img {
     position: absolute;
     width: 20px;
     top: 10px;

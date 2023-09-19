@@ -1,4 +1,11 @@
 @import url("./oneComment.css");
+.comments .comment_byme {
+    display: none;
+}
+.comments .comment_byme.open {
+    display: block;
+}
+
 
 .comments .comment_byme input {
     border: none;
@@ -10,6 +17,7 @@
     border-bottom: 2px solid #acacac;
     box-sizing: border-box;
 }
+
 .comments .comment_byme input:focus {
     border-bottom: 2px solid #000;
 }
@@ -44,6 +52,7 @@
     left: 5px;
     border-radius: 15px;
 }
+
 .comments .comment_byme .actionOnComment button {
     height: 100%;
     display: inline-block;
@@ -67,6 +76,35 @@
     background-color: #0352b8;
 }
 .comments .comment_byme .actionOnComment button:nth-child(2).disable {
+    cursor:not-allowed;
+    pointer-events: none;
+    background-color:#ecebeb;
+    color: #c8c8c8;
+}
+.comments .comment_byme.replymode .actionOnComment button:nth-child(2) {
+    visibility:hidden;
+    width: 60px;
+    position: relative;
+}
+.comments .comment_byme.replymode .actionOnComment button:nth-child(2):after {
+    visibility: visible;
+    position: absolute;
+    top: 0;
+    margin: 0;
+    left: -15px;
+    content: "reply";
+    line-height: 40px;
+    font-size: medium;
+    padding: 0 20px;
+    border-radius: 20px;
+    height: 100%;
+    width: fit-content;
+    display: inline-block;
+    background-color: #065fd4;
+    color: #fff;
+}
+
+.comments .comment_byme.replymode .actionOnComment button:nth-child(2).disable:after {
     cursor:not-allowed;
     pointer-events: none;
     background-color:#ecebeb;

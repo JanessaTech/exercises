@@ -393,9 +393,8 @@ body {
     width: 100%;
     max-width: 1024px;
     min-width: 400px;
-    height: 400px;
+    height:fit-content;
     margin-bottom: 50px;
-    background-color:cornflowerblue;
 }
 
 #c2 { display: none;}

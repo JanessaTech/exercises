@@ -214,9 +214,9 @@ body {
     color: #fff;
     background:rgba(74, 74, 74, 0.7);
     white-space: nowrap;
-    height: 35px;
-    line-height: 35px;
-    border-radius: 6px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 10px;
     top: 55px;
     left: 0;
     display: none;

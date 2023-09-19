@@ -1,22 +1,85 @@
-.comments .oneComment {
-    width: 100%;
-    height:fit-content;
-    padding-left: 70px;
-    margin-bottom: 30px;
-    box-sizing: border-box;
-    background-color: darkkhaki;
+@import url("./oneComment.css");
+
+.comments .comment_content > div:nth-of-type(1) {
+    font-size: small;
+    margin-bottom: 5px;
+}
+.comments .comment_content > div:nth-of-type(1) span:first-child {
+    font-weight: bold;
+    padding-right: 20px;
+} 
+.comments .comment_content > div:nth-of-type(1) span:last-child {
+    color: #4b4b4b;
+}
+
+.comments .comment_content > div:nth-of-type(3) {
+    margin-top: 10px;
+}
+.comments .comment_content > div:nth-of-type(3) > div { 
+    display: inline-block; 
+    font-size: small;
+    height: 40px;
+    margin-right: 10px;
+    line-height: 40px;
+    vertical-align: top;
     position: relative;
 }
-
-.comments .oneComment a {
+.comments .comment_content > div:nth-of-type(3) > div > div:nth-of-type(1) {
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+}
+.comments .comment_content > div:nth-of-type(3) > div > div:nth-of-type(1):hover {
+    background-color: #c8c8c8;   
+}
+.comments .comment_content > div:nth-of-type(3) > div > div:nth-of-type(2) {
+    padding: 0 3px;
     width: fit-content;
-    height: fit-content;
+    vertical-align: top;
+    cursor: pointer;
+}
+.comments .comment_content > div:nth-of-type(3) > div:nth-of-type(1) > span, .comments .comment_content > div:nth-of-type(3) > div:nth-of-type(2) > span {
+    position: absolute;
+    padding: 5px 20px;
+    color: #fff;
+    background:rgba(74, 74, 74, 0.7);
+    white-space: nowrap;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 10px;
+    top: 45px;
+    display: none;
+    left: 0;
+    z-index: 1;
+}
+.comments .comment_content > div:nth-of-type(3) > div:nth-of-type(1):hover > span {
+    display: block;
+}
+.comments .comment_content > div:nth-of-type(3) > div:nth-of-type(2):hover > span {
+    display: block;
 }
 
-.comments .oneComment img {
+.comments .comment_content > div:nth-of-type(3) > div img {
+    width: 25px;
     position: absolute;
-    width: 50px;
-    border-radius: 25px;
-    top: 0;
-    left: 0;
+    top: 7px;
+    left: 6px;
 }
+.comments .comment_content > div:nth-of-type(3) > div > div {
+    display: inline-block;
+}
+.comments .comment_content > div:nth-of-type(3) > div:nth-of-type(3) {
+    height: 40px;
+    padding: 0 15px;
+    font-weight: bold;   
+    border-radius: 20px;
+    cursor: pointer;
+}
+.comments .comment_content > div:nth-of-type(3) > div:nth-of-type(3):hover {
+    background-color: #c8c8c8;
+}
+
+
+

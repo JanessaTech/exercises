@@ -1,0 +1,21 @@
+@import url("./intro.css");
+
+/* styles for #videos #major*/
+#videos #major {
+    flex: 1 1 600px;
+    min-width: 400px;
+    max-width: 1024px;
+    margin: 0 20px;
+}
+/* styles for video */
+#videos #major #video {
+    width: 100%;
+}
+#videos #major #video video {
+    object-fit: cover;
+    width: 100%;
+}
+
+
+
+

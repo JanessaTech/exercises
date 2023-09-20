@@ -1,11 +1,12 @@
 /* style for tabs */
 #tabs {
-    height: 80px;
+    height: fit-content;
     width: 100%;
     left: 10px;
     margin-bottom: 10px;
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    align-items:center;
 }
 #tabs span {
     display:inline-block;
@@ -15,6 +16,7 @@
     background-color: #dfdede;
     padding: 2px 15px;
     margin-right: 15px;
+    margin-bottom: 10px;
     border-radius: 5px;
     cursor: pointer;
 }

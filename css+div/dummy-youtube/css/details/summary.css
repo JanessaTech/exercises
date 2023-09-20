@@ -1,0 +1,38 @@
+/* styles for #summary*/
+#intro #summary {
+    position: relative;
+}
+#intro #summary span {
+    display:inline-block;
+    width: 100%;
+    overflow: hidden;
+    padding: 10px;
+    padding-bottom: 30px;
+    background-color: #dfdede;
+    height:200px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    cursor:pointer;
+}
+#intro #summary > div {
+    position: absolute;
+    bottom: 0;
+    cursor: pointer;
+    color:blue;
+    background-color: #dfdede;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+#intro #summary #showMore {
+    right: 0px;
+}
+#intro #summary #showLess {
+    left: 0px;
+    display: none;
+}
+#intro #summary #showMore:hover {
+    background-color: #c8c8c8;
+}
+#intro #summary #showLess:hover {
+    background-color: #c8c8c8;
+}

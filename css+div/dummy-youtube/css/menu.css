@@ -18,11 +18,11 @@
 }
 
 #menu #menutails {
-    height: 1500px;
+    height:1500px;
     padding-left: 10px;
     padding-right: 15px;
     cursor: pointer;
-    overflow-y:none
+    overflow-y: none;
 }
 #menu #menutails:hover {
     overflow-y: scroll;

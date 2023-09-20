@@ -1,7 +1,8 @@
 /* styles for logo*/
 .logo {
     height:70px;
-    top: 0;
+    width: 290px;
+    display: flex;
 }
 
 /* styles for header*/
@@ -23,7 +24,8 @@
 
 /* styles for burger*/
 .burger {
-    min-width: 250px;
+    width: fit-content;
+    height: fit-content;
 }
 .burger > div {
     width: 50px;
@@ -56,8 +58,11 @@
 .burger #spans span:nth-child(3) {
     top:31px;
 }
-.burger a {
-    display: inline-block;
+.logo a {
+    height: 50px;
+    width: fit-content;
+    display: block;
+    margin-right: 60px;
 }
 
 /* styles for search */
@@ -98,7 +103,7 @@
 #search .input #historywords {
     position:absolute;
     width: calc(100% + 100px);
-    height: 250px;
+    height: fit-content;
     top:60px;
     left:0;
     border-radius: 25px;
@@ -110,6 +115,7 @@
 #search .input #historywords ul {
     padding: 10px 0px;
     width: 100%;
+    
 }
 #search .input #historywords ul li {
     height:40px;

@@ -1,7 +1,7 @@
-const cmt0_comment_input = document.querySelector(".comments #cmt0.comment_byme input")
-const cmt0_actionOnComment = document.querySelector(".comments #cmt0.comment_byme .actionOnComment")
-const cmt0_comment_cancel_button = document.querySelector(".comments #cmt0.comment_byme .cancelComment")
-const cmt0_comment_submit_button = document.querySelector(".comments #cmt0.comment_byme .submitComment")
+const cmt0_comment_input = document.querySelector("#c1.comments #cmt0.comment_byme input")
+const cmt0_actionOnComment = document.querySelector("#c1.comments #cmt0.comment_byme .actionOnComment")
+const cmt0_comment_cancel_button = document.querySelector("#c1.comments #cmt0.comment_byme .cancelComment")
+const cmt0_comment_submit_button = document.querySelector("#c1.comments #cmt0.comment_byme .submitComment")
 
 cmt0_comment_input.addEventListener('focus', (e) => {
     e.preventDefault();
@@ -27,14 +27,14 @@ cmt0_comment_cancel_button.addEventListener('click', (e) => {
 })
 
 
-const cmt1_comment_input = document.querySelector(".comments #cmt1.comment_content .comment_byme input")
-const cmt1_actionOnComment = document.querySelector(".comments #cmt1.comment_content .comment_byme .actionOnComment")
-const cmt1_comment_cancel_button = document.querySelector(".comments #cmt1.comment_content .comment_byme .cancelComment")
-const cmt1_comment_submit_button = document.querySelector(".comments #cmt1.comment_content .comment_byme .submitComment")
-const cmt1_reply_btn = document.querySelector("#cmt1_reply_btn")
-const cmt1_comment_byme = document.querySelector("#cmt1 .comment_byme")
-const cmt1_replies = document.querySelector(".comments #cmt1.comment_content > div:nth-of-type(6)")
-const cmt1_show_reply_btn = document.querySelector(".comments #cmt1.comment_content > div:nth-of-type(5)")
+const cmt1_comment_input = document.querySelector("#c1.comments #cmt1.comment_content .comment_byme input")
+const cmt1_actionOnComment = document.querySelector("#c1.comments #cmt1.comment_content .comment_byme .actionOnComment")
+const cmt1_comment_cancel_button = document.querySelector("#c1.comments #cmt1.comment_content .comment_byme .cancelComment")
+const cmt1_comment_submit_button = document.querySelector("#c1.comments #cmt1.comment_content .comment_byme .submitComment")
+const cmt1_reply_btn = document.querySelector("#c1 #cmt1_reply_btn")
+const cmt1_comment_byme = document.querySelector("#c1 #cmt1 .comment_byme")
+const cmt1_replies = document.querySelector("#c1.comments #cmt1.comment_content > div:nth-of-type(6)")
+const cmt1_show_reply_btn = document.querySelector("#c1.comments #cmt1.comment_content > div:nth-of-type(5)")
 cmt1_comment_input.addEventListener('focus', (e) => {
     console.log('focus cmt1_comment_input')
     e.preventDefault();
@@ -71,12 +71,12 @@ cmt1_show_reply_btn.addEventListener('click', (e) => {
     cmt1_replies.classList.toggle('showReplies')
 })
 
-const cmt2_comment_input = document.querySelector(".comments #cmt2.comment_content .comment_byme input")
-const cmt2_actionOnComment = document.querySelector(".comments #cmt2.comment_content .comment_byme .actionOnComment")
-const cmt2_comment_cancel_button = document.querySelector(".comments #cmt2.comment_content .comment_byme .cancelComment")
-const cmt2_comment_submit_button = document.querySelector(".comments #cmt2.comment_content .comment_byme .submitComment")
-const cmt2_reply_btn = document.querySelector("#cmt2_reply_btn")
-const cmt2_comment_byme = document.querySelector("#cmt2 .comment_byme")
+const cmt2_comment_input = document.querySelector("#c1.comments #cmt2.comment_content .comment_byme input")
+const cmt2_actionOnComment = document.querySelector("#c1.comments #cmt2.comment_content .comment_byme .actionOnComment")
+const cmt2_comment_cancel_button = document.querySelector("#c1.comments #cmt2.comment_content .comment_byme .cancelComment")
+const cmt2_comment_submit_button = document.querySelector("#c1.comments #cmt2.comment_content .comment_byme .submitComment")
+const cmt2_reply_btn = document.querySelector("#c1 #cmt2_reply_btn")
+const cmt2_comment_byme = document.querySelector("#c1 #cmt2 .comment_byme")
 cmt2_comment_input.addEventListener('focus', (e) => {
     console.log('focus cmt1_comment_input')
     e.preventDefault();
@@ -105,14 +105,14 @@ cmt2_reply_btn.addEventListener('click', (e) => {
 })
 
 
-const cmt3_comment_input = document.querySelector(".comments #cmt3.comment_content .comment_byme input")
-const cmt3_actionOnComment = document.querySelector(".comments #cmt3.comment_content .comment_byme .actionOnComment")
-const cmt3_comment_cancel_button = document.querySelector(".comments #cmt3.comment_content .comment_byme .cancelComment")
-const cmt3_comment_submit_button = document.querySelector(".comments #cmt3.comment_content .comment_byme .submitComment")
-const cmt3_reply_btn = document.querySelector("#cmt3_reply_btn")
-const cmt3_comment_byme = document.querySelector("#cmt3 .comment_byme")
-const cmt3_replies = document.querySelector(".comments #cmt3.comment_content > div:nth-of-type(6)")
-const cmt3_show_reply_btn = document.querySelector(".comments #cmt3.comment_content > div:nth-of-type(5)")
+const cmt3_comment_input = document.querySelector("#c1.comments #cmt3.comment_content .comment_byme input")
+const cmt3_actionOnComment = document.querySelector("#c1.comments #cmt3.comment_content .comment_byme .actionOnComment")
+const cmt3_comment_cancel_button = document.querySelector("#c1.comments #cmt3.comment_content .comment_byme .cancelComment")
+const cmt3_comment_submit_button = document.querySelector("#c1.comments #cmt3.comment_content .comment_byme .submitComment")
+const cmt3_reply_btn = document.querySelector("#c1 #cmt3_reply_btn")
+const cmt3_comment_byme = document.querySelector("#c1 #cmt3 .comment_byme")
+const cmt3_replies = document.querySelector("#c1.comments #cmt3.comment_content > div:nth-of-type(6)")
+const cmt3_show_reply_btn = document.querySelector("#c1.comments #cmt3.comment_content > div:nth-of-type(5)")
 cmt3_comment_input.addEventListener('focus', (e) => {
     console.log('focus cmt1_comment_input')
     e.preventDefault();
@@ -150,12 +150,12 @@ cmt3_show_reply_btn.addEventListener('click', (e) => {
 })
 
 
-const cmt4_comment_input = document.querySelector(".comments #cmt4.comment_content .comment_byme input")
-const cmt4_actionOnComment = document.querySelector(".comments #cmt4.comment_content .comment_byme .actionOnComment")
-const cmt4_comment_cancel_button = document.querySelector(".comments #cmt4.comment_content .comment_byme .cancelComment")
-const cmt4_comment_submit_button = document.querySelector(".comments #cmt4.comment_content .comment_byme .submitComment")
-const cmt4_reply_btn = document.querySelector("#cmt4_reply_btn")
-const cmt4_comment_byme = document.querySelector("#cmt4 .comment_byme")
+const cmt4_comment_input = document.querySelector("#c1.comments #cmt4.comment_content .comment_byme input")
+const cmt4_actionOnComment = document.querySelector("#c1.comments #cmt4.comment_content .comment_byme .actionOnComment")
+const cmt4_comment_cancel_button = document.querySelector("#c1.comments #cmt4.comment_content .comment_byme .cancelComment")
+const cmt4_comment_submit_button = document.querySelector("#c1.comments #cmt4.comment_content .comment_byme .submitComment")
+const cmt4_reply_btn = document.querySelector("#c1 #cmt4_reply_btn")
+const cmt4_comment_byme = document.querySelector("#c1 #cmt4 .comment_byme")
 cmt4_comment_input.addEventListener('focus', (e) => {
     console.log('focus cmt1_comment_input')
     e.preventDefault();
@@ -184,12 +184,12 @@ cmt4_reply_btn.addEventListener('click', (e) => {
 })
 
 
-const cmt5_comment_input = document.querySelector(".comments #cmt5.comment_content .comment_byme input")
-const cmt5_actionOnComment = document.querySelector(".comments #cmt5.comment_content .comment_byme .actionOnComment")
-const cmt5_comment_cancel_button = document.querySelector(".comments #cmt5.comment_content .comment_byme .cancelComment")
-const cmt5_comment_submit_button = document.querySelector(".comments #cmt5.comment_content .comment_byme .submitComment")
-const cmt5_reply_btn = document.querySelector("#cmt5_reply_btn")
-const cmt5_comment_byme = document.querySelector("#cmt5 .comment_byme")
+const cmt5_comment_input = document.querySelector("#c1.comments #cmt5.comment_content .comment_byme input")
+const cmt5_actionOnComment = document.querySelector("#c1.comments #cmt5.comment_content .comment_byme .actionOnComment")
+const cmt5_comment_cancel_button = document.querySelector("#c1.comments #cmt5.comment_content .comment_byme .cancelComment")
+const cmt5_comment_submit_button = document.querySelector("#c1.comments #cmt5.comment_content .comment_byme .submitComment")
+const cmt5_reply_btn = document.querySelector("#c1 #cmt5_reply_btn")
+const cmt5_comment_byme = document.querySelector("#c1 #cmt5 .comment_byme")
 cmt5_comment_input.addEventListener('focus', (e) => {
     console.log('focus cmt1_comment_input')
     e.preventDefault();

@@ -1,0 +1,134 @@
+/* styles for shorts */
+#s_title{
+    height: 50px;
+    width: 100%;
+    line-height: 50px;
+    font-size:x-large;
+    font-weight:normal;
+    color: #2b2b2b;
+    display: flex;
+    justify-content: space-between;
+    
+}
+#s_title_name {
+    position: relative;
+    padding-left: 40px;
+}
+#s_title_name img {
+    position: absolute;
+    top:10px;
+    left:0;
+}
+#hint_and_close div {
+    display: inline-block;
+    vertical-align: top;
+}
+div.hint{
+    height: 40px;
+    margin: 5px 20px;
+    padding: 0 10px;
+    font-size: medium;
+    font-weight: normal;
+    line-height: 40px;;
+    text-align: center;
+    color: #fff;
+    background:rgba(74, 74, 74, 0.7);
+    border-radius: 10px;
+    visibility: hidden;
+}
+div.hint.active {
+    visibility: visible;
+}
+div.close {
+    width: 50px;
+    height: 50px; 
+    border-radius: 25px;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+div.close.active {
+    background-color: #c8c8c8;
+}
+.close span {
+    display: block;
+    padding: 1px 0;
+    width: 36px;
+    position:absolute;
+    top: 24px;
+    left:6px;
+    background-color: #747474;
+}
+.close span:nth-child(1) {
+    transform: rotate(45deg);
+}
+.close span:nth-child(2) {
+    transform: rotate(-45deg);
+}
+
+.short {
+    display: flex;
+    flex-wrap: wrap;
+}
+.short .video {
+    width: 300px;
+    min-width:300px; 
+    height: 450px;
+    min-height:450px;
+    
+    box-sizing: border-box;
+    margin-right: 30px;
+    margin-bottom: 50px;
+}
+.short .video .overview {
+    width: 100%;
+    height: calc(100% - 60px);
+    background-color: #000;
+    border-radius: 20px;
+    margin-bottom:  20px;
+}
+.short .video .intro {
+    height: 60px;
+    width: 100%;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    position: relative;
+    cursor: pointer;
+}
+.short .video .intro span {
+    display: block;
+}
+.short .video .intro span:nth-child(1) {
+    color: #000;
+    font-size: larger;
+}
+.short .video .intro span:nth-child(3) {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    border-radius: 10px;
+}
+.short .video .intro span:nth-child(3):hover {
+    background-color: #c8c8c8;
+}
+.short .video .intro span:nth-child(3) img {
+    position: absolute;
+    width: 16px;
+    top: 2px;
+    left: 2px;
+    display: none;
+}
+.short .video .overview a {
+    display: block;
+}
+.short .video .overview a video {
+    width: 300px;
+    height: 400px;
+    border-radius: 20px;
+    box-sizing: border-box;
+}
+.short .video .intro:hover .short_actions img {
+    display:block;
+}

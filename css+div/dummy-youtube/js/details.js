@@ -18,9 +18,6 @@ const summary_showMore = document.querySelector("#intro #summary #showMore")
 const summary_showLess = document.querySelector("#intro #summary #showLess")
 
 
-
-
-
 header_burger.addEventListener('click', () => {
     console.log('header_burger is clicked in details');
     menu.classList.add('show')

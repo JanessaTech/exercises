@@ -97,12 +97,22 @@
 .comments .comment_content > div:nth-of-type(5):hover {
     background-color:#b6e2fa;
 }
+.comments .comment_content > div:nth-of-type(5):active {
+    background-color:#9dc2d7;
+}
 .comments .comment_content > div:nth-of-type(5) img {
     position: absolute;
     width: 20px;
     top: 10px;
     left: 16px;
 }
+.comments .comment_content > div:nth-of-type(6) {
+    display: none;
+}
+.comments .comment_content > div:nth-of-type(6).showReplies {
+    display: block;
+}
+
 
 
 

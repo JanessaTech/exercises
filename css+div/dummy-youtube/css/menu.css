@@ -2,6 +2,7 @@
 #menu {
     width: var(--sideSize);
     position:fixed;
+    height: 100%;
     background: #f3f2f2;
     top: 0;
     box-sizing:border-box;
@@ -18,20 +19,20 @@
 }
 
 #menu #menutails {
-    height:1500px;
+    height:calc(100% - 80px);
     padding-left: 10px;
     padding-right: 15px;
     cursor: pointer;
-    overflow-y: none;
+    overflow-y: hidden;
 }
 #menu #menutails:hover {
     overflow-y: scroll;
 }
 #menu ul {
-    width:calc(var(--sideSize) - 25px - 8px);  
+    width:calc(var(--sideSize) - 25px - 8px - 10px);  
     /* fix bug: when toggle scroll, the width of ul dynamically changed
     Here 25px is the the sum of padding-left and padding-right in menu
-    8px is the reserved for scroll
+    8px is the reserved for scroll, 10px is padding-left in #menu
     */
  }
 

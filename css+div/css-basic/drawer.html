@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+    <head>
+        <title>CSS for Beginner</title>
+        <style>
+            #ioc {
+                width: 600px;
+                height: 600px;
+                line-height: 50px;
+                font-size:larger;
+                padding-left: 100px; 
+                background-color: cadetblue;
+                position: relative;
+                cursor: pointer;
+            }
+            #menu {
+                width: 100px;
+                height: 300px;
+                position: fixed;
+                background-color: red;
+                top: 20px;
+                left:10px;
+                z-index: 1;
+            }
+            #menu1 {
+                width: 100px;
+                height: 300px;
+                position: fixed;
+                background-color: red;
+                top: 80px;
+                z-index: 1;
+            }
+            #menu {
+                transition: left ease-in 0.3s;
+            }
+            #menu.hide {
+                left: -100px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="ioc"></div>
+        <div id="menu"></div>
+        <script>
+            const ioc = document.querySelector('#ioc')
+            const menu  = document.querySelector('#menu')
+
+
+            ioc.addEventListener('click', () => {
+                console.log('ioc is clicked');
+                menu.classList.toggle('hide')
+            })
+        </script>
+    </body>
+</html>

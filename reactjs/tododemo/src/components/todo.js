@@ -42,7 +42,7 @@ class ToDo extends React.Component {
                 let todos = []
                 for(let key in jsonTodos) {
                     let value = jsonTodos[key]
-                    todos.push({id: value.id, title: value.title, body:value.title})
+                    todos.push({id: value.id, title: value.title, body:value.body})
                 }
                 this.setState({
                     todos: todos,

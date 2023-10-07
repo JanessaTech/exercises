@@ -15,6 +15,7 @@ class UserController {
                 roles: req.body.roles,
                 email: req.body.email
             }
+            logger.info(user)
             let payload = await userService.register(user)
             sendSuccess(res, messageHelper.getMessage('user_register', payload.name))
         } catch(e) {
@@ -22,7 +23,7 @@ class UserController {
         }
     }
     async login(req, res, next) {
-        logger.info('UserController.login')
+        logger.info('UserController.login: ', req.body.name)
         try {
             const user = {
                 name : req.body.name,

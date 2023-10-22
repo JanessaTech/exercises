@@ -1,0 +1,15 @@
+body {
+  margin: 0;
+  background: #f3f2f2;
+  font-family: "Roboto", "Arial", "sans-serif";
+  color: #4b4b4b;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.JButton.Mui-disabled {
+  background-color: red!important;
+}
+.myTextField .Mui-focused {
+  color: red!important;
+}

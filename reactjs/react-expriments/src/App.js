@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Root from "./components/ComponentTree/Root";
 import UseCallbackDemo from "./components/UseCallbackDemo";
 import RootComponent from "./components/UseContextUsage/RootComponent";
 import UseMemo from "./components/UseMemo";
@@ -16,7 +17,8 @@ function App() {
       {/* <UseMemo/> */}
       {/* <UseRefDemo/> */}
       {/* <RootComponent/> */}
-      <UseReducerDemo/>
+      {/* <UseReducerDemo/> */}
+      <Root/>
     </div>
   );
 }

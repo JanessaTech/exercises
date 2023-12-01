@@ -6,8 +6,19 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
-				"name": "greet",
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"name": "strConcat",
 				"outputs": [
 					{
 						"internalType": "string",
@@ -15,7 +26,7 @@
 						"type": "string"
 					}
 				],
-				"stateMutability": "view",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -32,7 +43,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/HelloWorld.sol": "HelloWorld"
+			"contracts/AbiEncode.sol": "IMyString"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -46,12 +57,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/HelloWorld.sol": {
-			"keccak256": "0x46a5525ddbafd0e2e7efb09ebb28ec4b32c78c54fd964f5ec502dfd7f4336c06",
+		"contracts/AbiEncode.sol": {
+			"keccak256": "0xad52b42d21d904264b28416aca2b66a35c39255ea8a016f04d87e85672cb538c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://bab5faf6a67c94ebbe1b6887c1bc806fd3bb1cb08aeaaf7a0137e95321987165",
-				"dweb:/ipfs/QmdEoxee4HKdyrC1cSS27g83cHhzJWt4urVi75HmLTR8RP"
+				"bzz-raw://6c67f11814e2ab1a44e0f57ebd98b418bf1a675a4a04921a70a08f20e37336fd",
+				"dweb:/ipfs/QmU5bZqDzm654MsjVBY7nEnSQLptkuqRrBQ5qGGAxa98C9"
 			]
 		}
 	},

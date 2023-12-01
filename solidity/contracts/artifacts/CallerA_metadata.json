@@ -1,0 +1,92 @@
+{
+	"compiler": {
+		"version": "0.8.22+commit.4fc1097e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_caller",
+						"type": "address"
+					}
+				],
+				"name": "callByAddress",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "contract CalleeA",
+						"name": "_caller",
+						"type": "address"
+					}
+				],
+				"name": "callByObject",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/CallerA.sol": "CallerA"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/CalleeA.sol": {
+			"keccak256": "0x808ce34f0da6fb2ec1decc52d2819d2e0c6fd3ffb8d59117b70df64588be13b0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://efadcd288fd18a85b0b99d348b8ce3514a7070d477753e3c17f4ec021115960b",
+				"dweb:/ipfs/QmdpSSWYHNBBCJTECQz7tDvoRvHs151SnSnXip75BbhDYz"
+			]
+		},
+		"contracts/CallerA.sol": {
+			"keccak256": "0x832b1bfe6e08aa20a15c5db6a4c9ebe2fdb65e5c5ed291421c48305ead3c4113",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://777f44c425983ce4b4bd4c80a5f7b674df700d92f6594251a1b4b0ac02688c28",
+				"dweb:/ipfs/QmfTJQQ6YAFzEWxdffPSiKRtB4F7fdx2er4aWquSxaEeeD"
+			]
+		}
+	},
+	"version": 1
+}

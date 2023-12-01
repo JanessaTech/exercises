@@ -1,0 +1,124 @@
+{
+	"compiler": {
+		"version": "0.8.22+commit.4fc1097e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "message",
+						"type": "string"
+					}
+				],
+				"name": "Log",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "bytes",
+						"name": "message",
+						"type": "bytes"
+					}
+				],
+				"name": "LogBytes",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "catcher",
+				"outputs": [
+					{
+						"internalType": "contract Catcher",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "i",
+						"type": "uint256"
+					}
+				],
+				"name": "tryCatchExternalCall",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_owner",
+						"type": "address"
+					}
+				],
+				"name": "tryCatchNewContract",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/Tryer.sol": "Tryer"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/Catcher.sol": {
+			"keccak256": "0x929b3bb3d201fc68993b79a3b0842440a44352470d8a1fc8ae13ccaf1e8aeb4c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://99d004bc95f3acf95ec2bde09babc100299c85af7b0abe767d6d4e1f2519c8fa",
+				"dweb:/ipfs/QmQK4xsaGgCHxZL7uAWQyLChbqjGoU8gkvUmqEXg3Q1ABV"
+			]
+		},
+		"contracts/Tryer.sol": {
+			"keccak256": "0x03146324f49c422ebc6d1e7d38e082df91f1911278a61836831fc72d4ec40d1c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://7f6b6bd830a0ba0bc721780eb9cb1e01eea6a99bc73c165f6772156038690030",
+				"dweb:/ipfs/QmYBiSj9wQ8iRH4aFqJjGuk73gL8zDmmeZAucdaHGK6Zdb"
+			]
+		}
+	},
+	"version": 1
+}

@@ -1,0 +1,78 @@
+{
+	"compiler": {
+		"version": "0.8.22+commit.4fc1097e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "origin",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					}
+				],
+				"name": "callEvent",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "callMe",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/Called.sol": "Called"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/Called.sol": {
+			"keccak256": "0x8c8ccdfb9562d0090bd951a8fa6cf3c7b0de92d933a5880214d3986a2fa80893",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://3b43ceda8d90851d3a88f621999c5b61b31484a7c01713872a56e2a0eca8c5b6",
+				"dweb:/ipfs/QmcvWdBfAQYR8ngcr7v7QkaigCDcAbL4SQNNN2LpinwKzY"
+			]
+		}
+	},
+	"version": 1
+}

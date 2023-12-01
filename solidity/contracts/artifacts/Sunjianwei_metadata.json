@@ -7,12 +7,12 @@
 		"abi": [
 			{
 				"inputs": [],
-				"name": "greet",
+				"name": "getBlance",
 				"outputs": [
 					{
-						"internalType": "string",
+						"internalType": "uint256",
 						"name": "",
-						"type": "string"
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -32,7 +32,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/HelloWorld.sol": "HelloWorld"
+			"contracts/Sunjianwei.sol": "Sunjianwei"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -46,12 +46,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/HelloWorld.sol": {
-			"keccak256": "0x46a5525ddbafd0e2e7efb09ebb28ec4b32c78c54fd964f5ec502dfd7f4336c06",
+		"contracts/Sunjianwei.sol": {
+			"keccak256": "0xf782068834165069e9010ce9e04bf942bb9231e34d4c1f2034f0aeaa3ce1cf89",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://bab5faf6a67c94ebbe1b6887c1bc806fd3bb1cb08aeaaf7a0137e95321987165",
-				"dweb:/ipfs/QmdEoxee4HKdyrC1cSS27g83cHhzJWt4urVi75HmLTR8RP"
+				"bzz-raw://569a337056ff19921e3104dd1746387e1a3872c57427d996b65f5baa9f67f3e1",
+				"dweb:/ipfs/QmcXjNRWsujt1G9dfNvfBXWPss5TMNJtjNEz71ywqDQqu9"
 			]
 		}
 	},

@@ -7,7 +7,7 @@
 		"abi": [
 			{
 				"inputs": [],
-				"name": "greet",
+				"name": "say",
 				"outputs": [
 					{
 						"internalType": "string",
@@ -15,7 +15,7 @@
 						"type": "string"
 					}
 				],
-				"stateMutability": "view",
+				"stateMutability": "pure",
 				"type": "function"
 			}
 		],
@@ -32,7 +32,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/HelloWorld.sol": "HelloWorld"
+			"contracts/CalleeA.sol": "CalleeA"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -46,12 +46,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/HelloWorld.sol": {
-			"keccak256": "0x46a5525ddbafd0e2e7efb09ebb28ec4b32c78c54fd964f5ec502dfd7f4336c06",
+		"contracts/CalleeA.sol": {
+			"keccak256": "0x808ce34f0da6fb2ec1decc52d2819d2e0c6fd3ffb8d59117b70df64588be13b0",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://bab5faf6a67c94ebbe1b6887c1bc806fd3bb1cb08aeaaf7a0137e95321987165",
-				"dweb:/ipfs/QmdEoxee4HKdyrC1cSS27g83cHhzJWt4urVi75HmLTR8RP"
+				"bzz-raw://efadcd288fd18a85b0b99d348b8ce3514a7070d477753e3c17f4ec021115960b",
+				"dweb:/ipfs/QmdpSSWYHNBBCJTECQz7tDvoRvHs151SnSnXip75BbhDYz"
 			]
 		}
 	},

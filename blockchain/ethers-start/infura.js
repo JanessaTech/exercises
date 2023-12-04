@@ -5,9 +5,16 @@ const network = "sepolia"
 const INFURA_API_KEY = '0326c4f69a034543b424b27d34057159'
 const SIGNER_PRIVATE_KEY = '0xa4ceece280db4b773cacb13075585736d250aa1d2e6dcedaf874d6313561d01e'
 const provider = new ethers.providers.InfuraProvider(
-    network
+    network,
+    INFURA_API_KEY
   );
 const signer = new ethers.Wallet(SIGNER_PRIVATE_KEY, provider);
+
+GetBasicInfo = async () => {
+
+    const mynetwork = await provider.getNetwork()
+    console.log(mynetwork)
+}
 
 
 ReadSmartContract = async () => {
@@ -42,5 +49,6 @@ WriteSmartContract = async () => {
  * I used remix to deploy the contract (MetaMask is configured with sepolia, see https://www.notion.so/Node-providers-Relay-network-0d7e00cec1dd4cc1ac116cd6035986ce?pvs=4)
  * 
  */
-ReadSmartContract()
-//WriteSmartContract()
+//GetBasicInfo()
+//ReadSmartContract()
+WriteSmartContract()

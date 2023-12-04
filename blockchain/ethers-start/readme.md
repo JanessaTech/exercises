@@ -1,5 +1,5 @@
 # Install independences
 
 ```
-    npm install ethers@5.6.1
+    npm install ethers@5.7.2
 ```

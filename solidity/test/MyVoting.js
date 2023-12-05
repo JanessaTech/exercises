@@ -55,7 +55,7 @@ describe("MyVoting", function () {
         })
         it('Should throw an error when get a candidate by the id which is out of index', async function () {
             const {myVoting} = await loadFixture(deployMyVotingFiveMinutesLockFixture);
-            await expect(myVoting.getCandidate(10)).to.be.revertedWith("invalid id when calling getCandidate");
+            await expect(myVoting.getCandidate(10)).to.be.revertedWith("Invalid id when calling getCandidate");
         })
     })
 
@@ -67,7 +67,7 @@ describe("MyVoting", function () {
         it("Should throw an error when voting by an id which is out of index", async function () {
             const {myVoting} = await loadFixture(deployMyVotingFiveMinutesLockFixture);
             await myVoting.registerName('account1');
-            await expect(myVoting.vote(10)).to.be.revertedWith("invalid id when voting");
+            await expect(myVoting.vote(10)).to.be.revertedWith("Invalid id when voting");
         })
         it("Should throw an error when vote the candidate who is alreay voted", async function () {
             const {myVoting} = await loadFixture(deployMyVotingFiveMinutesLockFixture);
@@ -75,10 +75,33 @@ describe("MyVoting", function () {
             await myVoting.vote(0);
             await expect(myVoting.vote(0)).to.be.revertedWith("The candiate is already voted");
         })
+        it("Should thrown an error when it is time to unlock the voting", async function () {
+            const {myVoting, unlockTime} = await loadFixture(deployMyVotingFiveMinutesLockFixture);
+            await myVoting.registerName('account1');
+            await time.increaseTo(unlockTime);
+            await expect(myVoting.vote(0)).to.be.revertedWith("You cannot vote. Voting ended");
+
+        })
         it("Should vote successfully", async function () {
             const {myVoting} = await loadFixture(deployMyVotingFiveMinutesLockFixture);
             await myVoting.registerName('account1');
             await myVoting.vote(0);
         })
     })
+
+    describe("isEnd", function () {
+        it("Should return false when voting is in progressing", async function () {
+            const {myVoting} = await loadFixture(deployMyVotingFiveMinutesLockFixture);
+            const res = await myVoting.isEnd();
+            expect(res).to.be.false;
+        })
+        it("Should return true when voting is ended", async function () {
+            const {myVoting, unlockTime} = await loadFixture(deployMyVotingFiveMinutesLockFixture);
+            await time.increaseTo(unlockTime);
+            const res = await myVoting.isEnd();
+            expect(res).to.be.true;
+        })
+    })
+
+
 })

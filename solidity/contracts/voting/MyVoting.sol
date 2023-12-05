@@ -44,15 +44,20 @@ contract MyVoting {
 
     function vote(uint id) public {
         require(bytes(names[msg.sender]).length > 0, 'You must register name first');
-        require(id < candidates.length, "invalid id when voting");
+        require(id < candidates.length, "Invalid id when voting");
+        require(block.timestamp < unlockTime,"You cannot vote. Voting ended");
         Candidate storage candidate = candidates[id];
         require(bytes(candidate.votedBy).length == 0, "The candiate is already voted");
         string memory name = names[msg.sender];
         candidate.votedBy = name;
     }
 
+    function isEnd() public view returns(bool) {
+        return block.timestamp >= unlockTime;
+    }
+
     function getCandidate(uint id) public view returns(uint, string memory, string memory) {
-        require(id < candidates.length, "invalid id when calling getCandidate");
+        require(id < candidates.length, "Invalid id when calling getCandidate");
         Candidate storage candidate = candidates[id];
         return (candidate.id, candidate.name, candidate.votedBy);
     }

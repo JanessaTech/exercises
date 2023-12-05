@@ -37,4 +37,48 @@ describe("MyVoting", function () {
             await expect(MyVoting.deploy(latestTime)).to.be.revertedWith('Unlock time should be in the future');  
         })
     })
+
+    describe("register name", function () {
+        it("Should register name successfully", async function () {
+            const {myVoting} = await loadFixture(deployMyVotingFiveMinutesLockFixture);
+            await myVoting.registerName('account1');
+            const name = await myVoting.getRegisterName();
+            expect(name).to.equal('account1');
+        })
+    })
+    
+    describe("getCandidate", function () {
+        it("Should return a candidate by id 0", async function () {
+            const {myVoting} = await loadFixture(deployMyVotingFiveMinutesLockFixture);
+            const res = await myVoting.getCandidate(0);
+            expect(res).to.have.ordered.members([0n, 'Smith', ''])
+        })
+        it('Should throw an error when get a candidate by the id which is out of index', async function () {
+            const {myVoting} = await loadFixture(deployMyVotingFiveMinutesLockFixture);
+            await expect(myVoting.getCandidate(10)).to.be.revertedWith("invalid id when calling getCandidate");
+        })
+    })
+
+    describe("vote", function () {
+        it("Should throw an error when the caller doesn't register his/her name", async function () {
+            const {myVoting} = await loadFixture(deployMyVotingFiveMinutesLockFixture);
+            await expect(myVoting.vote(0)).to.be.revertedWith("You must register name first");
+        })
+        it("Should throw an error when voting by an id which is out of index", async function () {
+            const {myVoting} = await loadFixture(deployMyVotingFiveMinutesLockFixture);
+            await myVoting.registerName('account1');
+            await expect(myVoting.vote(10)).to.be.revertedWith("invalid id when voting");
+        })
+        it("Should throw an error when vote the candidate who is alreay voted", async function () {
+            const {myVoting} = await loadFixture(deployMyVotingFiveMinutesLockFixture);
+            await myVoting.registerName('account1');
+            await myVoting.vote(0);
+            await expect(myVoting.vote(0)).to.be.revertedWith("The candiate is already voted");
+        })
+        it("Should vote successfully", async function () {
+            const {myVoting} = await loadFixture(deployMyVotingFiveMinutesLockFixture);
+            await myVoting.registerName('account1');
+            await myVoting.vote(0);
+        })
+    })
 })

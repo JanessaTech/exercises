@@ -41,9 +41,19 @@ contract MyVoting {
     function getRegisterName() public view returns(string memory) {
         return names[msg.sender];
     }
-    
-    function vote() public {
+
+    function vote(uint id) public {
         require(bytes(names[msg.sender]).length > 0, 'You must register name first');
+        require(id < candidates.length, "invalid id when voting");
+        Candidate storage candidate = candidates[id];
+        require(bytes(candidate.votedBy).length == 0, "The candiate is already voted");
+        string memory name = names[msg.sender];
+        candidate.votedBy = name;
     }
 
+    function getCandidate(uint id) public view returns(uint, string memory, string memory) {
+        require(id < candidates.length, "invalid id when calling getCandidate");
+        Candidate storage candidate = candidates[id];
+        return (candidate.id, candidate.name, candidate.votedBy);
+    }
 }

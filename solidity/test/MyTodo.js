@@ -10,7 +10,7 @@ describe('MyTodo', function () {
     }
     
     describe("addTodo", function () {
-        it("it should create a new todo succesfully", async function () {
+        it("Should create a new todo succesfully", async function () {
             const mytodo = await loadFixture(deployMyTodoFixture)
             await expect(mytodo.addTodo("todo1", "body1")).not.to.be.reverted;
         })
@@ -29,7 +29,7 @@ describe('MyTodo', function () {
         })
     })
     describe("updateTodo", function () {
-        it("it should update successfully when id is valid", async function () {
+        it("Should update successfully when id is valid", async function () {
             const mytodo = await loadFixture(deployMyTodoFixture)
             await expect(mytodo.addTodo("todo1", "body1")).not.to.be.reverted;
             await expect(mytodo.updateTodo(0, "new todo", "new body")).not.to.be.reverted;
@@ -40,12 +40,12 @@ describe('MyTodo', function () {
             expect(res[0][2]).to.equal("new body");
             expect(res[0][3]).to.equal(false);
         })
-        it("it should throw an error when update a to do using an invaid id", async function () {
+        it("Should throw an error when update a to do using an invaid id", async function () {
             const mytodo = await loadFixture(deployMyTodoFixture)
             await expect(mytodo.addTodo("todo1", "body1")).not.to.be.reverted;
             await expect(mytodo.updateTodo(1, "new todo", "new body")).to.be.revertedWith("id is out of index")
         })
-        it("it should throw an error when the to do we want to update is aleady deleted", async function () {
+        it("Should throw an error when the to do we want to update is aleady deleted", async function () {
             const mytodo = await loadFixture(deployMyTodoFixture)
             await expect(mytodo.addTodo("todo1", "body1")).not.to.be.reverted;
             await expect(mytodo.deleteTodo(0)).not.to.be.reverted;
@@ -54,7 +54,7 @@ describe('MyTodo', function () {
         })
     })
     describe("deleteTodo", function () {
-        it("it should be deleted successfully when id is valid", async function () {
+        it("Should be deleted successfully when id is valid", async function () {
             const mytodo = await loadFixture(deployMyTodoFixture)
             await expect(mytodo.addTodo("todo1", "body1")).not.to.be.reverted;
             await expect(mytodo.deleteTodo(0)).not.to.be.reverted;
@@ -62,7 +62,7 @@ describe('MyTodo', function () {
             expect(res).to.be.an("array").to.have.lengthOf(1);
             expect(res[0][3]).to.equal(true);
         })
-        it("it should throw an error when the to do want to delete is already deleted", async function () {
+        it("Should throw an error when the to do want to delete is already deleted", async function () {
             const mytodo = await loadFixture(deployMyTodoFixture)
             await expect(mytodo.addTodo("todo1", "body1")).not.to.be.reverted;
             await expect(mytodo.deleteTodo(0)).not.to.be.reverted;

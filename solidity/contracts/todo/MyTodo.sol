@@ -38,12 +38,4 @@ contract MyTodo {
         require(!todo.removed, "The todo is already removed");
         todo.removed = true;
     }
-
-    
-
-    
-    
-
-    
-
 }

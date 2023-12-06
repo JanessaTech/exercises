@@ -13,7 +13,7 @@ contract MyVoting {
     Candidate[] candidates;
     mapping(address => string) public names;
     
-    constructor(uint _unlockTime) {
+    constructor(uint _unlockTime) payable {
         require(block.timestamp < _unlockTime, 'Unlock time should be in the future' );
         unlockTime = _unlockTime;
         _initCandidates();

@@ -1,0 +1,12 @@
+const Candidate = "(uint id, string name, string votedBy)"
+export const abi = [
+    "constructor(uint _unlockTime) payable",
+    `function getCandidates() public view returns (${Candidate}[])`,
+    "function registerName(string memory _name) public",
+    "function getRegisterName() public view returns(string)",
+    "function vote(uint id) public",
+    "function isEnd() public view returns(bool)",
+    "function getCandidate(uint id) public view returns(uint, string memory, string memory)"
+]
+
+export const contractAddr = '0x5fbdb2315678afecb367f032d93f642f64180aa3'

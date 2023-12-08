@@ -37,7 +37,6 @@ const GetCandidate = async () => {
 }
 const RegisterName = async () => {
     const tx = await myVoting.registerName("account1")
-    await tx.wait()
     console.log(tx)
     const name = await myVotingReadOnly.getRegisterName();
     console.log("name = ", name)
@@ -48,7 +47,6 @@ const IsEnd = async () => {
 }
 const Vote = async () => {
     const tx = await myVoting.vote(2)
-    await tx.wait()
     console.log(tx)
     const res = await myVotingReadOnly.getCandidate(2)
     console.log(res)

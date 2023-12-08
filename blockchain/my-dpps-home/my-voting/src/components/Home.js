@@ -2,66 +2,198 @@ import { Box, Button, Container, Grid, Paper, Table, TableBody, TableCell, Table
 import React, { useEffect } from 'react'
 import {abi, contractAddr} from '../Constant/constants'
 import {ethers} from 'ethers' // import ethers lib
+import SimpleDialog from './SimpleDialog'
 
 
 export default function Home() {
-    const [state, setState] = React.useState({
+    const initData = {
         connected: false,
         isEnd: false,
-        rows: [
-            {id: 0, name: 'jane', votedBy: ''},
-            {id: 1, name: 'jane1', votedBy: 'rr'},
-            {id: 2, name: 'jane2', votedBy: 'cc'},
-        ],
-        provider: undefined,
+        rows: [],
         address: '',
-        contractReadOnly: undefined,
         contract: undefined,
-        signer: undefined,
-        registeredNames: new Map()
-    })
+        registeredNames: new Map([]),
+        dialogOpen: false,
+        name:''
+    }
 
-    useEffect( () => {
-       
+    const [state, setState] = React.useState({...initData, connected: localStorage.getItem('connected') === 'true'})
+    
+    useEffect( () => {  
         if (window.ethereum) {
             window.ethereum.on('accountsChanged', handleAccountsChanged)
         }
         return () => {
-            if(window.ethereum) {
+            if(window.ethereum) { 
                 window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
             }
         }
-    })
+    })// todo: the state is initiated when I add [] as the second parameter, why?
 
     const handleAccountsChanged = (accounts) => {
-        console.log('handleAccountsChanged. accounts=', accounts)
+        console.log("accounts:", accounts)
         if( accounts.length > 0 && accounts[0] !== state.address) {
-            setState({...state, address: accounts[0]})
+            updateStateByAccountChange(accounts[0])
         } else {
-            setState({...state, connected: false, provider: undefined, address: '', signer: undefined, registeredNames: new Map()})
+            console.log('run else in handleAccountsChanged')
         }
+    }
+
+    useEffect(() => {
+        const connected = localStorage.getItem('connected') === 'true'
+        if (connected) {
+            setStateWhenLogin()
+        } else {
+            emptyState()
+        }
+    }, [])
+
+    const emptyState = () => {
+        console.log('emptyState')
+        setState({...initData})
+    }
+
+    const setStateWhenLogin = async () => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum)
+        const signer = provider.getSigner()
+        const address = await signer.getAddress()
+        console.log("MetaMask is connected at ", ethers.utils.getAddress(address))
+        const contract = new ethers.Contract(contractAddr, abi, signer)
+        const candidates = await contract.getCandidates()
+        const registeredName = await contract.getRegisterName()
+        const isEnd = await contract.isEnd()
+        console.log("registeredName:", registeredName)
+        let newRegisteredNames = state.registeredNames
+        if (registeredName) {
+            newRegisteredNames = state.registeredNames.set(ethers.utils.getAddress(address), registeredName)
+        }
+        const newRows = []
+        candidates.forEach((v) => {
+            newRows.push({id: v[0].toNumber(), name: v[1], votedBy: v[2]})
+        })
+        console.log(newRows)
+        setState({
+            ...state, 
+            connected: true, 
+            isEnd: isEnd,
+            rows: newRows,
+            contract: contract,
+            registeredNames: newRegisteredNames,
+            address: ethers.utils.getAddress(address)
+            })
+    }
+
+    const handleLogout = (e) => {
+        e.preventDefault()
+        console.log('handleLogout')
+        localStorage.removeItem('connected')
+        emptyState()
+    }
+    const updateStateByAccountChange = async (account) => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum)
+        const signer = provider.getSigner()
+        const address = await signer.getAddress()
+        console.log("MetaMask is reconnected at ", address)
+        const contract = new ethers.Contract(contractAddr, abi, signer)
+        console.log("handleAccountsChanged. state:", state)
+        const registeredName = await contract.getRegisterName()
+        const isEnd = await contract.isEnd()
+        console.log("registeredName:", registeredName)
+        let newRegisteredNames = state.registeredNames
+        if (registeredName) {
+            newRegisteredNames = state.registeredNames.set(ethers.utils.getAddress(address), registeredName)
+        }
+
+        setState({...state, 
+            isEnd: isEnd,
+            address: ethers.utils.getAddress(account), 
+            contract: contract, 
+            registeredNames: newRegisteredNames})
+    }
+
+    const openDialog = (e) => {
+        e.preventDefault()
+        setState({...state, dialogOpen: true})
+    }
+    const closeDialog = (e) => {
+        e.preventDefault()
+        setState({...state, dialogOpen: false})
+    }
+
+    const handleVote = async (e, id) => {
+        e.preventDefault()
+        if (state.registeredNames.get(state.address)) {
+            try {
+                const tx = await state.contract.vote(id)
+                await tx.wait() //important but why??
+                console.log(tx)
+                const candiates = await state.contract.getCandidates()
+                const newRows = []
+                candiates.forEach((v) => {
+                    newRows.push({id: v[0].toNumber(), name: v[1], votedBy: v[2]})
+                })
+                setState({...state, rows: newRows})
+            } catch (error) {
+                console.log(error)
+            }
+        } else {
+            openDialog(e)
+        }   
+    }
+
+    const submitRegister = async (e) => {
+        e.preventDefault()
+        try {
+            const tx = await state.contract.registerName(state.name)
+            await tx.wait() //important but why??
+            console.log(tx)
+            const regiteredName = await state.contract.getRegisterName();
+            console.log("regiteredName:", regiteredName)
+            const isEnd = await state.contract.isEnd()
+            const newRegisteredNames = state.registeredNames.set(state.address, regiteredName)
+            setState({...state, newRegisteredNames: newRegisteredNames, name: '', isEnd: isEnd})
+        } catch (error) {
+            console.error('failed to register name due to:', error)
+            setState({...state, name:''}) // clear name othewise it will be used for another address
+        }
+    }
+
+    const handleNameChanges = (e) => {
+        e.preventDefault()
+        setState({...state, name: e.target.value})
     }
 
     const handleConnectMetaMask = async () => {
         if (window.ethereum) {
             try {
                 const provider = new ethers.providers.Web3Provider(window.ethereum)
-                await provider.send("eth_requestAccounts", []);
                 const signer = provider.getSigner()
                 const address = await signer.getAddress()
-                console.log("MetaMask is connected at ", address)
-                const contractReadOnly = new ethers.Contract(contractAddr, abi, provider)
-                const contract = await contractReadOnly.connect(signer)
-                const candiates = await contractReadOnly.getCandidates()
-                console.log(candiates)
+                console.log("MetaMask is connected at ", ethers.utils.getAddress(address))
+                const contract = new ethers.Contract(contractAddr, abi, signer)
+                const candidates = await contract.getCandidates()
+                const registeredName = await contract.getRegisterName()
+                const isEnd = await contract.isEnd()
+                console.log("registeredName:", registeredName)
+                let newRegisteredNames = state.registeredNames
+                if (registeredName) {
+                    newRegisteredNames = state.registeredNames.set(ethers.utils.getAddress(address), registeredName)
+                }
+                const newRows = []
+                candidates.forEach((v) => {
+                    newRows.push({id: v[0].toNumber(), name: v[1], votedBy: v[2]})
+                })
+                console.log(newRows)
                 setState({
                     ...state, 
                     connected: true, 
-                    provider: provider,
-                    contractReadOnly: contractReadOnly,
+                    isEnd: isEnd,
+                    rows: newRows,
                     contract: contract,
-                    address: address, 
-                    signer: signer})
+                    registeredNames: newRegisteredNames,
+                    address: ethers.utils.getAddress(address)
+                    })
+                localStorage.setItem('connected', 'true')
             } catch (err) {
                 console.log('Met err when trying to connect to MetaMask')
                 console.log(err)
@@ -71,22 +203,10 @@ export default function Home() {
         }
     }
 
-    const getCandidates = async () => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
-        await provider.send("eth_requestAccounts", []);
-        const contractReadOnly = new ethers.Contract(contractAddr, abi, provider)
-        const candiates = await contractReadOnly.getCandidates()
-        console.log(candiates)
-    }
-
-    const handleVote = (e, id) => {
-        e.preventDefault()
-        console.log('vote ', id)
-    }
-
   return (
     <Container>
         <Box sx={{width:1, backgroundColor:'grey.200', mt:10}}>
+            <Box sx={{display:'flex', justifyContent:'right', pr:3, pt:3}}><Button variant='contained' sx={{textTransform:'none'}} onClick={handleLogout}>Disconnect MetaMask</Button></Box>
             <Box sx={{display:'flex', justifyContent:'center', mb:3}}>
                 <Box>
                     <Grid container spacing={2} alignItems="center">
@@ -106,12 +226,11 @@ export default function Home() {
                     <Grid container spacing={2} alignItems="center">
                         <Grid item>
                             <Typography><strong>Address:</strong>{state.address}</Typography>
-                            <Typography><strong>Name:</strong></Typography>
+                            <Typography><strong>Name:</strong>{state.registeredNames.get(state.address)}</Typography>
                         </Grid>
-                        <Grid item>
-                        
+                        <Grid item>                        
                             {
-                                !state.registeredNames.get(state.address)&& <Box><TextField sx={{mr:2}} variant="standard" placeholder='register name'/><Button variant='contained'>Register</Button></Box>
+                                !state.registeredNames.get(state.address)&& <Box><TextField sx={{mr:2}} variant="standard" placeholder='register name' value={state.name} onChange={handleNameChanges}/><Button variant='contained' onClick={submitRegister} disabled={!state.name}>Register</Button></Box>
                             }
                             
                         </Grid>
@@ -143,7 +262,7 @@ export default function Home() {
                                         <TableCell align="center" >{row.name}</TableCell>
                                         <TableCell align="center">{row.votedBy}</TableCell>
                                         <TableCell align="center">
-                                        <Button variant='contained' onClick={(e) => handleVote(e, row.id)} disabled={row.votedBy.length != 0}>Vote</Button>
+                                        <Button variant='contained' onClick={(e) => handleVote(e, row.id)} disabled={row.votedBy.length !== 0}>Vote</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))
@@ -153,6 +272,7 @@ export default function Home() {
                 </TableContainer>
             </Box>
         </Box>
+        <SimpleDialog handleClose={closeDialog} open={state.dialogOpen} address={state.address}/>
     </Container>
   )
 }

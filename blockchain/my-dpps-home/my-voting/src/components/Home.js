@@ -20,7 +20,7 @@ export default function Home() {
     }
     const [state, setState] = React.useState({...initData, connected: localStorage.getItem('connected') === 'true'})
 
-    const count = useRef(0)
+    const count = useRef(0)  // for debug
     useEffect(() => {
         count.current = count.current + 1;
     });
@@ -57,14 +57,9 @@ export default function Home() {
             console.log('updateState({isReconnect: false}) ...')
             updateState({isReconnect: false})
         } else {
-            emptyState()
+            navigate('/')
         }
     }, [])
-
-    const emptyState = () => {
-        console.log('emptyState')
-        setState({...initData, connected: localStorage.getItem('connected') === 'true'})
-    }
 
     const updateState = async ({isReconnect}) => {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
@@ -181,7 +176,7 @@ export default function Home() {
 
   return (
     <Container>
-        {console.log("In rendering:", state)}
+        {/* {console.log("In rendering:", state)} */}
         <Box sx={{width:1, backgroundColor:'grey.200', mt:10}}>
             <Box><h1>Render Count: {count.current}</h1></Box>
             <Box sx={{display:'flex', justifyContent:'right', pr:3, pt:3}}><Button variant='contained' sx={{textTransform:'none'}} onClick={handleLogout}>Disconnect MetaMask</Button></Box>

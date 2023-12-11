@@ -12,8 +12,9 @@ contract MyVoting {
 
     Candidate[] candidates;
     mapping(address => string) public names;
+    address[] public registers;
     
-    constructor(uint _unlockTime) {
+    constructor(uint _unlockTime) payable {
         require(block.timestamp < _unlockTime, 'Unlock time should be in the future' );
         unlockTime = _unlockTime;
         _initCandidates();
@@ -37,6 +38,7 @@ contract MyVoting {
 
     function registerName(string memory _name) public {
         names[msg.sender] = _name;
+        registers.push(msg.sender);
     }
     function getRegisterName() public view returns(string memory) {
         return names[msg.sender];
@@ -60,5 +62,16 @@ contract MyVoting {
         require(id < candidates.length, "Invalid id when calling getCandidate");
         Candidate storage candidate = candidates[id];
         return (candidate.id, candidate.name, candidate.votedBy);
+    }
+
+    function reset() public {
+        for (uint i = 0; i < candidates.length; i++) {
+            Candidate storage candidate = candidates[i];
+            candidate.votedBy = '';
+        }
+        for (uint i = 0; i < registers.length; i++) {
+            delete names[registers[i]];
+        }
+        delete registers;
     }
 }

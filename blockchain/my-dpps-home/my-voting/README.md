@@ -1,3 +1,7 @@
+### How does project work
+
+![image info](pic/voting.png)
+
 ### Install dependences
 
 ```

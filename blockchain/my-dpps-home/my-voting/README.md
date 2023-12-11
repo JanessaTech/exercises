@@ -32,4 +32,6 @@ For local test:
 For testnet( Sepolia):
 
 1. Make sure you've had an account in Infura and created a new API key
-2.
+2. Deploy https://github.com/JanessaTech/exercises/tree/master/solidity/contracts/voting/MyVoting.sol using remix or hardhat or whatever you like
+3. Update the address of MyVoting.sol deployed on Sepolia to be the value of contractAddr in src/Constant/constants.js
+4. Start react when you are sure everything above is ready by running `npm start`

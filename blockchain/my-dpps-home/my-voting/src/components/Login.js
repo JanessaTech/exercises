@@ -7,8 +7,18 @@ export default function Login() {
 const navigate = useNavigate();
 
   const handleConnectMetaMask = async () => {
-    localStorage.setItem('connected', 'true')
-    navigate('/home')
+    if(window.ethereum) {
+      console.log('Ethereum support is available')
+      if (window.ethereum.isMetaMask) {
+        console.log('MetaMask is active')
+        localStorage.setItem('connected', 'true')
+        navigate('/home')
+      } else {
+        console.error('MetaMask is not available')
+      }
+    } else {
+      console.error('Pls install MetaMask')
+    }   
 }
 
   return (

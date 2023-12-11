@@ -63,11 +63,12 @@ export default function Home() {
 
     const emptyState = () => {
         console.log('emptyState')
-        setState({...initData})
+        setState({...initData, connected: localStorage.getItem('connected') === 'true'})
     }
 
     const updateState = async ({isReconnect}) => {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
+        await provider.send("eth_requestAccounts", []);
         const signer = provider.getSigner()
         const address = await signer.getAddress()
         if (isReconnect) {
@@ -101,6 +102,23 @@ export default function Home() {
             })
     }
 
+    const handleReset = async () => {
+        try {
+            const tx = await state.contract.reset()
+            await tx.wait() //important but why??
+            console.log(tx)
+            const isEnd = await state.contract.isEnd()
+            const candiates = await state.contract.getCandidates()
+            const newRows = []
+            candiates.forEach((v) => {
+                newRows.push({id: v[0].toNumber(), name: v[1], votedBy: v[2]})
+            })
+            setState({...state, registeredNames: new Map([]), isEnd: isEnd, rows: newRows})
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     const handleLogout = (e) => {
         e.preventDefault()
         console.log('handleLogout')
@@ -132,7 +150,7 @@ export default function Home() {
                 })
                 setState({...state, rows: newRows})
             } catch (error) {
-                console.log(error)
+                console.error(error)
             }
         } else {
             openDialog(e)
@@ -167,6 +185,7 @@ export default function Home() {
         <Box sx={{width:1, backgroundColor:'grey.200', mt:10}}>
             <Box><h1>Render Count: {count.current}</h1></Box>
             <Box sx={{display:'flex', justifyContent:'right', pr:3, pt:3}}><Button variant='contained' sx={{textTransform:'none'}} onClick={handleLogout}>Disconnect MetaMask</Button></Box>
+            <Box sx={{display:'flex', justifyContent:'right', pr:3, pt:3}}><Button variant='contained' sx={{textTransform:'none'}} onClick={handleReset}>Reset</Button></Box>
             <Box sx={{display:'flex', justifyContent:'center', mb:3}}>
                 <Box>
                     <Grid container spacing={2} alignItems="center">

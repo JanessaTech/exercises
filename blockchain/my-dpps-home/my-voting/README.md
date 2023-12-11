@@ -1,6 +1,6 @@
 ### How does project work
 
-![image info](pic/voting.png)
+![image info](pics/voting.png)
 
 ### Install dependences
 

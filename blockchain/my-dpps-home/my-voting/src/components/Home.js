@@ -1,11 +1,13 @@
 import { Box, Button, Container, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import {abi, contractAddr} from '../Constant/constants'
 import {ethers} from 'ethers' // import ethers lib
 import SimpleDialog from './SimpleDialog'
+import { useNavigate } from 'react-router-dom'
 
 
 export default function Home() {
+    const navigate = useNavigate();
     const initData = {
         connected: false,
         isEnd: false,
@@ -16,19 +18,25 @@ export default function Home() {
         dialogOpen: false,
         name:''
     }
-
     const [state, setState] = React.useState({...initData, connected: localStorage.getItem('connected') === 'true'})
+
+    const count = useRef(0)
+    useEffect(() => {
+        count.current = count.current + 1;
+    });
     
     useEffect( () => {  
+        console.log("accountsChanged is added")
         if (window.ethereum) {
             window.ethereum.on('accountsChanged', handleAccountsChanged)
         }
         return () => {
+            console.log("accountsChanged is removed")
             if(window.ethereum) { 
                 window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
             }
         }
-    })// todo: the state is initiated when I add [] as the second parameter, why?
+    },[])// todo: the state is initiated when I add [] as the second parameter, why?
 
     const handleAccountsChanged = (accounts) => {
         console.log("accounts:", accounts)
@@ -39,10 +47,15 @@ export default function Home() {
         }
     }
 
+    const updateStateByAccountChange = async (account) => {
+        updateState({isReconnect: true})
+    }
+
     useEffect(() => {
         const connected = localStorage.getItem('connected') === 'true'
         if (connected) {
-            setStateWhenLogin()
+            console.log('updateState({isReconnect: false}) ...')
+            updateState({isReconnect: false})
         } else {
             emptyState()
         }
@@ -53,11 +66,16 @@ export default function Home() {
         setState({...initData})
     }
 
-    const setStateWhenLogin = async () => {
+    const updateState = async ({isReconnect}) => {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         const signer = provider.getSigner()
         const address = await signer.getAddress()
-        console.log("MetaMask is connected at ", ethers.utils.getAddress(address))
+        if (isReconnect) {
+            console.log("MetaMask is reconnected at ", address)
+        } else {
+            console.log("MetaMask is connected at ", ethers.utils.getAddress(address))
+        }
+        
         const contract = new ethers.Contract(contractAddr, abi, signer)
         const candidates = await contract.getCandidates()
         const registeredName = await contract.getRegisterName()
@@ -87,29 +105,9 @@ export default function Home() {
         e.preventDefault()
         console.log('handleLogout')
         localStorage.removeItem('connected')
-        emptyState()
+        navigate('/')
     }
-    const updateStateByAccountChange = async (account) => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
-        const signer = provider.getSigner()
-        const address = await signer.getAddress()
-        console.log("MetaMask is reconnected at ", address)
-        const contract = new ethers.Contract(contractAddr, abi, signer)
-        console.log("handleAccountsChanged. state:", state)
-        const registeredName = await contract.getRegisterName()
-        const isEnd = await contract.isEnd()
-        console.log("registeredName:", registeredName)
-        let newRegisteredNames = state.registeredNames
-        if (registeredName) {
-            newRegisteredNames = state.registeredNames.set(ethers.utils.getAddress(address), registeredName)
-        }
-
-        setState({...state, 
-            isEnd: isEnd,
-            address: ethers.utils.getAddress(account), 
-            contract: contract, 
-            registeredNames: newRegisteredNames})
-    }
+    
 
     const openDialog = (e) => {
         e.preventDefault()
@@ -163,49 +161,11 @@ export default function Home() {
         setState({...state, name: e.target.value})
     }
 
-    const handleConnectMetaMask = async () => {
-        if (window.ethereum) {
-            try {
-                const provider = new ethers.providers.Web3Provider(window.ethereum)
-                const signer = provider.getSigner()
-                const address = await signer.getAddress()
-                console.log("MetaMask is connected at ", ethers.utils.getAddress(address))
-                const contract = new ethers.Contract(contractAddr, abi, signer)
-                const candidates = await contract.getCandidates()
-                const registeredName = await contract.getRegisterName()
-                const isEnd = await contract.isEnd()
-                console.log("registeredName:", registeredName)
-                let newRegisteredNames = state.registeredNames
-                if (registeredName) {
-                    newRegisteredNames = state.registeredNames.set(ethers.utils.getAddress(address), registeredName)
-                }
-                const newRows = []
-                candidates.forEach((v) => {
-                    newRows.push({id: v[0].toNumber(), name: v[1], votedBy: v[2]})
-                })
-                console.log(newRows)
-                setState({
-                    ...state, 
-                    connected: true, 
-                    isEnd: isEnd,
-                    rows: newRows,
-                    contract: contract,
-                    registeredNames: newRegisteredNames,
-                    address: ethers.utils.getAddress(address)
-                    })
-                localStorage.setItem('connected', 'true')
-            } catch (err) {
-                console.log('Met err when trying to connect to MetaMask')
-                console.log(err)
-            }
-        } else {
-            console.log("Pls install MetaMask first")
-        }
-    }
-
   return (
     <Container>
+        {console.log("In rendering:", state)}
         <Box sx={{width:1, backgroundColor:'grey.200', mt:10}}>
+            <Box><h1>Render Count: {count.current}</h1></Box>
             <Box sx={{display:'flex', justifyContent:'right', pr:3, pt:3}}><Button variant='contained' sx={{textTransform:'none'}} onClick={handleLogout}>Disconnect MetaMask</Button></Box>
             <Box sx={{display:'flex', justifyContent:'center', mb:3}}>
                 <Box>
@@ -221,8 +181,7 @@ export default function Home() {
                 
             </Box>
             <Box sx={{display:'flex', justifyContent:'center'}}>
-                {
-                    !state.connected ? <Button sx={{textTransform:'none'}} variant="contained" onClick={handleConnectMetaMask}>Connect MetaMask</Button> : <Box>
+                <Box>
                     <Grid container spacing={2} alignItems="center">
                         <Grid item>
                             <Typography><strong>Address:</strong>{state.address}</Typography>
@@ -236,7 +195,6 @@ export default function Home() {
                         </Grid>
                     </Grid>  
                 </Box>
-                }
             </Box>
             <Box sx={{px:8, py:2}}>
                 <TableContainer component={Paper}>

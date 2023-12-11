@@ -5,7 +5,15 @@ npm install ethers@5.7.2
 npm install @mui/material @emotion/react @emotion/styled
 npm install @fontsource/roboto
 npm install @mui/icons-material
+npm install react-router-dom
 ```
+
+### Which features in react are used in this project?
+
+- How to use route
+- How to use useState, useEffect
+- How to use useNavigate
+- How to use ethers
 
 ### How to start
 

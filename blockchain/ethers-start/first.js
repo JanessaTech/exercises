@@ -28,7 +28,7 @@ const privateKey2 = '0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6
 const signer = new ethers.Wallet(privateKey1, provider)
 
 const ReadBlance = async () => {
-    const balance = await provider.getBalance(addr)
+    const balance = await provider.getBalance(contractAddr)
     console.log(ethers.utils.formatEther(balance))
 }
 

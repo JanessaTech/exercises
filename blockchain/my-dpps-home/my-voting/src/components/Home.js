@@ -61,9 +61,13 @@ export default function Home() {
         }
     }, [])
 
+    async function requestAccount() {
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+    }
+
     const updateState = async ({isReconnect}) => {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
-        await provider.send("eth_requestAccounts", []);
+        await requestAccount()
         const signer = provider.getSigner()
         const address = await signer.getAddress()
         if (isReconnect) {

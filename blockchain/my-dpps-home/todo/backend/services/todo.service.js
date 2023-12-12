@@ -38,7 +38,7 @@ class TodoService {
         }
     }
 
-    async deleteTodoById(user, id) {
+    async deleteTodoById(user, id) {  // only need id
         logger.info('TodoService.deleteTodoById...')
         if (this.todoMap.has(user) && this.todoMap.get(user).has(id)) {
             this.todoMap.get(user).delete(id)

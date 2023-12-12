@@ -40,3 +40,7 @@ dist
 #### log ####
 /logs
 
+##### hardhat ######
+artifacts
+cache
+

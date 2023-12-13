@@ -10,6 +10,7 @@
 - npm install --save jsonwebtoken
 - npm install --save cors
 - npm install --save hardhat
+- npm install --save @nomicfoundation/hardhat-toolbox
 
 # Start app
 

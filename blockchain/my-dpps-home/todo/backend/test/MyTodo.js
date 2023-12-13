@@ -13,8 +13,53 @@ describe('MyTodo', function () {
         it("Should create a new todo succesfully", async function () {
             const mytodo = await loadFixture(deployMyTodoFixture)
             await expect(mytodo.addTodo(1, "todo1", "body1")).not.to.be.reverted;
+        })  
+    })
+
+    describe("reset", function () {
+        it("Should reset everything correctly", async function () {
+            const mytodo = await loadFixture(deployMyTodoFixture)
+            await expect(mytodo.addTodo(1, "todo1", "body1")).not.to.be.reverted;
+            await expect(mytodo.reset()).not.to.be.reverted;
+            const todos = await mytodo.getTodos(1)
+            const exist = await mytodo.checkTodoExist(1, 0)
+            expect(todos).to.be.an("array").to.have.lengthOf(0);
+            expect(exist).to.equal(false)
         })
-        
+    })
+
+    describe("isUserRegistered", function () {
+        it("Should return true if the user is used to add a todo item ever", async function () {
+            const mytodo = await loadFixture(deployMyTodoFixture)
+            await expect(mytodo.addTodo(1, "todo1", "body1")).not.to.be.reverted;
+            const exist = await mytodo.isUserRegistered(1);
+            expect(exist).to.equal(true)
+        })
+        it("Should return false if the user is not used to add a todo item", async function() {
+            const mytodo = await loadFixture(deployMyTodoFixture)
+            await expect(mytodo.addTodo(1, "todo1", "body1")).not.to.be.reverted;
+            const exist = await mytodo.isUserRegistered(2);
+            expect(exist).to.equal(false)
+        })
+    })
+
+    describe("getLatestTodo", function () {
+        it("Should return the newly added todo item under the user", async function () {
+            const mytodo = await loadFixture(deployMyTodoFixture)
+            await expect(mytodo.addTodo(1, "todo1", "body1")).not.to.be.reverted;
+            await expect(mytodo.addTodo(1, "todo11", "body11")).not.to.be.reverted;
+            const latest = await mytodo.getLatestTodo(1)
+            expect(latest[0]).to.equal(1)
+            expect(latest[1]).to.equal('todo11')
+            expect(latest[2]).to.equal('body11')
+        })
+        it("Should return an empty todo item if no todo belongs to the user", async function () {
+            const mytodo = await loadFixture(deployMyTodoFixture)
+            const latest = await mytodo.getLatestTodo(1)
+            expect(latest[0]).to.equal(0)
+            expect(latest[1]).to.equal('')
+            expect(latest[2]).to.equal('')
+        })
     })
 
     describe("getCount", function () {
@@ -70,11 +115,11 @@ describe('MyTodo', function () {
             await expect(mytodo.updateTodo(2, 1, "new todo", "new body")).to.be.revertedWith("user does not contain this id")
         })
         
-        it("Should throw an error when the to do we want to update is aleady deleted", async function () {
+        it("Should throw an error when the todo we want to update is aleady deleted", async function () {
             const mytodo = await loadFixture(deployMyTodoFixture)
             await expect(mytodo.addTodo(1, "todo1", "body1")).not.to.be.reverted;
             await expect(mytodo.deleteTodo(0)).not.to.be.reverted;
-            await expect(mytodo.updateTodo(0, "new todo", "new body")).to.be.revertedWith("The todo is already removed")
+            await expect(mytodo.updateTodo(1, 0,"new todo", "new body")).to.be.revertedWith("The todo is already removed")
 
         })
     })

@@ -1,12 +1,8 @@
 const logger = require("../helpers/logger");
 const {TodoError} = require("../routes/todo/TodoErrors");
-
 const {myTodo, myTodoReadOnly} = require("../contract/MyTodoContract")
 
 class TodoService {
-    todoMap = new Map()
-    indexMap = new Map()
-
     async getAllTodos(user){
         const res = await myTodoReadOnly.getTodos(user)
         if (res.length > 0) {
@@ -54,14 +50,8 @@ class TodoService {
         } else {
             throw new TodoError({key: 'todo_not_found', params:[id, user]})
         }
-        /*
-        if (this.todoMap.has(user) && this.todoMap.get(user).has(id)) {
-            this.todoMap.get(user).delete(id)
-        } else {
-            throw new TodoError({key: 'todo_not_found', params:[id, user]})
-        }*/
     }
 }
 
-const controller = new TodoService()
-module.exports = controller
+const todoService = new TodoService()
+module.exports = todoService

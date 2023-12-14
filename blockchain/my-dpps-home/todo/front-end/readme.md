@@ -10,7 +10,7 @@
   ![image info](./pics/add-todo.png)
   ![image info](./pics/todo-added.png)
 
-# Install dependencies
+# Installed dependencies
 
 ```
 npm install @mui/material @emotion/react @emotion/styled
@@ -25,6 +25,7 @@ npm install react-hook-form @hookform/resolvers yup
 # Run codes
 
 ```
+npm install (run it only for the first time)
 npm start
 ```
 

@@ -1,0 +1,15 @@
+{
+  "name": "ipfs-example",
+  "version": "1.0.0",
+  "description": "This project is to show how to upload and download file stored in IPFS",
+  "main": "index.js",
+  "type" : "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ipfs-core": "^0.18.1"
+  }
+}

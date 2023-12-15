@@ -46,7 +46,7 @@ start_win_test  (windows)
 npm run start_win_dev  (windows)
 ```
 
-# How to interact app with restful Apis
+# How to interact with app using restful Apis
 
 1. Register a new user
    http://127.0.0.1:3100/apis/v1/users/register (Post)

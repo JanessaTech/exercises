@@ -8,6 +8,11 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "_userId",
+						"type": "uint256"
+					},
+					{
 						"internalType": "string",
 						"name": "_title",
 						"type": "string"
@@ -27,6 +32,30 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
+						"name": "_userId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					}
+				],
+				"name": "checkTodoExist",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
 						"name": "id",
 						"type": "uint256"
 					}
@@ -37,7 +66,32 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_userId",
+						"type": "uint256"
+					}
+				],
+				"name": "getCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_userId",
+						"type": "uint256"
+					}
+				],
 				"name": "getTodos",
 				"outputs": [
 					{
@@ -109,7 +163,12 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "id",
+						"name": "_userId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_id",
 						"type": "uint256"
 					},
 					{
@@ -126,6 +185,30 @@
 				"name": "updateTodo",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "userToTodo",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			}
 		],
@@ -157,11 +240,11 @@
 	},
 	"sources": {
 		"contracts/todo/MyTodo.sol": {
-			"keccak256": "0xe22df0cb0b49857656564b372aa83962ed5975f35c04ea4aabdd24b32360e9da",
+			"keccak256": "0xc9160300d468535a16d39a5394d292335fda0e42399bc03e810b8c3b0ed0b97b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://8fb5c68053666e9d3bb3623e995333e74b3ec17a44379a50b1b38cfe2b2b395e",
-				"dweb:/ipfs/QmQxmYzEG7HP24hHwhUCfp6uZvvpVvoHfE9UbmezRuntsx"
+				"bzz-raw://1c3d3ed3ed666e4d0f42165813413b594b730a01c029cc93ec48d6ca3828e000",
+				"dweb:/ipfs/Qmc3yagMkHAZiiHeTQgdW3VCb6s35wWSmSQVpA25ojNfF5"
 			]
 		}
 	},

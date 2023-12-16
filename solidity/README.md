@@ -7,6 +7,7 @@ This project is about all solidity exercises regarding : https://solidity-by-exa
 ```
     npm install --save-dev @nomicfoundation/hardhat-toolbox
     npm install -g @remix-project/remixd
+    npm install glob@7.2.0
 ```
 
 # IDE or tools used

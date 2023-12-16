@@ -90,9 +90,9 @@ const deleteTodo = async () => {
 }
 
 //addTodo()
-//getTodos(3)
+getTodos(3)
 //getLatestTodo()
-getTodosById()
+//getTodosById()
 //updateTodo()
 //checkTodoExist()
 //deleteTodo()

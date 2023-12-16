@@ -27,7 +27,7 @@ Enjoy~
 - Start node project:
 
 ```
-start_win_test  (windows)
+npm run start_win_test  (windows)
 ```
 
 ## (Testnet mode)Start app using testnet sepolia

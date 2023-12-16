@@ -66,14 +66,14 @@ export default function Home() {
     }
 
     const updateState = async ({isReconnect}) => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
+        const provider = new ethers.BrowserProvider(window.ethereum)
         await requestAccount()
-        const signer = provider.getSigner()
+        const signer = await provider.getSigner()
         const address = await signer.getAddress()
         if (isReconnect) {
             console.log("MetaMask is reconnected at ", address)
         } else {
-            console.log("MetaMask is connected at ", ethers.utils.getAddress(address))
+            console.log("MetaMask is connected at ", ethers.getAddress(address))
         }
         
         const contract = new ethers.Contract(contractAddr, abi, signer)
@@ -83,11 +83,11 @@ export default function Home() {
         console.log("registeredName:", registeredName)
         let newRegisteredNames = state.registeredNames
         if (registeredName) {
-            newRegisteredNames = state.registeredNames.set(ethers.utils.getAddress(address), registeredName)
+            newRegisteredNames = state.registeredNames.set(ethers.getAddress(address), registeredName)
         }
         const newRows = []
         candidates.forEach((v) => {
-            newRows.push({id: v[0].toNumber(), name: v[1], votedBy: v[2]})
+            newRows.push({id: Number(v[0]), name: v[1], votedBy: v[2]})
         })
         console.log(newRows)
         setState({
@@ -97,7 +97,7 @@ export default function Home() {
             rows: newRows,
             contract: contract,
             registeredNames: newRegisteredNames,
-            address: ethers.utils.getAddress(address)
+            address: ethers.getAddress(address)
             })
     }
 
@@ -110,7 +110,7 @@ export default function Home() {
             const candiates = await state.contract.getCandidates()
             const newRows = []
             candiates.forEach((v) => {
-                newRows.push({id: v[0].toNumber(), name: v[1], votedBy: v[2]})
+                newRows.push({id: Number(v[0]), name: v[1], votedBy: v[2]})
             })
             setState({...state, registeredNames: new Map([]), isEnd: isEnd, rows: newRows})
         } catch (error) {
@@ -140,7 +140,7 @@ export default function Home() {
         if (state.registeredNames.get(state.address)) {
             try {
                 const tx = await state.contract.vote(id)
-                await tx.wait() //important but why??
+                await tx.wait() //important
                 console.log(tx)
                 const candiates = await state.contract.getCandidates()
                 const newRows = []
@@ -160,7 +160,7 @@ export default function Home() {
         e.preventDefault()
         try {
             const tx = await state.contract.registerName(state.name)
-            await tx.wait() //important but why??
+            await tx.wait() //important
             console.log(tx)
             const regiteredName = await state.contract.getRegisterName();
             console.log("regiteredName:", regiteredName)

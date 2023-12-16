@@ -5,7 +5,7 @@
 const { ethers } = require("ethers");
 
 // Pls make sure hardhat is started on local listening at 8545
-const  provider = new ethers.providers.JsonRpcProvider();  // connect to http://localhost:8545 by default
+const  provider = new ethers.JsonRpcProvider();  // connect to http://localhost:8545 by default
 
 // Make sure account1 exists in Hardhat when it is started. If not, update them accordingly
 const account1 = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266' // the first account given by local hardhat
@@ -52,11 +52,11 @@ const Vote = async () => {
     console.log(res)
 }
 
-//GetCandidates()
+GetCandidates()
 //GetCandidate()
 //RegisterName()
 //IsEnd()
-Vote()
+//Vote()
 
 
 

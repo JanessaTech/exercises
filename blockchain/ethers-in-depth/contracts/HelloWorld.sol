@@ -3,9 +3,12 @@
 pragma solidity ^0.8.20;
 
 contract HelloWorld {
-    string mesg;
+    string mesg = 'default message';
+    event logger(address from, string mesg);
+
     function setMsg(string memory _mesg) public {
         mesg = _mesg;
+        emit logger(msg.sender, _mesg);
     }
     function getMsg() public view returns(string memory){
         return mesg;

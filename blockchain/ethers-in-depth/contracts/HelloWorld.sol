@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 
 contract HelloWorld {
     string mesg = 'default message';
-    event logger(address from, string mesg);
+    event logger(address indexed from, string mesg);
 
     function setMsg(string memory _mesg) public {
         mesg = _mesg;

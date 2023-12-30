@@ -11,11 +11,11 @@ function getProvider() {
 
 async function readContract() {
     const provider = getProvider()
-    const contractAdd = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'  // assume this is the address you got from 03_deployContract.js
+    const contractAdd = '0x5FbDB2315678afecb367f032d93F642f64180aa3'  // assume this is the address you got from 03_deployContract.js
     const abi = [
         'function setMsg(string _mesg) public',
         'function getMsg() public view returns(string)',
-        'event logger(address from, string mesg)'
+        'event logger(address indexed from, string mesg)'
     ]
     const contractInstance = new ethers.Contract(contractAdd, abi, provider) // readonly
     const message = await contractInstance.getMsg()

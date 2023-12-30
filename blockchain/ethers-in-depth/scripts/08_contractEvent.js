@@ -8,8 +8,8 @@ function getProvider() {
     const provider = new ethers.JsonRpcProvider('http://127.0.0.1:8545/')
     return provider
 }
-
-async function readContract() {
+// we assume you have run 03_deployContract.js and 05_writeContract.js
+async function queryFilter() {
     const provider = getProvider()
     const contractAdd = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'  // assume this is the address you got from 03_deployContract.js
     const abi = [
@@ -18,8 +18,12 @@ async function readContract() {
         'event logger(address from, string mesg)'
     ]
     const contractInstance = new ethers.Contract(contractAdd, abi, provider) // readonly
-    const message = await contractInstance.getMsg()
-    console.log('message:', message)
+    const curBlockNumber = await provider.getBlockNumber()
+    const events = await contractInstance.queryFilter('logger', null, curBlockNumber)
+    console.log(`${events.length} events have been generated. See more as following:`)
+    for(let i = 0; i < events.length; i++) {
+        console.log(events[i])
+    }
 }
 
-readContract()
+queryFilter()

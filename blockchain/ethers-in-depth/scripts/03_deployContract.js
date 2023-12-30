@@ -14,7 +14,8 @@ function getWallet() {
 async function deploy() {
     const abi = [
         'function setMsg(string _mesg) public',
-        'function getMsg() public view returns(string)'
+        'function getMsg() public view returns(string)',
+        'event logger(address from, string mesg)'
     ]
     const wallet = getWallet()
     /**

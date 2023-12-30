@@ -13,10 +13,11 @@ function getWallet() {
 
 async function writeContract() {
     const wallet = getWallet()
-    const contractAdd = '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'  // assume this is the address you got from 03_deployContract.js
+    const contractAdd = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'  // assume this is the address you got from 03_deployContract.js
     const abi = [
         'function setMsg(string _mesg) public',
-        'function getMsg() public view returns(string)'
+        'function getMsg() public view returns(string)',
+        'event logger(address from, string mesg)'
     ]
     const contractInstance = new ethers.Contract(contractAdd, abi, wallet)
     const tx = await contractInstance.setMsg('new message')

@@ -16,7 +16,7 @@ async function listen() {
     const abi = [
         'function setMsg(string _mesg) public',
         'function getMsg() public view returns(string)',
-        'event logger(address indexed from, string mesg)'
+        'event logger(address indexed from, string indexed method, string mesg)'
     ]
     const contractInstance = new ethers.Contract(contractAdd, abi, provider)
     console.log('Start to listen to HelloWorld.sol by calling .on() ...')

@@ -17,7 +17,7 @@ async function writeContract() {
     const abi = [
         'function setMsg(string _mesg) public',
         'function getMsg() public view returns(string)',
-        'event logger(address indexed from, string mesg)'
+        'event logger(address indexed from, string indexed method, string mesg)'
     ]
     const contractInstance = new ethers.Contract(contractAdd, abi, wallet)
     const tx = await contractInstance.setMsg('new message')

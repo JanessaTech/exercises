@@ -16,7 +16,9 @@ function createWallet2() {
 }
 
 function createWallet3() {
+    // see more at : https://github.com/WTFAcademy/WTF-Ethers/tree/main/14_HDwallet
     const phrase = 'dish lyrics because despair reunion library primary twenty local twist reject two'
+    //const phrase = ethers.Mnemonic.entropyToPhrase(randomBytes(32))
     const mnemonic = ethers.Mnemonic.fromPhrase(phrase);
     for (let index = 0; index < 3; index++) {
         const wallet = ethers.HDNodeWallet.fromMnemonic(mnemonic, `m/44'/60'/0'/0/${index}`);

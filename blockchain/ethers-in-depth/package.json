@@ -11,7 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "ethers": "^6.9.1",
-    "hardhat": "^2.19.4"
+    "hardhat": "^2.19.4",
+    "merkletreejs": "^0.3.11"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0"

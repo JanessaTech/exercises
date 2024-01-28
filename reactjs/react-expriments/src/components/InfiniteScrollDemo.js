@@ -21,7 +21,6 @@ function generateArray(start, count) {
 export default function InfiniteScrollDemo() {
     const [items, setItems] = useState([])
     const [hasMore, setHasMore] = useState(true)
-    const [index, setIndex] = useState(2)
 
     useEffect(() => {
         const data = generateArray(0, 12)
@@ -37,7 +36,6 @@ export default function InfiniteScrollDemo() {
         } else {
             setHasMore(true)
         }
-        setIndex(index + 1)
     }
 
 

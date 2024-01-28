@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import Root from "./components/ComponentTree/Root";
+import InfiniteScrollDemo from "./components/InfiniteScrollDemo";
 import StateUpdate from "./components/StateUpdate";
 import UseCallbackDemo from "./components/UseCallbackDemo";
 import RootComponent from "./components/UseContextUsage/RootComponent";
@@ -18,7 +19,8 @@ function App() {
       {/* <UseReducerDemo/> */}
       {/* <Root/> */}
       {/* <UseEffectDemo/> */}
-      <StateUpdate/>
+      {/* <StateUpdate/> */}
+      <InfiniteScrollDemo />
     </div>
   );
 }

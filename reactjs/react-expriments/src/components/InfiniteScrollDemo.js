@@ -46,13 +46,13 @@ export default function InfiniteScrollDemo() {
             hasMore={hasMore}
             loader={<Typography>Loading...</Typography>}
         >
-            <Box>
-                {
-                    items.map( (item) => (
-                        <Item index={item}/>
-                    ))
-                }
-            </Box>
+            
+            {
+                items.map( (item) => (
+                    <Item index={item}/>
+                ))
+            }
+    
         </InfiniteScroll>
     )
 }

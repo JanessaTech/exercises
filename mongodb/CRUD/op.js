@@ -167,8 +167,8 @@ async function updateStudent() {
 }
 
 //AddStudentsAndTeachers()
-//queryStudentAndTeacher()
-updateStudent()
+queryStudentAndTeacher()
+//updateStudent()
 
 
 

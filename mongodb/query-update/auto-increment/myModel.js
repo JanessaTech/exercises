@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 const initMyModelSchema = (mongoose) => {
   const myModelSchema = new Schema({
-    id: { type: Number,  min: 1 },
+    id: { type: Number,  unique: true, index: true, min: 1 },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date },
     someOtherField: { type: String }

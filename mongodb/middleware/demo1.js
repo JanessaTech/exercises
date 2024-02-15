@@ -112,8 +112,13 @@ async function test2() {
     }).catch((error) => {
         console.error('Failed to save stu due to ', error) 
     })
+    /*
+    it doesn't work from now on
+    stu1.save(function(err) {
+        console.log('Failed to save stu1 due to: ', err)
+    })*/
 }
 
-test1()
+//test1()
 
-//test2()
+test2()

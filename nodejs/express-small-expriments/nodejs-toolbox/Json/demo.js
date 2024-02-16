@@ -1,23 +1,4 @@
-const {data} =  require('./data')
-
-
-
 function  test1() {
-
-    const res = data.find(e => e.id === 1)
-    res.age=20
-    console.log(res)
-    console.log(data)
-    console.log(!![])
-}
-
-function test2() {
-    const arr = [1, 2, 3, 4, 5, 6]
-    arr.push(7)
-    console.log(arr.toString())
-}
-
-function  test3() {
     function isJson(obj) {
         return obj !== undefined && obj !== null && obj.constructor === Object;
     }
@@ -27,5 +8,5 @@ function  test3() {
     args.forEach(e => console.log(isJson(e)))
     args.forEach(e => console.log(e ? e.constructor : e))
 }
-//test2()
-test3()
+
+test1()

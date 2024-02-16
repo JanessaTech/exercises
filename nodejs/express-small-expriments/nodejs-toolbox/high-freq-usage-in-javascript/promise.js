@@ -69,4 +69,4 @@ function throwErrorInPromise(n) {
 
 
 //throwErrorInPromise(3)
-throwErrorInPromise(-1)
+throwErrorInPromise(1)

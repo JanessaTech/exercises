@@ -1,0 +1,12 @@
+{
+  "name": "jest-demo",
+  "version": "1.0.0",
+  "description": "This is the demo on how to use jest",
+  "main": "index.js",
+  "scripts":{
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

@@ -34,5 +34,64 @@ function  test3() {
     args.forEach(e => console.log(isJson(e)))
     args.forEach(e => console.log(e ? e.constructor : e))
 }
+
+function test4() {
+    const id = 1
+    const chainId = 2
+    const address = 'some-address'
+    const tokenId = 3
+    const nft = {id: id, chainId: chainId, address: address, tokenId: tokenId, toJSON: () => { return { id: id, chainId: chainId, address: address, tokenId: tokenId}}}
+    console.log(nft.toJSON())
+}
+
+function test5() {
+    const sortBy = 'chainId:asc,tokenId:desc'
+    const sorts = {}
+    sortBy.split(',').forEach((sort) => {
+        const [key, order] = sort.split(':')
+        sorts[key] = order === 'asc' ? 1 : -1
+    })
+    const sortingCriteria = {sortBy : sorts}
+    console.log(sortingCriteria)
+}
+
+function test6() {
+    const ipfs = 'ipfs://bafybeics4gipwcek5rzkyfs7t2cptkodoqeguf2ttv4ers7sr4g642tj6q'
+    //const gateway = 'http://localhost:8080'  // https://nftstorage.link
+    const gateway = 'https://nftstorage.link'
+    const cid = ipfs.substring('ipfs://'.length)
+    console.log('cid = ', cid)
+    const [protocol, domain] = gateway.split('://')
+    console.log('protocol = ', protocol , ' domain = ', domain)
+    const url = `${protocol}://${cid}.ipfs.${domain}`
+    console.log(' url = ', url)
+}
+
+function test7() {
+    const options_populate = 'userId:id name,replies:id userId:userId|id name createdAt'
+    if (options_populate) {
+        options_populate.split(',').forEach((populateOption) => {
+            const [path, select, subPopulate] = populateOption.split(':')
+            const popOptions = {path: path, select: path}
+            if (subPopulate) {
+                const [subPath, subSelect] = subPopulate.split('|')
+                popOptions.populate = {path: subPath, select: subSelect}
+            }
+            console.log('paginate.populate. path =', path, ',select =', select, ',population =', subPopulate)
+
+        });
+        /*docsPromise = docsPromise.populate(
+          {path: 'userId', select: 'id name createdAt'}
+        );
+        docsPromise = docsPromise.populate(
+          {path: 'replies', select: 'id userId',  populate: { path: 'userId', select: 'id name createdAt'}}
+        );*/
+    }
+}
+
 //test2()
-test3()
+//test3()
+//test4()
+//test5()
+//test6()
+test7()

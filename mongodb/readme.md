@@ -12,5 +12,10 @@ npm install --save mongoose
 ## How to run:
 
 ```
+run
+    quickstart.js
+    or
+    CRUD/op.js
+directly
 
 ```

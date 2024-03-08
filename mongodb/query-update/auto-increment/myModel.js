@@ -11,7 +11,7 @@ const initMyModelSchema = (mongoose) => {
   
   const counterSchema = new Schema(
     {
-    _id: {type: String, unique: true, required: true},
+    _id: {type: String},
     seq: { type: Number, default: 0 }
     }
   );

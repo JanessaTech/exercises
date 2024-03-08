@@ -166,9 +166,17 @@ async function updateStudent() {
     }
 }
 
+function getAttrsForModel() {
+
+    const props = Object.keys(Student.schema.paths);
+    console.log(props.filter((attr) => attr !== '__v'))
+}
+
 //AddStudentsAndTeachers()
-queryStudentAndTeacher()
+//queryStudentAndTeacher()
 //updateStudent()
+getAttrsForModel()
+
 
 
 

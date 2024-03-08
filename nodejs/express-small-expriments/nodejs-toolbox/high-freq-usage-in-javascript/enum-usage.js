@@ -41,7 +41,6 @@ function test2() {
     const On2 = Symbol("on")
     console.log(On1.toString() === On2.toString())
     console.log(On1 === On2)
-
 }
 
 //test1()

@@ -170,6 +170,17 @@ function getAttrsForModel() {
 
     const props = Object.keys(Student.schema.paths);
     console.log(props.filter((attr) => attr !== '__v'))
+    console.log(Student.schema.paths['teachers'].options.type[0].ref)  //Teacher
+    console.log(Student.schema.paths['teachers'].options.type instanceof Array)  //true
+    console.log(Student.schema.paths['teachers'].options.type[0])
+    console.log(Student.schema.paths['teachers'].options.type[0] instanceof mongoose.SchemaTypeOptions)  //true
+    console.log(Student.schema.paths['teachers'].options instanceof mongoose.SchemaTypeOptions) //true
+    console.log(Student.schema.pathType('teachers')) //real
+    console.log(Student.schema.paths['name'] instanceof mongoose.SchemaType) //true
+    console.log(Student.schema.paths['name'] instanceof mongoose.Schema.Types.String) //true
+    console.log(Student.schema.paths['name'].options instanceof mongoose.SchemaTypeOptions) //true
+    console.log(Student.schema.paths['name'].instance) //String
+    console.log(Student.schema.paths['name'].options.type)  //[Function: String]
 }
 
 //AddStudentsAndTeachers()

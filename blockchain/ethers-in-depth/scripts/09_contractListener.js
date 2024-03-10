@@ -21,7 +21,7 @@ async function listen() {
     ]
     const contractInstance = new ethers.Contract(contractAdd, abi, provider)
     console.log('Start to listen to HelloWorld.sol by calling .on() ...')
-    contractInstance.on('logger', (from, method, mesg, event) => {
+    contractInstance.on('logger', (from, method, mesg, event) => { // you should start this demo after the contract is deployed
         console.log(`from=${from} method=${method} mesg=${mesg} event=${event}`)
     })
 

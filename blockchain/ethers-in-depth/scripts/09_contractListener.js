@@ -28,4 +28,8 @@ async function listen() {
 }
 listen()
 // once you start 09_contractListener.js, you could setMsg by calling 05_writeContract.js or calling setMsg in remix
+// more about how it runs:
+// 1. I deploy codes by remix(hardhat is started) and choose hardhat as provider
+// 2. start this demo
+// 3. goback to remix and call setMsg in UI
 

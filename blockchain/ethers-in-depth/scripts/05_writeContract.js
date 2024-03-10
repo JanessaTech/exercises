@@ -13,7 +13,7 @@ function getWallet() {
 
 async function writeContract() {
     const wallet = getWallet()
-    const contractAdd = '0x5FbDB2315678afecb367f032d93F642f64180aa3'  // assume this is the address you got from 03_deployContract.js
+    const contractAdd = '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9'  // assume this is the address you got from 03_deployContract.js
     const abi = [
         'function setMsg(string _mesg) public',
         'function getMsg() public view returns(string)',

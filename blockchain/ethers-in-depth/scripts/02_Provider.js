@@ -31,7 +31,7 @@ async function getBlockNumber() {
 
 async function getTransactionsInOneBlock() {
     const provider = getProvider()
-    const block = await provider.getBlock()
+    const block = await provider.getBlock() //get the latest block
     const txs = block.transactions
     for(var i = 0; i< txs.length; i++) {
         console.log(`transaction hash in block ${block.number}: ${txs[i]}`)

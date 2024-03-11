@@ -89,9 +89,41 @@ function test7() {
     }
 }
 
+function test8() {
+    const sortBy = 'chainId:asc,address:desc,tokenId:asc'
+    const columns = ['chainId','address','tokenId']
+    if (sortBy) {
+        const sortOptions = sortBy.split(',')
+        for (const sortOption of sortOptions) {
+            const [key, order] = sortOption.split(':')
+            if (!order) {
+                return false
+            }
+            if (!columns.includes(key)) {
+                return false
+            }
+            if (!['asc', 'desc'].includes(order)){
+                return false
+            }
+        }
+    }
+    return true
+}
+
+function test9() {
+    const [key, order] = 'chainId-asc'.split(':')
+    console.log('key = ', key, ' order = ', order)
+    const columns = ['chainId','address','tokenId']
+    console.log(columns.includes('chainI'))
+    console.log(`${columns}`)
+
+}
+
 //test2()
 //test3()
 //test4()
 //test5()
 //test6()
-test7()
+//test7()
+//console.log(test8())
+test9()

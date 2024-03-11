@@ -1,3 +1,4 @@
+const path  = require("path");
 
 
 function test1() {
@@ -13,4 +14,13 @@ function test1() {
 
 }
 
-test1()
+function test2() {
+    const originalName = 'test.png'
+    const matches = originalName.match(/\.+[\S]+$/)
+    const fileExtension = (matches || [])[0]
+    console.log(fileExtension)  // .png
+    console.log(path.extname(originalName))  // .png
+}
+
+//test1()
+test2()

@@ -22,5 +22,14 @@ function test2() {
     console.log(path.extname(originalName))  // .png
 }
 
+function test3() {
+    var fileTypes =  /jpeg|jpg|png|gif/
+    const originalName = 'test.png'
+    console.log('path.extname(originalName) = ', path.extname(originalName))
+    var extname = fileTypes.test(path.extname(originalName).toLowerCase())
+    console.log('extname = ', extname)
+}
+
 //test1()
-test2()
+//test2()
+test3()

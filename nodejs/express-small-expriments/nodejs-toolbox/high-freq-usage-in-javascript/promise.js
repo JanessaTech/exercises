@@ -14,14 +14,18 @@ function basic_usage_promise() {
 //const myPromise = getPromise(-1)
     const myPromise = getPromise(-1)
 
-    myPromise.then(
-        function (value) {
+    myPromise.then( (value) => {
+            console.log('in then of success part')
             console.log(value)
-        },
-        function (error) {
+        }, (error) => {
+            console.log('in then of error part')
             console.log(error)
+            //throw new Error(error)  //this  will never be hit if comment out this line
         }
-    )
+    ).catch((e) => {
+        console.log('in catch')
+        console.log(e.message)
+    })
 }
 
 
@@ -39,34 +43,24 @@ function throwErrorInPromise(n) {
     }
 
     let myPromise = getPromise(n)
-    let myerror = undefined
-    myPromise.then(
-        function (value) {
+
+    myPromise.then((value) => {
             if (value !== 'janessa') {
-                throw new Error('throw error from promise when value = janessa')
+                throw new Error('throw error from promise when value != janessa')
             } else {
                 console.log('res is:' + value)
             }
-        },
-        function (error) {
+        }, (error) => {
+            // notice this part will never be hit because we throw error at the end
             console.log('throw error from the second function in promise')
-            throw error
+            throw error  // guess what happens if we comment out this line?
         }
-    ).catch(function (e) {
+    ).catch( (e) => {
         console.log(e.message)
         console.log('throw error from catch in promise')
-        myerror = e
-
     })
-
-    if (myerror) {
-        // the info cannot be printed out, we cannot use this way to set variable
-        console.log('println error here')
-        console.log(myerror.message)
-    }
-
 }
 
-
+basic_usage_promise()
 //throwErrorInPromise(3)
-throwErrorInPromise(1)
+//throwErrorInPromise(-1)

@@ -119,6 +119,14 @@ function test9() {
 
 }
 
+function test10() {
+    const BACKEND_ADDR = 'http://127.0.0.1:8080'
+    const id = 1
+    const userId = 2
+    const url = `${BACKEND_ADDR}/apis/v1/nfts/${id}${userId ? '?userId='+ userId : ''}`
+    console.log('url = ', url)
+}
+
 //test2()
 //test3()
 //test4()
@@ -126,4 +134,5 @@ function test9() {
 //test6()
 //test7()
 //console.log(test8())
-test9()
+//test9()
+test10()

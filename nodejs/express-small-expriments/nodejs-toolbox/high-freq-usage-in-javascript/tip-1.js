@@ -1,5 +1,4 @@
 
-const messages = require('./message_en')
 function bing_console_log() {
     const logger = {}
     const log = console.log.bind(logger)
@@ -102,11 +101,29 @@ function removeDuplicatedNumber() {
 
 }
 
-function msg_template(key, ...params) {
-    let message = messages.sub
-    for(let i = 0; i < params.length; i++) {
+function msg_template(...params) {
+    const isJson = (obj) => {
+        return obj !== undefined && obj !== null && obj.constructor === Object;
+    }
+    const isArray = (obj) => {
+        return !!obj && obj.constructor === Array;
+    }
+
+    const convert = (obj) => {
+        if (isJson(obj)) {
+            return  '\n' + JSON.stringify(obj, null, 4) + '\n'
+        }
+        if (isArray(obj)) {
+            return obj.map((o) => convert(o))
+        }
+        return obj
+    }
+
+    let message =  'value1 = {0}, value2 = {1}, value3 = {2}, value4 = {3}, value5 = {4}, value6={5}'
+    const _params = params.map( (e) => convert(e))
+    for(let i = 0; i < _params.length; i++) {
         const ph = `{${i}}`
-        message = message.replace(ph, params[i])
+        message = message.replace(ph, _params[i])
     }
     console.log(message); //
 }
@@ -204,10 +221,10 @@ function isValueOrReference() {
 //verifyIsNull()
 //removeDuplicatedNumber()
 //msg_template('sub', ...['hello', 'janessa'])
-//msg_template('sub', 'janessa', 'hello')
+msg_template('janessa', 'hello', {aa: '123'}, [{bb: '111'}, {cc: '2222'}], null, undefined)
 //convert_str_to_int()
 //myErrorClassName()
 //arrayContains()
 //regex()
 //regex1()
-isValueOrReference()
+//isValueOrReference()

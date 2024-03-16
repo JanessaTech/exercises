@@ -127,6 +127,10 @@ function test10() {
     console.log('url = ', url)
 }
 
+function test11() {
+    console.log(Number(null))
+}
+
 //test2()
 //test3()
 //test4()
@@ -135,4 +139,5 @@ function test10() {
 //test7()
 //console.log(test8())
 //test9()
-test10()
+//test10()
+test11()

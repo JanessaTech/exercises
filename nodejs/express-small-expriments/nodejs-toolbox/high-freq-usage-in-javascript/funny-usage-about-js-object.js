@@ -5,4 +5,12 @@ function test1() {
     console.log('name = ', stu.name)
     console.log('age = ', stu.age)
 }
-test1()
+
+function test2() {
+    const obj = {name: 'Jane', age: 12}
+    for (const [key, value] of Object.entries(obj)) {
+        console.log('key =', key, ' value =', value)
+    }
+}
+//test1()
+test2()

@@ -128,7 +128,12 @@ function test10() {
 }
 
 function test11() {
-    console.log(Number(null))
+    console.log(Number(undefined))
+}
+
+function test12() {
+    const eventBus = {}
+    eventBus.overview = new Map([])
 }
 
 //test2()

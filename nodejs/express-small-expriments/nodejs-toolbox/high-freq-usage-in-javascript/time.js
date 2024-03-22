@@ -17,4 +17,28 @@ function test1() {
 
 }
 
-test1()
+const monthMap = new Map([
+    [0, 'Jan'],
+    [1, 'Feb'],
+    [2, 'Mar'],
+    [3, 'Apr'],
+    [4, 'May'],
+    [5, 'Jun'],
+    [6, 'Jul'],
+    [7, 'Aug'],
+    [8, 'Sep'],
+    [9, 'Oct'],
+    [10, 'Nov'],
+    [11, 'Dec']
+])
+function shortFormatDate(date) {
+    return `${monthMap.get(date.getMonth())} ${date.getDate()}th,${date.getFullYear()}`
+}
+function test2() {
+    let date = new Date('2024-03-17T02:10:07.336Z')
+    console.log(date)
+    console.log(shortFormatDate(date))
+}
+
+//test1()
+test2()

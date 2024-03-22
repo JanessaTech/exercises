@@ -12,5 +12,47 @@ function test2() {
         console.log('key =', key, ' value =', value)
     }
 }
+
+function test3() {
+    const nfts = [{
+        category: "cars",
+        price: 50,
+        status: 'on'
+    }]
+    const copies = nfts.map((nft) => {
+        const copy = {}
+        for (const [key, value] of Object.entries(nft)) {
+            if (key === 'price' || key === 'status') {
+                copy[key] = {}
+                copy[key].isChanged = false
+                copy[key].backUpValue = undefined
+                copy[key].value = value
+            } else {
+                copy[key] = value
+            }
+        }
+        return copy
+    })
+
+    console.log(copies)
+}
+
+function  check_object_is_empty() {
+    function isEmpty(obj) {
+        return Object.keys(obj).length === 0;
+    }
+
+    const emptyObj = {}
+    const nonEmptyObj = {name: 'jane'}
+
+    console.log('is emptyObj empty? ', isEmpty(emptyObj))
+    console.log('is nonEmptyObj empty? ', isEmpty(nonEmptyObj))
+}
+
+
+
+
 //test1()
-test2()
+//test2()
+//test3()
+check_object_is_empty()

@@ -1,3 +1,5 @@
+
+const axios = require('axios')
 function test1({page, limit, sortBy}) {
     let query = {}
     if (page) {
@@ -105,8 +107,32 @@ function test3() {
     console.log('q8 = ', q8)
 }
 
+async function test4() {
+    const metadata = {
+        url: 'ipfs://bafyreidn6i4ml4bgoyl5upnzgstjag7qsmihmhcgd2ylon6xsukkbnj3me/metadata.json'
+    }
+    const gateway = 'https://nftstorage.link'
+    const regex = /^ipfs:\/\/(Qm[1-9A-HJ-NP-Za-km-z]{44,}|b[A-Za-z2-7]{58,}|B[A-Z2-7]{58,}|z[1-9A-HJ-NP-Za-km-z]{48,}|F[0-9A-F]{50,})\/metadata\.json$/
+    const ok = regex.test(metadata.url)
+    console.log('ok =', ok)
+    const end = metadata.url.indexOf('metadata.json') - 1
+    const cid = metadata.url.substring('ipfs://'.length, end)
+    console.log('cid =', cid)
+    const [protocol, domain] = gateway.split('://')
+    const url = `${protocol}://${cid}.ipfs.${domain}/metadata.json`
+    console.log('url =', url)
+    try {
+        const response = await axios.get(url)
+        console.log('response =', response?.data)
+    } catch (err) {
+        console.log(err)
+    }
+
+}
+
 
 //test1()
 //test2()
 //forTest1()
-test3()
+//test3()
+test4()

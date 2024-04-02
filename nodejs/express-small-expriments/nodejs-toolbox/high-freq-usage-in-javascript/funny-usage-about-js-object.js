@@ -39,7 +39,7 @@ function test3() {
 
 function  check_object_is_empty() {
     function isEmpty(obj) {
-        return Object.keys(obj).length === 0;
+        return !obj || Object.keys(obj).length === 0;
     }
 
     const emptyObj = {}
@@ -47,6 +47,7 @@ function  check_object_is_empty() {
 
     console.log('is emptyObj empty? ', isEmpty(emptyObj))
     console.log('is nonEmptyObj empty? ', isEmpty(nonEmptyObj))
+    console.log('is emptyObj empty? ', isEmpty(undefined))
 }
 
 

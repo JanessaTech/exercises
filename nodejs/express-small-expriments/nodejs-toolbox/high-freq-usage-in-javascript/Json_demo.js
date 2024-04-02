@@ -30,8 +30,28 @@ function  test1() {
     args.forEach(e => console.log(e ? e.constructor : e))
 }
 
-function test_emptyJson() {
-    
+function  mapToString(map) {
+    let map_array = Object.fromEntries(map)
+    return JSON.stringify(map_array)
 }
 
-test1()
+function stringToMap() {
+    let jsonString = '{"1":"aaaa","2":"bbbb","3":"cccc","4":"dddd"}'
+    let obj = JSON.parse(jsonString)
+    for (const [key, value] of Object.entries(obj)) {
+        
+    }
+}
+
+function test2() {
+    const token_uri_mapping = new Map()
+    token_uri_mapping.set(1, 'aaaa')
+    token_uri_mapping.set(2, 'bbbb')
+    token_uri_mapping.set(3, 'cccc')
+    token_uri_mapping.set(4, 'dddd')
+    let jsonString = mapToString(token_uri_mapping)
+    console.log('jsonString:', jsonString)
+}
+
+//test1()
+test2()

@@ -40,5 +40,14 @@ function test2() {
     console.log(shortFormatDate(date))
 }
 
+
+async function time_duration() {
+    let startTime = performance.now()
+    await new Promise(r => setTimeout(r, 2000))
+    let endTime = performance.now()
+    console.log(`Call to doSomething took ${endTime - startTime} milliseconds`)
+}
 //test1()
-test2()
+//test2()
+time_duration().then(() => console.log('done')
+)

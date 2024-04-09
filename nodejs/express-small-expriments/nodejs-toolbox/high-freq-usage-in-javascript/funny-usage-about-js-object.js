@@ -49,11 +49,50 @@ function  check_object_is_empty() {
     console.log('is nonEmptyObj empty? ', isEmpty(nonEmptyObj))
     console.log('is emptyObj empty? ', isEmpty(undefined))
 }
+function test_for_sort() {
+    const nfts = [
+        {owner: {address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'}, price: 10, tokenId: 3},
+        {owner: {address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'}, price: 23, tokenId: 4},
+        {owner: {address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'}, price: 56, tokenId: 6},
+        {owner: {address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'}, price: 54, tokenId: 5},
+        {owner: {address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'}, price: 50, tokenId: 2},
+        {owner: {address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C9'}, price: 12, tokenId: 3},
+        {owner: {address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C9'}, price: 10, tokenId: 1},
+        {owner: {address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C9'}, price: 20, tokenId: 2}
+    ]
+    const nftMap = new Map()
+    for (const nft of nfts) {
+        if (!nftMap.get(nft.owner.address)) {
+            nftMap.set(nft.owner.address, [])
+        }
+        nftMap.get(nft.owner.address).push({price: nft.price, tokenId: nft.tokenId})
+    }
+    const froms = []
+    let idss = []
+    let totalPrice = 0
+    for(const [from, value] of nftMap) {
+        froms.push(from)
+        value.sort((a, b) => {
+            return a.tokenId - b.tokenId
+        })
+        const ids = value.map( (v) => v.tokenId)
+        idss.push(ids)
+        totalPrice += value.reduce((a, b) => a + b.price, 0)
+    }
 
+    const buyData = {
+        froms : froms,
+        idss: idss,
+        totalPrice: totalPrice
+    }
+    console.log(buyData)
+}
 
 
 
 //test1()
 //test2()
 //test3()
-check_object_is_empty()
+//check_object_is_empty()
+
+test_for_sort()

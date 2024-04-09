@@ -13,4 +13,12 @@ function test1() {
     }
 }
 
-test1()
+function filter() {
+    const rawMap = new Map([['a', 1], ['b', 2], ['c', 3], ['d', 4]])
+
+    const newMap = new Map([...rawMap].filter(([k, v]) => v > 2))
+    console.log(newMap)
+}
+
+//test1()
+filter()

@@ -13,6 +13,10 @@ function  test1() {
     function isArray(obj){
         return !!obj && obj.constructor === Array;
     }
+
+    function isSet(obj){
+        return !!obj && obj.constructor === Set;
+    }
     function convert(obj) {
         if (isJson(obj)) {
            return  '\n' + JSON.stringify(obj, null, 4)
@@ -20,9 +24,12 @@ function  test1() {
         if (isArray(obj)) {
             return obj.map((o) => convert(o))
         }
+        if (isSet(obj)) {
+            return [...obj].map((o) => convert(o))
+        }
         return obj
     }
-    const args = [ 1, [2, 3], true, 'sss', null, undefined, { name: 'John' }, [{ name: 'aaa' }, { name: 'bbb' }], 'aaa', new CustomError('xxxxxx')]
+    const args = [ 1, [2, 3], true, 'sss', null, undefined, { name: 'John' }, [{ name: 'aaa' }, { name: 'bbb' }], 'aaa', new CustomError('xxxxxx'), new Set(['jane', 'vvv'])]
     //const res = args.map( e => isJson(e) ? '\n' + JSON.stringify(e, null, 4) + '\n' : e).join(' ')
     const res = args.map( e => convert(e)).join(' ')
     console.log(res)
@@ -53,5 +60,5 @@ function test2() {
     console.log('jsonString:', jsonString)
 }
 
-//test1()
-test2()
+test1()
+//test2()

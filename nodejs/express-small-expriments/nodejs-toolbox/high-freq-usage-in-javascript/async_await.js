@@ -106,9 +106,30 @@ function case4(n) {
     outside(n)
 }
 
+function test5() {
+    function resolveAfter5Seconds() {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('hello JanessaTech');
+            }, 5000);
+        }, (reject) => {
+            reject(new Error('Hi, wrong!'))
+        });
+    }
+
+    console.log('start1 ....')
+    resolveAfter5Seconds().then((res) => {
+        console.log('we hit then. res =', res)
+    }).catch((err) => {
+        console.log('we hit catch. err =', err)
+    })
+    console.log('end ...')
+}
+
 //case2()
 //case3(-1)
-case4(-1)
+//case4(-1)
+test5()
 
 
 

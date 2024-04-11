@@ -126,10 +126,27 @@ function test5() {
     console.log('end ...')
 }
 
+async function test6() {
+    function resolveAfter5Seconds() {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('hello JanessaTech');
+            }, 5000);
+        }, (reject) => {
+            reject(new Error('Hi, wrong!'))
+        });
+    }
+    console.log('start1 ....')
+    const res = await resolveAfter5Seconds()
+    console.log('res =', res)
+    console.log('end ...')
+}
+
 //case2()
 //case3(-1)
 //case4(-1)
-test5()
+//test5()
+test6()
 
 
 

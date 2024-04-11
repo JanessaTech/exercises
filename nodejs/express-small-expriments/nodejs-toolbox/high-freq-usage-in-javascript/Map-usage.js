@@ -20,5 +20,13 @@ function filter() {
     console.log(newMap)
 }
 
+function loop_map() {
+    const rawMap = new Map([['a', 1], ['b', 2], ['c', 3], ['d', 4]])
+    rawMap.forEach((v, k) => {
+        console.log(v)
+    })
+}
+
 //test1()
-filter()
+//filter()
+loop_map()

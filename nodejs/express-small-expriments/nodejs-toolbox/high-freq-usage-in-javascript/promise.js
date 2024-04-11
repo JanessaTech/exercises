@@ -61,6 +61,6 @@ function throwErrorInPromise(n) {
     })
 }
 
-basic_usage_promise()
-//throwErrorInPromise(3)
+//basic_usage_promise()
+throwErrorInPromise(3)
 //throwErrorInPromise(-1)

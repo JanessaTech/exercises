@@ -19,3 +19,7 @@ npm install
 ```
 
 ```
+
+## References
+
+- https://www.sitepoint.com/using-redis-node-js/

@@ -44,6 +44,7 @@ function parseUnits() { // big unit -> small unit(wei)
     console.log(ethers.parseUnits('1.0', 'gwei'))   //1000000000n
     console.log(ethers.parseUnits('1.0', 9))        //1000000000n
     console.log(ethers.parseEther('1.0'))           //1000000000000000000n , equivalent to parseUnits(ether, 18)
+    console.log(ethers.parseEther('1'))
 
 }
 

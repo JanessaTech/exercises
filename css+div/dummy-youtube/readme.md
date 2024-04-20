@@ -7,7 +7,7 @@ The project doesn't use any library or tool, just pure CSS + HTML + Javascript o
 
 - Install live server
 - Run live server
-  Open a HTML file and right-click on the editor and click on Open with Live Serve
+  Right-click on index.html and click on Open with Live Server(I am assume you project in VSCode)
   You will see like blow:
   The home page:![image info](pics/home.png)
   The detail page:![image info](pics/details.png)

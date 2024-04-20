@@ -1,3 +1,8 @@
+# About this project
+
+This project is a dummy clone of youtube to showcase the solid understanding of HTML and CSS
+The project doesn't use any library or tool, just pure CSS + HTML + Javascript only
+
 # How to run
 
 - Install live server

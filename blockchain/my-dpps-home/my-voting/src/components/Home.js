@@ -143,9 +143,10 @@ export default function Home() {
                 await tx.wait() //important
                 console.log(tx)
                 const candiates = await state.contract.getCandidates()
+                console.log("candiates =", candiates)
                 const newRows = []
                 candiates.forEach((v) => {
-                    newRows.push({id: v[0].toNumber(), name: v[1], votedBy: v[2]})
+                    newRows.push({id: Number(v[0]), name: v[1], votedBy: v[2]})
                 })
                 setState({...state, rows: newRows})
             } catch (error) {

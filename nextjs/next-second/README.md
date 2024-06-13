@@ -1,3 +1,12 @@
+### Install
+
+```
+Install json-server to mock as json server
+ npm install json-server -g
+Run data server
+ json-server --watch --port 4000 ./_data/db.json
+```
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

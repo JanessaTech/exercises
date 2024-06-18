@@ -1,8 +1,12 @@
 import React from 'react'
+import Link from 'next/link'
 
-export default function Page() {
+export default function Home() {
   return (
-    <h1>Hi, Janessa</h1>
+    <>
+    <h1>Home page. Hi, Janessa</h1>
+    <Link href="/blog">Blog</Link>
+    </>
   )
 }
 

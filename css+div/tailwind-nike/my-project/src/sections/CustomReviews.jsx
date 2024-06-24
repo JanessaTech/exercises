@@ -24,7 +24,6 @@ const CustomReviews = () => {
               customerName={review.customerName}
               rating={review.rating}
               feedback={review.feedback}
-
             />
           ))
         }

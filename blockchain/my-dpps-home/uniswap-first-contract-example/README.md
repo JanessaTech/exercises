@@ -14,9 +14,12 @@ Learn to build your first on chain integration here: https://uniswap.org/blog/yo
 ```
  For SingleSwap.sol, run:
     npx hardhat run --network sepolia scripts/deploySingleSwap.js
- For SimpleSwap.sol, run(You should start a forking on mainnet on local first):
+ For SimpleSwap.sol, run:
+    npx hardhat node --fork https://eth-mainnet.g.alchemy.com/v2/lFKEWE2Z7nkAXL73NSeAM2d5EbndwoQk
     npx hardhat run --network localhost scripts/deploySimpleSwap.js
-
+ For LiquidityExamples, run:
+    npx hardhat node --fork https://eth-mainnet.g.alchemy.com/v2/lFKEWE2Z7nkAXL73NSeAM2d5EbndwoQk
+    npx hardhat run --network localhost scripts/deployLiquidityExamples.js
 ```
 
 ## How to run test cases for SingleSwap.sol

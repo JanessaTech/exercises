@@ -1,10 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-pragma solidity =0.7.6;
-pragma abicoder v2;
-
-import '@uniswap/v3-core/contracts/libraries/TickMath.sol';
-
-//import 'https://github.com/Uniswap/v3-core/blob/main/contracts/libraries/TickMath.sol';
+pragma solidity ^0.8.0;
 
 interface IERC20 {
     function totalSupply() external view returns (uint256);
@@ -25,11 +20,9 @@ interface IWETH is IERC20 {
     function deposit() external payable;
     function withdraw(uint256 amount) external;
 }
-
 interface IERC721Receiver {
     function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data) external returns (bytes4);
 }
-
 interface INonfungiblePositionManager {
     event IncreaseLiquidity(uint256 indexed tokenId, uint128 liquidity, uint256 amount0, uint256 amount1);
     event DecreaseLiquidity(uint256 indexed tokenId, uint128 liquidity, uint256 amount0, uint256 amount1);
@@ -116,23 +109,21 @@ interface INonfungiblePositionManager {
         returns (uint256 amount0, uint256 amount1);
 }
 
-contract LiquidityExamples is IERC721Receiver {
+contract LiquidityExamples1 is IERC721Receiver {
     address public constant DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
     address public constant WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
-
-    uint24 public constant poolFee = 3000;
-
+    
     INonfungiblePositionManager public nonfungiblePositionManager =
         INonfungiblePositionManager(0xC36442b4a4522E871399CD717aBDD847Ab11FE88);
 
     // Implementing `onERC721Received` so this contract can receive custody of erc721 tokens
     function onERC721Received(
         address operator,
-        address,
+        address from,
         uint256 tokenId,
         bytes calldata
-    ) external override returns (bytes4) {
-        return this.onERC721Received.selector;
+    ) override external returns (bytes4) {
+        return IERC721Receiver.onERC721Received.selector;
     }
 
     function mintNewPosition()
@@ -159,9 +150,9 @@ contract LiquidityExamples is IERC721Receiver {
             INonfungiblePositionManager.MintParams({
                 token0: DAI,
                 token1: WETH,
-                fee: poolFee,
-                tickLower: TickMath.MIN_TICK,
-                tickUpper: TickMath.MAX_TICK,
+                fee: 3000,
+                tickLower: -887272,
+                tickUpper: 887272,
                 amount0Desired: amount0ToMint,
                 amount1Desired: amount1ToMint,
                 amount0Min: 0,

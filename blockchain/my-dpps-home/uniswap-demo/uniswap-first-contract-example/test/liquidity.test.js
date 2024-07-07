@@ -73,4 +73,27 @@ describe("LiquidityExamples", () => {
     console.log(`dai ${await dai.balanceOf(liquidityExamples.address)}`)
     console.log(`usdc ${await usdc.balanceOf(liquidityExamples.address)}`)
   })
+
+  it("increaseLiquidityCurrentRange", async () => {
+    const daiAmount = 3n * 10n ** 18n
+    const usdcAmount = 3n * 10n ** 6n
+
+    await dai.connect(accounts[0]).approve(liquidityExamples.address, daiAmount)
+    await usdc
+      .connect(accounts[0])
+      .approve(liquidityExamples.address, usdcAmount)
+
+    await liquidityExamples.increaseLiquidityCurrentRange(daiAmount, usdcAmount)
+  })
+  it("decreaseLiquidity", async () => {
+    const tokenId = await liquidityExamples.tokenId()
+    const liquidity = await liquidityExamples.getLiquidity(tokenId)
+
+    await liquidityExamples.decreaseLiquidity(liquidity)
+
+    console.log("--- decrease liquidity ---")
+    console.log(`liquidity ${liquidity}`)
+    console.log(`dai ${await dai.balanceOf(liquidityExamples.address)}`)
+    console.log(`usdc ${await usdc.balanceOf(liquidityExamples.address)}`)
+  })
 })

@@ -3,6 +3,7 @@ pragma solidity =0.7.6;
 pragma abicoder v2;
 
 import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
+import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol";
 import "@uniswap/v3-core/contracts/libraries/TickMath.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol";
@@ -19,6 +20,7 @@ contract LiquidityExamples is IERC721Receiver {
 
     INonfungiblePositionManager public nonfungiblePositionManager = 
         INonfungiblePositionManager(0xC36442b4a4522E871399CD717aBDD847Ab11FE88);
+    IUniswapV3Factory public uniswapV3Factory = IUniswapV3Factory(0x1F98431c8aD98523631AE4a59f267346ea31F984);
 
     /// @notice Represents the deposit of an NFT
     struct Deposit {
@@ -207,5 +209,17 @@ contract LiquidityExamples is IERC721Receiver {
         console.log("removed liquidity", liquidity);
         console.log("amount 0", amount0);
         console.log("amount 1", amount1);
+    }
+
+    function getPool(address _tokenA, address _tokenB, uint24 _fee) external view returns (address pool) {
+        address _pool = uniswapV3Factory.getPool(_tokenA, _tokenB, _fee);
+        console.log("pool:", _pool);
+        return _pool;
+    }
+
+    function createPool(address tokenA, address tokenB, uint24 fee) external returns (address pool) {
+        address newPool = uniswapV3Factory.createPool(tokenA, tokenB, fee);
+        console.log("new pool:", newPool);
+        return newPool;
     }
 }

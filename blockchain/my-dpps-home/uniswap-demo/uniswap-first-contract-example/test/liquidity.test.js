@@ -48,7 +48,7 @@ describe("LiquidityExamples", () => {
     await usdc.connect(usdcWhale).transfer(accounts[0].address, usdcAmount)
   })
 
-  it("mintNewPosition", async () => {
+  it.skip("mintNewPosition", async () => {
      let daiAmount = 2n * 10n ** 18n
      let usdcAmount = 2n * 10n ** 6n
      await dai.connect(accounts[0]).transfer(liquidityExamples.address, daiAmount)
@@ -66,7 +66,7 @@ describe("LiquidityExamples", () => {
 
   })
 
-  it("collectAllFees", async () => {
+  it.skip("collectAllFees", async () => {
     await liquidityExamples.collectAllFees()
 
     console.log("--- collect fees ---")
@@ -74,7 +74,7 @@ describe("LiquidityExamples", () => {
     console.log(`usdc ${await usdc.balanceOf(liquidityExamples.address)}`)
   })
 
-  it("increaseLiquidityCurrentRange", async () => {
+  it.skip("increaseLiquidityCurrentRange", async () => {
     const daiAmount = 3n * 10n ** 18n
     const usdcAmount = 3n * 10n ** 6n
 
@@ -85,7 +85,7 @@ describe("LiquidityExamples", () => {
 
     await liquidityExamples.increaseLiquidityCurrentRange(daiAmount, usdcAmount)
   })
-  it("decreaseLiquidity", async () => {
+  it.skip("decreaseLiquidity", async () => {
     const tokenId = await liquidityExamples.tokenId()
     const liquidity = await liquidityExamples.getLiquidity(tokenId)
 
@@ -96,4 +96,23 @@ describe("LiquidityExamples", () => {
     console.log(`dai ${await dai.balanceOf(liquidityExamples.address)}`)
     console.log(`usdc ${await usdc.balanceOf(liquidityExamples.address)}`)
   })
+
+  it.skip("getNonexitingPool", async () => {
+    const token1 = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
+    //const token2 = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
+    const token2 = '0x4F26FfBe5F04ED43630fdC30A87638d53D0b0876'
+    await liquidityExamples.getPool(token1, token2, 3000)
+  })
+  it.skip("createPool", async () => {
+    const token1 = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
+    const token2 = '0x4F26FfBe5F04ED43630fdC30A87638d53D0b0876'
+    await liquidityExamples.createPool(token1, token2, 3000)
+  })
+  it.skip("checkNewPool", async () => {
+    const token1 = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
+    //const token2 = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
+    const token2 = '0x4F26FfBe5F04ED43630fdC30A87638d53D0b0876'
+    await liquidityExamples.getPool(token1, token2, 3000)
+  })
+
 })

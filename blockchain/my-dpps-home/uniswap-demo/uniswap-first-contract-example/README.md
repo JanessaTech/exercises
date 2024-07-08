@@ -15,6 +15,7 @@ test:
 ## How to deploy
 
 ```
+
 ```
 
 ## How to run
@@ -22,4 +23,10 @@ test:
 ```
 
 
+```
+
+## How to run scripts
+
+```
+npx hardhat run .\scripts\GetPrice.js
 ```

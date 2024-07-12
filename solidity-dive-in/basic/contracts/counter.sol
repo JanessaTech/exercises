@@ -1,18 +1,33 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.24;
 
-contract Counter {
-    uint256 public cnt;
+interface ICounter {
+    function count() external view returns(uint);
+    function inc() external;
+}
 
-    function get() public view returns(uint256) {
+contract MyCounter {
+    uint private cnt;
+    function count() external view returns(uint) {
         return cnt;
     }
-
-    function inc() public {
+    function inc() external {
         cnt += 1;
     }
+}
 
-    function dec() public {
-        cnt -= 1;
+contract MyContract {
+    ICounter private counter;
+
+    constructor(ICounter _counter) {
+        counter = _counter;
+    }
+
+    function getCount() public view returns(uint) {
+        return counter.count();
+    }
+
+    function increment() public {
+        counter.inc();
     }
 }

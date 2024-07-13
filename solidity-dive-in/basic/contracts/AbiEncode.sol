@@ -26,7 +26,7 @@ contract AbiEncode {
         returns (bytes memory)
     {
         // Type is not checked - (IERC20.transfer.selector, true, amount)
-        return abo.encodeWithSelector(IERC20.transfer.selector, to, amount);
+        return abi.encodeWithSelector(IERC20.transfer.selector, to, amount);
     }
 
     function encodeCall(address to, uint256 amount)
@@ -35,6 +35,6 @@ contract AbiEncode {
         returns (bytes memory)
     {
         // Typo and type errors will not compile
-        return abi.encodeCall(IERC20.transfer,(to, amount));
+        return abi.encodeCall(IERC20.transfer, (to, amount));
     }
 }

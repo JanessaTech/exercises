@@ -8,8 +8,8 @@ module.exports = {
   solidity: "0.8.24",
   networks: {
     virtualMainnet: {
-      url: "https://virtual.mainnet.rpc.tenderly.co/b2cf2953-9b03-472f-bc70-4985194a8759",
-      chainId: 175361,
+      url: "https://virtual.mainnet.rpc.tenderly.co/7cf36273-4f0d-4712-a3ed-7a2601108ebb",
+      chainId: 175361
     },
   },
   tenderly: {

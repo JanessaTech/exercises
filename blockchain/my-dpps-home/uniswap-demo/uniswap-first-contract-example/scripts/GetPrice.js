@@ -8,6 +8,8 @@ function GetPrice() {
     const buyOneOfToken0 = ((sqrtPriceX96 / 2**96)**2) / (10**Decimal1 / 10**Decimal0).toFixed(Decimal1);
 
 	const buyOneOfToken1 = (1 / buyOneOfToken0).toFixed(Decimal0);
+	//const buyOneOfToken0 = sqrtPriceX96 ** 2 / (2 ** 192)
+	//const buyOneOfToken1 = (2 ** 192 )/ sqrtPriceX96 ** 2
 	console.log("price of token0 in value of token1 : " + buyOneOfToken0.toString());
 	console.log("price of token1 in value of token0 : " + buyOneOfToken1.toString());
 }

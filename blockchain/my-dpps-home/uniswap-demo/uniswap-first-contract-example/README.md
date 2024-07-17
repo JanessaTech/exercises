@@ -12,10 +12,10 @@ test:
     npx hardhat test --network localhost .\test\liquidity.test.js
 ```
 
-## How to deploy
+## How to deploy to tenderly
 
 ```
-
+npx hardhat run .\scripts\deployLiquidityExamples.js --network virtualMainnet
 ```
 
 ## How to run

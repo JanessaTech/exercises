@@ -7,7 +7,7 @@ async function main() {
   const liquidityExamples = await LiquidityExamples.deploy();
   await liquidityExamples.deployed();
 
-  console.log("LiquidityExamples contract deployed: ", liquidityExamples.address);
+  console.log("LiquidityExamples contract deployed: ", await liquidityExamples.getAddress());
 }
 
 main().catch((error) => {

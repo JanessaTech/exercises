@@ -15,9 +15,7 @@ describe("LiquidityExamples", () => {
     before(async () => {
     accounts = await ethers.getSigners()
 
-    const LiquidityExamples = await ethers.getContractFactory(
-      "LiquidityExamples"
-    )
+    const LiquidityExamples = await ethers.getContractFactory("LiquidityExamples")
     liquidityExamples = await LiquidityExamples.deploy()
     await liquidityExamples.deployed()
 
@@ -47,8 +45,8 @@ describe("LiquidityExamples", () => {
     await dai.connect(daiWhale).transfer(accounts[0].address, daiAmount)
     await usdc.connect(usdcWhale).transfer(accounts[0].address, usdcAmount)
   })
-
-  it.skip("mintNewPosition", async () => {
+ 
+  it("mintNewPosition", async () => {
      let daiAmount = 2n * 10n ** 18n
      let usdcAmount = 2n * 10n ** 6n
      await dai.connect(accounts[0]).transfer(liquidityExamples.address, daiAmount)
@@ -64,7 +62,7 @@ describe("LiquidityExamples", () => {
       await usdc.balanceOf(accounts[0].address)
     )
 
-  })
+  }) 
 
   it.skip("collectAllFees", async () => {
     await liquidityExamples.collectAllFees()
@@ -113,6 +111,6 @@ describe("LiquidityExamples", () => {
     //const token2 = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
     const token2 = '0x4F26FfBe5F04ED43630fdC30A87638d53D0b0876'
     await liquidityExamples.getPool(token1, token2, 3000)
-  })
+  }) 
 
 })

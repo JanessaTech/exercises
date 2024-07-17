@@ -1,4 +1,7 @@
 require("@nomiclabs/hardhat-waffle");
+// const tenderly = require("@tenderly/hardhat-tenderly");
+ 
+// tenderly.setup({ automaticVerifications: true });
 // require('hardhat-ethernal');
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -30,5 +33,16 @@ module.exports = {
         },
       },
     ],
-  }
+  },
+  // networks: {
+  //   virtualMainnet: {
+  //     url: "https://virtual.mainnet.rpc.tenderly.co/7cf36273-4f0d-4712-a3ed-7a2601108ebb",
+  //     chainId: 175361
+  //   },
+  // },
+  // tenderly: {
+  //   // https://docs.tenderly.co/account/projects/account-project-slug
+  //   project: "project",
+  //   username: "JanessaTech",
+  // }
 };

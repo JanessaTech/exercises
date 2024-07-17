@@ -37,4 +37,17 @@ contract AbiEncode {
         // Typo and type errors will not compile
         return abi.encodeCall(IERC20.transfer, (to, amount));
     }
+    // transfer(address,uint256)
+    function encodeByKeccak256(string memory selector) public pure returns(bytes4) {
+        return bytes4(keccak256(bytes(selector)));
+    }
+
+    function getData(address to, uint256 amount) public pure returns(bytes memory) {
+        return abi.encode(to, amount);
+    }
+
+    // "transfer(address,uint256)",0x5B38Da6a701c568545dCfcB03FcB875f56beddC4,10
+    function putTogether(string memory selector, address to, uint256 amount) external pure returns(bytes memory) {
+        return abi.encodePacked(encodeByKeccak256(selector), getData(to, amount));
+    }
 }

@@ -25,6 +25,15 @@ function createWallet3() {
         console.log('address:', wallet.address, ' private key:', wallet.privateKey);
     }
 }
-createWallet2()
+
+function createWallet4() {
+    const provider = new ethers.JsonRpcProvider('http://127.0.0.1:8545/');
+    const wallet = ethers.Wallet.fromPhrase(ethers.Mnemonic.fromEntropy(ethers.randomBytes(24)).phrase, provider);
+    console.log('address:', wallet.address, ' private key:', wallet.privateKey);
+    return wallet
+}
+//createWallet2()
+createWallet4()
+
 
 

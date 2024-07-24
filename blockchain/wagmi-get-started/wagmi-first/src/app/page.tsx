@@ -6,7 +6,7 @@ import { WalletOptions } from './WalletOptions'
 
 function ConnectWallet() {
   const { isConnected } = useAccount()
-  if (isConnected) return <Account />
+  if (isConnected) return <Account/>
   return <WalletOptions />
 }
 

@@ -1,10 +1,11 @@
 import { http, cookieStorage, createConfig, createStorage } from 'wagmi'
-import { mainnet, sepolia,localhost } from 'wagmi/chains'
-import { coinbaseWallet, injected, walletConnect, metaMask, safe} from 'wagmi/connectors'
+import { mainnet, sepolia } from 'wagmi/chains'
+import { coinbaseWallet, injected} from 'wagmi/connectors'
+import { hardhat } from './utils/hardhat'
 
 export function getConfig() {
   return createConfig({
-    chains: [mainnet, sepolia],
+    chains: [hardhat, sepolia, mainnet],
     connectors: [
       injected(),
       coinbaseWallet(),
@@ -14,8 +15,9 @@ export function getConfig() {
     }),
     ssr: true,
     transports: {
-      [mainnet.id]: http(),
+      [hardhat.id]: http(),
       [sepolia.id]: http(),
+      [mainnet.id]: http(),
     },
   })
 }

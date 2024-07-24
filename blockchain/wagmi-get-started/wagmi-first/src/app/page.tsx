@@ -1,6 +1,14 @@
 'use client'
 
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
+import { Account } from './account'
+import { WalletOptions } from './WalletOptions'
+
+function ConnectWallet() {
+  const { isConnected } = useAccount()
+  if (isConnected) return <Account />
+  return <WalletOptions />
+}
 
 function App() {
   const account = useAccount()
@@ -9,7 +17,7 @@ function App() {
 
   return (
     <>
-      <div>
+      {/* <div>
         <h2>Account</h2>
 
         <div>
@@ -40,7 +48,9 @@ function App() {
         ))}
         <div>{status}</div>
         <div>{error?.message}</div>
-      </div>
+      </div> */
+      }
+       <ConnectWallet />
     </>
   )
 }

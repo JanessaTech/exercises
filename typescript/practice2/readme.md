@@ -1,4 +1,4 @@
-### setup env from scratch
+## setup env from scratch to run the first TS code
 
 ```
 npm install typescript ts-node --save-dev

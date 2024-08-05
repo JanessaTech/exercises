@@ -1,10 +1,11 @@
 
 
+
 const InPut = () => {
     return (
         <div>
-            ddd
-
+            <input type="range" />
+            <span className="cursor-col-resize">col-resize</span>
         </div>
     )
 }

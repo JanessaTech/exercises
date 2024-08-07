@@ -20,3 +20,7 @@ npm install
   npm run build
   npm run start
 ```
+
+### See how to use recoil
+
+https://recoiljs.org/docs/introduction/getting-started

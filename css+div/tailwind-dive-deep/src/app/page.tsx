@@ -1,5 +1,6 @@
 import Grid from "@/components/gridDemo/Grid";
 import InPut from "@/components/inputDemo/Input";
+import LayOutMain from "@/components/layout/LayoutMain";
 import Position from "@/components/positionDemo/Position";
 import Size from "@/components/sizeDemo/Size";
 
@@ -8,6 +9,7 @@ export default function Home() {
     // <Size/>
     // <Grid/>
     //<InPut/>
-    <Position/>
+    // <Position/>
+    <LayOutMain/>
   );
 }

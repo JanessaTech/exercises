@@ -1,6 +1,6 @@
 
 
-const Layout1Main = () => {
+const Layout1 = () => {
     return (
         <div className="flex w-full">
             <div className="bg-red-200 w-[200px] h-screen text-black  text-center sticky top-0"> menu</div>
@@ -36,4 +36,4 @@ const Layout1Main = () => {
     )
 }
 
-export default Layout1Main
+export default Layout1

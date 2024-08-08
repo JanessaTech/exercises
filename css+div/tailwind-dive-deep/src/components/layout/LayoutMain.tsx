@@ -1,8 +1,8 @@
-import Layout1Main from "./Layout1/Layout1Main"
+import Layout1 from "./Layout1"
 
 const LayOutMain = () => {
     return (
-        <Layout1Main/>
+        <Layout1/>
     )
 }
 

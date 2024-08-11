@@ -344,5 +344,178 @@ function test_25() {
 }
 
 function test_26() {
+    type Source = {
+        key1: String,
+        key2: String,
+        key3: String
+    }
+    const content: Pick<Source, 'key1'|'key2'> = {
+        key1: 'value1',
+        key2: 'value2'
+    }
+}
+
+function test_27() {
+    type Todo = {
+        title: string,
+        desc: string,
+        completed: boolean,
+        createdAt: number
+    }
+    const todo: Omit<Todo, 'completed' | 'createdAt'> = {
+        title: 'my todo',
+        desc: 'this is my todo'
+    }
+}
+
+function test_28() {
+    type T0 = Exclude<'a' | 'b' | 'c', 'a'| 'c'>
+    const t: T0 = 'b'
+}
+
+function test_29() {
+    type T0 = Extract<1 | 2 | 3, 2>
+    const t: T0 = 2
+}
+
+function test_30() {
+    type T0 = NonNullable<string | number | null | undefined>
+    const t: T0 = 2
+}
+
+function test_31() {
+
+    type T0 = Parameters<({a, b}: {a: string, b: boolean}) => void>
+    type T1 = Parameters<(aa: string[]) => void>
+}
+
+function test_32() {
+    class C {
+        constructor(a: string, b: boolean){}
+    }
+
+    type T0 = ConstructorParameters<typeof C>
+}
+
+declare function f1(): {a: number, b: boolean}
+
+function test_33() {
+    type T0 = ReturnType<() => string>
+    type T1 = ReturnType<<T>() => T>
+    type T2 = ReturnType<typeof f1>
+}
+
+function test_34() {
+    class C {}
+    type T0 = InstanceType<typeof C>
+}
+
+function test_35() {
+    function createStreetLight<C extends string>(
+        colors: C[],
+        defaultColor?: NoInfer<C>,
+      ) {
+        // ...
+      }
+      createStreetLight(["red", "yellow", "green"], "red");  // OK
+      //createStreetLight(["red", "yellow", "green"], "blue");  // Error
+}
+
+function test_36() {
+    function toHex(this: Number) {
+        return this.toString(16);
+    }
+    type T0 = ThisParameterType<typeof toHex>
+}
+
+function test_37() {
+    interface ID<T> {
+        (arg: T): T
+    }
+    function identity<T>(arg: T) {
+        return arg
+    }
+    let fun: ID<string> = identity
+}
+
+function test_38() {
+    class Animal {
+        numLegs: number = 0
+    }
+    class Cat extends Animal {
+        numLegs: number = 4
+    }
+    class Spider extends Animal {
+        numLegs: number = 8
+    }
+    function createInstance<A extends Animal>(a: new() => A): A {
+        return new a()
+    }
+    console.log(createInstance(Cat).numLegs)
+    console.log(createInstance(Spider).numLegs)
+}
+//test_38()
+function test_39() {
+    type Person<T> = {
+        name: T, 
+        age: number
+    }
+
+    const person: Person<string> = {
+        name: 'Janessa',
+        age: 10
+    }
+}
+
+function test_40() {
+    type Person = {
+        name: string,
+        age: number
+    }
+    type KeyType = keyof Person  // equal to  type KeyType = 'name' | 'age'
+
+    const key1: KeyType = 'name'
+    const key2: KeyType = 'age'
+    //const key3: KeyType = 'xxx'
+}
+
+function test_41() {
+    type OBJ_NUM = {
+        [key: number] : boolean
+    }
+    type OBJ_STR = {
+        [key: string] : boolean
+    }
+    type M1 = keyof OBJ_NUM
+    type M2 = keyof OBJ_STR  //string | number
+
+}
+
+function test_42() {
+    type Predicate = (x: unknown) => boolean
+    type K = ReturnType<Predicate>
+}
+
+function test_43() {
+    function f() {
+        return {x: 10, y: 'ok'}
+    }
+
+    type M = ReturnType<typeof f>
+}
+
+function test_44() {
+    type Person = {
+        name: string,
+        age: number,
+        isAlive: boolean
+    }
+
+    type NAME  = Person['name']
+    type NAME_AGE = Person['name' | 'age']
+    type ALL = Person[keyof Person]
+}
+
+function test_45() {
     
 }

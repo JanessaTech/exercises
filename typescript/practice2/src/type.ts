@@ -661,5 +661,28 @@ function test_61() {
 }
 
 function test_62() {
-    
+    type DBFields = {
+        id: { format: "incrementing" };
+        name: { type: string; pii: true };
+    };
+    type Convert<T> = {
+        [key in keyof T]: T[key] extends {pii: boolean} ? true : false
+    }
+
+    type FilteredDBFields = Convert<DBFields>
 }
+
+// function test_63() {
+//     type Person = {
+//         firstName: "Saoirse",
+//         lastName: "Ronan",
+//         age: 26
+//     }
+//     type AddOn = {
+//         on(eventName: 'eventName', callback: (newValue: any) => void): void
+//     }
+//     const addon: AddOn = {
+//         on(eventName: 'eventName', callback: (newValue: any) => void): void {}
+//     }
+//     //addon.on('eventName', (newValue: any) => {})
+// }

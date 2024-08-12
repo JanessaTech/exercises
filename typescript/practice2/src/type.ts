@@ -487,7 +487,7 @@ function test_41() {
         [key: string] : boolean
     }
     type M1 = keyof OBJ_NUM
-    type M2 = keyof OBJ_STR  //string | number
+    type M2 = keyof OBJ_STR  //string | number  // keep in mind that the key being number or string is treated as string always
 
 }
 
@@ -517,5 +517,149 @@ function test_44() {
 }
 
 function test_45() {
+    const MyArray = [
+        { name: "Alice", age: 15 },
+        { name: "Bob", age: 23 },
+        { name: "Eve", age: 38 },
+      ];
+    type Arra = typeof MyArray 
+    type ItemType = typeof MyArray[number]
+    type NAME = typeof MyArray[number]['name']
+    type AGE = typeof MyArray[number]['age']
+    //type xxxx = typeof MyArray[number]['xxx']
+}
+
+function test_46() {
+    interface Email {
+        message: string
+    }
+
+    type M0 = Email extends {message: any} ? 1 : 0
+    type M1 = Email extends {prop: unknown} ? 1 : 0
+}
+
+function test_47() {
+    type Flatten<T> = T extends any[] ? T[number] : T
+    type M0 = Flatten<string[]>
+    type M1 = Flatten<number>
+}
+
+function test_48() {
+    type Flatten<T> = T extends Array<infer Item> ? Item : T
+    type M0 = Flatten<string[]>
+    type M1 = Flatten<number[]>
+}
+
+function test_49() {
+   type GetReturnType<FUNC> = FUNC extends (...args: any[]) => infer RETURN ? RETURN : never
+   type M0 = GetReturnType<() => string>
+   type M1 = GetReturnType<(a: string, b: boolean) => number[]>
+}
+
+function test_50() {
+    const myArray = [1, false, 'test']
+    type M0 = typeof myArray
+}
+declare function fun(): string  
+declare function fun(a: string): boolean
+declare function fun(a: boolean): string[]
+function test_51() {
+    type M0 = ReturnType<typeof fun> // inferences are made from the last signature
+}
+
+function test_52() {
+    type ToArray<T> = T extends any ? T[] : never
+    type M0 = ToArray<string | boolean>
+}
+function test_53() {
+    type Person = {
+        name: string,
+        age: number,
+        isMale: boolean
+    }
+    type Info = {
+        [key in keyof Person]: boolean
+    } 
+}
+
+function test_54() {
+    type Person = {
+        name: string,
+        age: number
+    }
+
+    type NAME = Person['name']
+}
+
+function test_55() {
+    type LockAccount = {
+        readonly name: string,
+        readonly age: number
+    }
+    type CreateMutable<T> = {
+        -readonly [key in keyof T]: T[key]
+    }
+
+    type UnlockAccount = CreateMutable<LockAccount>
+}
+
+function test_56() {
+    type MaybeUser = {
+        name: string,
+        age?: number,
+        isMale?: boolean
+    }
+    type Concrete<T> = {
+        [key in keyof T]-?: T[key]
+    }
+    type User = Concrete<MaybeUser>
+}
+function test_57() {
+    type Name = 'Jane' | 'Lisa'
+    type Greeting = `hello ${Name}`
+}
+
+function test_58() {
+    type NUM_Left = 'a' | 'b'
+    type OP = '+' | '-'
+    type NUM_right = '1' | '2'
+    type expression = `${NUM_Left} ${OP} ${NUM_right}` 
+}
+
+function test_59() {
+    type Person = {
+        name: string,
+        age: number
+    }
+    type Getters<T> = {
+        [key in keyof T as `{get${Capitalize<string &key>}}`] : T[key]
+    }
+    type LazyPerson = Getters<Person>
+}
+
+function test_60() {
+    type Person = {
+        name: string,
+        age: number,
+        description: string,
+        isMale: boolean
+    }
+    type RemoveAge<T> = {
+        [key in keyof T as Exclude<key, 'age'>]: T[key]
+    }
+
+    type NewPerson = RemoveAge<Person>
+}
+
+function test_61() {
+    type SquareEvent = {kind: 'square', x: number, y: number}
+    type RadiusEvnet = {kind: 'circle', radius: number}
+    type ConfigEvent<Events extends {kind: string}> = {
+        [E in Events as E['kind']]: (e: E) => void
+    }
+    type Config = ConfigEvent<SquareEvent | RadiusEvnet>
+}
+
+function test_62() {
     
 }

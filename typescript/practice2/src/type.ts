@@ -691,6 +691,13 @@ function test63() {
     type res15 = any extends string ? 1: 0  // 1 | 0
 }
 
+function test_64() {
+    type List1 = [1, 2, 3]
+    type List2 = []
+    type M0 = List1 extends [infer first, ...infer rest] ? true : false;
+    type M1 = List2 extends [infer first, ...infer rest]? true : false
+}
+
 // function test_63() {
 //     type Person = {
 //         firstName: "Saoirse",

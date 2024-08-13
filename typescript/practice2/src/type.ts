@@ -672,6 +672,25 @@ function test_62() {
     type FilteredDBFields = Convert<DBFields>
 }
 
+function test63() {
+    type res1 = 'xxx' extends string ? 1 : 0
+    type res2 = string extends String ? 1 : 0
+    type res3 = String extends Object ? 1 : 0
+    type res4 = {} extends object ? 1 : 0
+    type res5  = [] extends object ? 1: 0
+    type res6 = Function extends object ? 1 : 0
+    type res7 = (() => void) extends object ? 1 : 0
+    type res8 = 1 |2 extends 1 | 2 | 3 ? 1 : 0
+    type res9 = {a: string, b: boolean} extends {} ? 1 : 0
+    type res10 = {a: string, b: boolean} extends {a: string} ? 1 : 0
+    type res11 = {a: string, b: boolean} extends {c: string} ? 1 : 0  //0
+
+    type res12 = string extends unknown ? 1: 0 //1
+    type res13 = unknown extends string ? 1 : 0  //0
+    type res14 = string extends any ? 1 : 0  //1
+    type res15 = any extends string ? 1: 0  // 1 | 0
+}
+
 // function test_63() {
 //     type Person = {
 //         firstName: "Saoirse",

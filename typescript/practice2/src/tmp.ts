@@ -12,13 +12,6 @@ function test__2() {
 }
 
 function demo3() {
-    type Person = {
-        name: string,
-        age: boolean
-    }
-    type Filter<T> = {
-        [P in keyof T as P extends 'age'? P : never]: T[P]
-    }
-    type NewPerson = Filter<Person>
+    type M = ''
 
 }

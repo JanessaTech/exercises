@@ -12,13 +12,5 @@ function test__2() {
 }
 
 function demo3() {
-    type fun = (a: string, b: boolean) => void
-    type P = Parameters<fun>
-
-    type Reverse<P extends unknown[], acc extends unknown[] = []> = P extends[infer F, ...infer R]
-    ? Reverse<R, [F, ...acc]>
-    : acc
-
-    type Res = Reverse<P>
-
+    type M = 1 | 2 extends unknown ? 1 : 0
 }

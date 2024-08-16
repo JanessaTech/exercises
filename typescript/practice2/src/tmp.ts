@@ -12,7 +12,13 @@ function test__2() {
 }
 
 function demo3() {
-    type Check<T> = T extends {[P in any]: unknown} ? 1 : 0
-    type M = Check<{name : 'Jane'}>  //1
+    type Person = {
+        name: string,
+        age: boolean
+    }
+    type Filter<T> = {
+        [P in keyof T as P extends 'age'? P : never]: T[P]
+    }
+    type NewPerson = Filter<Person>
 
 }

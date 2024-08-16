@@ -539,7 +539,7 @@ function test_46() {
 }
 
 function test_47() {
-    type Flatten<T> = T extends any[] ? T[number] : T
+    type Flatten<T> = T extends unknown[] ? T[number] : T
     type M0 = Flatten<string[]>
     type M1 = Flatten<number>
 }

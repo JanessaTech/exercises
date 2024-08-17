@@ -17,14 +17,16 @@ function demo() {
     type P = {name: 'xxx', age: 11} | {name: 'yyy', age: 11}
     type Check<P> = P extends {name: 'xxx'} ? 1 : 0
     type M2 = Check<P>
+}
 
 function demo3() {
-    type M = 1 | 2 | 3 
-    type T<M> = 1 extends M
-    ? M extends 1
-        ? 1
-        :  M extends 2 ? 4 : 5 
-    : 'no'
+    type Person = {
+        name: string,
+        age: number
+    }
+    type M = {
+        [P in keyof Person]: [P, Person[P]]
+    }[keyof Person]
 
-    type R = T<M>
+
 }

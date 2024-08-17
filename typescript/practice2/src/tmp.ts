@@ -24,9 +24,12 @@ function demo3() {
         name: string,
         age: number
     }
-    type M = {
-        [P in keyof Person]: [P, Person[P]]
-    }[keyof Person]
+    type M<T= Partial<Person>> = {
+        [P in keyof T]: T[P]
+    }
+    type R = M
+    type T = Exclude<'aaa' | undefined, undefined>
+    
 
 
 }

@@ -16,6 +16,9 @@ interface Model {
     Expect<Equal<ObjectEntries<{ key: string | undefined }>, ['key', string | undefined]>>,
   ]
 
-type ObjectEntries<M> = {
-    [P in keyof M]: [P, M[P]]
-}[keyof M]
+type ObjectEntries<M, T = Required<M>> = {
+    [P in keyof T]: [P, T[P]]
+}[keyof T]
+
+type S = ObjectEntries<{ key?: undefined }>
+type T = Required<{ key?: undefined }>

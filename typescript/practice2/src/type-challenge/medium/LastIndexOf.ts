@@ -8,8 +8,8 @@ type cases = [
     Expect<Equal<LastIndexOf<[string, any, 1, number, 'a', any, 1], any>, 5>>,
   ]
 
-  type LastIndexOf<T extends unknown[], target extends number, CUR extends number = 0, RES extends number = -1> = T extends [infer F, ...infer R]
-  ? F extends target 
-   ? never
-   : never
-  : RES
+  type LastIndexOf<T extends unknown[], target extends number> = T extends [...infer F, infer L]
+  ? Equal<L, target> extends true 
+    ? F['length']
+    : LastIndexOf<F, target>
+  : -1

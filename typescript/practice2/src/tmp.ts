@@ -12,5 +12,5 @@ function test__2() {
 }
 
 function demo3() {
-    type M = 1 | 2 extends unknown ? 1 : 0
+    type M = [1, 2, 3] extends [...infer R, infer L] ? 1 : 0
 }

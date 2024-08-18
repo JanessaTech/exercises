@@ -21,15 +21,18 @@ function demo() {
 
 function demo3() {
     type Person = {
-        name: string,
+        name?: undefined,
         age: number
     }
-    type M<T= Partial<Person>> = {
-        [P in keyof T]: T[P]
+    type M = {
+        [P in keyof Person]-?: [P, Person[P] extends undefined ? undefined : Person[P]]
     }
-    type R = M
-    type T = Exclude<'aaa' | undefined, undefined>
+
+    type M1<T>
     
 
 
+}
+function demo4() {
+    type M = 1 | 2 extends infer F | 2 ? F : never
 }

@@ -17,8 +17,5 @@ interface Model {
   ]
 
 type ObjectEntries<M, T = Required<M>> = {
-    [P in keyof T]: [P, T[P]]
-}[keyof T]
-
-type S = ObjectEntries<{ key?: undefined }>
-type T = Required<{ key?: undefined }>
+      [P in keyof T]: [P, T[P] extends never ?  undefined : T[P]]
+  }[keyof T]

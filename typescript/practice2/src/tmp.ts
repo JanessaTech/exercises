@@ -20,10 +20,18 @@ function demo() {
 }
 
 function demo3() {
+    type Person = {
+        readonly name ?: string
+        age: number
+    }
+
+    type P = {readonly name: string} & {name: string}
+    let p: P = {name: 'xxx'}
+    p.name = 'yyy'
+    
     
 }
 
 function demo4() {
-   type M<T>= T extends never ? 1 : 0
-   type m = M<never>
+   
 }

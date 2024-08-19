@@ -20,19 +20,10 @@ function demo() {
 }
 
 function demo3() {
-    type Person = {
-        name?: undefined,
-        age: number
-    }
-    type M = {
-        [P in keyof Person]-?: [P, Person[P] extends undefined ? undefined : Person[P]]
-    }
-
-    type M1<T>
     
-
-
 }
+
 function demo4() {
-    type M = 1 | 2 extends infer F | 2 ? F : never
+   type M<T>= T extends never ? 1 : 0
+   type m = M<never>
 }

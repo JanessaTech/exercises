@@ -26,19 +26,16 @@ interface User {
     Expect<Equal<PartialByKeys<User, 'name' | 'unknown'>, UserPartialName>>,
   ]
 
-  type PartialByKeys<T, K extends keyof T> = 
-  Omit<T, K> & {
+
+  type M0<T, K> = {
     [P in keyof T as P extends K ? P : never] ?: T[P]
   }
-
-  type T1 = PartialByKeys<User, 'name'>
-
-
-  type M0<T, K extends keyof T> = Omit<T, K>
-  type m0 = M0<User, 'name' | 'age'>
-  type M1<T, K extends keyof T> = {
-    [P in keyof T as P extends K ? P : never] ?: T[P]
+  type M1<T, K> = {
+    [P in keyof T as P extends K ? never : P] : T[P]
   }
-  type m1 = M1<User, 'name' | 'age'>
-  type m = m0 & m1
-  type a = Partial<User>
+
+  type All<T, K> = M0<T, K> & M1<T, K>
+
+  type Merge<T> =  { [P in keyof T]: T[P] };
+
+  type PartialByKeys<T, K extends keyof T = keyof T> = Merge<All<T, K>>

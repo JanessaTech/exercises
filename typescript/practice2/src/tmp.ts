@@ -33,6 +33,8 @@ function demo3() {
 }
 
 function demo4() {
-   type M = 'foobarbar' extends `${infer left}${''}${infer right}` ? right : 0
+    type M = [1, 2] | [3, 4]
+    type S = [...M, 6]
+    
    
 }

@@ -698,6 +698,17 @@ function test_64() {
     type M1 = List2 extends [infer first, ...infer rest]? true : false
 }
 
+function test_65() {
+    type ListA = [1, 2, 3, 4]
+    type ListB = ['a', 'b', 'c', 'd', 'e']
+
+    type Compound<A, B> = [A, B] extends [[infer A1, ...infer An], [infer B1, ...infer Bn]]
+    ? [[A1, B1], ...Compound<An, Bn>]
+    : []
+
+    type test = Compound<ListA, ListB>
+}
+
 // function test_63() {
 //     type Person = {
 //         firstName: "Saoirse",

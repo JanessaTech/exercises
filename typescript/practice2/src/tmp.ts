@@ -33,7 +33,6 @@ function demo3() {
 }
 
 function demo4() {
-    type M = ' str' extends `${' ' | '\n' | '\t'}${infer mid}${' ' | '\n' | '\t'}` ? 1 : 0
-    
+    type M = 1 extends [1, 2] ? 1 : 0
    
 }

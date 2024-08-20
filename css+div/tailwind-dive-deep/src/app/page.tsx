@@ -1,3 +1,4 @@
+import Transform from "@/components/TransformDemo/Transform";
 import Grid from "@/components/gridDemo/Grid";
 import InPut from "@/components/inputDemo/Input";
 import LayOutMain from "@/components/layout/LayoutMain";
@@ -11,5 +12,6 @@ export default function Home() {
     //<InPut/>
     // <Position/>
     <LayOutMain/>
+    // <Transform/>
   );
 }

@@ -33,8 +33,7 @@ function demo3() {
 }
 
 function demo4() {
-    type M = [1, 2] | [3, 4]
-    type S = [...M, 6]
+    type M = 'abc ' extends `${infer rest}${'\t' | ' ' | '\n'}` ? rest : 0
     
    
 }

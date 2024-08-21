@@ -1,18 +1,20 @@
-import { Alike, Expect, Equal } from "../test-utils";
+import { Alike, Expect, Equal, NotEqual } from "../test-utils";
 
 type cases = [
-  // @ts-expect-error
-  Expect<Equal<DropChar<'butter fly!', ''>, 'butterfly!'>>,
-  Expect<Equal<DropChar<'butter fly!', ' '>, 'butterfly!'>>,
-  Expect<Equal<DropChar<'butter fly!', '!'>, 'butter fly'>>,
-  Expect<Equal<DropChar<'    butter fly!        ', ' '>, 'butterfly!'>>,
-  Expect<Equal<DropChar<' b u t t e r f l y ! ', ' '>, 'butterfly!'>>,
-  Expect<Equal<DropChar<' b u t t e r f l y ! ', 'b'>, '  u t t e r f l y ! '>>,
-  Expect<Equal<DropChar<' b u t t e r f l y ! ', 't'>, ' b u   e r f l y ! '>>,
+  Expect<Equal<LengthOfString<''>, 0>>,
+  Expect<Equal<LengthOfString<'kumiko'>, 6>>,
+  Expect<Equal<LengthOfString<'reina'>, 5>>,
+  Expect<Equal<LengthOfString<'Sound! Euphonium'>, 16>>,
 ]
 
-type DropChar<T, S> = T extends `${infer F}${infer R}`
-? F extends S
-  ? DropChar<R, S>
-  : `${F}${DropChar<R, S>}`
-: ''
+type ToArray<T> = T extends `${infer F}${infer R}`
+? [F , ...ToArray<R>]
+: []
+type Test = ToArray<''>
+
+type LengthOfString<S extends string> = ToArray<S>['length']
+
+
+
+
+

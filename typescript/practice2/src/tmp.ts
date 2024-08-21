@@ -33,17 +33,5 @@ function demo3() {
 }
 
 function demo4() {
-    type Person = {
-        name: string
-        age : number
-    }
-    type Stu = {
-        name : string
-        isMale: boolean
-    }  
-
-    type K = keyof (Person | Stu) & {}
-    
-    
-   
+    type M = '' extends '' ? 1 : 0
 }

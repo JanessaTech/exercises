@@ -10,3 +10,10 @@ type cases = [
 type LengthOfString<T extends string, A extends unknown[] = []> = T extends `${infer F}${infer R}`
 ? LengthOfString<R, [...A, F]>
 : A['length']
+
+// type ToArray<T> = T extends `${infer F}${infer R}`
+// ? [F , ...ToArray<R>]
+// : []
+// type Test = ToArray<''>
+
+// type LengthOfString<S extends string> = ToArray<S>['length']

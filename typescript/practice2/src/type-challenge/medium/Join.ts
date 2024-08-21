@@ -12,3 +12,9 @@ type cases = [
   type Join<T extends unknown[], U extends string | number = ',', acc extends string = ''> = T extends [infer F extends string, ...infer R]
   ? Join<R, U, `${acc}${F}${R extends [] ? '' : U}`>
   : acc
+
+//   type Join<T, U extends string | number = ','> = T extends [infer F extends string, ... infer R]
+// ? R extends []
+//   ? F
+//   : `${F}${U}${Join<R, U>}`
+// :

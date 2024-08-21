@@ -1,55 +1,28 @@
-import { Equal, Expect } from "../test-utils";
+import { Alike, Expect, Equal } from "../test-utils";
 
-
-
-
-type test1 = {
-  key: 'cat'
-  value: 'green'
+type Foo = {
+  name: string
+  age: string
 }
-
-type testExpect1 = {
-  key: 'cat'
-  value: 'green'
-  home: boolean
+type Bar = {
+  name: string
+  age: string
+  gender: number
 }
-
-type test2 = {
-  key: 'dog' | undefined
-  value: 'white'
-  sun: true
-}
-
-type testExpect2 = {
-  key: 'dog' | undefined
-  value: 'white'
-  sun: true
-  home: 1
-}
-
-type test3 = {
-  key: 'cow'
-  value: 'yellow'
-  sun: false
-}
-
-type testExpect3 = {
-  key: 'cow'
-  value: 'yellow'
-  sun: false
-  moon: false | undefined
+type Coo = {
+  name: string
+  gender: number
 }
 
 type cases = [
-  Expect<Equal<AppendToObject<test1, 'home', boolean>, testExpect1>>,
-  Expect<Equal<AppendToObject<test2, 'home', 1>, testExpect2>>,
-  Expect<Equal<AppendToObject<test3, 'moon', false | undefined>, testExpect3>>,
+  Expect<Equal<Diff<Foo, Bar>, { gender: number }>>,
+  Expect<Equal<Diff<Bar, Foo>, { gender: number }>>,
+  Expect<Equal<Diff<Foo, Coo>, { age: string, gender: number }>>,
+  Expect<Equal<Diff<Coo, Foo>, { age: string, gender: number }>>,
 ]
-
-type  Merge<T> = {
+type Merge<T> = {
   [P in keyof T]: T[P]
 }
-
-type AppendToObject<T, U extends string, V> =  
-Merge<T & {[P in U]: V}>
-
+type Diff<T, U> = {
+  [P in keyof (T & U) as P extends keyof (T | U) ? never : P] : (T & U)[P]
+}

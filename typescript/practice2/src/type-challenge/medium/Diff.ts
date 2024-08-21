@@ -28,3 +28,7 @@ type Foo = {
       ? U[P]
       : never
   }
+
+  // type Diff<T, U> = {
+  //   [P in keyof (T & U) as P extends keyof (T | U) ? never : P] : (T & U)[P]
+  // }

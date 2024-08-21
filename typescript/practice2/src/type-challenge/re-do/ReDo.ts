@@ -1,28 +1,18 @@
 import { Alike, Expect, Equal } from "../test-utils";
 
-type Foo = {
-  name: string
-  age: string
-}
-type Bar = {
-  name: string
-  age: string
-  gender: number
-}
-type Coo = {
-  name: string
-  gender: number
-}
-
 type cases = [
-  Expect<Equal<Diff<Foo, Bar>, { gender: number }>>,
-  Expect<Equal<Diff<Bar, Foo>, { gender: number }>>,
-  Expect<Equal<Diff<Foo, Coo>, { age: string, gender: number }>>,
-  Expect<Equal<Diff<Coo, Foo>, { age: string, gender: number }>>,
+  // @ts-expect-error
+  Expect<Equal<DropChar<'butter fly!', ''>, 'butterfly!'>>,
+  Expect<Equal<DropChar<'butter fly!', ' '>, 'butterfly!'>>,
+  Expect<Equal<DropChar<'butter fly!', '!'>, 'butter fly'>>,
+  Expect<Equal<DropChar<'    butter fly!        ', ' '>, 'butterfly!'>>,
+  Expect<Equal<DropChar<' b u t t e r f l y ! ', ' '>, 'butterfly!'>>,
+  Expect<Equal<DropChar<' b u t t e r f l y ! ', 'b'>, '  u t t e r f l y ! '>>,
+  Expect<Equal<DropChar<' b u t t e r f l y ! ', 't'>, ' b u   e r f l y ! '>>,
 ]
-type Merge<T> = {
-  [P in keyof T]: T[P]
-}
-type Diff<T, U> = {
-  [P in keyof (T & U) as P extends keyof (T | U) ? never : P] : (T & U)[P]
-}
+
+type DropChar<T, S> = T extends `${infer F}${infer R}`
+? F extends S
+  ? DropChar<R, S>
+  : `${F}${DropChar<R, S>}`
+: ''

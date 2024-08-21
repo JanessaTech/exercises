@@ -16,3 +16,9 @@ type cases = [
     ? DropChar<R, C, acc>
     : DropChar<R, C, `${acc}${F}`>
   : acc
+
+//   type DropChar<T, S> = T extends `${infer F}${infer R}`
+// ? F extends S
+//   ? DropChar<R, S>
+//   : `${F}${DropChar<R, S>}`
+// : 

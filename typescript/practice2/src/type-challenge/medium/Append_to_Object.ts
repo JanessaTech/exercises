@@ -52,4 +52,3 @@ type  Merge<T> = {
 
 type AppendToObject<T, U extends string, V> =  
 Merge<T & {[P in U]: V}>
-

@@ -13,3 +13,8 @@ type Zip<T, U, acc extends unknown[] = []> = T extends [infer T_First, ...infer 
   ? Zip<T_Rest, U_Rest, [...acc, [T_First, U_First]]>
   : acc
 : acc
+
+
+// type Zip<T, U> = [T, U] extends [[infer T1, ...infer T2], [infer U1, ...infer U2]]
+// ? [[T1, U1], ...Zip<T2, U2>]
+// : []

@@ -33,5 +33,14 @@ function demo3() {
 }
 
 function demo4() {
-    type M = '' extends '' ? 1 : 0
+    type Person = {
+        name?: string
+    }
+    type M<T> = {
+        [P in keyof T]: T[P] extends undefined ? 1 : 0
+    }
+
+    type m = M<Person>
+
+
 }

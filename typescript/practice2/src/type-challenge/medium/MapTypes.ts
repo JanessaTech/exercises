@@ -18,3 +18,13 @@ type MapTypes<T, M extends {[p in 'mapFrom' | 'mapTo'] : unknown}> = {
         : never
     : T[P]
 }
+
+// type MapTypes<T, R extends {mapFrom: any, mapTo: any}> = {
+//     [P in keyof T]: T[P] extends R['mapFrom']
+//     ? R extends any
+//       ? R['mapFrom'] extends T[P]
+//         ? R['mapTo']
+//         : never
+//       : never
+//     : T[P]
+//   }

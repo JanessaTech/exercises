@@ -16,4 +16,13 @@ type cases = [
     ? Permutation<Exclude<A, T>, acc, [...path, T]>
     : never
 
-  type test = Permutation<'A'>
+
+// type Merge<E, T extends unknown[]> = T extends any
+// ? [E, ...T]
+// : never
+
+// type Permutation<T, all = T> = [T] extends [never]
+// ? []
+// : T extends any
+//   ? Merge<T, Permutation<Exclude<all, T>>>
+//   : never

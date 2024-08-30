@@ -5,7 +5,7 @@ const Inventory = require('./models/inventory.model')
 const Sale = require('./models/sales.model')
 
 function connect() {
-    mongoose.connect('mongodb://127.0.0.1/stu')
+    mongoose.connect('mongodb://127.0.0.1/demo')
 
     let db = mongoose.connection;
 
@@ -61,13 +61,13 @@ async function createView() {
         {
            $lookup:
               {
-                 from: "inventory",
+                 from: "inventory",  //the name of target collection (you need add s if it has it)
                  localField: "prodId",
                  foreignField: "_id",
                  as: "inventoryDocs"
               }
         },
-        { $unwind: "$inventoryDocs" },
+        { $unwind: "$inventoryDocs" },  // in compass, it is the value of path
         {
            $project:
               {
@@ -111,8 +111,8 @@ async function runAggregate() {
     }  
 }
 
-//insertData()
+insertData()
 //createView()
-runAggregate()
+//runAggregate()
 
 

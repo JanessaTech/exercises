@@ -12,28 +12,14 @@ function test__2() {
 }
 
 function demo() {
-    type M0 = {name: 'xxx', age: 11} | {name: 'xxx', age: 11} extends {name: 'xxx'} ? 1 : 0
-    type M1 = {name: 'xxx', age: 11} | {name: 'yyy', age: 11} extends {name: 'xxx'} ? 1 : 0
-    type P = {name: 'xxx', age: 11} | {name: 'yyy', age: 11}
-    type Check<P> = P extends {name: 'xxx'} ? 1 : 0
-    type M2 = Check<P>
-}
-
-function demo3() {
-    type Person = {
-        readonly name ?: string
-        age: number
+    type M = {
+        [key: string]: number
     }
-
-    type P = {readonly name: string} & {name: string}
-    let p: P = {name: 'xxx'}
-    p.name = 'yyy'
-    
-    
+    const foo: M = {
+        124: 1,
+        name: 3,
+        'age': 23
+    }
 }
 
-function demo4() {
-    type M = 'a' extends string | '11' ? 1 : 0
-    type p = 1[number]
-
-}
+demo()

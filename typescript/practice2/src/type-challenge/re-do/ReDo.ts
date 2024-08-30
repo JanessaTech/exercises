@@ -1,20 +1,27 @@
 import { Alike, Expect, Equal, NotEqual } from "../test-utils";
 
 type cases = [
-  Expect<Equal<Permutation<'A'>, ['A']>>,
-  Expect<Equal<Permutation<'A' | 'B' | 'C'>, ['A', 'B', 'C'] | ['A', 'C', 'B'] | ['B', 'A', 'C'] | ['B', 'C', 'A'] | ['C', 'A', 'B'] | ['C', 'B', 'A']>>,
-  Expect<Equal<Permutation<'B' | 'A' | 'C'>, ['A', 'B', 'C'] | ['A', 'C', 'B'] | ['B', 'A', 'C'] | ['B', 'C', 'A'] | ['C', 'A', 'B'] | ['C', 'B', 'A']>>,
-  Expect<Equal<Permutation<boolean>, [false, true] | [true, false]>>,
-  Expect<Equal<Permutation<never>, []>>,
+  Expect<Equal<Trunc<0.1>, '0'>>,
+  Expect<Equal<Trunc<0.2>, '0'>>,
+  Expect<Equal<Trunc<1.234>, '1'>>,
+  Expect<Equal<Trunc<12.345>, '12'>>,
+  Expect<Equal<Trunc<-5.1>, '-5'>>,
+  Expect<Equal<Trunc<'.3'>, '0'>>,
+  Expect<Equal<Trunc<'1.234'>, '1'>>,
+  Expect<Equal<Trunc<'-.3'>, '-0'>>,
+  Expect<Equal<Trunc<'-10.234'>, '-10'>>,
+  Expect<Equal<Trunc<10>, '10'>>,
 ]
 
-type Merge<E, T extends unknown[]> = T extends any
-? [E, ...T]
-: never
 
-type Permutation<T, all = T> = [T] extends [never]
-? []
-: T extends any
-  ? Merge<T, Permutation<Exclude<all, T>>>
-  : never
+type Trunc<T extends string | number> = `${T}` extends `${infer left}.${infer right}`
+? left extends `-${infer rest}`
+  ? rest extends ''
+   ? '-0'
+   : `-${rest}`
+  : left extends ''
+    ? '0'
+    : left
+: `${T}`
 
+type test = Trunc<'.3'>

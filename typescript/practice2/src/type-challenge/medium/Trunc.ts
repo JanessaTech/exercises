@@ -22,3 +22,14 @@ type Tr<T extends string> = T extends `${infer rest}${'.'}${any}`
 
 
 type Trunc<T extends number | string> = Tr<`${T}`>
+
+
+// type Trunc<T extends string | number> = `${T}` extends `${infer left}.${infer right}`
+// ? left extends `-${infer rest}`
+//   ? rest extends ''
+//    ? '-0'
+//    : `-${rest}`
+//   : left extends ''
+//     ? '0'
+//     : left
+// : `${T}`

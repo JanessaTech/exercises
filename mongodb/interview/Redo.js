@@ -1,76 +1,77 @@
 const { connect, Schema, default: mongoose } = require("mongoose");
 
-const booSchema = new Schema({
-    title : {
-        type: String,
-        index: true,
-        required: [true, "Title is required"]
-    },
-    author: {
-        type: Schema.Types.ObjectId,
-        ref: 'Author',
-        required: [true, 'author is required']
-    },
-    price: {
-        type: Number,
-        min: [0, 'Price cannot be negative'], 
-        default: 0,
-        required: [true, 'Price is required']
-    },
-    isbn: {
-        type: String,
-        validate : {
-            validator: function(v) {
-                let re = /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/
-                return re.test(v)
-
-            }
-        },
-        required: [true, 'ISBN is required']
-    }
-})
-
 const authorSchema = new Schema({
     firstName: {
         type: String,
         required: [true, 'firstName is required']
     },
-    lastName: {
+    lastName : {
         type: String,
         required: [true, 'lastName is required']
     },
     age: {
         type: Number,
-        min: [18, 'The min age is 18'],
+        min: [18, 'age must be greater than or equal to 18'],
         required: [true, 'age is required']
     },
     gender: {
         type: String,
         enum: {
-            values: ['male', 'female'],
-            message: '${VALUE} is not supported'
+            values: ['male', 'female'], 
+            message: '${VALUE} is not supportted'
         },
         default: 'male',
         required: [true, 'gender is required']
     }
+
 }, {
-    virtuals: {
+    virtuals : {
         fullName: {
             get() {
                 return this.firstName + ' ' + this.lastName
             }
         }
-    },
-    toObject: {virtuals: true}
+    }, toObject: {virtuals: true}
 })
 authorSchema.virtual('books', {
-    ref: 'Book', 
-    localField: '_id',
-    foreignField: 'author'
+    ref: 'Book',
+    foreignField: 'author', localField: '_id'
 })
 
-const Book = mongoose.model('Book', booSchema)
+
+const bookSchema = new Schema({
+    title: {
+        type : String,
+        index: true,
+        required: [true, 'title is required']
+    },
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'Author',
+        required: [true, 'author is required']
+    }, 
+    price: {
+        type: Number,
+        min: [0, 'price cannot be negative'],
+        default: 0,
+        required: [true, 'Price is required']
+    },
+    isbn: {
+        type: String,
+        validate: {
+            validator: function(v) {
+                let re = /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/
+                return re.test(v)
+            },
+            message: props => `${props.value} is not valid`
+        },
+        required: [true, 'ISBN is required']
+    }
+})
+
 const Author = mongoose.model('Author', authorSchema)
+const Book = mongoose.model('Book', bookSchema)
+
 
 async function createData() {
     const author1 = new Author({ firstName: 'John', lastName: 'Tomas', age: 45, gender: 'male'})
@@ -103,8 +104,13 @@ async function createData() {
     }
 }
 
-async function queryBook() {
-    const res = await Book.find({price: {$gt: 100}, 'author.age' : {lte: 30}}).sort({price: 1}).populate('author')
+async function queryAuthors() {
+    const res = await Author.find({age: {$lt: 40}}).sort({age: 1}).populate('books')
+    console.log(res)
+}
+
+async function queryBooks() {
+    const res = await Book.find({price: {$lt: 50}}).sort({price: 1}).populate('author', 'gender age')
     console.log(res)
 }
 
@@ -112,38 +118,50 @@ async function aggregate() {
     const res = await Book.aggregate([
         {
             $lookup: {
-                from: "authors",
-                localField: "author",
-                foreignField: "_id",
-                as: "R"
+            from: "authors",
+            localField: "author",
+            foreignField: "_id",
+            as: "R"
             }
-        },
+        }, 
         {
-            $unwind: {
+            $unwind: { 
                 path: "$R",
                 includeArrayIndex: 'string',
                 preserveNullAndEmptyArrays: true
             }
-        },
+        }, 
         {
             $match: {
                 $and: [
-                    {price: {$lte : 100}},
-                    {'R.age': {$eq: 45}},
-                    {title: {$regex: '11'}}
+                    {price: {$lte: 120}},
+                    {'R.age': {$gt: 30}}
                   ]
+            }
+        }, {
+            $project : {
+                title: 1,
+                price: 1,
+                author_name:"$R.firstName",
+                author_age:"$R.age"
+            }
+        }, {
+            $group: {
+                _id: "$author_name",
+                sum: {
+                    $sum: "$price"
+                }
             }
         }
     ])
-
     console.log(res)
-
 }
 
 async function main() {
     await connect("mongodb://127.0.0.1:27017/demo")
     //await createData()
-    //await queryBook()
+    //await queryAuthors()
+    //await queryBooks()
     await aggregate()
     console.log('ended')
 }

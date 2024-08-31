@@ -8,15 +8,14 @@ type cases = [
   Expect<Equal<Unique<[unknown, unknown, any, any, never, never]>, [unknown, any, never]>>,
 ]
 
-type Include<T, E> = T extends [infer F, ...infer rest]
-? Equal<E, F> extends true
+type Include<T, E> = T extends [infer F, ...infer R]
+? Equal<F, E> extends true
   ? true
-  : Include<rest, E>
+  : Include<R, E>
 : false
 
-type test = Include<[string, never], never>
 
-type Unique<T, acc extends unknown[] = []> = T extends [infer F, ...infer rest]
+type Unique<T, acc extends unknown[] = []> = T extends [infer F, ... infer rest]
 ? Include<acc, F> extends true
   ? Unique<rest, acc>
   : Unique<rest, [...acc, F]>

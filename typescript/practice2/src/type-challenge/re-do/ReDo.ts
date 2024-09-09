@@ -1,22 +1,23 @@
 import { Alike, Expect, Equal, NotEqual, ExpectExtends } from "../test-utils";
 
 type cases = [
-  Expect<Equal<Unique<[1, 1, 2, 2, 3, 3]>, [1, 2, 3]>>,
-  Expect<Equal<Unique<[1, 2, 3, 4, 4, 5, 6, 7]>, [1, 2, 3, 4, 5, 6, 7]>>,
-  Expect<Equal<Unique<[1, 'a', 2, 'b', 2, 'a']>, [1, 'a', 2, 'b']>>,
-  Expect<Equal<Unique<[string, number, 1, 'a', 1, string, 2, 'b', 2, number]>, [string, number, 1, 'a', 2, 'b']>>,
-  Expect<Equal<Unique<[unknown, unknown, any, any, never, never]>, [unknown, any, never]>>,
+  Expect<Equal<KebabCase<'FooBarBaz'>, 'foo-bar-baz'>>,
+  Expect<Equal<KebabCase<'fooBarBaz'>, 'foo-bar-baz'>>,
+  Expect<Equal<KebabCase<'foo-bar'>, 'foo-bar'>>,
+  Expect<Equal<KebabCase<'foo_bar'>, 'foo_bar'>>,
+  Expect<Equal<KebabCase<'Foo-Bar'>, 'foo--bar'>>,
+  Expect<Equal<KebabCase<'ABC'>, 'a-b-c'>>,
+  Expect<Equal<KebabCase<'-'>, '-'>>,
+  Expect<Equal<KebabCase<''>, ''>>,
+  Expect<Equal<KebabCase<'😎'>, '😎'>>,
 ]
 
-type Include<T, E> = T extends [infer F, ...infer R]
-? Equal<F, E> extends true
-  ? true
-  : Include<R, E>
-: false
+type UPPERCASE = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'G' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z'
 
-
-type Unique<T, acc extends unknown[] = []> = T extends [infer F, ... infer rest]
-? Include<acc, F> extends true
-  ? Unique<rest, acc>
-  : Unique<rest, [...acc, F]>
+type KebabCase<T, acc extends string = ''> = T extends `${infer F}${infer R}`
+? F extends UPPERCASE
+  ? acc extends '' 
+    ? KebabCase<R, Lowercase<F>>
+    : KebabCase<R, `${acc}-${Lowercase<F>}`>
+  : KebabCase<R, `${acc}${F}`>
 : acc

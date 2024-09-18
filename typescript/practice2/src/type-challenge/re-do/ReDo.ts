@@ -1,30 +1,24 @@
 import { Alike, Expect, Equal, NotEqual, ExpectExtends } from "../test-utils";
 
 type cases = [
-  Expect<Equal<Subsequence<[1, 2]>, [] | [1] | [2] | [1, 2]>>,
-  Expect<Equal<Subsequence<[1, 2, 3]>, [] | [1] | [2] | [1, 2] | [3] | [1, 3] | [2, 3] | [1, 2, 3]>>,
-  Expect<Equal<Subsequence<[1, 2, 3, 4, 5]>, [] |
-  [1] | [2] | [3] | [4] | [5] |
-  [1, 2] | [1, 3] | [1, 4] | [1, 5] | [2, 3] | [2, 4] | [2, 5] | [3, 4] | [3, 5] | [4, 5] |
-  [1, 2, 3] | [1, 2, 4] | [1, 2, 5] | [1, 3, 4] | [1, 3, 5] | [1, 4, 5] | [2, 3, 4] | [2, 3, 5] | [2, 4, 5] | [3, 4, 5] |
-  [1, 2, 3, 4] | [1, 2, 3, 5] | [1, 2, 4, 5] | [1, 3, 4, 5] | [2, 3, 4, 5] |
-  [1, 2, 3, 4, 5] >>,
-  Expect<Equal<Subsequence<['a', 'b', 'c']>, [] |
-  ['a'] | ['b'] | ['c'] |
-  ['a', 'b'] | ['a', 'c'] | ['b', 'c'] |
-  ['a', 'b', 'c'] >>,
-  Expect<Equal<Subsequence<['x', 'y']>, [] |
-  ['x'] | ['y'] |
-  ['x', 'y'] >>,
+  Expect<Equal<Trunc<0.1>, '0'>>,
+  Expect<Equal<Trunc<0.2>, '0'>>,
+  Expect<Equal<Trunc<1.234>, '1'>>,
+  Expect<Equal<Trunc<12.345>, '12'>>,
+  Expect<Equal<Trunc<-5.1>, '-5'>>,
+  Expect<Equal<Trunc<'.3'>, '0'>>,
+  Expect<Equal<Trunc<'1.234'>, '1'>>,
+  Expect<Equal<Trunc<'-.3'>, '-0'>>,
+  Expect<Equal<Trunc<'-10.234'>, '-10'>>,
+  Expect<Equal<Trunc<10>, '10'>>,
 ]
 
-type test = [1, 2] extends unknown[] ? 1 : 0
-
-type Merge<T extends unknown[], E> = T extends any
-? [E, ...T]
-: never
-type merge = Merge< [1, 3] | [1, 4], 5>
-
-type Subsequence<T extends unknown[]> = T extends [infer F, ... infer R]
-? [F] | Merge<Subsequence<R>, F> | Subsequence<R>
-: []
+type Trunc<T extends string | number> = `${T}` extends `${infer L}.${infer R}`
+? L extends `-${infer rest}`
+  ? rest extends ''
+    ? '-0'
+    : `-${rest}`
+  : L extends ''
+    ? '0'
+    : L
+: `${T}`

@@ -21,18 +21,19 @@ var inorderTraversal = function(root) {
     }
     dfs(root)
     return ans*/
-    const ans =[]
-    let cur = root
+
+    const ans = []
     const stack = []
-    while (cur !== null) {
+    var cur = root
+    while (cur) {
         stack.push(cur)
         cur = cur.left
     }
-    while( stack.length > 0) {
+    while (stack.length) {
         cur = stack.pop()
         ans.push(cur.val)
         cur = cur.right
-        while (cur !== null) {
+        while (cur) {
             stack.push(cur)
             cur = cur.left
         }

@@ -22,24 +22,25 @@
 };*/
 
 var levelOrder = function(root) {
-    const res = []
+    const ans = []
+    if (!root) return ans
     const queue = []
-    var level = 0
-    if (!root) return res
     queue.push(root)
+    var level = 0
     while (queue.length) {
         const size = queue.length
-        res[level] = []
+        const sub = []
         for (let i = 0; i < size; i++) {
             const cur = queue.shift()
-            res[level].push(cur.val)
+            sub.push(cur.val)
             for (let child of cur.children) {
                 if (child) {
                     queue.push(child)
                 }
             }
         }
+        ans[level] = sub
         level++
     }
-    return res
+    return ans
 }

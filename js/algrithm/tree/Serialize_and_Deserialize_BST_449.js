@@ -1,10 +1,10 @@
-
-
- function TreeNode(val) {
-     this.val = val;
-     this.left = this.right = null
-  }
-
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
 
 /**
  * Encodes a tree to a single string.
@@ -38,12 +38,7 @@ var deserialize = function(data) {
     
 };
 
-const root = new TreeNode(2)
-root.left = new TreeNode(1)
-root.right = new TreeNode(3)
-const str = serialize(root)
-console.log(str)
-const root1 = deserialize(str)
-console.log(root1)
-//deserialize(serialize(root));
- 
+/**
+ * Your functions will be called as such:
+ * deserialize(serialize(root));
+ */

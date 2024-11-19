@@ -1,49 +1,6 @@
-
-
- function TreeNode(val) {
-     this.val = val;
-     this.left = this.right = null
-  }
-
-
-/**
- * Encodes a tree to a single string.
- *
- * @param {TreeNode} root
- * @return {string}
- */
-var serialize = function(root) {
-    if (!root) return 'null'
-    return root.val + ',' + serialize(root.left) + ',' + serialize(root.right)
-};
-
-/**
- * Decodes your encoded data to tree.
- *
- * @param {string} data
- * @return {TreeNode}
- */
-var deserialize = function(data) {
-    const path = data.split(',')
-    const create = function(path) {
-        const cur = path.shift()
-        if (cur === 'null') return null
-        const node = new TreeNode(parseInt(cur))
-        node.left = create(path)
-        node.right = create(path)
-        return node
-    }
-    const root = create(path)
-    return root
-    
-};
-
-const root = new TreeNode(2)
-root.left = new TreeNode(1)
-root.right = new TreeNode(3)
-const str = serialize(root)
-console.log(str)
-const root1 = deserialize(str)
-console.log(root1)
-//deserialize(serialize(root));
+const myMap = new Map().set('a', 1).set('b', 2);
+const arr = [...myMap];
+console.log(arr);
+const arr1 = arr.sort((a, b) => b[1] - a[1])
+console.log(arr1)
  

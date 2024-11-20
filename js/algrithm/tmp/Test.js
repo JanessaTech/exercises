@@ -1,4 +1,3 @@
-const aa = [2,3,1]
-aa.sort()
+const aa = Array(4).fill(2)
 console.log(aa)
  

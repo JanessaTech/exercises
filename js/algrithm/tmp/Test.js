@@ -1,6 +1,11 @@
-const cc = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+function isNumber(ch) {
+    return ch >= '0' && ch <= '9'
+}
+function isLetter(ch) {
+    return ch.toUpperCase() !== ch.toLowerCase()
+}
+const ch = ''
+console.log('isNumber:', isNumber(ch))
+console.log('isLetter', isLetter(ch))
 
-const a = [1, 2, 3]
-const b = [1, 2,3]
-console.log(cc.includes(a))
  

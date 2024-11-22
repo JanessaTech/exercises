@@ -4,18 +4,20 @@
  */
 var restoreIpAddresses = function(s) {
     const ans = []
-    if (s.length < 4) return ans
+    if (s.length < 4) return []
     const nums = s.split('').map((v) => parseInt(v))
 
     const isValid = function(sub) {
         if (sub.length === 0) return false
         if (sub.length > 3) return false
         if (sub.length > 1 && sub[0] === 0) return false
+
         var sum = 0
         for (let i = 0; i < sub.length; i++) {
-            sum = sum * 10 + sub[i]
+            sum += sum * 10 + sub[i]
         }
         if (sum > 255) return false
+
         return true
     }
 
@@ -28,13 +30,12 @@ var restoreIpAddresses = function(s) {
 
             const res = part1.join('') + '.' + part2.join('') + '.' + part3.join('') + '.' + part4.join('')
             ans.push(res)
-
         } else {
-            for (let i = start; i <= nums.length - 1; i++) {
+            for (let i = start; i <= s.length; i++) {
                 const part1 = nums.slice(start, i)
                 const part2 = nums.slice(i)
                 const valid1 = isValid(part1)
-                if (seps.length === 2) {
+                if(seps.length === 2) {
                     const valid2 = isValid(part2)
                     if (valid1 && valid2) {
                         seps.push(i)
@@ -42,7 +43,6 @@ var restoreIpAddresses = function(s) {
                         seps.pop()
                     }
                 } else {
-                    // <2
                     if (valid1) {
                         seps.push(i)
                         dfs(i, seps)

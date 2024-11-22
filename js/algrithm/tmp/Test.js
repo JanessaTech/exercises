@@ -1,17 +1,10 @@
-const move = function(seq, k, dir) {
-    const slots = seq.split('').map((v) => parseInt(v))
-    if (dir === -1) {
-        slots[k] =  (slots[k] - 1 + 10) % 10
-    } else {
-        slots[k] = (slots[k] + 1) % 10
+for (let i = 0; i < 5; i++) {
+    for (let j = 0; j < 5; j++) {
+        console.log('i=', i, 'j=', j)
+        if (j ==3) {
+            break
+        }
     }
-    return slots.join('')
 }
-
-const num = '0000'
-const back = move(num, 0, -1)
-const forward = move(num, 0, 1)
-console.log('back:', back)
-console.log('forward:', forward)
 
  

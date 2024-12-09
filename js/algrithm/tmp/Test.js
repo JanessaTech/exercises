@@ -1,8 +1,8 @@
-for (let i = 0; i < 5; i++) {
-    for (let j = 0; j < 3; j++) {
-        if (j === 2) {
-            break
-        }
-        console.log('i = ', i, ' j = ', j)
-    }
+function isLetter(ch) {
+    //return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')
+    return ch.toUpperCase() != ch.toLowerCase()
 }
+
+const ch = 'a'
+const res = isLetter(ch)
+console.log(res)

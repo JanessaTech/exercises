@@ -18,8 +18,12 @@ var recoverTree = function(root) {
     const dfs = function(node) {
         if (node === null) return
         dfs(node.left)
-        if (!first && pre && pre.val > node.val) first = pre
-        if (first && pre && pre.val > node.val) second = node
+        if (pre && pre.val > node.val) {
+            if (!first) {
+                first = pre
+            }
+            second = node
+        }
         pre = node
         dfs(node.right)
     }

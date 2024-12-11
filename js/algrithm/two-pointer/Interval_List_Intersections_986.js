@@ -4,7 +4,6 @@
  * @return {number[][]}
  */
 var intervalIntersection = function(firstList, secondList) {
-    let i = 0, j = 0
     const ans = []
     for (let i = 0, j = 0; i < firstList.length && j < secondList.length;) {
         if (firstList[i][1] < secondList[j][0]) {

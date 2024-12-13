@@ -42,7 +42,7 @@ function bfs(node) {
     visited.set(node.val, copy)
 
     while (queue.length > 0) {
-        const cur = queue.pop()
+        const cur = queue.shift()
         for (let neighbor of cur.neighbors) {
             let clonedNeighbor = undefined
             if (visited.has(neighbor.val)) {

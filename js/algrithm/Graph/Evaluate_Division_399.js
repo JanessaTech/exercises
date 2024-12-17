@@ -5,7 +5,6 @@
  * @return {number[]}
  */
 var calcEquation = function(equations, values, queries) {
-    const n = equations.length
     const graph = createGraph(equations, values)
     const ans = Array(queries.length).fill(-1)
     

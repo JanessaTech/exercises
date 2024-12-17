@@ -4,12 +4,51 @@
  * @return {number[]}
  */
 var findOrder = function(numCourses, prerequisites) {
-    const ans = bfs(numCourses, prerequisites)
+    //const ans = bfs(numCourses, prerequisites)
+    const ans = dfs(numCourses, prerequisites)
     return ans
 };
 
 function dfs(numCourses, prerequisites) {
+    const digraph = []
+    const visited = Array(numCourses).fill(0)
+    for (let pre of prerequisites) {
+        if (!digraph[pre[1]]) {
+            digraph[pre[1]] = []
+        }
+        digraph[pre[1]].push(pre[0])
+    }
+    const order = []
+    for (let i = 0; i < numCourses; i++) {
+        if (visited[i] === 0) {
+            if (!_dfs(digraph, visited, i, order)) {
+                return []
+            }
+        }
+    }
 
+    const ans = []
+    let i = 0
+    while (order.length) {
+        ans[i++] = order.pop()
+    }
+
+    return ans
+}
+
+function _dfs(digraph, visited, i, order) {
+    visited[i] = 1
+    if (digraph[i]) {
+        for (let next of digraph[i]) {
+            if (visited[next] === 1) return false
+            if (visited[next] === 0) {
+                if (!_dfs(digraph, visited, next, order)) return false
+            }
+        }
+    }
+    visited[i] = 2
+    order.push(i)
+    return true
 }
 
 function bfs(numCourses, prerequisites) {
@@ -46,6 +85,6 @@ function bfs(numCourses, prerequisites) {
 }
 
 
-const numCourses = 4, prerequisites = [[1,0],[2,0],[3,1],[3,2]]
+const numCourses = 2, prerequisites = [[0,1],[1,0]]
 const res = findOrder(numCourses, prerequisites)
 console.log(res)

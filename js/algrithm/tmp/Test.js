@@ -1,2 +1,5 @@
-const res = Array(3).fill(undefined).map((_, i) => [])
-console.log(res)
+const types = new Set([1, 2, 3, 4])
+const taken = new Set([2, 3])
+const arr = [...types].filter((t) => !taken.has(t))
+console.log(arr)
+console.log(arr[0])

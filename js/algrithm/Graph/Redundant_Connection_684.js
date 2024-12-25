@@ -3,11 +3,11 @@
  * @return {number[]}
  */
 var findRedundantConnection = function(edges) {
-    const id = Array(edges.length).fill(0).map((_, i) => i)
+    const id = Array(edges.length).fill(undefined).map((_, id) => id)
     const sz = Array(edges.length).fill(1)
 
     const find = (x) => {
-        if (id[x] === x) return x
+        if (x === id[x]) return x
         id[x] = id[id[x]]
         return find(id[x])
     }
@@ -15,11 +15,12 @@ var findRedundantConnection = function(edges) {
     const isConnected = (i, j) => {
         return find(i) === find(j)
     }
+
     const union = (i, j) => {
         const pi = find(i)
         const pj = find(j)
         if (sz[pi] < sz[pj]) {
-            id[pi] = pj 
+            id[pi] = pj
             sz[pj] += sz[pi]
         } else {
             id[pj] = pi
@@ -35,9 +36,9 @@ var findRedundantConnection = function(edges) {
         } else {
             return [a + 1, b + 1]
         }
+
     }
 };
-
 const edges = [[1,2],[1,3],[2,3]]
 const res = findRedundantConnection(edges)
 console.log(res)

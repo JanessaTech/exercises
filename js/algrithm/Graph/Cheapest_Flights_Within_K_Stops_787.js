@@ -7,6 +7,9 @@
  * @return {number}
  */
 var findCheapestPrice = function(n, flights, src, dst, k) {
+    return bellman_ford(n, flights, src, dst, k)
+ }
+var findCheapestPrice1 = function(n, flights, src, dst, k) {
     const digraph = createDigraph(n, flights)
     const dists = Array(n).fill(Number.MAX_VALUE)
     dists[src] = 0
@@ -40,6 +43,18 @@ function createDigraph(n, flights) {
         digraph[from].push([to, price])
     }
     return digraph
+}
+
+function bellman_ford(n, flights, src, dst, K) {
+    let M = Array(n).fill(undefined).map((_, i) => i === src? 0: Infinity)
+    for (let i = 0; i < K + 1; i++) {
+        let N = [...M]
+        for (let [from, to, price] of flights) {
+            N[to] = Math.min(N[to], M[from] + price)
+        }
+        M = [...N]
+    }
+    return M[dst] !== Infinity ? M[dst] : -1
 }
 
 const n = 4, flights = [[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]], src = 0, dst = 3, k = 1

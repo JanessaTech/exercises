@@ -1,57 +1,45 @@
-var findCheapestPrice1 = function(n, flights, src, dst, k) {
-    return bellman_ford(n, flights, src, dst, k)
- }
-var findCheapestPrice = function(n, flights, src, dst, k) {
-    const digraph = createDigraph(n, flights)
-    const queue = []
+const PriorityQueue =  require('js-priority-queue')
+
+var networkDelayTime = function(times, n, k) {
+    const digraph = createDigraph(times, n)
     const dists = Array(n).fill(Infinity)
-    dists[src] = 0
-    queue.push([src, 0])
-    let level = 0
-
-    while (queue.length && level < k + 1) {
-        const size = queue.length
-        for (let i = 0; i < size; i++) {
-            let [cur, dist] = queue.shift()
-            for (let [to, price] of digraph[cur]) {
-                let newPrice = dist + price
-                if (newPrice < dists[to]) {
-                    dists[to] = newPrice
-                    queue.push([to, newPrice])
-                }
-            }
+    dijkstra(digraph, dists, k)
+    let max = 0
+    for (let i = 0; i < n; i++) {
+        if (dists[i] > max) {
+            max = dists[i]
         }
-        level++
     }
-
-    return dists[dst] !== Infinity ? dists[dst] : -1
-
+    return max !== Infinity ? max : -1
 };
 
-function createDigraph(n, flights) {
+function createDigraph(times, n) {
     const digraph = Array(n).fill(undefined).map((_, i) => [])
-    for (let flight of flights) {
-        const from = flight[0]
-        const to = flight[1]
-        const price = flight[2]
-        digraph[from].push([to, price])
+    for (let time of times) {
+        const u = time[0] - 1
+        const v = time[1] - 1
+        const w = time[2]
+        digraph[u].push([v, w])
     }
     return digraph
 }
 
-function bellman_ford(n, flights, src, dst, K) {
-    let M = Array(n).fill(undefined).map((_, i) => i === src? 0: Infinity)
-    for (let i = 0; i < K + 1; i++) {
-        let N = [...M]
-        for (let [from, to, price] of flights) {
-            N[to] = Math.min(N[to], M[from] + price)
+function dijkstra(digraph, dists, k) {
+    const pq = new PriorityQueue({comparator: (a, b) => a[1] - b[1]})
+    pq.queue([k - 1, 0])
+    while (pq.length) {
+        const [cur, dis] = pq.dequeue()
+        if (dis > dists[cur]) continue
+        for (let [next, wei] of digraph[cur]) {
+            const newDist = dis + wei
+            if (newDist < dists[next]) {
+                dists[next] = newDist
+                pq.queue([next, newDist])
+            }
         }
-        M = [...N]
     }
-    return M[dst] !== Infinity ? M[dst] : -1
 }
 
-const n = 4, flights = [[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]], src = 0, dst = 3, k = 1
-
-const res = findCheapestPrice(n, flights, src, dst, k)
+const times = [[2,1,1],[2,3,1],[3,4,1]], n = 4, k = 2
+const res = networkDelayTime(times, n, k)
 console.log(res)

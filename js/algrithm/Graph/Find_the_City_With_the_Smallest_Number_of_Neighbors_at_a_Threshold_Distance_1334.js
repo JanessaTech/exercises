@@ -13,9 +13,18 @@ var findTheCity = function(n, edges, distanceThreshold) {
         dists.push(Array(n).fill(Infinity))
         dists[i][i] = 0
     }
-    const graph = createGraph(n, edges, dists)
+    const graph = Array(n).fill(undefined).map((_, i) => [])
+    for (let edge of edges) {
+        const u = edge[0]
+        const v = edge[1]
+        const w = edge[2]
+        graph[u].push([v, w])
+        graph[v].push([u, w])
+        dists[u][v] = w
+        dists[v][u] = w
+    }
 
-    floyd(n, graph, dists)
+    floyd(n, dists)
     for (let i = 0; i < n; i++) {
         //bellman(n, edges, dists[i], i)
         //dijkstra(n, graph, dists[i], i)
@@ -39,24 +48,8 @@ var findTheCity = function(n, edges, distanceThreshold) {
     
 };
 
-function createGraph(n, edges, dists = undefined) {
-    const graph = Array(n).fill(undefined).map((_, i) => [])
-    for (let edge of edges) {
-        const u = edge[0]
-        const v = edge[1]
-        const w = edge[2]
-        graph[u].push([v, w])
-        graph[v].push([u, w])
-        if (dists) {
-            dists[u][v] = w
-            dists[v][u] = w
-        }
-    }
-    return graph
-}
-
 function bellman(n, edges, dist, src) {
-    for (let k = 1; k < n; k++) {
+    for (let k = 0; k < n; k++) {
         for (let edge of edges) {
             const u = edge[0]
             const v = edge[1]
@@ -70,7 +63,7 @@ function bellman(n, edges, dist, src) {
         }
     }
 }
-
+//for leetcode
 function dijkstra(n, graph, dist, src) {
     const minPQ = new PriorityQueue({compare: (a, b) => a[1] - b[1]})
     minPQ.enqueue([src, 0])
@@ -104,7 +97,7 @@ function dijkstra(n, graph, dist, src) {
 
 }
 
-function floyd(n, graph, dists) {
+function floyd(n, dists) {
     for (let k = 0; k < n; k++) {
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < n; j++) {

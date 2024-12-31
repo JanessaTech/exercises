@@ -1,45 +1,45 @@
-const PriorityQueue =  require('js-priority-queue')
-
-var networkDelayTime = function(times, n, k) {
-    const digraph = createDigraph(times, n)
-    const dists = Array(n).fill(Infinity)
-    dijkstra(digraph, dists, k)
-    let max = 0
-    for (let i = 0; i < n; i++) {
-        if (dists[i] > max) {
-            max = dists[i]
-        }
+/**
+ * @param {number[][]} grid
+ * @return {number}
+ */
+var maxAreaOfIsland = function(grid) {
+    const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+    const m = grid.length
+    const n = grid[0].length
+    const visited = []
+    for (let i = 0; i < m; i++) {
+        visited.push(Array(n).fill(false))
     }
-    return max !== Infinity ? max : -1
-};
+    let area = 0
 
-function createDigraph(times, n) {
-    const digraph = Array(n).fill(undefined).map((_, i) => [])
-    for (let time of times) {
-        const u = time[0] - 1
-        const v = time[1] - 1
-        const w = time[2]
-        digraph[u].push([v, w])
-    }
-    return digraph
-}
-
-function dijkstra(digraph, dists, k) {
-    const pq = new PriorityQueue({comparator: (a, b) => a[1] - b[1]})
-    pq.queue([k - 1, 0])
-    while (pq.length) {
-        const [cur, dis] = pq.dequeue()
-        if (dis > dists[cur]) continue
-        for (let [next, wei] of digraph[cur]) {
-            const newDist = dis + wei
-            if (newDist < dists[next]) {
-                dists[next] = newDist
-                pq.queue([next, newDist])
+    const dfs = function(grid, i, j, visited) {
+        visited[i][j] = true
+        area++
+        for (let dir of dirs) {
+            let nr = dir[0] + i
+            let nc = dir[1] + j
+            if (nr >=0 && nr < m && nc >= 0 && nc < n && !visited[nr][nc] && grid[nr][nc] === 1) {
+                dfs(grid, nr, nc, visited)
             }
         }
     }
-}
 
-const times = [[2,1,1],[2,3,1],[3,4,1]], n = 4, k = 2
-const res = networkDelayTime(times, n, k)
+
+    let max = 0
+    for (let i = 0; i < m; i++) {
+        for (let j = 0; j < n; j++) {
+            if (!visited[i][j] && grid[i][j] === 1) {
+                dfs(grid, i, j, visited)
+                if (area > max) {
+                    max = area
+                }
+                area = 0
+            }
+        }
+    }
+    return max
+
+};
+const grid = [[1],[1]]
+const res = maxAreaOfIsland(grid)
 console.log(res)

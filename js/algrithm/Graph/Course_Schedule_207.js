@@ -11,34 +11,33 @@ var canFinish = function(numCourses, prerequisites) {
 
 function dfs(numCourses, prerequisites) {
     const digraph = []
-    const visited = Array(numCourses).fill(false)
-    const memo = Array(numCourses).fill(false)
     for (let pre of prerequisites) {
-        if (!digraph[pre[1]]) {
-            digraph[pre[1]] = []
-        }
+        if (!digraph[pre[1]]) digraph[pre[1]] = []
         digraph[pre[1]].push(pre[0])
     }
+
+    const visited = Array(numCourses).fill(0)
     for (let i = 0; i < numCourses; i++) {
-        if (!_dfs(digraph, visited, i, memo)) {
-            return false
+        if (visited[i] === 0) {
+            if(!_dfs(digraph, i, visited))  return false
         }
+        
     }
     return true
 }
 function _dfs(digraph, visited, i, memo) {
-    if (visited[i]) return false
-    if (memo[i]) return true
-    visited[i] = true
-    if(digraph[i]) {
+    if (visited[i] === 1) return false
+    if (visited[i] === 2) return true
+    visited[i] = 1
+    if (digraph[i]) {
         for (let next of digraph[i]) {
-            if (!_dfs(digraph, visited, next, memo)) {
-                return false
+            if (visited[next] === 1) return false
+            if (visited[next] === 0) {
+                if (!_dfs(digraph, next, visited)) return false
             }
         }
     }
-    visited[i] = false
-    memo[i] = true
+    visited[i] = 2
     return true
 }
 

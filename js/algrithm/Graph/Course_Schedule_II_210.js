@@ -37,6 +37,8 @@ function dfs(numCourses, prerequisites) {
 }
 
 function _dfs(digraph, visited, i, order) {
+    if (visited[i] === 1) return false
+    if (visited[i] === 2) return true
     visited[i] = 1
     if (digraph[i]) {
         for (let next of digraph[i]) {

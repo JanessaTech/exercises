@@ -8,8 +8,8 @@ var makeConnected = function(n, connections) {
     const sz = Array(n).fill(1)
 
     const find = (x) => {
-        if (x === id[x]) return x
-        id[x] = id[id[x]]
+        if (id[x] === x) return x
+        id[x]  = id[id[x]]
         return find(id[x])
     }
 
@@ -28,27 +28,24 @@ var makeConnected = function(n, connections) {
             sz[pi] += sz[pj]
         }
     }
-
     let cnt = 0
     for (let con of connections) {
-        const a = con[0]
-        const b = con[1]
-        if (!isConnected(a, b)) {
-            union(a, b)
-        } else {
+        let a = con[0]
+        let b = con[1]
+        if (isConnected(a, b)) {
             cnt++
+        } else {
+            union(a, b)
         }
     }
 
-    let components = new Set()
-    for (let i of id) {
-        let p = find(i)
-        if (!components.has(p)) {
-            components.add(p)
-        }
+    const componnets = new Set()
+    for (let i = 0; i < n; i++) {
+        const rt = find(i)
+        if (!componnets.has(rt)) componnets.add(rt)
     }
 
-    return components.size - 1 <= cnt ? components.size - 1 : -1
+    return componnets.size -1 <= cnt ? componnets.size -1 : -1
 };
 
 const n = 12

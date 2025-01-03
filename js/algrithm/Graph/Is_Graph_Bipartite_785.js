@@ -43,13 +43,12 @@ function bfs_solution(graph) {
 
 function dfs_solution(graph) {
     const n = graph.length
-    const visited = Array(n).fill(false)
+    const visited = Array(n).fill(0)
     for (let i = 0; i < n; i++) {
-        if (!visited[i]) {
+        if (visited[i] === 0) {
             if (!dfs(graph, i, visited, 1)) return false
-        }
+        } 
     }
-
     return true
 }
 
@@ -57,14 +56,11 @@ function dfs_solution(graph) {
 
 function dfs(graph, i, visited, color) {
     visited[i] = color
-    let newColor = nextColor(color)
     for (let next of graph[i]) {
-        if (!visited[next]) {
-            if (!dfs(graph, next, visited, newColor)) return false
-        } else {
-            if (color === visited[next]) return false
+        if (visited[next] === color) return false
+        if (visited[next] === 0) {
+            if (!dfs(graph, next, visited, -1 * color)) return false
         }
     }
-
     return true
 }

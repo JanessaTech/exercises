@@ -11,12 +11,13 @@
  * @return {number}
  */
 var maxDepth = function(root) {
-    const dfs = function(node, depth) {
-        if (!node) return depth
-        const left = node.left ? dfs(node.left) : 0
-        const right = node.right ? dfs(node.right) : 0
-        return Math.max(left, right) + 1;
+    const dfs = function(node) {
+        if (!node) return 0
+        let left = dfs(node.left)
+        let right = dfs(node.right)
+        return Math.max(left, right) + 1
     }
-    const res = dfs(root, 0)
-    return res 
+
+    const res = dfs(root)
+    return res
 };

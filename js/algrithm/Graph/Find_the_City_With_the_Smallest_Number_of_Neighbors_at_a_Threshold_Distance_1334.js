@@ -49,20 +49,21 @@ var findTheCity = function(n, edges, distanceThreshold) {
 };
 
 function bellman(n, edges, dist, src) {
-    for (let k = 0; k < n; k++) {
+    let M = dist
+    for (let i = 0; i < n; i++) {
+        let N = [...M]
         for (let edge of edges) {
-            const u = edge[0]
-            const v = edge[1]
-            const w = edge[2]
-            if (dist[u] > dist[v] + w) {
-                dist[u] = dist[v] + w
-            }
-            if (dist[v] > dist[u] + w) {
-                dist[v] = dist[u] + w
-            }
+            const [from, to, weight] = edge
+            N[to] = Math.min(N[to], M[from] + weight)
+            N[from] = Math.min(N[from], M[to] + weight)
         }
+        M = [...N]
+    }
+    for (let i = 0; i <dist.length; i++) {
+        dist[i] = M[i]
     }
 }
+
 //for leetcode
 function dijkstra(n, graph, dist, src) {
     const minPQ = new PriorityQueue({compare: (a, b) => a[1] - b[1]})

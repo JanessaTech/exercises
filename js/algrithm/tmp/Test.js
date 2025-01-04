@@ -1,5 +1,10 @@
-const test = [[1, 2], [3, 4], [5, 6]]
-for (let next of test) {
-    next[0] = 5
+const tests = [[1, 2], [3, 4], [5, 6]]
+function change(e) {
+    if (e[0] === 3) {
+        e = [2, 2, 2]
+    }
 }
-console.log(test)
+for (let t of tests) {
+    change(t)
+}
+console.log(tests)

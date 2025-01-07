@@ -39,3 +39,16 @@ var diameterOfBinaryTree = function(root) {
     dfs(root)
     return max
 };
+
+var diameterOfBinaryTree2 = function(root) {
+    let max = 0
+    const maxDepth = function(node) {
+        if (!node) return -1
+        let left = maxDepth(node.left)
+        let right = maxDepth(node.right)
+        max = Math.max(max,left + right + 2)
+        return Math.max(left, right) + 1
+    }
+    maxDepth(root)
+    return max
+};

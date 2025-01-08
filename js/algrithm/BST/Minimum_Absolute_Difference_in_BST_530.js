@@ -11,22 +11,18 @@
  * @return {number}
  */
 var getMinimumDifference = function(root) {
-    let min = 1e5
-    let pre = null
+    let min = Infinity
+    let pre = undefined
     const dfs = function(node) {
-        if (node === null) return
+        if (!node) return
         dfs(node.left)
         if (pre) {
-            const diff = node.val - pre.val
-            if (Math.abs(diff) < min) {
-                min = Math.abs(diff)
-            }
+            const abs = Math.abs(pre.val - node.val)
+            min = Math.min(min, abs)
         }
         pre = node
         dfs(node.right)
     }
-
     dfs(root)
-
     return min
 };

@@ -12,18 +12,8 @@
  * @return {TreeNode}
  */
 var searchBST = function(root, val) {
-
-    const dfs = function(node, val) {
-        if (!node) return null
-        if (node.val === val) {
-            return node
-        } else if (node.val > val) {
-            return dfs(node.left, val)
-        } else {
-            return dfs(node.right, val)
-        }
-    }
-
-    const ret = dfs(root, val)
-    return ret
+    if (!root) return null
+    if (root.val === val) return root
+    if (val < root.val) return searchBST(root.left, val)
+    return searchBST(root.right, val)
 };

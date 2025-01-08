@@ -1,73 +1,82 @@
 
-function ListNode(val, next) {
-    this.val = (val===undefined ? 0 : val)
-    this.next = (next===undefined ? null : next)
+  function ListNode(val, next) {
+     this.val = (val===undefined ? 0 : val)
+      this.next = (next===undefined ? null : next)
+  }
+
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var sortList = function(head) {
+  const res = sort(head)
+  return res
 }
 
-var sortList = function(head) {
-  const res  = sort(head)
-  return res
-};
 function sort(list) {
-  if (!list) return null
-  if (list?.next === null) return list
+  if (list === null) return null
+  if (list.next === null) return list
   const [l1, l2] = split(list)
   const first = sort(l1)
   const second = sort(l2)
-  const res = merge(first, second)
-  return res
+  const merged = merge(first, second)
+  return merged
 }
 
-function split(head) {
-  const dummy1 = new ListNode(undefined, undefined)
-  const dummy2 = new ListNode(undefined, undefined)
-  var pre1 = dummy1
-  var pre2 = dummy2
-  var cur = head
+function split(list) {
+  const dummy0 = new ListNode()
+  const dummy1 = new ListNode()
+  let pre0 = dummy0
+  let pre1 = dummy1
+  let cur = list
+
+  let toggle = 0
   while (cur) {
-      var first = cur
-      var second = cur?.next
-      var next = cur?.next?.next
-      insert(pre1, first)
-      insert(pre2, second)
-      pre1 = first
-      pre2 = second
+      let next = cur.next
+      cur.next = null
+      if (toggle === 0) {
+          pre0.next = cur
+          pre0 = cur
+          toggle = 1
+      } else {
+          pre1.next = cur
+          pre1 = cur
+          toggle = 0
+      }
       cur = next
   }
-  return [dummy1.next, dummy2.next]
-}
-
-function insert(pre, node) {
-  if (node) {
-      pre.next = node
-      node.next = null
-  }
+  return [dummy0.next, dummy1.next]
 }
 
 function merge(l1, l2) {
-  const dummy = new ListNode(undefined, undefined)
-  var pre = dummy
-  var cur1 = l1
-  var cur2  = l2
-  while (cur1 && cur2) {
-      if (cur1.val < cur2.val) {
-          pre.next = cur1
-          pre = cur1
-          cur1 = cur1.next
-          pre.next = null
+  const dummy = new ListNode()
+  let pre = dummy
+  let p = l1
+  let q = l2
+  while (p || q) {
+      if (p && q) {
+          if (p.val < q.val) {
+              let next = p.next
+              pre.next = p
+              pre = p
+              pre.next = null
+              p = next
+          } else {
+              let next = q.next
+              pre.next = q
+              pre = q
+              pre.next = null
+              q = next
+          }
+      } else if (p) {
+          pre.next = p
+          break
       } else {
-          pre.next = cur2
-          pre = cur2
-          cur2 = cur2.next
-          pre.next = null
+          pre.next = q
+          break
       }
   }
-  if (cur1) {
-      pre.next = cur1
-  }
-  if (cur2) {
-      pre.next = cur2
-  }
+
   return dummy.next
 }
 

@@ -10,32 +10,25 @@
  * @return {ListNode}
  */
  
-function insert(dummy, node) {
-    var pre = dummy
-    var cur = pre.next
-    while (cur) {
-        if (cur.val < node.val) {
-            pre = cur
-            cur = cur.next
-        } else {
-            pre.next = node
-            node.next = cur
-            break;
-        }
-    }
-    if (cur === null) {
-        pre.next = node
-    }
-}
-
 var insertionSortList = function(head) {
-    var dummy = new ListNode(undefined, undefined)
-    var cur = head
+    const dummy = new ListNode()
+    let cur = head
     while (cur) {
-        var next = cur.next
+        let next = cur.next
         cur.next = null
         insert(dummy, cur)
         cur = next
     }
     return dummy.next
 };
+
+function insert(dummy, one) {
+    let pre = dummy
+    let cur = dummy.next
+    while (cur && cur.val < one.val) {
+        pre = cur
+        cur = cur.next
+    }
+    pre.next = one
+    one.next = cur
+}

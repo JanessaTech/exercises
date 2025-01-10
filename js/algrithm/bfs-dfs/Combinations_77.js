@@ -5,17 +5,18 @@
  */
 var combine = function(n, k) {
     const ans = []
-    const dfs = function(start, level, path) {
-        if (level === k) {
+    const dfs = function(pos, path) {
+        if (path.length === k) {
             ans.push(path.slice())
         } else {
-            for (let i = start; i <= n; i++) {
+            for (let i = pos; i <= n; i++) {
                 path.push(i)
-                dfs( i + 1, level + 1, path)
+                dfs(i + 1, path)
                 path.pop()
             }
         }
     }
-    dfs(1, 0, [])
+
+    dfs(1, [])
     return ans
 };

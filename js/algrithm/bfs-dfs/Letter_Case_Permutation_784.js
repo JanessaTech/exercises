@@ -3,34 +3,36 @@
  * @return {string[]}
  */
 var letterCasePermutation = function(s) {
-    const isNumber = function(ch) {
+    const isNumber= function(ch) {
         return ch >= '0' && ch <= '9'
     }
-    const isLetter = function(ch) {
-        return ch.toUpperCase() !== ch.toLowerCase()
+    const isChar = function(ch) {
+        return ch.toLowerCase() !== ch.toUpperCase()
     }
     const ans = []
-    const dfs = function(level, path) {
-        if (level === s.length) {
+
+    const dfs = function(pos, path) {
+        if (pos === s.length) {
             ans.push(path.join(''))
         } else {
-            const ch = s.charAt(level)
-            if (isNumber(ch)) {
-                path.push(ch)
-                dfs(level + 1, path)
+            const cur = s.charAt(pos)
+            if (isNumber(cur)) {
+                path.push(cur)
+                dfs(pos + 1, path)
                 path.pop()
             } else {
-                const lower = ch.toLowerCase()
+                const lower = cur.toLowerCase()
                 path.push(lower)
-                dfs(level + 1, path)
+                dfs(pos + 1, path)
                 path.pop()
-                const upper = ch.toUpperCase()
+                const upper = cur.toUpperCase()
                 path.push(upper)
-                dfs(level + 1, path)
+                dfs(pos + 1, path)
                 path.pop()
             }
         }
     }
+
     dfs(0, [])
     return ans
-}; 
+};

@@ -157,13 +157,24 @@ const word = "SEE"
 
 const res  = exist(board, word)
 console.log('res = ', res) */
-var exist = function(board, word) {
-    const getFirst = function() {
-        const first = word.charAt(0)
+vvar exist = function(board, word) {
+    const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+    const m = board.length
+    const n = board[0].length
+
+    const init = function() {
+        const visited = []
+        for (let i = 0; i < m; i++) {
+            visited.push(Array(n).fill(false))
+        }
+        return visited
+    }
+
+    const getStarters = function(ch) {
         const ans = []
-        for (let i  = 0; i < board.length; i++) {
-            for (let j = 0; j < board[0].length; j++) {
-                if (board[i][j] === first) {
+        for (let i = 0; i < m; i++) {
+            for (let j = 0; j < n; j++) {
+                if (board[i][j] === ch) {
                     ans.push([i, j])
                 }
             }
@@ -171,64 +182,33 @@ var exist = function(board, word) {
         return ans
     }
 
-    const iniVisited = function() {
-        const visited = []
-        for (let i = 0; i < board.length; i++) {
-            visited.push(Array(board[0].length).fill(false))
-        }
-        return visited
-    }
-
-    const resetVisited = function(visited) {
-        for (let i = 0; i < visited.length; i++) {
-            for (let j = 0; j < visited[0].length; j++) {
-                visited[i][j] = false
-            }
-        }
-    }
-
-    const isValid = function(row, col) {
-        if (row < 0 || row >= board.length) return false
-        if (col < 0 || col >= board[0].length) return false
-        return true
-    }
-
-    const dfs = function(row, col, pos) {
-        const target = word.charAt(pos)
-        const cur = board[row][col]
+    const dfs = function(i, j, visited, pos) {
+        const cur = word.charAt(pos)
+        const target = board[i][j]
         if (cur === target) {
-            if (pos === word.length - 1) {
-                found = true
-                return
-            }
-            visited[row][col] = true
+            if (pos === word.length - 1) return true
+            visited[i][j] = true
             for (let dir of dirs) {
-                const nr = row + dir[0]
-                const nc = col + dir[1]
-                if (isValid(nr, nc) && !visited[nr][nc]) {
-                    dfs(nr, nc, pos + 1)
+                const nr = dir[0] + i
+                const nc = dir[1] + j
+                if (nr >= 0 && nr < m && nc >= 0 && nc < n && !visited[nr][nc]) {
+                    if (dfs(nr, nc, visited, pos + 1)) return true
                 }
             }
-             visited[row][col] = false
+            visited[i][j] = false
         }
+        return false
     }
 
-    const dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]]
-
-    var found = false
-    const firsts = getFirst()
-    const visited = iniVisited()
-
-    for (const first of firsts) {
-        dfs(first[0], first[1], 0)
-        if (!found) {
-            resetVisited(visited)
-        } else {
-            break
-        }
+    const starters = getStarters(word.charAt(0))
+    for (let starter of starters) {
+        const visited = init()
+        if (dfs(starter[0], starter[1], visited, 0)) return true
     }
-    return found
+    return false
+
 };
+
 
 const board = [["A","B","C","E"],
                ["S","F","C","S"],

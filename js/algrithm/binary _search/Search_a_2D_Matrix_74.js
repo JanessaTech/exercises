@@ -42,3 +42,7 @@ var searchMatrix = function(matrix, target) {
     if (col === -1 || matrix[row][col] !== target) return false
     return true
 };
+
+const matrix = [[1,3]], target = 3
+const res = searchMatrix(matrix, target)
+console.log(res)

@@ -14,4 +14,4 @@ type cases = [
     First<{ 0: 'arrayLike' }>,
   ]
 
-  type First<T extends unknown[]> = T extends [] ? never : T[0]
+  type First<T extends unknown[]> = T extends [infer F, ...infer R] ? F : never

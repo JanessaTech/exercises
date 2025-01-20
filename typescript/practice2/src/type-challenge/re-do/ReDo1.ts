@@ -1,13 +1,19 @@
 import {Expect, Equal} from "../test-utils";
 
 
-
-
 type cases = [
-  Expect<Equal<MyExclude<'a' | 'b' | 'c', 'a'>, 'b' | 'c'>>,
-  Expect<Equal<MyExclude<'a' | 'b' | 'c', 'a' | 'b'>, 'c'>>,
-  Expect<Equal<MyExclude<string | number | (() => void), Function>, string | number>>,
-]
+    Expect<Equal<First<[3, 2, 1]>, 3>>,
+    Expect<Equal<First<[() => 123, { a: string }]>, () => 123>>,
+    Expect<Equal<First<[]>, never>>,
+    Expect<Equal<First<[undefined]>, undefined>>,
+  ]
+  
+  type errors = [
+    // @ts-expect-error
+    First<'notArray'>,
+    // @ts-expect-error
+    First<{ 0: 'arrayLike' }>,
+  ]
 
-
-type MyExclude<T, U> = Exclude<T, U>
+  
+type First<T extends unknown[]> = T extends [infer F, ...infer R] ? F : never

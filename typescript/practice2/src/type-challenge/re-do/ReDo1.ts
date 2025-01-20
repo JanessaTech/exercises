@@ -1,18 +1,16 @@
 import {Expect, Equal} from "../test-utils";
 
+const tesla = ['tesla', 'model 3', 'model X', 'model Y'] as const
+const spaceX = ['FALCON 9', 'FALCON HEAVY', 'DRAGON', 'STARSHIP', 'HUMAN SPACEFLIGHT'] as const
+
 type cases = [
-    Expect<Equal<MyReadonly<Todo1>, Readonly<Todo1>>>,
-  ]
+  Expect<Equal<Length<typeof tesla>, 4>>,
+  Expect<Equal<Length<typeof spaceX>, 5>>,
+  // @ts-expect-error
+  Length<5>,
+  // @ts-expect-error
+  Length<'hello world'>,
+]
 
-interface Todo1 {
-    title: string
-    description: string
-    completed: boolean
-    meta: {
-      author: string
-    }
-  }
 
-type MyReadonly<T> = {
-    readonly [K in keyof T]: T[K]
-}
+type Length<T extends readonly unknown[]> = T['length']

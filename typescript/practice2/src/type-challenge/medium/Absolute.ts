@@ -14,3 +14,6 @@ type cases = [
   ]
 
 type Absolute<T extends string | number | bigint> = `${T}` extends `-${infer N}` ? N : `${T}`
+
+  type num = 1_000_000n
+  type str = `${num}`

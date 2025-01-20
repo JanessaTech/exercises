@@ -22,4 +22,7 @@ type cases = [
     completed: boolean
   }
 
-type MyPick<T, V extends keyof T> = Pick<T, V>
+//type MyPick<T, V extends keyof T> = Pick<T, V>
+type MyPick<T, V extends keyof T> = {
+  [K in keyof T as K extends V ? K : never] : T[K]
+}

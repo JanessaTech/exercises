@@ -10,5 +10,8 @@ type cases = [
   Expect<Equal<MyParameters<typeof baz>, []>>,
 ]
 
-type MyParameters<FUN extends Function> = FUN extends (...args: infer P) => any ? P : never
+type MyParameters<T extends (...args: any[]) => any> =  T extends (...args: infer P) => any
+? P
+: never
+
 

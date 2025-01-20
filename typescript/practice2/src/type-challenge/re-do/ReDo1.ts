@@ -1,10 +1,18 @@
 import {Expect, Equal} from "../test-utils";
 
-
 type cases = [
-    Expect<Equal<Push<[], 1>, [1]>>,
-    Expect<Equal<Push<[1, 2], '3'>, [1, 2, '3']>>,
-    Expect<Equal<Push<['1', 2, '3'], boolean>, ['1', 2, '3', boolean]>>,
+    Expect<Equal<MyReadonly<Todo1>, Readonly<Todo1>>>,
   ]
 
-  type Push<T extends unknown[], U> = [...T, U] 
+interface Todo1 {
+    title: string
+    description: string
+    completed: boolean
+    meta: {
+      author: string
+    }
+  }
+
+type MyReadonly<T> = {
+    readonly [K in keyof T]: T[K]
+}

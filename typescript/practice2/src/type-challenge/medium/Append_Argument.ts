@@ -16,4 +16,4 @@ type cases = [
 // type AppendArgument<T extends Function, A> = T extends (...args: infer P) => infer R 
 // ? (...args: [...P, A]) => R
 // : never
-type AppendArgument<T extends (...args: any) => any, A> = (...args: [...Parameters<T>, A]) => ReturnType<T>
+type AppendArgument<T extends (...args: any) => any, A> = (...args: [...Parameters<T>, x: A]) => ReturnType<T>

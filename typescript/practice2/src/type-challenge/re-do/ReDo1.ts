@@ -1,21 +1,22 @@
 import {Expect, Equal} from "../test-utils";
 
-type cases = [
-    Expect<Equal<AnyOf<[1, 'test', true, [1], { name: 'test' }, { 1: 'test' }]>, true>>,
-    Expect<Equal<AnyOf<[1, '', false, [], {}]>, true>>,
-    Expect<Equal<AnyOf<[0, 'test', false, [], {}]>, true>>,
-    Expect<Equal<AnyOf<[0, '', true, [], {}]>, true>>,
-    Expect<Equal<AnyOf<[0, '', false, [1], {}]>, true>>,
-    Expect<Equal<AnyOf<[0, '', false, [], { name: 'test' }]>, true>>,
-    Expect<Equal<AnyOf<[0, '', false, [], { 1: 'test' }]>, true>>,
-    Expect<Equal<AnyOf<[0, '', false, [], { name: 'test' }, { 1: 'test' }]>, true>>,
-    Expect<Equal<AnyOf<[0, '', false, [], {}, undefined, null]>, false>>,
-    Expect<Equal<AnyOf<[]>, false>>,
-  ]
+type Case1 = AppendArgument<(a: number, b: string) => number, boolean>
+type Result1 = (a: number, b: string, x: boolean) => number
 
-  type falsy = [0, '', false, [], {[P in any]: never}, undefined, null][number]
-  type AnyOf<T extends readonly any[]> = T extends [infer F, ...infer R]
-  ? F extends falsy
-    ? AnyOf<R>
-    : true
-  : false
+type Case2 = AppendArgument<() => void, undefined>
+type Result2 = (x: undefined) => void
+
+type cases = [
+  Expect<Equal<Case1, Result1>>,
+  Expect<Equal<Case2, Result2>>,
+  // @ts-expect-error
+  AppendArgument<unknown, undefined>,
+]
+
+// type AppendArgument<Fn extends Function, A> = Fn extends (...args: infer P) => infer R
+// ? (...args: [...P, x: A]) => R
+// : never
+
+type AppendArgument<Fn extends Function, A> = Fn extends (...args: infer P) => infer R
+? (...args: [...P, x: A]) => R
+: never

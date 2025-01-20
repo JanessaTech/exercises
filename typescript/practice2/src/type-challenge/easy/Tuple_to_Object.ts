@@ -13,7 +13,9 @@ type cases = [
   Expect<Equal<TupleToObject<typeof tupleSymbol>, { [sym1]: typeof sym1, [sym2]: typeof sym2 }>>,
   Expect<Equal<TupleToObject<typeof tupleMix>, { 1: 1, '2': '2', 3: 3, '4': '4', [sym1]: typeof sym1 }>>,
 ]
+// @ts-expect-error
+type error = TupleToObject<[[1, 2], {}]>
 
-type TupleToObject<T extends readonly any[]> = {
-    [K in T[number]] : K
+type TupleToObject<T extends readonly (string | number | symbol)[]> = {
+  [K in T[number]]: K
 }

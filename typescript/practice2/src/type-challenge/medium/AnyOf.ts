@@ -13,10 +13,10 @@ type cases = [
     Expect<Equal<AnyOf<[]>, false>>,
   ]
 
-type ZERO = 0 | '' | false | [] | {[P in any]: never} | undefined | null
-
-type AnyOf<T extends any[]> = T extends [infer first, ...infer rest]
-? first extends ZERO 
-    ? AnyOf<rest>
+  type falsy = [0, '', false, [], {[P in any]: never}, undefined, null][number]
+  
+  type AnyOf<T extends readonly any[]> = T extends [infer F, ...infer R]
+  ? F extends falsy
+    ? AnyOf<R>
     : true
-: false
+  : false

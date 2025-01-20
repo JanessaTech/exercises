@@ -1,19 +1,21 @@
 import {Expect, Equal} from "../test-utils";
 
 type cases = [
-    Expect<Equal<Absolute<0>, '0'>>,
-    Expect<Equal<Absolute<-0>, '0'>>,
-    Expect<Equal<Absolute<10>, '10'>>,
-    Expect<Equal<Absolute<-5>, '5'>>,
-    Expect<Equal<Absolute<'0'>, '0'>>,
-    Expect<Equal<Absolute<'-0'>, '0'>>,
-    Expect<Equal<Absolute<'10'>, '10'>>,
-    Expect<Equal<Absolute<'-5'>, '5'>>,
-    Expect<Equal<Absolute<-1_000_000n>, '1000000'>>,
-    Expect<Equal<Absolute<9_999n>, '9999'>>,
+    Expect<Equal<AnyOf<[1, 'test', true, [1], { name: 'test' }, { 1: 'test' }]>, true>>,
+    Expect<Equal<AnyOf<[1, '', false, [], {}]>, true>>,
+    Expect<Equal<AnyOf<[0, 'test', false, [], {}]>, true>>,
+    Expect<Equal<AnyOf<[0, '', true, [], {}]>, true>>,
+    Expect<Equal<AnyOf<[0, '', false, [1], {}]>, true>>,
+    Expect<Equal<AnyOf<[0, '', false, [], { name: 'test' }]>, true>>,
+    Expect<Equal<AnyOf<[0, '', false, [], { 1: 'test' }]>, true>>,
+    Expect<Equal<AnyOf<[0, '', false, [], { name: 'test' }, { 1: 'test' }]>, true>>,
+    Expect<Equal<AnyOf<[0, '', false, [], {}, undefined, null]>, false>>,
+    Expect<Equal<AnyOf<[]>, false>>,
   ]
 
-  type Absolute<T extends number | string | bigint> = `${T}` extends `-${infer N}` ? N : `${T}`
-
-  type num = 1_000_000n
-  type str = `${num}`
+  type falsy = [0, '', false, [], {[P in any]: never}, undefined, null][number]
+  type AnyOf<T extends readonly any[]> = T extends [infer F, ...infer R]
+  ? F extends falsy
+    ? AnyOf<R>
+    : true
+  : false

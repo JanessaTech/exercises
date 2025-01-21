@@ -33,4 +33,8 @@ type cases = [
     Expect<Equal<MyCapitalize<'z'>, 'Z'>>,
   ]
 
-  type MyCapitalize<S extends string> = S extends `${infer F}${infer R}` ? `${Uppercase<F>}${R}` : ''
+  //type MyCapitalize<S extends string> = S extends `${infer F}${infer R}` ? `${Uppercase<F>}${R}` : ''
+
+  type MyCapitalize<S extends string> = S extends `${infer F}${infer R}`
+? `${Capitalize<string &F>}${R}`
+: ''

@@ -55,7 +55,7 @@ type cases = [
   
   type Expected2 = { readonly a: string } | { readonly b: number }
 
-  type DeepReadonlyArray<T extends unknown, acc extends unknown[] = []> = T extends [infer F, ...infer R]
+  type DeepReadonlyArray<T, acc extends unknown[] = []> = T extends [infer F, ...infer R]
   ? DeepReadonlyArray<R, [...acc, DeepReadonly<F>]> 
   : acc
   

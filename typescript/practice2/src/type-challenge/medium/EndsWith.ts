@@ -9,10 +9,6 @@ type cases = [
     Expect<Equal<EndsWith<'abc', ' '>, false>>,
   ]
 
-  type EndsWith<T extends string, U extends string, acc extends string = ''> = U extends ''
+  type EndsWith<T extends string, U extends string> = T extends `${any}${U}`
   ? true
-  : T extends `${infer rest}${infer end}`
-    ? end extends ''
-        ? `${rest}${acc}` extends U ? true : false
-        : `${end}${acc}` extends U ? true : EndsWith<rest, U, `${end}${acc}`>
-    : never
+  : false

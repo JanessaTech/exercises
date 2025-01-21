@@ -1,71 +1,14 @@
 import {Expect, Equal, Alike} from "../test-utils";
 
 type cases = [
-  Expect<Equal<DeepReadonly<X1>, Expected1>>,
-  Expect<Equal<DeepReadonly<X2>, Expected2>>,
+  Expect<Equal<EndsWith<'abc', 'bc'>, true>>,
+  Expect<Equal<EndsWith<'abc', 'abc'>, true>>,
+  Expect<Equal<EndsWith<'abc', 'd'>, false>>,
+  Expect<Equal<EndsWith<'abc', 'ac'>, false>>,
+  Expect<Equal<EndsWith<'abc', ''>, true>>,
+  Expect<Equal<EndsWith<'abc', ' '>, false>>,
 ]
 
-type X1 = {
-  a: () => 22
-  b: string
-  c: {
-    d: boolean
-    e: {
-      g: {
-        h: {
-          i: true
-          j: 'string'
-        }
-        k: 'hello'
-      }
-      l: [
-        'hi',
-        {
-          m: ['hey']
-        },
-      ]
-    }
-  }
-}
-
-type X2 = { a: string } | { b: number }
-
-type Expected1 = {
-  readonly a: () => 22
-  readonly b: string
-  readonly c: {
-    readonly d: boolean
-    readonly e: {
-      readonly g: {
-        readonly h: {
-          readonly i: true
-          readonly j: 'string'
-        }
-        readonly k: 'hello'
-      }
-      readonly l: readonly [
-        'hi',
-        {
-          readonly m: readonly ['hey']
-        },
-      ]
-    }
-  }
-}
-
-type Expected2 = { readonly a: string } | { readonly b: number }
-
-type DeepArray<T, acc extends unknown[] = []> = T extends [infer F, ...infer R]
-? DeepArray<R, [...acc, DeepReadonly<F>]>
-: acc
-
-
-type DeepReadonly<T> = T extends any
-? T extends {[P in any]: unknown}
-  ? {readonly [K in keyof T]: DeepReadonly<T[K]>}
-  : T extends unknown[]
-    ? readonly [...DeepArray<T>]
-    : T
-: never
-
-type test = DeepReadonly<X1>
+type EndsWith<T extends string, U extends string> = T extends `${any}${U}`
+? true
+: false

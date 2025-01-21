@@ -22,3 +22,5 @@ type cases = [
 //   ? DropChar<R, S>
 //   : `${F}${DropChar<R, S>}`
 // : 
+
+type test = DropChar<' b u t t e r f l y ! ', 't'>

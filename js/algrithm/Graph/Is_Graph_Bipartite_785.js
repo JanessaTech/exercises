@@ -8,51 +8,16 @@ var isBipartite = function(graph) {
     return res
 };
 
-function nextColor(color) {
-    if (color === 2) return 1
-    return color + 1
-}
-
-function bfs_solution(graph) {
-    const queue = []
-    const n = graph.length
-    const visited = Array(n).fill(0)
-    let color = 1
-    for (let i = 0; i < n; i++) {
-        if (!visited[i]) {
-            queue.push([i, color])
-            visited[i] = color
-        }
-
-        while (queue.length) {
-            const [cur, color] = queue.shift()
-            for (let next of graph[cur]) {
-                if (!visited[next]) {
-                    const newColor = nextColor(color)
-                    queue.push([next, newColor])
-                    visited[next] = newColor
-                } else {
-                    if (color === visited[next]) return false
-                }
-            }
-        }
-    }
-
-    return true
-}
-
 function dfs_solution(graph) {
     const n = graph.length
     const visited = Array(n).fill(0)
     for (let i = 0; i < n; i++) {
         if (visited[i] === 0) {
             if (!dfs(graph, i, visited, 1)) return false
-        } 
+        }
     }
     return true
 }
-
-
 
 function dfs(graph, i, visited, color) {
     visited[i] = color
@@ -62,5 +27,32 @@ function dfs(graph, i, visited, color) {
             if (!dfs(graph, next, visited, -1 * color)) return false
         }
     }
+    return true
+}
+
+function bfs_solution(graph) {
+    const n = graph.length
+    const visited = Array(n).fill(0)
+    
+    for (let i = 0; i < n; i++) {
+        const queue = []
+        if (visited[i] === 0) {
+            queue.push([i, 1])
+            visited[i]= 1
+        }
+
+        while (queue.length) {
+            const [cur, color] = queue.shift()
+            for (let next of graph[cur]) {
+                if (visited[next] === color) return false
+                if (visited[next] === 0) {
+                    queue.push([next, -1 * color])
+                    visited[next] = -1 * color
+                }
+            }
+        }
+
+    }
+
     return true
 }

@@ -13,9 +13,15 @@ type cases = [
 
   type Flatten<T extends unknown[], acc extends unknown[] = []> = T extends [infer F, ...infer R]
   ? F extends unknown[]
-    ? Flatten<R, [...acc, ...Flatten<F, []>]>
+    ? Flatten<[...F, ...R], acc>
     : Flatten<R, [...acc, F]>
   : acc
+
+  // type Flatten<T extends unknown[], acc extends unknown[] = []> = T extends [infer F, ...infer R]
+  // ? F extends unknown[]
+  //   ? Flatten<R, [...acc, ...Flatten<F, []>]>
+  //   : Flatten<R, [...acc, F]>
+  // : acc
 
   // type Flatten<T extends unknown[]> = T extends [infer F, ... infer E]
   // ? F extends unknown[]

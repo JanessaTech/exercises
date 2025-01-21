@@ -1,18 +1,70 @@
 import {Expect, Equal, Alike} from "../test-utils";
 
 type cases = [
-  Expect<Equal<Chunk<[], 1>, []>>,
-  Expect<Equal<Chunk<[1, 2, 3], 1>, [[1], [2], [3]]>>,
-  Expect<Equal<Chunk<[1, 2, 3], 2>, [[1, 2], [3]]>>,
-  Expect<Equal<Chunk<[1, 2, 3, 4], 2>, [[1, 2], [3, 4]]>>,
-  Expect<Equal<Chunk<[1, 2, 3, 4], 5>, [[1, 2, 3, 4]]>>,
-  Expect<Equal<Chunk<[1, true, 2, false], 2>, [[1, true], [2, false]]>>,
+  Expect<Equal<DeepReadonly<X1>, Expected1>>,
+  Expect<Equal<DeepReadonly<X2>, Expected2>>,
 ]
 
-type Chunk<T extends unknown[], N, acc extends unknown[] = [], sub extends unknown[] = []> = T extends [infer F, ...infer R]
-? sub['length'] extends N
-  ? Chunk<R, N, [...acc, sub], [F]>
-  : Chunk<R, N, acc, [...sub, F]>
-: sub extends []
-  ? acc
-  : [...acc, sub]
+type X1 = {
+  a: () => 22
+  b: string
+  c: {
+    d: boolean
+    e: {
+      g: {
+        h: {
+          i: true
+          j: 'string'
+        }
+        k: 'hello'
+      }
+      l: [
+        'hi',
+        {
+          m: ['hey']
+        },
+      ]
+    }
+  }
+}
+
+type X2 = { a: string } | { b: number }
+
+type Expected1 = {
+  readonly a: () => 22
+  readonly b: string
+  readonly c: {
+    readonly d: boolean
+    readonly e: {
+      readonly g: {
+        readonly h: {
+          readonly i: true
+          readonly j: 'string'
+        }
+        readonly k: 'hello'
+      }
+      readonly l: readonly [
+        'hi',
+        {
+          readonly m: readonly ['hey']
+        },
+      ]
+    }
+  }
+}
+
+type Expected2 = { readonly a: string } | { readonly b: number }
+
+type DeepReadonlyArray<T extends unknown, acc extends unknown[] = []> = T extends [infer F, ...infer R]
+? DeepReadonlyArray<R, [...acc, DeepReadonly<F>]> 
+: acc
+
+type DeepReadonly<T> = T extends any
+? T extends {[P in any]: unknown}
+  ? { readonly [K in keyof T] : DeepReadonly<T[K]> }
+  : T extends unknown[]
+    ? readonly [...DeepReadonlyArray<T>]
+    : T
+: never
+
+type test = DeepReadonly<X1>

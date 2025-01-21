@@ -55,15 +55,17 @@ type cases = [
   
   type Expected2 = { readonly a: string } | { readonly b: number }
 
-type Flatten<T> = T extends Array<infer I> ? I : T
-type DeepReadonly<T> = T extends any
-? T extends {[P in any]: unknown}
-  ? { readonly [K in keyof T]: DeepReadonly<T[K]>}
-  : T extends unknown[]
-    ? T extends [infer first, ... infer rest]
-        ? rest['length'] extends 0
-            ? readonly [first]
-            : readonly [first , DeepReadonly<Flatten<rest>>]
-        : never
-    : T
-: never
+  type DeepReadonlyArray<T extends unknown, acc extends unknown[] = []> = T extends [infer F, ...infer R]
+  ? DeepReadonlyArray<R, [...acc, DeepReadonly<F>]> 
+  : acc
+  
+  type DeepReadonly<T> = T extends any
+  ? T extends {[P in any]: unknown}
+    ? { readonly [K in keyof T] : DeepReadonly<T[K]> }
+    : T extends unknown[]
+      ? readonly [...DeepReadonlyArray<T>]
+      : T
+  : never
+  
+  // for test
+  type test = DeepReadonly<X1>

@@ -1,52 +1,18 @@
 import {Expect, Equal, Alike} from "../test-utils";
 
-declare const a: Chainable
-
-const result1 = a
-  .option('foo', 123)
-  .option('bar', { value: 'Hello World' })
-  .option('name', 'type-challenges')
-  .get()
-
-const result2 = a
-  .option('name', 'another name')
-  // @ts-expect-error
-  .option('name', 'last name')
-  .get()
-
-const result3 = a
-  .option('name', 'another name')
-  // @ts-expect-error
-  .option('name', 123)
-  .get()
-
 type cases = [
-  Expect<Alike<typeof result1, Expected1>>,
-  Expect<Alike<typeof result2, Expected2>>,
-  Expect<Alike<typeof result3, Expected3>>,
+  Expect<Equal<Chunk<[], 1>, []>>,
+  Expect<Equal<Chunk<[1, 2, 3], 1>, [[1], [2], [3]]>>,
+  Expect<Equal<Chunk<[1, 2, 3], 2>, [[1, 2], [3]]>>,
+  Expect<Equal<Chunk<[1, 2, 3, 4], 2>, [[1, 2], [3, 4]]>>,
+  Expect<Equal<Chunk<[1, 2, 3, 4], 5>, [[1, 2, 3, 4]]>>,
+  Expect<Equal<Chunk<[1, true, 2, false], 2>, [[1, true], [2, false]]>>,
 ]
 
-type Expected1 = {
-  foo: number
-  bar: {
-    value: string
-  }
-  name: string
-}
-
-type Expected2 = {
-  name: string
-}
-
-type Expected3 = {
-  name: number
-}
-
-type Chainable<O = {}> = {
-  option<K extends string, V>(
-    key: K extends keyof O
-      ? never
-      : K, 
-    value: V): Chainable<Omit<O, K> & {[P in K] : V}>
-  get(): O
-}
+type Chunk<T extends unknown[], N, acc extends unknown[] = [], sub extends unknown[] = []> = T extends [infer F, ...infer R]
+? sub['length'] extends N
+  ? Chunk<R, N, [...acc, sub], [F]>
+  : Chunk<R, N, acc, [...sub, F]>
+: sub extends []
+  ? acc
+  : [...acc, sub]

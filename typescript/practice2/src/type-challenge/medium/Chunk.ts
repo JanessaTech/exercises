@@ -10,10 +10,10 @@ type cases = [
     Expect<Equal<Chunk<[1, true, 2, false], 2>, [[1, true], [2, false]]>>,
   ]
 
-type Chunk<T, N, acc extends unknown[] = [], TMP extends unknown[] = []> = T extends [infer first, ... infer rest]
-? TMP['length'] extends N
-  ? Chunk<[first, ...rest], N, [...acc, TMP], []>
-  : Chunk<rest, N, acc, [...TMP, first]>
-: TMP extends []
-  ? acc
-  : [...acc, TMP]
+  type Chunk<T extends unknown[], N, acc extends unknown[] = [], sub extends unknown[] = []> = T extends [infer F, ...infer R]
+  ? sub['length'] extends N
+    ? Chunk<R, N, [...acc, sub], [F]>
+    : Chunk<R, N, acc, [...sub, F]>
+  : sub extends []
+    ? acc
+    : [...acc, sub]

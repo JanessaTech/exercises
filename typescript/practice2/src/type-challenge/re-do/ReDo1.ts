@@ -27,4 +27,8 @@ type Mutable<T extends {[P in keyof any]: any}> = {
   -readonly [P in keyof T]: T[P]
 }
 
-type M = Readonly<List>
+type M<T extends {[P in keyof any]: any}> = {
+  [P in keyof T]: T[P]
+}
+
+type test = M<List>

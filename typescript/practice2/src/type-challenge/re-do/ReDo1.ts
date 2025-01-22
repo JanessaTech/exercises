@@ -1,13 +1,15 @@
 import {Expect, Equal, Alike, NotEqual} from "../test-utils";
 
 type cases = [
-  Expect<Equal<Last<[]>, never>>,
-  Expect<Equal<Last<[2]>, 2>>,
-  Expect<Equal<Last<[3, 2, 1]>, 1>>,
-  Expect<Equal<Last<[() => 123, { a: string }]>, { a: string }>>,
+  Expect<Equal<LastIndexOf<[1, 2, 3, 2, 1], 2>, 3>>,
+  Expect<Equal<LastIndexOf<[2, 6, 3, 8, 4, 1, 7, 3, 9], 3>, 7>>,
+  Expect<Equal<LastIndexOf<[0, 0, 0], 2>, -1>>,
+  Expect<Equal<LastIndexOf<[string, 2, number, 'a', number, 1], number>, 4>>,
+  Expect<Equal<LastIndexOf<[string, any, 1, number, 'a', any, 1], any>, 5>>,
 ]
 
-type Last<T extends any[]> = T extends [...infer R, infer L]
-? L
-: never
-
+type LastIndexOf<T, U> = T extends [...infer R, infer L]
+? Equal<L, U> extends true
+  ? R['length']
+  : LastIndexOf<R, U>
+: -1

@@ -18,7 +18,7 @@ type cases = [
 
 type IsUnion<T, C = T> = [T] extends [never]
 ? false
-: T extends unknown 
+: T extends any 
     ? [C] extends [T] 
         ? false 
         : true 

@@ -24,4 +24,7 @@ interface Todo1 {
   ]
   
 
-  type Mutable<T extends readonly unknown[] | {[p in any] : unknown}> = {-readonly [P in keyof T]: T[P]}
+  //type Mutable<T extends readonly unknown[] | {[p in any] : unknown}> = {-readonly [P in keyof T]: T[P]}
+  type Mutable<T extends {[P in keyof any]: any}> = {
+    -readonly [P in keyof T]: T[P]
+  }

@@ -1,20 +1,30 @@
 import {Expect, Equal, Alike, NotEqual} from "../test-utils";
 
+interface Todo1 {
+  title: string
+  description: string
+  completed: boolean
+  meta: {
+    author: string
+  }
+}
+
+type List = [1, 2, 3]
+
 type cases = [
-  Expect<Equal<MinusOne<1>, 0>>,
-  Expect<Equal<MinusOne<55>, 54>>,
-  Expect<Equal<MinusOne<3>, 2>>,
-  Expect<Equal<MinusOne<100>, 99>>,
-  Expect<Equal<MinusOne<1101>, 1100>>,
-  Expect<Equal<MinusOne<9_007_199_254_740_992>, 9_007_199_254_740_991>>,
+  Expect<Equal<Mutable<Readonly<Todo1>>, Todo1>>,
+  Expect<Equal<Mutable<Readonly<List>>, List>>,
 ]
 
-type CreateArray<T extends number, R extends unknown[] = []> = T extends R['length']
-? R
-: CreateArray<T, [...R, unknown]>
+type errors = [
+  // @ts-expect-error
+  Mutable<'string'>,
+  // @ts-expect-error
+  Mutable<0>,
+]
 
-type two = CreateArray<2>['length']
+type Mutable<T extends {[P in keyof any]: any}> = {
+  -readonly [P in keyof T]: T[P]
+}
 
-type MinusOne<T extends number> = CreateArray<T> extends [...infer R, infer L]
-? R['length']
-: never
+type M = Readonly<List>

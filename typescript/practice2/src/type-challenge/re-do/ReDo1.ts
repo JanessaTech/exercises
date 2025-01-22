@@ -1,17 +1,23 @@
 import {Expect, Equal, Alike, NotEqual} from "../test-utils";
 
 type cases = [
-  Expect<Equal<Join<['a', 'p', 'p', 'l', 'e'], '-'>, 'a-p-p-l-e'>>,
-  Expect<Equal<Join<['Hello', 'World'], ' '>, 'Hello World'>>,
-  Expect<Equal<Join<['2', '2', '2'], 1>, '21212'>>,
-  Expect<Equal<Join<['o'], 'u'>, 'o'>>,
-  Expect<Equal<Join<[], 'u'>, ''>>,
-  Expect<Equal<Join<['1', '1', '1']>, '1,1,1'>>,
+  Expect<Equal<KebabCase<'FooBarBaz'>, 'foo-bar-baz'>>,
+  Expect<Equal<KebabCase<'fooBarBaz'>, 'foo-bar-baz'>>,
+  Expect<Equal<KebabCase<'foo-bar'>, 'foo-bar'>>,
+  Expect<Equal<KebabCase<'foo_bar'>, 'foo_bar'>>,
+  Expect<Equal<KebabCase<'Foo-Bar'>, 'foo--bar'>>,
+  Expect<Equal<KebabCase<'ABC'>, 'a-b-c'>>,
+  Expect<Equal<KebabCase<'-'>, '-'>>,
+  Expect<Equal<KebabCase<''>, ''>>,
+  Expect<Equal<KebabCase<'😎'>, '😎'>>,
 ]
 
-type Join<T, U extends string | number = ',', acc extends string = ''> = T extends [infer F extends string, ...infer R]
-? R extends []
-  ? Join<R, U, `${acc}${F}`>
-  : Join<R, U, `${acc}${F}${U}`>
+type UPPERCASE = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'G' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z'
+type KebabCase<S, acc extends string = ''> = S extends `${infer F}${infer R}`
+? F extends UPPERCASE
+  ? acc extends ''
+    ? KebabCase<R, `${Lowercase<F>}`>
+    : KebabCase<R, `${acc}-${Lowercase<F>}`>
+  : KebabCase<R, `${acc}${F}`>
 : acc
 

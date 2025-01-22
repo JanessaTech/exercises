@@ -1,12 +1,33 @@
 import {Expect, Equal, Alike, NotEqual} from "../test-utils";
 
 type cases = [
-  Expect<Equal<LengthOfString<''>, 0>>,
-  Expect<Equal<LengthOfString<'kumiko'>, 6>>,
-  Expect<Equal<LengthOfString<'reina'>, 5>>,
-  Expect<Equal<LengthOfString<'Sound! Euphonium'>, 16>>,
+  Expect<Equal<MapTypes<{ stringToArray: string }, { mapFrom: string, mapTo: [] }>, { stringToArray: [] }>>,
+  Expect<Equal<MapTypes<{ stringToNumber: string }, { mapFrom: string, mapTo: number }>, { stringToNumber: number }>>,
+  Expect<Equal<MapTypes<{ stringToNumber: string, skipParsingMe: boolean }, { mapFrom: string, mapTo: number }>, { stringToNumber: number, skipParsingMe: boolean }>>,
+  Expect<Equal<MapTypes<{ date: string }, { mapFrom: string, mapTo: Date } | { mapFrom: string, mapTo: null }>, { date: null | Date }>>,
+  Expect<Equal<MapTypes<{ date: string }, { mapFrom: string, mapTo: Date | null }>, { date: null | Date }>>,
+  Expect<Equal<MapTypes<{ fields: Record<string, boolean> }, { mapFrom: Record<string, boolean>, mapTo: string[] }>, { fields: string[] }>>,
+  Expect<Equal<MapTypes<{ name: string }, { mapFrom: boolean, mapTo: never }>, { name: string }>>,
+  Expect<Equal<MapTypes<{ name: string, date: Date }, { mapFrom: string, mapTo: boolean } | { mapFrom: Date, mapTo: string }>, { name: boolean, date: string }>>,
 ]
 
-type LengthOfString<S extends string, acc extends unknown[] = []> = S extends `${infer F}${infer R}`
-? LengthOfString<R, [...acc, F]>
-: acc['length']
+type MapTypes<T, R extends {[P in 'mapFrom' | 'mapTo']: unknown}> = {
+  [P in keyof T]: T[P] extends R['mapFrom']
+    ? R extends {mapFrom: T[P]}
+      ? R['mapTo']
+      : never
+    : T[P]
+}
+
+
+// type MapTypes<T, R extends {[P in 'mapFrom' | 'mapTo']: unknown}> = {
+//   [P in keyof T]: T[P] extends R['mapFrom']
+//   ? R extends any
+//     ? R['mapFrom'] extends T[P]
+//       ? R['mapTo']
+//       : never
+//     : never
+//   : T[P]
+// }
+
+type test = MapTypes<{ name: string, date: Date }, { mapFrom: string, mapTo: boolean } | { mapFrom: Date, mapTo: string }>

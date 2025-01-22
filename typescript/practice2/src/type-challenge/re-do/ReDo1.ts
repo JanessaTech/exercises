@@ -1,29 +1,20 @@
 import {Expect, Equal, Alike, NotEqual} from "../test-utils";
 
-type Foo = {
-  a: number
-  b: string
-}
-type Bar = {
-  b: number
-  c: boolean
-}
-
 type cases = [
-  Expect<Equal<Merge<Foo, Bar>, {
-    a: number
-    b: number
-    c: boolean
-  }>>,
+  Expect<Equal<MinusOne<1>, 0>>,
+  Expect<Equal<MinusOne<55>, 54>>,
+  Expect<Equal<MinusOne<3>, 2>>,
+  Expect<Equal<MinusOne<100>, 99>>,
+  Expect<Equal<MinusOne<1101>, 1100>>,
+  Expect<Equal<MinusOne<9_007_199_254_740_992>, 9_007_199_254_740_991>>,
 ]
 
+type CreateArray<T extends number, R extends unknown[] = []> = T extends R['length']
+? R
+: CreateArray<T, [...R, unknown]>
 
-type Merge<F, S extends {[K in any]: any}> = {
-  [P in keyof (F & S)] : P extends keyof F
-    ? P extends keyof S
-      ? S[P]
-      : F[P]
-    : S[P]
-}
+type two = CreateArray<2>['length']
 
-type test = Merge<Foo, Bar>
+type MinusOne<T extends number> = CreateArray<T> extends [...infer R, infer L]
+? R['length']
+: never

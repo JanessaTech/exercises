@@ -1,18 +1,13 @@
-import {Expect, Equal, Alike} from "../test-utils";
+import {Expect, Equal, Alike, NotEqual} from "../test-utils";
 
 type cases = [
-  Expect<Equal<Flatten<[]>, []>>,
-  Expect<Equal<Flatten<[1, 2, 3, 4]>, [1, 2, 3, 4]>>,
-  Expect<Equal<Flatten<[1, [2]]>, [1, 2]>>,
-  Expect<Equal<Flatten<[1, 2, [3, 4], [[[5]]]]>, [1, 2, 3, 4, 5]>>,
-  Expect<Equal<Flatten<[{ foo: 'bar', 2: 10 }, 'foobar']>, [{ foo: 'bar', 2: 10 }, 'foobar']>>,
+  Expect<Equal<IsNever<never>, true>>,
+  Expect<Equal<IsNever<never | string>, false>>,
+  Expect<Equal<IsNever<''>, false>>,
+  Expect<Equal<IsNever<undefined>, false>>,
+  Expect<Equal<IsNever<null>, false>>,
+  Expect<Equal<IsNever<[]>, false>>,
+  Expect<Equal<IsNever<{}>, false>>,
 ]
 
-// @ts-expect-error
-type error = Flatten<'1'>
-
-type Flatten<T extends unknown[], acc extends unknown[] = []> = T extends [infer F, ...infer R]
-? F extends unknown[]
-  ? Flatten<[...F, ...R], acc>
-  : Flatten<R, [...acc, F]>
-: acc
+type IsNever<T> = [T] extends [never] ? true : false

@@ -43,3 +43,14 @@ interface User {
   // type PartialByKeys<T, K extends keyof T = keyof T> = Merge<{
   //   [P in K] ?: T[P]
   // } & Omit<T, K>>
+
+
+  // type M<T> = {
+  //   [P in keyof T]: T[P]
+  // }
+  
+  // type PartialByKeys<T, K extends keyof T = keyof T> = M<{
+  //   [P in keyof T as P extends K ? P : never]?: T[P]
+  // } & {
+  //   [P in keyof T as P extends K ? never: P]: T[P]
+  // }>

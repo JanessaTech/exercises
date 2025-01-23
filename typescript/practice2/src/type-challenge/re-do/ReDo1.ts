@@ -1,18 +1,39 @@
 import {Expect, Equal, Alike, NotEqual} from "../test-utils";
 
-interface Model {
+interface User {
   name: string
-  count: number
-  isReadonly: boolean
-  isEnable: boolean
+  age: number
+  address: string
+}
+
+interface UserPartialName {
+  name?: string
+  age: number
+  address: string
+}
+
+interface UserPartialNameAndAge {
+  name?: string
+  age?: number
+  address: string
 }
 
 type cases = [
-  Expect<Equal<OmitByType<Model, boolean>, { name: string, count: number }>>,
-  Expect<Equal<OmitByType<Model, string>, { count: number, isReadonly: boolean, isEnable: boolean }>>,
-  Expect<Equal<OmitByType<Model, number>, { name: string, isReadonly: boolean, isEnable: boolean }>>,
+  Expect<Equal<PartialByKeys<User, 'name'>, UserPartialName>>,
+  Expect<Equal<PartialByKeys<User, 'name' | 'age'>, UserPartialNameAndAge>>,
+  Expect<Equal<PartialByKeys<User>, Partial<User>>>,
+  // @ts-expect-error
+  Expect<Equal<PartialByKeys<User, 'name' | 'unknown'>, UserPartialName>>,
 ]
 
-type OmitByType<T, U> = {
-  [P in keyof T as T[P] extends U ? never : P]: T[P]
+type M<T> = {
+  [P in keyof T]: T[P]
 }
+
+type PartialByKeys<T, K extends keyof T = keyof T> = M<{
+  [P in keyof T as P extends K ? P : never]?: T[P]
+} & {
+  [P in keyof T as P extends K ? never: P]: T[P]
+}>
+
+type test1 = PartialByKeys<User>

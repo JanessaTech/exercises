@@ -1,33 +1,16 @@
 import {Expect, Equal, Alike, NotEqual} from "../test-utils";
 
 type cases = [
-  Expect<Alike<MyReadonly2<Todo1>, Readonly<Todo1>>>,
-  Expect<Alike<MyReadonly2<Todo1, 'title' | 'description'>, Expected>>,
-  Expect<Alike<MyReadonly2<Todo2, 'title' | 'description'>, Expected>>,
-  Expect<Alike<MyReadonly2<Todo2, 'description' >, Expected>>,
+  Expect<Equal<ReplaceFirst<[1, 2, 3], 3, 4>, [1, 2, 4]>>,
+  Expect<Equal<ReplaceFirst<['A', 'B', 'C'], 'C', 'D'>, ['A', 'B', 'D']>>,
+  Expect<Equal<ReplaceFirst<[true, true, true], true, false>, [false, true, true]>>,
+  Expect<Equal<ReplaceFirst<[string, boolean, number], boolean, string>, [string, string, number]>>,
+  Expect<Equal<ReplaceFirst<[1, 'two', 3], string, 2>, [1, 2, 3]>>,
+  Expect<Equal<ReplaceFirst<['six', 'eight', 'ten'], 'eleven', 'twelve'>, ['six', 'eight', 'ten']>>,
 ]
 
-// @ts-expect-error
-type error = MyReadonly2<Todo1, 'title' | 'invalid'>
-
-interface Todo1 {
-  title: string
-  description?: string
-  completed: boolean
-}
-
-interface Todo2 {
-  readonly title: string
-  description?: string
-  completed: boolean
-}
-
-interface Expected {
-  readonly title: string
-  readonly description?: string
-  completed: boolean
-}
-
-type MyReadonly2<T, K extends keyof T = keyof T> = {
-  readonly [P in K]: T[P]
-} & Omit<T, K>
+type ReplaceFirst<T extends readonly unknown[], S, R, acc extends unknown[] = []> = T extends [infer F, ...infer rest]
+? F extends S
+  ? ReplaceFirst<[], S, R, [...acc, R, ...rest]>
+  : ReplaceFirst<rest, S, R, [...acc, F]>
+: acc

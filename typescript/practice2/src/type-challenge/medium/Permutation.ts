@@ -26,3 +26,12 @@ type cases = [
 // : T extends any
 //   ? Merge<T, Permutation<Exclude<all, T>>>
 //   : never
+
+
+type M<T, acc extends unknown[]= [], A = T> = [T] extends [never]
+? acc
+: T extends any
+  ? M<Exclude<A, T>, [...acc, T]>
+  : never
+
+type m = M<boolean>

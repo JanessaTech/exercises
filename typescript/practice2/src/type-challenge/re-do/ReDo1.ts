@@ -1,15 +1,33 @@
 import {Expect, Equal, Alike, NotEqual} from "../test-utils";
 
 type cases = [
-  Expect<Equal<PublicType<{ a: number }>, { a: number }>>,
-  Expect<Equal<PublicType<{ _b: string | bigint }>, {}>>,
-  Expect<Equal<PublicType<{ readonly c?: number }>, { readonly c?: number }>>,
-  Expect<Equal<PublicType<{ d: string, _e: string }>, { d: string }>>,
-  Expect<Equal<PublicType<{ _f: () => bigint[] }>, {}>>,
-  Expect<Equal<PublicType<{ g: '_g' }>, { g: '_g' }>>,
-  Expect<Equal<PublicType<{ __h: number, i: unknown }>, { i: unknown }>>,
+  Expect<Alike<MyReadonly2<Todo1>, Readonly<Todo1>>>,
+  Expect<Alike<MyReadonly2<Todo1, 'title' | 'description'>, Expected>>,
+  Expect<Alike<MyReadonly2<Todo2, 'title' | 'description'>, Expected>>,
+  Expect<Alike<MyReadonly2<Todo2, 'description' >, Expected>>,
 ]
 
-type PublicType<T extends object> = {
-  [P in keyof T as P extends `_${any}` ? never : P]: T[P]
+// @ts-expect-error
+type error = MyReadonly2<Todo1, 'title' | 'invalid'>
+
+interface Todo1 {
+  title: string
+  description?: string
+  completed: boolean
 }
+
+interface Todo2 {
+  readonly title: string
+  description?: string
+  completed: boolean
+}
+
+interface Expected {
+  readonly title: string
+  readonly description?: string
+  completed: boolean
+}
+
+type MyReadonly2<T, K extends keyof T = keyof T> = {
+  readonly [P in K]: T[P]
+} & Omit<T, K>

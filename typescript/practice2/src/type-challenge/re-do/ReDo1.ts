@@ -1,25 +1,16 @@
 import {Expect, Equal, Alike, NotEqual} from "../test-utils";
 
+
+
+
+
+
 type cases = [
-  Expect<Equal<Permutation<'A'>, ['A']>>,
-  Expect<Equal<Permutation<'A' | 'B' | 'C'>, ['A', 'B', 'C'] | ['A', 'C', 'B'] | ['B', 'A', 'C'] | ['B', 'C', 'A'] | ['C', 'A', 'B'] | ['C', 'B', 'A']>>,
-  Expect<Equal<Permutation<'B' | 'A' | 'C'>, ['A', 'B', 'C'] | ['A', 'C', 'B'] | ['B', 'A', 'C'] | ['B', 'C', 'A'] | ['C', 'A', 'B'] | ['C', 'B', 'A']>>,
-  Expect<Equal<Permutation<boolean>, [false, true] | [true, false]>>,
-  Expect<Equal<Permutation<never>, []>>,
+  Expect<Equal<Pop<[3, 2, 1]>, [3, 2]>>,
+  Expect<Equal<Pop<['a', 'b', 'c', 'd']>, ['a', 'b', 'c']>>,
+  Expect<Equal<Pop<[]>, []>>,
 ]
 
-type Permutation<T, path extends unknown[] = [], acc = never, A = T> = [T] extends [never]
-? acc | path
-:  T extends any
-  ? Permutation<Exclude<A, T>, [...path, T], acc>
-  : never
-
-type test = Permutation<never>
-
-type M<T, acc extends unknown[]= [], A = T> = [T] extends [never]
-? acc
-: T extends any
-  ? M<Exclude<A, T>, [...acc, T]>
-  : never
-
-type m = M<boolean>
+type Pop<T extends any[]> = T extends [...infer R, infer L]
+? R
+: []

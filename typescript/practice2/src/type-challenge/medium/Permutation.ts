@@ -8,13 +8,13 @@ type cases = [
     Expect<Equal<Permutation<never>, []>>,
   ]
 
-  type Permutation<A, acc = never, path extends unknown[] = [], T = A> = [T] extends [never]
-  ? path['length'] extends 0
-    ? []
-    : acc | path
-  : T extends any
-    ? Permutation<Exclude<A, T>, acc, [...path, T]>
-    : never
+  // type Permutation<A, acc = never, path extends unknown[] = [], T = A> = [T] extends [never]
+  // ? path['length'] extends 0
+  //   ? []
+  //   : acc | path
+  // : T extends any
+  //   ? Permutation<Exclude<A, T>, acc, [...path, T]>
+  //   : never
 
 
 // type Merge<E, T extends unknown[]> = T extends any
@@ -35,3 +35,9 @@ type M<T, acc extends unknown[]= [], A = T> = [T] extends [never]
   : never
 
 type m = M<boolean>
+
+type Permutation<A, acc = never, path extends unknown[] = [], T = A> = [T] extends [never]
+  ? acc | path
+  : T extends any
+    ? Permutation<Exclude<A, T>, acc, [...path, T]>
+    : never

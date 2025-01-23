@@ -1,42 +1,18 @@
 import {Expect, Equal, Alike, NotEqual} from "../test-utils";
 
+interface Model {
+  name: string
+  count: number
+  isReadonly: boolean
+  isEnable: boolean
+}
+
 type cases = [
-  Expect<Equal<Expected1, MyOmit<Todo, 'description'>>>,
-  Expect<Equal<Expected2, MyOmit<Todo, 'description' | 'completed'>>>,
-  Expect<Equal<Expected3, MyOmit<Todo1, 'description' | 'completed'>>>,
+  Expect<Equal<OmitByType<Model, boolean>, { name: string, count: number }>>,
+  Expect<Equal<OmitByType<Model, string>, { count: number, isReadonly: boolean, isEnable: boolean }>>,
+  Expect<Equal<OmitByType<Model, number>, { name: string, isReadonly: boolean, isEnable: boolean }>>,
 ]
 
-// @ts-expect-error
-type error = MyOmit<Todo, 'description' | 'invalid'>
-
-interface Todo {
-  title: string
-  description: string
-  completed: boolean
+type OmitByType<T, U> = {
+  [P in keyof T as T[P] extends U ? never : P]: T[P]
 }
-
-interface Todo1 {
-  readonly title: string
-  description: string
-  completed: boolean
-}
-
-interface Expected1 {
-  title: string
-  completed: boolean
-}
-
-interface Expected2 {
-  title: string
-}
-
-interface Expected3 {
-  readonly title: string
-}
-
-
-type MyOmit<T, K extends keyof T> = {
-  [P in keyof T as P extends K ? never : P]: T[P]
-}
-
-type test = MyOmit<Todo1, 'description' | 'completed'>

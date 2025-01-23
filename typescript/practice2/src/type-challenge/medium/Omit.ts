@@ -35,3 +35,7 @@ type cases = [
   }
 
   type MyOmit<T, O extends keyof T> = Omit<T, O>
+
+  // type MyOmit<T, K extends keyof T> = {
+  //   [P in keyof T as P extends K ? never : P]: T[P]
+  // }

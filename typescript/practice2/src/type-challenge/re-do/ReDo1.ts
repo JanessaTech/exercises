@@ -1,8 +1,25 @@
 import {Expect, Equal, Alike, NotEqual} from "../test-utils";
 
+interface Cat {
+  type: 'cat'
+  breeds: 'Abyssinian' | 'Shorthair' | 'Curl' | 'Bengal'
+}
+
+interface Dog {
+  type: 'dog'
+  breeds: 'Hound' | 'Brittany' | 'Bulldog' | 'Boxer'
+  color: 'brown' | 'white' | 'black'
+}
+
+type Animal = Cat | Dog
+
 type cases = [
-  Expect<Equal<TupleToUnion<[123, '456', true]>, 123 | '456' | true>>,
-  Expect<Equal<TupleToUnion<[123]>, 123>>,
+  Expect<Equal<LookUp<Animal, 'dog'>, Dog>>,
+  Expect<Equal<LookUp<Animal, 'cat'>, Cat>>,
 ]
 
-type TupleToUnion<T extends unknown[]> = T[number]
+type LookUp<U extends {type : string}, T> = U extends any
+? U['type'] extends T
+  ? U
+  : never
+: never

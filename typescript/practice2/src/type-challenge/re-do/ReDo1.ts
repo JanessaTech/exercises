@@ -1,22 +1,24 @@
 import {Expect, Equal, Alike, NotEqual} from "../test-utils";
 
 type cases = [
-  Expect<Equal<Trim<'str'>, 'str'>>,
-  Expect<Equal<Trim<' str'>, 'str'>>,
-  Expect<Equal<Trim<'     str'>, 'str'>>,
-  Expect<Equal<Trim<'str   '>, 'str'>>,
-  Expect<Equal<Trim<'     str     '>, 'str'>>,
-  Expect<Equal<Trim<'   \n\t foo bar \t'>, 'foo bar'>>,
-  Expect<Equal<Trim<''>, ''>>,
-  Expect<Equal<Trim<' \n\t '>, ''>>,
+  Expect<Equal<Trunc<0.1>, '0'>>,
+  Expect<Equal<Trunc<0.2>, '0'>>,
+  Expect<Equal<Trunc<1.234>, '1'>>,
+  Expect<Equal<Trunc<12.345>, '12'>>,
+  Expect<Equal<Trunc<-5.1>, '-5'>>,
+  Expect<Equal<Trunc<'.3'>, '0'>>,
+  Expect<Equal<Trunc<'1.234'>, '1'>>,
+  Expect<Equal<Trunc<'-.3'>, '-0'>>,
+  Expect<Equal<Trunc<'-10.234'>, '-10'>>,
+  Expect<Equal<Trunc<10>, '10'>>,
 ]
 
-type TrimRight<S> = S extends `${infer R}${' ' | '\n' | '\t'}`
-? TrimRight<R>
-: S
+type Trunc<T extends string | number> = `${T}` extends `${infer L}${'.'}${infer R}`
+? L extends '-'
+  ? '-0'
+  : L extends ''
+    ? '0'
+    : L
+: `${T}`
 
-type TrimLeft<S> =  S extends `${' ' | '\n' | '\t'}${infer R}`
-? TrimLeft<R>
-: S
-
-type Trim<S extends string> = TrimLeft<TrimRight<S>>
+  type test = Trunc<'-.3'>

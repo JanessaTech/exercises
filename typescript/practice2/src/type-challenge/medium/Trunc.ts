@@ -33,3 +33,23 @@ type Trunc<T extends number | string> = Tr<`${T}`>
 //     ? '0'
 //     : left
 // : `${T}`
+
+
+// type Trunc<T extends string | number> = `${T}` extends `${infer L}${'.'}${infer R}`
+// ? Trunc<L>
+// : `${T}` extends `${'-'}${infer R}`
+//   ?  R extends ''
+//     ? '-0'
+//     : `-${R}`
+//   : `${T}` extends ''
+//     ? '0'
+//     : `${T}`
+
+
+// type Trunc<T extends string | number> = `${T}` extends `${infer L}${'.'}${infer R}`
+// ? L extends '-'
+//   ? '-0'
+//   : L extends ''
+//     ? '0'
+//     : L
+// : `${T}`

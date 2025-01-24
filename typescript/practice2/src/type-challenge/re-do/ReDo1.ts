@@ -8,7 +8,7 @@ type cases = [
 ]
 
 type TupleToNestedObject<T, U> = T extends [infer F extends string, ...infer R]
-? {[P in F]: TupleToNestedObject<R, U>}
+? {[P in F] : TupleToNestedObject<R, U>}
 : U
 
 type test = TupleToNestedObject<['a'], string>

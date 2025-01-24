@@ -1,24 +1,14 @@
 import {Expect, Equal, Alike, NotEqual} from "../test-utils";
 
 type cases = [
-  Expect<Equal<Trunc<0.1>, '0'>>,
-  Expect<Equal<Trunc<0.2>, '0'>>,
-  Expect<Equal<Trunc<1.234>, '1'>>,
-  Expect<Equal<Trunc<12.345>, '12'>>,
-  Expect<Equal<Trunc<-5.1>, '-5'>>,
-  Expect<Equal<Trunc<'.3'>, '0'>>,
-  Expect<Equal<Trunc<'1.234'>, '1'>>,
-  Expect<Equal<Trunc<'-.3'>, '-0'>>,
-  Expect<Equal<Trunc<'-10.234'>, '-10'>>,
-  Expect<Equal<Trunc<10>, '10'>>,
+  Expect<Equal<TupleToNestedObject<['a'], string>, { a: string }>>,
+  Expect<Equal<TupleToNestedObject<['a', 'b'], number>, { a: { b: number } }>>,
+  Expect<Equal<TupleToNestedObject<['a', 'b', 'c'], boolean>, { a: { b: { c: boolean } } }>>,
+  Expect<Equal<TupleToNestedObject<[], boolean>, boolean>>,
 ]
 
-type Trunc<T extends string |number> = `${T}` extends `${infer L}${'.'}${any}`
-? L extends '-'
-  ? '-0'
-  : L extends ''
-    ? '0'
-    : L
-: `${T}`
+type TupleToNestedObject<T, U> = T extends [infer F extends string, ...infer R]
+? {[P in F]: TupleToNestedObject<R, U>}
+: U
 
-  type test = Trunc<10>
+type test = TupleToNestedObject<['a'], string>

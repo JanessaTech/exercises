@@ -19,12 +19,12 @@ type cases = [
   ]
 
 
-type Merge<U, I> = U extends any[]
-? [I,...U]
-: never
-
-type Test = Merge<[4, 5] | [4, 6], 3>
-
-  type Subsequence<T extends any[]> = T extends [infer F, ... infer R]
-  ? [F] | [F, ...Subsequence<R>] | Subsequence<R>
+  type Merge<U extends unknown[], E> = U extends any
+  ? [E, ...U]
+  : never
+  
+  type Subsequence<T extends any[]> = T extends [infer F, ...infer R]
+  ? Merge<Subsequence<R>, F> | Subsequence<R>
   : []
+  
+  type merge = Merge<[2] | [], 1>

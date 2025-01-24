@@ -1,15 +1,12 @@
 import {Expect, Equal, Alike, NotEqual} from "../test-utils";
 
 type cases = [
-  Expect<Equal<StartsWith<'abc', 'ac'>, false>>,
-  Expect<Equal<StartsWith<'abc', 'ab'>, true>>,
-  Expect<Equal<StartsWith<'abc', 'abc'>, true>>,
-  Expect<Equal<StartsWith<'abc', 'abcd'>, false>>,
-  Expect<Equal<StartsWith<'abc', ''>, true>>,
-  Expect<Equal<StartsWith<'abc', ' '>, false>>,
-  Expect<Equal<StartsWith<'', ''>, true>>,
+  Expect<Equal<StringToUnion<''>, never>>,
+  Expect<Equal<StringToUnion<'t'>, 't'>>,
+  Expect<Equal<StringToUnion<'hello'>, 'h' | 'e' | 'l' | 'l' | 'o'>>,
+  Expect<Equal<StringToUnion<'coronavirus'>, 'c' | 'o' | 'r' | 'o' | 'n' | 'a' | 'v' | 'i' | 'r' | 'u' | 's'>>,
 ]
 
-type StartsWith<T extends string, U extends string> = T extends `${U}${any}`
-? true
-: false
+type StringToUnion<T extends string, acc = never> = T extends `${infer F}${infer R}`
+? StringToUnion<R, acc | F>
+: acc

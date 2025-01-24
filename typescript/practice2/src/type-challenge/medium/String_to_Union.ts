@@ -10,3 +10,8 @@ type cases = [
 type StringToUnion<T extends string> =  T extends `${infer F}${infer R}`
 ? F | StringToUnion<R>
 : never
+
+
+// type StringToUnion<T extends string, acc = never> = T extends `${infer F}${infer R}`
+// ? StringToUnion<R, acc | F>
+// : acc

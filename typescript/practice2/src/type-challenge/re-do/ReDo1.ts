@@ -13,7 +13,7 @@ type cases = [
   Expect<Equal<Trunc<10>, '10'>>,
 ]
 
-type Trunc<T extends string | number> = `${T}` extends `${infer L}${'.'}${infer R}`
+type Trunc<T extends string |number> = `${T}` extends `${infer L}${'.'}${any}`
 ? L extends '-'
   ? '-0'
   : L extends ''
@@ -21,4 +21,4 @@ type Trunc<T extends string | number> = `${T}` extends `${infer L}${'.'}${infer 
     : L
 : `${T}`
 
-  type test = Trunc<'-.3'>
+  type test = Trunc<10>

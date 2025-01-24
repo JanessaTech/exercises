@@ -25,5 +25,3 @@ type Merge<U extends unknown[], E> = U extends any
 type Subsequence<T extends any[]> = T extends [infer F, ...infer R]
 ? Merge<Subsequence<R>, F> | Subsequence<R>
 : []
-
-type merge = Merge<[2] | [], 1>

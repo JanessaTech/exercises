@@ -16,3 +16,7 @@ type cases = [
 type Reverse<T extends unknown[]> = T extends [infer F, ...infer R]
 ? [...Reverse<R>, F]
 : []
+
+// type Reverse<T extends unknown[], acc extends unknown[] = []> = T extends [infer F, ...infer R]
+// ? Reverse<R, [F, ...acc]>
+// : acc

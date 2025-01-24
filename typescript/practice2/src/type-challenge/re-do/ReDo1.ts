@@ -1,68 +1,35 @@
 import {Expect, Equal, Alike, NotEqual} from "../test-utils";
 
-type NodeA = {
-  type: 'A'
+interface User {
+  name?: string
+  age?: number
+  address?: string
+}
+
+interface UserRequiredName {
   name: string
-  flag: number
+  age?: number
+  address?: string
 }
 
-type NodeB = {
-  type: 'B'
-  id: number
-  flag: number
-}
-
-type NodeC = {
-  type: 'C'
+interface UserRequiredNameAndAge {
   name: string
-  flag: number
+  age: number
+  address?: string
 }
-
-type ReplacedNodeA = {
-  type: 'A'
-  name: number
-  flag: string
-}
-
-type ReplacedNodeB = {
-  type: 'B'
-  id: number
-  flag: string
-}
-
-type ReplacedNodeC = {
-  type: 'C'
-  name: number
-  flag: string
-}
-
-type NoNameNodeA = {
-  type: 'A'
-  flag: number
-  name: never
-}
-
-type NoNameNodeC = {
-  type: 'C'
-  flag: number
-  name: never
-}
-
-type Nodes = NodeA | NodeB | NodeC
-type ReplacedNodes = ReplacedNodeA | ReplacedNodeB | ReplacedNodeC
-type NodesNoName = NoNameNodeA | NoNameNodeC | NodeB
 
 type cases = [
-  Expect<Equal<ReplaceKeys<Nodes, 'name' | 'flag', { name: number, flag: string }>, ReplacedNodes>>,
-  Expect<Equal<ReplaceKeys<Nodes, 'name', { aa: number }>, NodesNoName>>,
+  Expect<Equal<RequiredByKeys<User, 'name'>, UserRequiredName>>,
+  Expect<Equal<RequiredByKeys<User, 'name' | 'age'>, UserRequiredNameAndAge>>,
+  Expect<Equal<RequiredByKeys<User>, Required<User>>>,
+  // @ts-expect-error
+  Expect<Equal<RequiredByKeys<User, 'name' | 'unknown'>, UserRequiredName>>,
 ]
-
-type ReplaceKeys<U, T, Y> = U extends any
-? {
-  [P in keyof U]: P extends T
-    ? P extends keyof Y
-      ? Y[P]
-      : never
-    : U[P]
+type M<T> = {
+  [P in keyof T]: T[P]
 }
-: never
+type RequiredByKeys<T, K extends keyof T = keyof T> = M<{
+  [P in K]-?: T[P]
+} & Omit<T, K>>
+
+type test = RequiredByKeys<User, 'name'>

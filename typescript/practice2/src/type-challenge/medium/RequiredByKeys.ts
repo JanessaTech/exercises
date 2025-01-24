@@ -28,8 +28,15 @@ interface User {
 
   
 
-  type M<T, K extends keyof T = keyof T> = Pick<Required<T>, K>
-  type S<T, K extends keyof T = keyof T> = Omit<T, K>
-  type All<T, K extends keyof T = keyof T> = Pick<Required<T>, K> & Omit<T, K>
-  type Merge<T> =  { [P in keyof T]: T[P] };
-  type RequiredByKeys<T, K extends keyof T = keyof T> = Merge<All<T, K>>
+  // type M<T, K extends keyof T = keyof T> = Pick<Required<T>, K>
+  // type S<T, K extends keyof T = keyof T> = Omit<T, K>
+  // type All<T, K extends keyof T = keyof T> = Pick<Required<T>, K> & Omit<T, K>
+  // type Merge<T> =  { [P in keyof T]: T[P] };
+  // type RequiredByKeys<T, K extends keyof T = keyof T> = Merge<All<T, K>>
+
+  type M<T> = {
+    [P in keyof T]: T[P]
+  }
+  type RequiredByKeys<T, K extends keyof T = keyof T> = M<{
+    [P in K]-?: T[P]
+  } & Omit<T, K>>

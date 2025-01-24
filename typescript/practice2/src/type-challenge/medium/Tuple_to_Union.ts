@@ -8,3 +8,6 @@ type cases = [
 type TupleToUnion<T extends unknown[]> = T extends [infer F, ... infer R]
 ? F | TupleToUnion<R>
 : never
+
+
+//type TupleToUnion<T extends unknown[]> = T[number]

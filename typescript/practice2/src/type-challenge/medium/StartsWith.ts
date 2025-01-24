@@ -10,8 +10,6 @@ type cases = [
     Expect<Equal<StartsWith<'', ''>, true>>,
   ]
 
-type StartsWith<T extends string, U extends string> = U extends ''
-? true
-: T extends `${U}${infer R}`
+  type StartsWith<T extends string, U extends string> = T extends `${U}${any}`
   ? true
   : false

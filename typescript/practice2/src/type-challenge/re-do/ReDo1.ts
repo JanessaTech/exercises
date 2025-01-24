@@ -1,18 +1,14 @@
 import {Expect, Equal, Alike, NotEqual} from "../test-utils";
 
 type cases = [
-  Expect<Equal<Reverse<[]>, []>>,
-  Expect<Equal<Reverse<['a', 'b']>, ['b', 'a']>>,
-  Expect<Equal<Reverse<['a', 'b', 'c']>, ['c', 'b', 'a']>>,
+  // @ts-expect-error
+  Shift<unknown>,
+  Expect<Equal<Shift<[]>, []>>,
+  Expect<Equal<Shift<[1]>, []>>,
+  Expect<Equal<Shift<[3, 2, 1]>, [2, 1]>>,
+  Expect<Equal<Shift<['a', 'b', 'c', 'd']>, ['b', 'c', 'd']>>,
 ]
 
-type errors = [
-  // @ts-expect-error
-  Reverse<'string'>,
-  // @ts-expect-error
-  Reverse<{ key: 'value' }>,
-]
-
-type Reverse<T extends unknown[], acc extends unknown[] = []> = T extends [infer F, ...infer R]
-? Reverse<R, [F, ...acc]>
-: acc
+type Shift<T extends unknown[]> = T extends [infer F, ...infer R]
+? R
+: []

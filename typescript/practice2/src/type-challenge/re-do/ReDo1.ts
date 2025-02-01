@@ -1,20 +1,32 @@
-import {Expect, Equal, Alike, NotEqual} from "../test-utils";
+import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
 type cases = [
-  Expect<Equal<Zip<[], []>, []>>,
-  Expect<Equal<Zip<[1, 2], [true, false]>, [[1, true], [2, false]]>>,
-  Expect<Equal<Zip<[1, 2, 3], ['1', '2']>, [[1, '1'], [2, '2']]>>,
-  Expect<Equal<Zip<[], [1, 2, 3]>, []>>,
-  Expect<Equal<Zip<[[1, 2]], [3]>, [[[1, 2], 3]]>>,
+  Expect<Equal<AllCombinations<''>, ''>>,
+  Expect<Equal<AllCombinations<'A'>, '' | 'A'>>,
+  Expect<Equal<AllCombinations<'AB'>, '' | 'A' | 'B' | 'AB' | 'BA'>>,
+  Expect<Equal<AllCombinations<'ABC'>, '' | 'A' | 'B' | 'C' | 'AB' | 'AC' | 'BA' | 'BC' | 'CA' | 'CB' | 'ABC' | 'ACB' | 'BAC' | 'BCA' | 'CAB' | 'CBA'>>,
+  Expect<Equal<AllCombinations<'ABCD'>, '' | 'A' | 'B' | 'C' | 'D' | 'AB' | 'AC' | 'AD' | 'BA' | 'BC' | 'BD' | 'CA' | 'CB' | 'CD' | 'DA' | 'DB' | 'DC' | 'ABC' | 'ABD' | 'ACB' | 'ACD' | 'ADB' | 'ADC' | 'BAC' | 'BAD' | 'BCA' | 'BCD' | 'BDA' | 'BDC' | 'CAB' | 'CAD' | 'CBA' | 'CBD' | 'CDA' | 'CDB' | 'DAB' | 'DAC' | 'DBA' | 'DBC' | 'DCA' | 'DCB' | 'ABCD' | 'ABDC' | 'ACBD' | 'ACDB' | 'ADBC' | 'ADCB' | 'BACD' | 'BADC' | 'BCAD' | 'BCDA' | 'BDAC' | 'BDCA' | 'CABD' | 'CADB' | 'CBAD' | 'CBDA' | 'CDAB' | 'CDBA' | 'DABC' | 'DACB' | 'DBAC' | 'DBCA' | 'DCAB' | 'DCBA'>>,
 ]
 
-type Zip<T, U, acc extends unknown[] = []> = T extends [infer T1, ...infer TR]
-? U extends [infer U1, ...infer UR]
-  ? Zip<TR, UR, [...acc, [T1, U1]]>
-  : acc
-: acc
+type StringToUnion<S> = S extends `${infer F}${infer R}`
+? F | StringToUnion<R>
+: never
 
+type ArrayToString<A> = A extends any
+? A extends [infer F, ...infer R]
+  ? `${string &F}${ArrayToString<R>}`
+  : ''
+: never
 
-// type Zip<T, U, acc extends unknown[] = []> = [T, U] extends [[infer T1, ...infer TR], [infer U1, ...infer UR]]
-// ? Zip<TR, UR, [...acc, [T1, U1]]>
-// : acc
+type Com<T, path extends unknown[] = [], acc = never, A = T> = [T] extends [never]
+? ArrayToString<acc | path>
+: T extends any
+  ? Com<Exclude<A, T>, [...path, T], acc | path>
+  : never
+
+type AllCombinations<S> = Com<StringToUnion<S>>
+
+type test = StringToUnion<'AB'>
+type test1 = ArrayToString<['A','B'] | ['C', 'D', 'E']>
+type test2 = Com<'A' | 'B'>
+

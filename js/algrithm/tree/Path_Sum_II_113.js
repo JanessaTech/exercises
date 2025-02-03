@@ -13,16 +13,17 @@
  */
 var pathSum = function(root, targetSum) {
     const ans = []
-    const dfs = function(node, path, acc, target) {
-        if (node === null) return
-        path.push(node.val)
-        if (node.left === null && node.right === null && acc + node.val === target) {
-            ans.push(path.slice())
-        }
-        dfs(node.left, path, acc + node.val, target)
-        dfs(node.right, path, acc + node.val, target)
-        path.pop()
+    const dfs = function(node, acc, path) {
+     if (!node) return
+     path.push(node.val)
+     if (!node.left && !node.right) {
+         if (acc + node.val === targetSum) ans.push(path.slice())
+     }
+     dfs(node.left, acc + node.val, path)
+     dfs(node.right, acc + node.val, path)
+     path.pop()
     }
-    dfs(root, [], 0, targetSum)
+ 
+    dfs(root, 0, [])
     return ans
-};
+ };

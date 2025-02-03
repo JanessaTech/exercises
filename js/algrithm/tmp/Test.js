@@ -1,2 +1,2 @@
-const res = 1 === 1.0000
-console.log(res)
+const nums = '123'.split('').map((v) => parseInt(v))
+console.log(nums.slice(2, 1))

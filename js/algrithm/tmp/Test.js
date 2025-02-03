@@ -1,2 +1,2 @@
-const nums = '123'.split('').map((v) => parseInt(v))
-console.log(nums.slice(2, 1))
+const res = '&12a?d-'.replace(/[^0-9a-z]/g, '')
+console.log(res)

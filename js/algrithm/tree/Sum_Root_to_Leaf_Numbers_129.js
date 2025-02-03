@@ -11,29 +11,33 @@
  * @return {number}
  */
 var sumNumbers = function(root) {
-    const stack = []
-    const calc = function(path) {
-        var s = 0
-        for (let i = 0; i < path.length; i++) {
-            s = s * 10 + path[i]
+    var sumNumbers = function(root) {
+        const paths = []
+        const dfs = function(node, path) {
+            if (!node) return
+            path.push(node.val)
+            if (!node.left && !node.right) {
+                paths.push(path.slice())
+            }
+            dfs(node.left, path)
+            dfs(node.right, path)
+            path.pop()
         }
-        return s
-    }
-    const dfs = function(node, path) {
-        if (node === null) return 
-        path.push(node.val)
-        if (node.left === null && node.right === null) {
-            const num = calc(path)
-            stack.push(num)
+    
+        const calc = function(path) {
+            let sum = 0
+            for (let p of path) {
+                sum = sum * 10 + p
+            }
+            return sum
         }
-        dfs(node.left, path)
-        dfs(node.right, path)
-        path.pop()
-    }
-    dfs(root, [])
-    var sum = 0
-    while (stack.length) {
-        sum += stack.pop()
-    }
-    return sum  
+    
+        dfs(root, [])
+    
+        let sum = 0
+        for (let path of paths) {
+            sum += calc(path)
+        }
+        return sum
+    }  
 };

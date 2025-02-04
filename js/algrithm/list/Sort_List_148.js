@@ -12,10 +12,9 @@ var sortList = function(head) {
   const res = sort(head)
   return res
 }
-
 function sort(list) {
-  if (list === null) return null
-  if (list.next === null) return list
+  if (!list) return null
+  if (!list.next) return list
   const [l1, l2] = split(list)
   const first = sort(l1)
   const second = sort(l2)
@@ -28,53 +27,53 @@ function split(list) {
   const dummy1 = new ListNode()
   let pre0 = dummy0
   let pre1 = dummy1
+  
   let cur = list
-
-  let toggle = 0
   while (cur) {
-      let next = cur.next
-      cur.next = null
-      if (toggle === 0) {
-          pre0.next = cur
-          pre0 = cur
-          toggle = 1
+      const first = cur
+      const second = first.next
+      if (second) {
+          const next = second.next
+          first.next = null
+          pre0.next = first
+          pre0 = first
+          second.next = null
+          pre1.next = second
+          pre1 = second
+          cur = next
       } else {
-          pre1.next = cur
-          pre1 = cur
-          toggle = 0
+          pre0.next = first
+          break
       }
-      cur = next
   }
+
   return [dummy0.next, dummy1.next]
 }
 
 function merge(l1, l2) {
   const dummy = new ListNode()
   let pre = dummy
-  let p = l1
-  let q = l2
-  while (p || q) {
-      if (p && q) {
-          if (p.val < q.val) {
-              let next = p.next
-              pre.next = p
-              pre = p
-              pre.next = null
-              p = next
-          } else {
-              let next = q.next
-              pre.next = q
-              pre = q
-              pre.next = null
-              q = next
-          }
-      } else if (p) {
+  let p = l1, q = l2
+  while (p && q) {
+      if (p.val <= q.val) {
+          let next = p.next
+          p.next = null
           pre.next = p
-          break
+          pre = p
+          p = next
       } else {
+          let next = q.next
+          q.next = null
           pre.next = q
-          break
+          pre = q
+          q = next
       }
+  }
+  if (p) {
+      pre.next = p
+  }
+  if (q) {
+      pre.next = q
   }
 
   return dummy.next

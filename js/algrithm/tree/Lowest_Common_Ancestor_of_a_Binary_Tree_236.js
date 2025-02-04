@@ -12,29 +12,24 @@
  * @return {TreeNode}
  */
 var lowestCommonAncestor = function(root, p, q) {
-    var pathP = undefined
-    var pathQ = undefined
+    let pathP = undefined
+    let pathQ = undefined
     const dfs = function(node, path) {
-        if (!node) return
+        if (!node) return 
         path.push(node)
-        if (node === p) {
-            pathP = path.slice()
-        }
-        if (node === q) {
-            pathQ = path.slice()
-        }
+        if (node === p) pathP = path.slice()
+        if (node === q) pathQ = path.slice()
         dfs(node.left, path)
         dfs(node.right, path)
         path.pop()
     }
     dfs(root, [])
-    var ans = undefined
-    for (let i = 0; i < pathP.length && i < pathQ.length; i++) {
-        if (pathP[i].val === pathQ[i].val) {
+
+    let ans = undefined
+    for (let i = 0; i < Math.min(pathP.length, pathQ.length); i++) {
+        if (pathP[i] === pathQ[i]) {
             ans = pathP[i]
-        } else {
-            break
-        }
+        } else {break}
     }
-    return ans 
+    return ans
 };

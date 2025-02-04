@@ -12,6 +12,7 @@ var combinationSum3 = function(k, n) {
             }
         } else {
             for (let i = start; i <= 9; i++) {
+                if (sum + i > n) continue
                 path.push(i)
                 dfs(i + 1, sum + i, path)
                 path.pop()

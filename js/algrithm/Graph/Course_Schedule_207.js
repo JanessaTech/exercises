@@ -4,37 +4,31 @@
  * @return {boolean}
  */
 var canFinish = function(numCourses, prerequisites) {
-    //const res = bfs(numCourses, prerequisites)
-    const res = dfs(numCourses, prerequisites)
-    return res
-};
+    //const can  = dfs(numCourses, prerequisites)
+    const can  = bfs(numCourses, prerequisites)
+    return can
+}
 
 function dfs(numCourses, prerequisites) {
-    const digraph = []
+    const digraph = Array(numCourses).fill(undefined).map((_, i) => [])
     for (let pre of prerequisites) {
-        if (!digraph[pre[1]]) digraph[pre[1]] = []
         digraph[pre[1]].push(pre[0])
     }
-
     const visited = Array(numCourses).fill(0)
     for (let i = 0; i < numCourses; i++) {
-        if (visited[i] === 0) {
-            if(!_dfs(digraph, i, visited))  return false
+        if (visited[i] == 0) {
+            if (!_dfs(digraph, i, visited)) return false
         }
-        
     }
     return true
 }
-function _dfs(digraph, visited, i, memo) {
-    if (visited[i] === 1) return false
-    if (visited[i] === 2) return true
+
+function _dfs(digraph, i, visited) {
     visited[i] = 1
-    if (digraph[i]) {
-        for (let next of digraph[i]) {
-            if (visited[next] === 1) return false
-            if (visited[next] === 0) {
-                if (!_dfs(digraph, next, visited)) return false
-            }
+    for (let next of digraph[i]) {
+        if (visited[next] === 1) return false
+        if (visited[next] === 0) {
+            if (!_dfs(digraph, next, visited)) return false
         }
     }
     visited[i] = 2
@@ -42,35 +36,30 @@ function _dfs(digraph, visited, i, memo) {
 }
 
 function bfs(numCourses, prerequisites) {
-    const digraph = []
+    const digraph = Array(numCourses).fill(undefined).map((_, i) => [])
     const degree = Array(numCourses).fill(0)
-    const queue = []
-    let cnt = 0
-
-    for(let pre of prerequisites) {
-        if (!digraph[pre[1]]) {
-            digraph[pre[1]] = []
-        }
+    for (let pre of prerequisites) {
         digraph[pre[1]].push(pre[0])
         degree[pre[0]]++
     }
+
+    const queue = []
     for (let i = 0; i < numCourses; i++) {
-        if (degree[i] === 0) {
-            queue.push(i)
-        }
+        if (degree[i] === 0) queue.push(i)
     }
 
+
+    let cnt = 0
     while (queue.length) {
-        const cur = queue.shift()
-        if (digraph[cur]) {
-            for (let next of digraph[cur]) {
-                if (--degree[next] === 0) {
-                    queue.push(next)
-                }
+        const cur  = queue.shift()
+        for (let next of digraph[cur]) {
+            if (--degree[next] === 0) {
+                queue.push(next)
             }
         }
         cnt++
     }
 
-    return cnt === numCourses
+    return cnt === numCourses ? true : false
 }
+

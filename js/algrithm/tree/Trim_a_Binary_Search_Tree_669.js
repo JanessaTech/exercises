@@ -14,13 +14,13 @@
  */
 var trimBST = function(root, low, high) {
     if (root === null) return null
-    const left = trimBST(root.left, low, high)
-    const right = trimBST(root.right, low, high)
-    if (root.val >= low && root.val <= high) {
-        root.left = left
-        root.right = right
-        return root
+    if (root.val > high) {
+        return trimBST(root.left, low, high)
+    } else if (root.val < low) {
+        return trimBST(root.right, low, high)
     } else {
-        return left ? left : right
+        root.left = trimBST(root.left, low, root.val)
+        root.right = trimBST(root.right, root.val, high)
     }
+    return root
 };

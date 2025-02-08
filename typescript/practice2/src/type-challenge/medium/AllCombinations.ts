@@ -29,3 +29,11 @@ type SU = StringToUnion<'AB'>
 type AU = ArrayToString<['']>
 type test = Comb<StringToUnion<'AB'>>
 type test1 = AllCombinations<'AB'>
+
+// type Com<U, path extends unknown[] = [], acc = never, A = U> = [U] extends [never]
+// ? ArrayToString<acc | path>
+// : U extends any
+//   ? Com<Exclude<A, U>, [...path, U], acc | path>
+//   : never
+
+// type AllCombinations<S> = Com<StringToUnion<S>>

@@ -12,21 +12,20 @@ type StringToUnion<S> = S extends `${infer F}${infer R}`
 ? F | StringToUnion<R>
 : never
 
-type ArrayToString<A> = A extends any
+type ArrayToString<A>  = A extends any
 ? A extends [infer F, ...infer R]
   ? `${string &F}${ArrayToString<R>}`
   : ''
 : never
 
-type Com<T, path extends unknown[] = [], acc = never, A = T> = [T] extends [never]
+type Com<U, path extends unknown[] = [], acc = never, A = U> = [U] extends [never]
 ? ArrayToString<acc | path>
-: T extends any
-  ? Com<Exclude<A, T>, [...path, T], acc | path>
+: U extends any
+  ? Com<Exclude<A, U>, [...path, U], acc | path>
   : never
 
 type AllCombinations<S> = Com<StringToUnion<S>>
 
 type test = StringToUnion<'AB'>
-type test1 = ArrayToString<['A','B'] | ['C', 'D', 'E']>
-type test2 = Com<'A' | 'B'>
+type test1 = Com<StringToUnion<'AB'>>
 

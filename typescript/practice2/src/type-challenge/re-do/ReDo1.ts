@@ -1,23 +1,24 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
 type cases = [
-  Expect<Equal<KebabCase<'FooBarBaz'>, 'foo-bar-baz'>>,
-  Expect<Equal<KebabCase<'fooBarBaz'>, 'foo-bar-baz'>>,
-  Expect<Equal<KebabCase<'foo-bar'>, 'foo-bar'>>,
-  Expect<Equal<KebabCase<'foo_bar'>, 'foo_bar'>>,
-  Expect<Equal<KebabCase<'Foo-Bar'>, 'foo--bar'>>,
-  Expect<Equal<KebabCase<'ABC'>, 'a-b-c'>>,
-  Expect<Equal<KebabCase<'-'>, '-'>>,
-  Expect<Equal<KebabCase<''>, ''>>,
-  Expect<Equal<KebabCase<'😎'>, '😎'>>,
+  Expect<Equal<MapTypes<{ stringToArray: string }, { mapFrom: string, mapTo: [] }>, { stringToArray: [] }>>,
+  Expect<Equal<MapTypes<{ stringToNumber: string }, { mapFrom: string, mapTo: number }>, { stringToNumber: number }>>,
+  Expect<Equal<MapTypes<{ stringToNumber: string, skipParsingMe: boolean }, { mapFrom: string, mapTo: number }>, { stringToNumber: number, skipParsingMe: boolean }>>,
+  Expect<Equal<MapTypes<{ date: string }, { mapFrom: string, mapTo: Date } | { mapFrom: string, mapTo: null }>, { date: null | Date }>>,
+  Expect<Equal<MapTypes<{ date: string }, { mapFrom: string, mapTo: Date | null }>, { date: null | Date }>>,
+  Expect<Equal<MapTypes<{ fields: Record<string, boolean> }, { mapFrom: Record<string, boolean>, mapTo: string[] }>, { fields: string[] }>>,
+  Expect<Equal<MapTypes<{ name: string }, { mapFrom: boolean, mapTo: never }>, { name: string }>>,
+  Expect<Equal<MapTypes<{ name: string, date: Date }, { mapFrom: string, mapTo: boolean } | { mapFrom: Date, mapTo: string }>, { name: boolean, date: string }>>,
 ]
-type UPPERCASE = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'G' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z'
-type KebabCase<S, acc extends string = ''> = S extends `${infer F}${infer R}`
-  ? F extends UPPERCASE
-    ? acc extends ''
-      ? KebabCase<R, `${Lowercase<F>}`>
-      : KebabCase<R, `${acc}-${Lowercase<F>}`>
-    : KebabCase<R, `${acc}${F}`>
-  : acc
+
+type MapTypes<T, R extends {[P in 'mapFrom' | 'mapTo']: any}> = {
+  [P in keyof T]: T[P] extends R['mapFrom']
+    ? R extends any
+      ? R extends {mapFrom: T[P]}
+        ? R['mapTo']
+        : never
+      : never
+    : T[P]
+}
 
 

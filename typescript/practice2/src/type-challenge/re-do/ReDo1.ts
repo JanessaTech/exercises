@@ -1,31 +1,52 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
+declare const a: Chainable
+
+const result1 = a
+  .option('foo', 123)
+  .option('bar', { value: 'Hello World' })
+  .option('name', 'type-challenges')
+  .get()
+
+const result2 = a
+  .option('name', 'another name')
+  // @ts-expect-error
+  .option('name', 'last name')
+  .get()
+
+const result3 = a
+  .option('name', 'another name')
+  // @ts-expect-error
+  .option('name', 123)
+  .get()
+
 type cases = [
-  Expect<Equal<AllCombinations<''>, ''>>,
-  Expect<Equal<AllCombinations<'A'>, '' | 'A'>>,
-  Expect<Equal<AllCombinations<'AB'>, '' | 'A' | 'B' | 'AB' | 'BA'>>,
-  Expect<Equal<AllCombinations<'ABC'>, '' | 'A' | 'B' | 'C' | 'AB' | 'AC' | 'BA' | 'BC' | 'CA' | 'CB' | 'ABC' | 'ACB' | 'BAC' | 'BCA' | 'CAB' | 'CBA'>>,
-  Expect<Equal<AllCombinations<'ABCD'>, '' | 'A' | 'B' | 'C' | 'D' | 'AB' | 'AC' | 'AD' | 'BA' | 'BC' | 'BD' | 'CA' | 'CB' | 'CD' | 'DA' | 'DB' | 'DC' | 'ABC' | 'ABD' | 'ACB' | 'ACD' | 'ADB' | 'ADC' | 'BAC' | 'BAD' | 'BCA' | 'BCD' | 'BDA' | 'BDC' | 'CAB' | 'CAD' | 'CBA' | 'CBD' | 'CDA' | 'CDB' | 'DAB' | 'DAC' | 'DBA' | 'DBC' | 'DCA' | 'DCB' | 'ABCD' | 'ABDC' | 'ACBD' | 'ACDB' | 'ADBC' | 'ADCB' | 'BACD' | 'BADC' | 'BCAD' | 'BCDA' | 'BDAC' | 'BDCA' | 'CABD' | 'CADB' | 'CBAD' | 'CBDA' | 'CDAB' | 'CDBA' | 'DABC' | 'DACB' | 'DBAC' | 'DBCA' | 'DCAB' | 'DCBA'>>,
+  Expect<Alike<typeof result1, Expected1>>,
+  Expect<Alike<typeof result2, Expected2>>,
+  Expect<Alike<typeof result3, Expected3>>,
 ]
 
-type StringToUnion<S> = S extends `${infer F}${infer R}`
-? F | StringToUnion<R>
-: never
+type Expected1 = {
+  foo: number
+  bar: {
+    value: string
+  }
+  name: string
+}
 
-type ArrayToString<A>  = A extends any
-? A extends [infer F, ...infer R]
-  ? `${string &F}${ArrayToString<R>}`
-  : ''
-: never
+type Expected2 = {
+  name: string
+}
 
-type Com<U, path extends unknown[] = [], acc = never, A = U> = [U] extends [never]
-? ArrayToString<acc | path>
-: U extends any
-  ? Com<Exclude<A, U>, [...path, U], acc | path>
-  : never
+type Expected3 = {
+  name: number
+}
 
-type AllCombinations<S> = Com<StringToUnion<S>>
-
-type test = StringToUnion<'AB'>
-type test1 = Com<StringToUnion<'AB'>>
-
+type Chainable<O = {}> = {
+  option<K extends string, V>
+  (key: K extends keyof O
+      ? never
+      : K, 
+  value: V): Chainable<Omit<O, K> & {[P in K]: V}>
+  get(): O
+}

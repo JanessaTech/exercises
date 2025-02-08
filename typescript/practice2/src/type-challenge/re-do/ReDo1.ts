@@ -1,28 +1,23 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
-type Foo = {
-  name: string
-  age: string
-}
-type Bar = {
-  name: string
-  age: string
-  gender: number
-}
-type Coo = {
-  name: string
-  gender: number
-}
-
 type cases = [
-  Expect<Equal<Diff<Foo, Bar>, { gender: number }>>,
-  Expect<Equal<Diff<Bar, Foo>, { gender: number }>>,
-  Expect<Equal<Diff<Foo, Coo>, { age: string, gender: number }>>,
-  Expect<Equal<Diff<Coo, Foo>, { age: string, gender: number }>>,
+  Expect<Equal<KebabCase<'FooBarBaz'>, 'foo-bar-baz'>>,
+  Expect<Equal<KebabCase<'fooBarBaz'>, 'foo-bar-baz'>>,
+  Expect<Equal<KebabCase<'foo-bar'>, 'foo-bar'>>,
+  Expect<Equal<KebabCase<'foo_bar'>, 'foo_bar'>>,
+  Expect<Equal<KebabCase<'Foo-Bar'>, 'foo--bar'>>,
+  Expect<Equal<KebabCase<'ABC'>, 'a-b-c'>>,
+  Expect<Equal<KebabCase<'-'>, '-'>>,
+  Expect<Equal<KebabCase<''>, ''>>,
+  Expect<Equal<KebabCase<'😎'>, '😎'>>,
 ]
-
-type Diff<O, O1> = {
-  [P in keyof (O & O1) as P extends keyof (O | O1) ? never : P]: (O & O1)[P]
-}
+type UPPERCASE = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'G' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z'
+type KebabCase<S, acc extends string = ''> = S extends `${infer F}${infer R}`
+  ? F extends UPPERCASE
+    ? acc extends ''
+      ? KebabCase<R, `${Lowercase<F>}`>
+      : KebabCase<R, `${acc}-${Lowercase<F>}`>
+    : KebabCase<R, `${acc}${F}`>
+  : acc
 
 

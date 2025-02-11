@@ -8,8 +8,8 @@ type cases = [
   Expect<Equal<AllCombinations<'ABCD'>, '' | 'A' | 'B' | 'C' | 'D' | 'AB' | 'AC' | 'AD' | 'BA' | 'BC' | 'BD' | 'CA' | 'CB' | 'CD' | 'DA' | 'DB' | 'DC' | 'ABC' | 'ABD' | 'ACB' | 'ACD' | 'ADB' | 'ADC' | 'BAC' | 'BAD' | 'BCA' | 'BCD' | 'BDA' | 'BDC' | 'CAB' | 'CAD' | 'CBA' | 'CBD' | 'CDA' | 'CDB' | 'DAB' | 'DAC' | 'DBA' | 'DBC' | 'DCA' | 'DCB' | 'ABCD' | 'ABDC' | 'ACBD' | 'ACDB' | 'ADBC' | 'ADCB' | 'BACD' | 'BADC' | 'BCAD' | 'BCDA' | 'BDAC' | 'BDCA' | 'CABD' | 'CADB' | 'CBAD' | 'CBDA' | 'CDAB' | 'CDBA' | 'DABC' | 'DACB' | 'DBAC' | 'DBCA' | 'DCAB' | 'DCBA'>>,
 ]
 
-type StringToUnion<S> = S extends `${infer F}${infer R}`
-? F | StringToUnion<R>
+type StringtoUnion<S> = S extends `${infer F}${infer R}`
+? F | StringtoUnion<R>
 : never
 
 type ArrayToString<A> = A extends any
@@ -19,13 +19,13 @@ type ArrayToString<A> = A extends any
 : never
 
 type Com<U, path extends unknown[] = [], acc = never, A = U> = [U] extends [never]
-  ? ArrayToString<acc | path>
-  : U extends any
-    ? Com<Exclude<A, U>, [...path, U], acc | path>
-    : never
-  
+? ArrayToString<acc | path>
+: U extends any
+  ? Com<Exclude<A, U>, [...path, U], acc | path>
+  : never
 
-type AllCombinations<S> = Com<StringToUnion<S>>
 
-type test = StringToUnion<'AB'>
-type test1 = Com<StringToUnion<'AB'>>
+type AllCombinations<S> = Com<StringtoUnion<S>>
+
+type test = StringtoUnion<'AB'>
+type test1 = Com<StringtoUnion<'AB'>>

@@ -12,6 +12,22 @@ npx hardhat node
 npx hardhat ignition deploy ./ignition/modules/Lock.js
 ```
 
+## How to create an empty hardhat project
+
+```
+npx hardhat init
+
+```
+
+1. create an empty directory, and go into it
+2. npm init
+3. npm install hardhat
+4. npx hardhat init
+5. npx hardhat
+6. npx hardhat compile
+7. npx hardhat test
+8. npx hardhat node
+
 ## How to run the codes
 
 ```

@@ -33,3 +33,11 @@ remixd.cmd
 npx hardhat node
 
 ```
+
+## How to run test cases
+```
+1. run all cases under test
+   npx hardhat test
+2. Run cases defined in a file saying  .\test\EtherWallet.js
+   npx hardhat test .\test\EtherWallet.js
+```

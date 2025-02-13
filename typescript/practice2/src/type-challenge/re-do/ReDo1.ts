@@ -1,27 +1,25 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
-type Foo = {
-  name: string
-  age: string
-}
-type Bar = {
-  name: string
-  age: string
-  gender: number
-}
-type Coo = {
-  name: string
-  gender: number
-}
-
 type cases = [
-  Expect<Equal<Diff<Foo, Bar>, { gender: number }>>,
-  Expect<Equal<Diff<Bar, Foo>, { gender: number }>>,
-  Expect<Equal<Diff<Foo, Coo>, { age: string, gender: number }>>,
-  Expect<Equal<Diff<Coo, Foo>, { age: string, gender: number }>>,
+  Expect<Equal<IsUnion<string>, false>>,
+  Expect<Equal<IsUnion<string | number>, true>>,
+  Expect<Equal<IsUnion<'a' | 'b' | 'c' | 'd'>, true>>,
+  Expect<Equal<IsUnion<undefined | null | void | ''>, true>>,
+  Expect<Equal<IsUnion<{ a: string } | { a: number }>, true>>,
+  Expect<Equal<IsUnion<{ a: string | number }>, false>>,
+  Expect<Equal<IsUnion<[string | number]>, false>>,
+  // Cases where T resolves to a non-union type.
+  Expect<Equal<IsUnion<string | never>, false>>,
+  Expect<Equal<IsUnion<string | unknown>, false>>,
+  Expect<Equal<IsUnion<string | any>, false>>,
+  Expect<Equal<IsUnion<string | 'a'>, false>>,
+  Expect<Equal<IsUnion<never>, false>>,
 ]
 
-
-type Diff<O, O1> = {
-  [P in keyof (O & O1) as P extends keyof (O | O1) ? never : P]: (O & O1)[P]
-}
+type IsUnion<T, A = T> = [T] extends [never]
+  ? false
+  : T extends any
+    ? [A] extends [T]
+      ? false
+      : true
+    : never

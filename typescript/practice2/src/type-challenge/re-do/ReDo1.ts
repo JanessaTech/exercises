@@ -1,18 +1,70 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
 type cases = [
-  Expect<Equal<Absolute<0>, '0'>>,
-  Expect<Equal<Absolute<-0>, '0'>>,
-  Expect<Equal<Absolute<10>, '10'>>,
-  Expect<Equal<Absolute<-5>, '5'>>,
-  Expect<Equal<Absolute<'0'>, '0'>>,
-  Expect<Equal<Absolute<'-0'>, '0'>>,
-  Expect<Equal<Absolute<'10'>, '10'>>,
-  Expect<Equal<Absolute<'-5'>, '5'>>,
-  Expect<Equal<Absolute<-1_000_000n>, '1000000'>>,
-  Expect<Equal<Absolute<9_999n>, '9999'>>,
+  Expect<Equal<DeepReadonly<X1>, Expected1>>,
+  Expect<Equal<DeepReadonly<X2>, Expected2>>,
 ]
 
-type Absolute<T extends number | string | bigint> = `${T}` extends `-${infer R}`
-  ? R
-  : `${T}`
+type X1 = {
+  a: () => 22
+  b: string
+  c: {
+    d: boolean
+    e: {
+      g: {
+        h: {
+          i: true
+          j: 'string'
+        }
+        k: 'hello'
+      }
+      l: [
+        'hi',
+        {
+          m: ['hey']
+        },
+      ]
+    }
+  }
+}
+
+type X2 = { a: string } | { b: number }
+
+type Expected1 = {
+  readonly a: () => 22
+  readonly b: string
+  readonly c: {
+    readonly d: boolean
+    readonly e: {
+      readonly g: {
+        readonly h: {
+          readonly i: true
+          readonly j: 'string'
+        }
+        readonly k: 'hello'
+      }
+      readonly l: readonly [
+        'hi',
+        {
+          readonly m: readonly ['hey']
+        },
+      ]
+    }
+  }
+}
+
+type Expected2 = { readonly a: string } | { readonly b: number }
+
+type DeepArray<A, acc extends unknown[] = []> = A extends [infer F, ...infer R]
+  ? DeepArray<R, [...acc, DeepReadonly<F>]>
+  : acc
+
+type DeepReadonly<T> = T extends any
+? T extends {[P in any]: unknown}
+  ? {readonly [P in keyof T]: DeepReadonly<T[P]>}
+  : T extends unknown[]
+    ? readonly [...DeepArray<T>]
+    : T
+: never
+
+type test = DeepReadonly<X1>

@@ -1,38 +1,15 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
-type Case0 = ['', '', '']
-type Case1 = ['+', '', '']
-type Case2 = ['+', '1', '']
-type Case3 = ['+', '100', '']
-type Case4 = ['+', '100', '%']
-type Case5 = ['', '100', '%']
-type Case6 = ['-', '100', '%']
-type Case7 = ['-', '100', '']
-type Case8 = ['-', '1', '']
-type Case9 = ['', '', '%']
-type Case10 = ['', '1', '']
-type Case11 = ['', '100', '']
-
 type cases = [
-  Expect<Equal<PercentageParser<''>, Case0>>,
-  Expect<Equal<PercentageParser<'+'>, Case1>>,
-  Expect<Equal<PercentageParser<'+1'>, Case2>>,
-  Expect<Equal<PercentageParser<'+100'>, Case3>>,
-  Expect<Equal<PercentageParser<'+100%'>, Case4>>,
-  Expect<Equal<PercentageParser<'100%'>, Case5>>,
-  Expect<Equal<PercentageParser<'-100%'>, Case6>>,
-  Expect<Equal<PercentageParser<'-100'>, Case7>>,
-  Expect<Equal<PercentageParser<'-1'>, Case8>>,
-  Expect<Equal<PercentageParser<'%'>, Case9>>,
-  Expect<Equal<PercentageParser<'1'>, Case10>>,
-  Expect<Equal<PercentageParser<'100'>, Case11>>,
+  Expect<Equal<Permutation<'A'>, ['A']>>,
+  Expect<Equal<Permutation<'A' | 'B' | 'C'>, ['A', 'B', 'C'] | ['A', 'C', 'B'] | ['B', 'A', 'C'] | ['B', 'C', 'A'] | ['C', 'A', 'B'] | ['C', 'B', 'A']>>,
+  Expect<Equal<Permutation<'B' | 'A' | 'C'>, ['A', 'B', 'C'] | ['A', 'C', 'B'] | ['B', 'A', 'C'] | ['B', 'C', 'A'] | ['C', 'A', 'B'] | ['C', 'B', 'A']>>,
+  Expect<Equal<Permutation<boolean>, [false, true] | [true, false]>>,
+  Expect<Equal<Permutation<never>, []>>,
 ]
 
-
-type PercentageParser<A extends string, sign = '', num = '', unit = ''> = A extends ''
-? [sign, num, unit]
-: A extends `${infer S extends '+' | '-'}${infer R}`
-  ? PercentageParser<R, S, num, unit>
-  : A extends `${infer N}%`
-    ? PercentageParser<'', sign, N, '%'>
-    : PercentageParser<'', sign, A, unit>
+type Permutation<T, path extends unknown[] = [], acc = never, A = T> = [T] extends [never]
+? acc | path
+: T extends any
+  ? Permutation<Exclude<A, T>, [...path, T], acc>
+  : never

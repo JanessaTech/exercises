@@ -1,12 +1,27 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
 type cases = [
-  Expect<Equal<StringToUnion<''>, never>>,
-  Expect<Equal<StringToUnion<'t'>, 't'>>,
-  Expect<Equal<StringToUnion<'hello'>, 'h' | 'e' | 'l' | 'l' | 'o'>>,
-  Expect<Equal<StringToUnion<'coronavirus'>, 'c' | 'o' | 'r' | 'o' | 'n' | 'a' | 'v' | 'i' | 'r' | 'u' | 's'>>,
+  Expect<Equal<Subsequence<[1, 2]>, [] | [1] | [2] | [1, 2]>>,
+  Expect<Equal<Subsequence<[1, 2, 3]>, [] | [1] | [2] | [1, 2] | [3] | [1, 3] | [2, 3] | [1, 2, 3]>>,
+  Expect<Equal<Subsequence<[1, 2, 3, 4, 5]>, [] |
+  [1] | [2] | [3] | [4] | [5] |
+  [1, 2] | [1, 3] | [1, 4] | [1, 5] | [2, 3] | [2, 4] | [2, 5] | [3, 4] | [3, 5] | [4, 5] |
+  [1, 2, 3] | [1, 2, 4] | [1, 2, 5] | [1, 3, 4] | [1, 3, 5] | [1, 4, 5] | [2, 3, 4] | [2, 3, 5] | [2, 4, 5] | [3, 4, 5] |
+  [1, 2, 3, 4] | [1, 2, 3, 5] | [1, 2, 4, 5] | [1, 3, 4, 5] | [2, 3, 4, 5] |
+  [1, 2, 3, 4, 5] >>,
+  Expect<Equal<Subsequence<['a', 'b', 'c']>, [] |
+  ['a'] | ['b'] | ['c'] |
+  ['a', 'b'] | ['a', 'c'] | ['b', 'c'] |
+  ['a', 'b', 'c'] >>,
+  Expect<Equal<Subsequence<['x', 'y']>, [] |
+  ['x'] | ['y'] |
+  ['x', 'y'] >>,
 ]
 
-type StringToUnion<T extends string> = T extends `${infer F}${infer R}`
-? F | StringToUnion<R>
+type Merge<E, A extends unknown[]> = A extends any
+? [E, ...A]
 : never
+
+type Subsequence<T extends any[]> = T extends [infer F, ...infer R]
+? Merge<F, Subsequence<R>> | Subsequence<R>
+: []

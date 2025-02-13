@@ -1,15 +1,42 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
+type Foo = {
+  [key: string]: any
+  foo(): void
+}
+
+type Bar = {
+  [key: number]: any
+  bar(): void
+  0: string
+}
+
+const foobar = Symbol('foobar')
+type FooBar = {
+  [key: symbol]: any
+  [foobar](): void
+}
+
+type Baz = {
+  bar(): void
+  baz: string
+}
+
 type cases = [
-  Expect<Equal<Permutation<'A'>, ['A']>>,
-  Expect<Equal<Permutation<'A' | 'B' | 'C'>, ['A', 'B', 'C'] | ['A', 'C', 'B'] | ['B', 'A', 'C'] | ['B', 'C', 'A'] | ['C', 'A', 'B'] | ['C', 'B', 'A']>>,
-  Expect<Equal<Permutation<'B' | 'A' | 'C'>, ['A', 'B', 'C'] | ['A', 'C', 'B'] | ['B', 'A', 'C'] | ['B', 'C', 'A'] | ['C', 'A', 'B'] | ['C', 'B', 'A']>>,
-  Expect<Equal<Permutation<boolean>, [false, true] | [true, false]>>,
-  Expect<Equal<Permutation<never>, []>>,
+  Expect<Equal<RemoveIndexSignature<Foo>, { foo(): void }>>,
+  Expect<Equal<RemoveIndexSignature<Bar>, { bar(): void, 0: string }>>,
+  Expect<Equal<RemoveIndexSignature<FooBar>, { [foobar](): void }>>,
+  Expect<Equal<RemoveIndexSignature<Baz>, { bar(): void, baz: string }>>,
 ]
 
-type Permutation<T, path extends unknown[] = [], acc = never, A = T> = [T] extends [never]
-? acc | path
-: T extends any
-  ? Permutation<Exclude<A, T>, [...path, T], acc>
-  : never
+type Filter<T> = string extends T
+? never
+: number extends T
+  ? never
+  : symbol extends T
+    ? never
+    : T
+
+type RemoveIndexSignature<T> = {
+  [P in keyof T as Filter<P>]: T[P]
+}

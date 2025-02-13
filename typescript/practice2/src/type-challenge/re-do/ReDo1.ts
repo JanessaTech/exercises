@@ -1,30 +1,38 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
+type Case0 = ['', '', '']
+type Case1 = ['+', '', '']
+type Case2 = ['+', '1', '']
+type Case3 = ['+', '100', '']
+type Case4 = ['+', '100', '%']
+type Case5 = ['', '100', '%']
+type Case6 = ['-', '100', '%']
+type Case7 = ['-', '100', '']
+type Case8 = ['-', '1', '']
+type Case9 = ['', '', '%']
+type Case10 = ['', '1', '']
+type Case11 = ['', '100', '']
+
 type cases = [
-  Expect<Equal<AllCombinations<''>, ''>>,
-  Expect<Equal<AllCombinations<'A'>, '' | 'A'>>,
-  Expect<Equal<AllCombinations<'AB'>, '' | 'A' | 'B' | 'AB' | 'BA'>>,
-  Expect<Equal<AllCombinations<'ABC'>, '' | 'A' | 'B' | 'C' | 'AB' | 'AC' | 'BA' | 'BC' | 'CA' | 'CB' | 'ABC' | 'ACB' | 'BAC' | 'BCA' | 'CAB' | 'CBA'>>,
-  Expect<Equal<AllCombinations<'ABCD'>, '' | 'A' | 'B' | 'C' | 'D' | 'AB' | 'AC' | 'AD' | 'BA' | 'BC' | 'BD' | 'CA' | 'CB' | 'CD' | 'DA' | 'DB' | 'DC' | 'ABC' | 'ABD' | 'ACB' | 'ACD' | 'ADB' | 'ADC' | 'BAC' | 'BAD' | 'BCA' | 'BCD' | 'BDA' | 'BDC' | 'CAB' | 'CAD' | 'CBA' | 'CBD' | 'CDA' | 'CDB' | 'DAB' | 'DAC' | 'DBA' | 'DBC' | 'DCA' | 'DCB' | 'ABCD' | 'ABDC' | 'ACBD' | 'ACDB' | 'ADBC' | 'ADCB' | 'BACD' | 'BADC' | 'BCAD' | 'BCDA' | 'BDAC' | 'BDCA' | 'CABD' | 'CADB' | 'CBAD' | 'CBDA' | 'CDAB' | 'CDBA' | 'DABC' | 'DACB' | 'DBAC' | 'DBCA' | 'DCAB' | 'DCBA'>>,
+  Expect<Equal<PercentageParser<''>, Case0>>,
+  Expect<Equal<PercentageParser<'+'>, Case1>>,
+  Expect<Equal<PercentageParser<'+1'>, Case2>>,
+  Expect<Equal<PercentageParser<'+100'>, Case3>>,
+  Expect<Equal<PercentageParser<'+100%'>, Case4>>,
+  Expect<Equal<PercentageParser<'100%'>, Case5>>,
+  Expect<Equal<PercentageParser<'-100%'>, Case6>>,
+  Expect<Equal<PercentageParser<'-100'>, Case7>>,
+  Expect<Equal<PercentageParser<'-1'>, Case8>>,
+  Expect<Equal<PercentageParser<'%'>, Case9>>,
+  Expect<Equal<PercentageParser<'1'>, Case10>>,
+  Expect<Equal<PercentageParser<'100'>, Case11>>,
 ]
 
-type StringToUnion<S> = S extends `${infer F}${infer R}`
-  ? F | StringToUnion<R>
-  : never
 
-type ArrayToString<A> = A extends any
-?  A extends [infer F, ...infer R]
-  ?  `${string &F}${ArrayToString<R>}`
-  : ''
-: never
-
-type Com<U, path extends unknown[] = [], acc = never, A = U> = [U] extends [never]
-? ArrayToString<acc | path>
-: U extends any
-  ? Com<Exclude<A, U>, [...path, U], acc | path>
-  : never
-
-type AllCombinations<S> =  Com<StringToUnion<S>>
-
-type test = StringToUnion<'AB'>
-type test1 = Com<StringToUnion<'AB'>>
+type PercentageParser<A extends string, sign = '', num = '', unit = ''> = A extends ''
+? [sign, num, unit]
+: A extends `${infer S extends '+' | '-'}${infer R}`
+  ? PercentageParser<R, S, num, unit>
+  : A extends `${infer N}%`
+    ? PercentageParser<'', sign, N, '%'>
+    : PercentageParser<'', sign, A, unit>

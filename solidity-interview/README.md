@@ -26,6 +26,12 @@ npx hardhat ignition deploy ./ignition/modules/Lock.js
 
 ```
 
+## Install dependences
+
+```
+npm install @openzeppelin
+```
+
 ## How to run the codes
 
 ```
@@ -35,6 +41,7 @@ npx hardhat node
 ```
 
 ## How to run test cases
+
 ```
 1. run all cases under test
    npx hardhat test

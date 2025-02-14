@@ -106,7 +106,7 @@ contract MultiSigWallet {
         notExcuted(txId) {
             Transaction storage transaction = transactions[txId];
             require(transaction.confirms >= numConfirmRequired, 'numConfirmRequired is enough');
-            (bool success, ) = transaction.to.call(transaction.data);
+            (bool success,) = transaction.to.call(transaction.data);
             require(success, 'failed to call dummy');
             transaction.executed = true;
 

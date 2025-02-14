@@ -10,6 +10,11 @@ contract MultiSigWallet {
     mapping(uint256 => mapping(address => bool)) isConfirm;
     mapping(address => bool) isOwner;
 
+    event SubmitTx(address indexed owner, uint256 indexed txId);
+    event ConfirmTx(address indexed owner, uint256 indexed txId);
+    event RevokeTx(address indexed owner, uint256 indexed txId);
+    event ExecuteTx(address indexed owner, uint256 indexed txId);
+
     struct Transaction {
         address to;
         bytes data;
@@ -57,6 +62,7 @@ contract MultiSigWallet {
     function submitTransaction(address to, bytes memory data) 
         public 
         onlyOwner {
+            uint256 txId = transactions.length;
             Transaction memory transaction = Transaction({
                 to: to,
                 data: data,
@@ -64,6 +70,7 @@ contract MultiSigWallet {
                 confirms: 0
             });
             transactions.push(transaction);
+            emit SubmitTx(msg.sender, txId);
     }
 
     function confirmTransaction(uint256 txId) 
@@ -75,6 +82,8 @@ contract MultiSigWallet {
             Transaction storage transaction = transactions[txId];
             transaction.confirms += 1;
             isConfirm[txId][msg.sender] = true;   
+
+            emit ConfirmTx(msg.sender, txId);
     }
 
     function revokeConfirm(uint256 txId)
@@ -86,6 +95,8 @@ contract MultiSigWallet {
         require(isConfirm[txId][msg.sender], 'Tx is not confirmed');
         transaction.confirms -= 1;
         isConfirm[txId][msg.sender] = false;
+
+        emit RevokeTx(msg.sender, txId);
     }
 
     function executeTransaction(uint256 txId)
@@ -98,6 +109,8 @@ contract MultiSigWallet {
             (bool success, ) = transaction.to.call(transaction.data);
             require(success, 'failed to call dummy');
             transaction.executed = true;
+
+            emit ExecuteTx(msg.sender, txId);
     }
 
     function getTransactionSize() public view returns(uint256) {

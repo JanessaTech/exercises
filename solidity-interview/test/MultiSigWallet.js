@@ -78,9 +78,10 @@ describe('MultiSigWallet', function () {
     describe('submitTransaction', function () {
         it('It should submit a new transaction succesfully when it is owner', async function () {
             const {multiSigWallet, data, dummy} = await loadFixture(deployMultiSigWalletFixture)
-            await multiSigWallet.submitTransaction(dummy.getAddress(), data)
+            await expect(multiSigWallet.submitTransaction(dummy.getAddress(), data)).to.emit(multiSigWallet, 'SubmitTx')
             const size = await multiSigWallet.getTransactionSize()
             expect(size).to.equal(1)
+            
         })
         it('It should fail to submit a new transaction when it is not owner', async function () {
             const {multiSigWallet, account6, data, dummy} = await loadFixture(deployMultiSigWalletFixture)
@@ -117,7 +118,7 @@ describe('MultiSigWallet', function () {
         it('It confirm the tx succesfully', async function () {
             const {multiSigWallet, data, dummy} = await loadFixture(deployMultiSigWalletFixture)
             await multiSigWallet.submitTransaction(dummy.getAddress(), data)
-            await multiSigWallet.confirmTransaction(0)
+            await expect(multiSigWallet.confirmTransaction(0)).to.emit(multiSigWallet, 'ConfirmTx')
             const transaction = await multiSigWallet.getTransaction(0)
             expect(transaction.confirms).to.equal(1)
         })
@@ -151,7 +152,7 @@ describe('MultiSigWallet', function () {
             const {multiSigWallet, dummy, data} = await loadFixture(deployMultiSigWalletFixture)
             await multiSigWallet.submitTransaction(dummy.getAddress(), data)
             await multiSigWallet.confirmTransaction(0)
-            await multiSigWallet.revokeConfirm(0)
+            await expect(multiSigWallet.revokeConfirm(0)).to.emit(multiSigWallet, 'RevokeTx')
             const transaction = await multiSigWallet.getTransaction(0)
             expect(transaction.confirms).to.equal(0)
         })
@@ -186,7 +187,7 @@ describe('MultiSigWallet', function () {
             await multiSigWallet.confirmTransaction(0)
             await multiSigWallet.connect(account2).confirmTransaction(0)
             await multiSigWallet.connect(account3).confirmTransaction(0)
-            await multiSigWallet.executeTransaction(0)
+            await expect(multiSigWallet.executeTransaction(0)).to.emit(multiSigWallet, 'ExecuteTx')
             const msg = await dummy.get()
            
             const transaction = await multiSigWallet.getTransaction(0)

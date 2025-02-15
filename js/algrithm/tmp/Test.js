@@ -1,4 +1,3 @@
-const vowels = new Set(['a', 'e', 'i', 'o', 'u'])
-
-const res = vowels.has('I'.toLowerCase())
-console.log(res)
+const str = '   hello     word  '
+const  res = str.trim().replace(/\s+/, ' ')
+console.log(res.split(' '))

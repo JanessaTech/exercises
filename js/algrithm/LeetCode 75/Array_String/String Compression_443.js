@@ -2,35 +2,34 @@ var compress = function(chars) {
     let cnt = 0
     let pre = undefined
     let write = 0
-
     const fill = function(ch, num) {
-        chars[write++] = pre
+        chars[write++] = ch
         if (num > 1) {
-            const cnt_arr = (num + '').split('')
-            let j = 0
-            while (j < cnt_arr.length) chars[write++] = cnt_arr[j++]
-        } 
+            const arr = (num +'').split('')
+            for (let a of arr) {
+                chars[write++] = a
+            }
+        }
     }
-    
-    for (let i = 0; i < chars.length; i++) {
-        let cur = chars[i]
-        if(!pre) {
+    for (let i = 0; i < chars.length;i++) {
+        const ch = chars[i]
+        if (!pre) {
             cnt++
-            pre = cur
+            pre = ch
         } else {
-            if (pre === cur) {
+            if (pre === ch) {
                 cnt++
             } else {
                 fill(pre, cnt)
-                cnt= 1
-                pre = cur
+                cnt = 1
+                pre = ch
             }
         }
-
     }
     fill(pre, cnt)
+
     return write
-};
+}
 
 const chars = ["a","b","b","b","b","b","b","b","b","b","b","b","b"]
 const res = compress(chars)

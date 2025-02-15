@@ -1,3 +1,4 @@
-const g = [9, 8, 7, 1]
-g.sort()
-console.log(g)
+const vowels = new Set(['a', 'e', 'i', 'o', 'u'])
+
+const res = vowels.has('I'.toLowerCase())
+console.log(res)

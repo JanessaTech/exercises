@@ -1,0 +1,27 @@
+var lowestCommonAncestor = function(root, p, q) {
+    let pathP = undefined
+    let pathQ = undefined
+    const dfs = function(node, path) {
+        if (!node) return 
+        path.push(node)
+        if (node === p) pathP = path.slice()
+        if (node === q) pathQ = path.slice()
+        dfs(node.left, path)
+        dfs(node.right, path)
+        path.pop()
+    }
+
+    dfs(root, [])
+
+    let ans = undefined
+    for (let i = 0; i < pathP.length && i < pathQ.length; i++) {
+        if (pathP[i] === pathQ[i]) {
+            ans = pathP[i]
+        } else {
+            break
+        }
+    }
+    return ans
+
+
+};

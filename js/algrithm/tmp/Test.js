@@ -1,3 +1,2 @@
-const str = '   hello     word  '
-const  res = str.trim().replace(/\s+/, ' ')
-console.log(res.split(' '))
+const min = -Infinity
+console.log(min < 10)

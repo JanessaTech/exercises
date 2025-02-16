@@ -4,18 +4,17 @@
  */
 var asteroidCollision = function(asteroids) {
     const stack = []
-    
     for (let asteroid of asteroids) {
         if (stack.length) {
             let next = asteroid
             while (stack.length) {
                 const top = stack[stack.length - 1]
-                if (next < 0 && top > 0) {
-                    if (Math.abs(top) < Math.abs(next)) {
-                        stack.pop() 
-                    } else if (Math.abs(top) > Math.abs(next)) {
+                if (top > 0 && next < 0) {
+                    if (Math.abs(top) > Math.abs(next)) {
                         next = undefined
                         break
+                    } else if (Math.abs(top) < Math.abs(next)) {
+                        stack.pop()
                     } else {
                         next = undefined
                         stack.pop()
@@ -30,7 +29,6 @@ var asteroidCollision = function(asteroids) {
             stack.push(asteroid)
         }
     }
-
     return stack
 };
 

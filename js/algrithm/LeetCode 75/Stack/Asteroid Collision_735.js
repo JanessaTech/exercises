@@ -4,28 +4,31 @@
  */
 var asteroidCollision = function(asteroids) {
     const stack = []
-
-    const reduce = function(stack) {
-        while (stack.length > 1) {
-            const top1 = stack.pop()
-            const top2 = stack.pop()
-            if (top2 > 0 && top1 < 0) {
-                if (Math.abs(top2) > Math.abs(top1)) {
-                    stack.push(top2)
-                } else if (Math.abs(top2) < Math.abs(top1)) {
-                    stack.push(top1)
-                }
-            } else {
-                stack.push(top2)
-                stack.push(top1)
-                break
-            }
-        }
-    }
     
     for (let asteroid of asteroids) {
-        stack.push(asteroid)
-        reduce(stack)
+        if (stack.length) {
+            let next = asteroid
+            while (stack.length) {
+                const top = stack[stack.length - 1]
+                if (next < 0 && top > 0) {
+                    if (Math.abs(top) < Math.abs(next)) {
+                        stack.pop() 
+                    } else if (Math.abs(top) > Math.abs(next)) {
+                        next = undefined
+                        break
+                    } else {
+                        next = undefined
+                        stack.pop()
+                        break
+                    }
+                } else {
+                    break
+                }
+            }
+            if (next) stack.push(next)
+        } else {
+            stack.push(asteroid)
+        }
     }
 
     return stack

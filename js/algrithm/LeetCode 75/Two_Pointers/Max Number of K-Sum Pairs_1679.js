@@ -1,3 +1,8 @@
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
 var maxOperations = function(nums, k) {
     nums.sort((a, b) => a - b)
     let cnt = 0
@@ -14,3 +19,5 @@ var maxOperations = function(nums, k) {
         }
     }
     return cnt
+    
+};

@@ -61,5 +61,4 @@ describe('MyERC721', function () {
             expect(ownerAfter).to.be.equal(account3.address)
         })
     })
-
 })

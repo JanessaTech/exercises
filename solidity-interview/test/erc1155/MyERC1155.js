@@ -39,4 +39,36 @@ describe('MyERC1155', function () {
             expect(balance3).to.be.equal(33)
         })
     })
+
+    describe('safeTransferFrom', function () {
+        it('It should call safeTransferFrom successfully', async function () {
+            const {erc1155, account2, account3} = await loadFixture(deployMyERC1155Fixture)
+            const tokenId = 1
+            const value = 1
+            const data = '0x'
+            await erc1155.mint(account2.address, tokenId, value, data)
+            const beforeBalance = await erc1155.balanceOf(account3.address, tokenId)
+            await erc1155.connect(account2).safeTransferFrom(account2.address, account3.address, tokenId, value, data)
+            const afterBalance = await erc1155.balanceOf(account3.address, tokenId)
+
+            expect(beforeBalance).to.be.equal(0)
+            expect(afterBalance).to.be.equal(1)
+        })
+    })
+    describe('safeBatchTransferFrom', function () {
+        it('It should call safeBatchTransferFrom successfully', async function () {
+            const {erc1155, account1, account2, account3} = await loadFixture(deployMyERC1155Fixture)
+            const ids =[1, 2, 3]
+            const values = [11n, 22n, 33n]
+            const data = '0x1111'
+            await erc1155.batchMint(account2.address, ids, values, data)
+            const beforeBalances = await erc1155.balanceOfBatch(Array(3).fill(account2.address), ids)
+            await erc1155.connect(account2).safeBatchTransferFrom(account2.address, account3.address, ids, values, data)
+            const afterBlances = await erc1155.balanceOfBatch(Array(3).fill(account3.address), ids)
+
+            expect(beforeBalances).to.include.members(values)
+            expect(afterBlances).to.include.members(values)
+        })
+    })
+
 })

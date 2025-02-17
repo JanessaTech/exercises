@@ -1,7 +1,6 @@
 const {expect} = require("chai")
 const { ethers } = require("hardhat");
 const {loadFixture} = require("@nomicfoundation/hardhat-toolbox/network-helpers");
-const exp = require("constants");
 
 describe('MultiSigWallet', function () {
     async function deployMultiSigWalletFixture() {

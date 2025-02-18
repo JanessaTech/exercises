@@ -64,10 +64,10 @@ describe('MyERC1155', function () {
             await erc1155.batchMint(account2.address, ids, values, data)
             const beforeBalances = await erc1155.balanceOfBatch(Array(3).fill(account2.address), ids)
             await erc1155.connect(account2).safeBatchTransferFrom(account2.address, account3.address, ids, values, data)
-            const afterBlances = await erc1155.balanceOfBatch(Array(3).fill(account3.address), ids)
+            const afterBalances = await erc1155.balanceOfBatch(Array(3).fill(account3.address), ids)
 
             expect(beforeBalances).to.include.members(values)
-            expect(afterBlances).to.include.members(values)
+            expect(afterBalances).to.include.members(values)
         })
     })
 

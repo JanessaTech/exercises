@@ -14,12 +14,10 @@ type cases = [
 
 
 type ReplaceAll<S extends string, From extends string, To extends string, acc extends string= ''> = From extends ''
-? S
-: S extends ''
-  ? acc
-  : S extends `${infer L}${From}${infer R}` 
+  ? S
+  : S extends `${infer L}${From}${infer R}`
     ? ReplaceAll<R, From, To, `${acc}${L}${To}`>
-    : ReplaceAll<'', From, To, `${acc}${S}`>
+    : `${acc}${S}`
 
 
 type test = ReplaceAll<'foobar', 'bar', 'foo'>

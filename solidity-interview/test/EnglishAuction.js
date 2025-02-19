@@ -17,7 +17,9 @@ describe('EnglishAuction', function () {
 
         const EnglishAuction = await ethers.getContractFactory('EnglishAuction', nftOwner)
         const englishAuction = await EnglishAuction.deploy(nft, nftId)
-        return {englishAuction, nftOwner, nonNftOwner, bidderA, bidderB, SEVEN_DAY_IN_SECS}
+
+        await nft.connect(nftOwner).approve(englishAuction.getAddress(), nftId)
+        return {englishAuction, nft, nftId, nftOwner, nonNftOwner, bidderA, bidderB, SEVEN_DAY_IN_SECS}
     }
 
     describe('init', function () {
@@ -87,20 +89,38 @@ describe('EnglishAuction', function () {
             const {englishAuction} = await loadFixture(deployEnglishAuctionFixture)
             await expect(englishAuction.end()).to.be.revertedWith('not started')
         })
-        it('It fails to end when it is not ended', async function () {
-            const {englishAuction} = await loadFixture(deployEnglishAuctionFixture)
-            await englishAuction.start()
-
-            await expect(englishAuction.end()).to.be.revertedWith('not ended')
-
-        })
-        it('It ended successfully', async function () {
-            const {englishAuction, SEVEN_DAY_IN_SECS, nftOwner} = await loadFixture(deployEnglishAuctionFixture)
+        it('It ended successfully when nothing happened', async function () {
+            const {englishAuction, nft, nftId, SEVEN_DAY_IN_SECS, nftOwner} = await loadFixture(deployEnglishAuctionFixture)
             await englishAuction.start()
             const latest = await time.latest()
             await time.increaseTo(latest + SEVEN_DAY_IN_SECS)
 
             await expect(englishAuction.end()).to.emit(englishAuction, 'End').withArgs(nftOwner.address)
+            const latestNftOwner = await nft.ownerOf(nftId)
+            expect(latestNftOwner).to.be.equal(nftOwner.address)
+        })
+        it('It ended successfully when bidderB finally got the bid', async function () {
+            const {englishAuction, nft, nftId, SEVEN_DAY_IN_SECS, nftOwner, bidderA, bidderB} = await loadFixture(deployEnglishAuctionFixture)
+            await englishAuction.start()
+            const amount1 = 500
+            const amount2 = 1500
+            await englishAuction.connect(bidderA).bid({value: amount1})
+            await englishAuction.connect(bidderB).bid({value: amount2})
+            const latest = await time.latest()
+            await time.increaseTo(latest + SEVEN_DAY_IN_SECS)
+
+            await expect(englishAuction.end()).to.emit(englishAuction, 'End').withArgs(nftOwner.address)
+            const latestNftOwner = await nft.ownerOf(nftId)
+            expect(latestNftOwner).to.be.equal(bidderB.address)
+        })
+        it('It fails to end when it is not ended', async function () {
+            const {englishAuction, SEVEN_DAY_IN_SECS} = await loadFixture(deployEnglishAuctionFixture)
+            await englishAuction.start()
+            const latest = await time.latest()
+            await time.increaseTo(latest + SEVEN_DAY_IN_SECS)
+            await englishAuction.end()
+
+            await expect(englishAuction.end()).to.be.revertedWith('endeded')
         })
     })
 })

@@ -34,9 +34,12 @@ contract EnglishAuction  {
     function start() public {
         require(!started, 'started');
         require(msg.sender == seller, 'not owner');
+
+        nft.transferFrom(msg.sender, address(this), nftId);
+
         started = true;
         endAt = block.timestamp + 7 days;
-
+        
         emit Start(msg.sender);
     }
 
@@ -69,9 +72,13 @@ contract EnglishAuction  {
         require(block.timestamp >= endAt, 'not ended');
         require(!ended, 'endeded');
         ended = true;
-
+        if(highestBidder != address(0)) {
+            nft.safeTransferFrom(address(this), highestBidder, nftId);
+            bool sent = payable(seller).send(highestBid);
+            require(sent, 'failed to send eth to seller');
+        } else {
+            nft.safeTransferFrom(address(this), seller, nftId);
+        }
         emit End(msg.sender);
-
     }
-
 }

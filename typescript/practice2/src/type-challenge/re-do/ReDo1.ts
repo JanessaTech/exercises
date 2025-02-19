@@ -57,10 +57,16 @@ type Expected1 = {
 
 type Expected2 = { readonly a: string } | { readonly b: number }
 
+type DeepArray<A, acc extends unknown[]= []> = A extends [infer F, ...infer R]
+  ? DeepArray<R, [...acc, DeepReadonly<F>]>
+  : acc
+
 type DeepReadonly<T> = T extends any
 ? T extends {[P in any]: unknown}
-  ? never
+  ? {readonly [K in keyof T]: DeepReadonly<T[K]>}
   : T extends unknown[]
-    ? never
-    : never
+    ? readonly [...DeepArray<T>]
+    : T
 : never
+
+type test = DeepReadonly<X1>

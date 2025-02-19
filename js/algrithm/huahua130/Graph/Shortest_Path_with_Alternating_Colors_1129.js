@@ -5,51 +5,38 @@
  * @return {number[]}
  */
 var shortestAlternatingPaths = function(n, redEdges, blueEdges) {
-    const digraph = createDigraph(n, redEdges, blueEdges)
-    const ans = Array(n).fill(-1)
-    searchPath(n, digraph, ans)
-    return ans
-};
+    const digraph = createDigraph(n,  redEdges, blueEdges)
+    const dists = Array(n).fill(-1)
 
-function searchPath(n, digraph, ans) {
-    const queue = []
-    queue.push([0, 1])
-    queue.push([0, -1])
+    const queue = [[0, 1], [0, -1]]
+    let level = 0
 
-    let steps = 0
-    while(queue.length) {
+    while (queue.length) {
         const size = queue.length
         for (let i = 0; i < size; i++) {
-            const cur = queue.shift()
-            const u = cur[0]
-            const color = cur[1]
-            ans[u] = ans[u] === -1 ? steps : ans[u]
-            for (let k = 0; k < digraph[u].length; k++) {
-                const next = digraph[u][k]
-                const v = next[0]
-                const nextColor = next[1]
-                const visited = next[2]
-                if (visited || color === nextColor) continue
-                queue.push([v, nextColor])
+            const [cur, color] = queue.shift()
+            dists[cur] = dists[cur] === -1 ? level : dists[cur]
+            for (let next of digraph[cur]) {
+                const [v, col, visited] = next
+                if (col === color || visited) continue
+                queue.push([v, -1 * color])
                 next[2] = true
             }
         }
-        steps++
-    } 
+        level++
+    }
+    return dists
 }
-
 
 function createDigraph(n, redEdges, blueEdges) {
     const digraph = Array(n).fill(undefined).map((_, i) => [])
     for (let red of redEdges) {
-        const a = red[0]
-        const b = red[1]
+        const [a, b] = red
         digraph[a].push([b, 1, false])
     }
     for (let blue of blueEdges) {
-        const a = blue[0]
-        const b = blue[1]
-        digraph[a].push([b , -1, false])
+        const [u, v] = blue
+        digraph[u].push([v, -1, false])
     }
     return digraph
 }

@@ -14,8 +14,6 @@ type cases = [
 
 type ReplaceAll<S extends string, From extends string, To extends string, acc extends string= ''> = From extends ''
   ? S
-  : S extends ''
-    ? acc
-    : S extends `${infer L}${From}${infer R}`
-      ? ReplaceAll<R, From, To, `${acc}${L}${To}`>
-      : ReplaceAll<'', From, To, `${acc}${S}`>
+  : S extends `${infer L}${From}${infer R}`
+    ? ReplaceAll<R, From, To, `${acc}${L}${To}`>
+    : `${acc}${S}`

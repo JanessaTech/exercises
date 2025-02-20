@@ -48,7 +48,5 @@ describe('TimeLock', function () {
             const balance = await timeLock.getBalance()
             expect(balance).to.be.equal(0)
         })
-       
-
     })
 })

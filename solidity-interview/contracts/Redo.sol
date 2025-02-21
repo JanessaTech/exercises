@@ -3,112 +3,33 @@ pragma solidity ^0.8.20;
 
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Redo {
-    address[] owners;
-    uint256 numConfirm;
-    mapping(address => bool) isOwner;
-    mapping(uint256 => mapping(address => bool)) isConfirm;
+    IERC20 token1;
+    address owner1;
+    IERC20 token2;
+    address owner2;
 
-    event SubmitTx(address indexed owner, uint256 indexed txId);
-    event ConfirmTx(address indexed owner, uint256 indexed txId);
-    event RevokeTx(address indexed owner, uint256 indexed txId);
-    event ExecuteTx(address indexed owner, uint256 indexed txId);
-
-    constructor(address[] memory _owners, uint256 _numConfirm) {
-        require(_owners.length > 0, 'owners is empty');
-        require( _numConfirm > 0 && _owners.length >= _numConfirm, 'invalid _numConfirm');
-        numConfirm = _numConfirm;
-        for (uint256 i = 0; i < _owners.length; i++) {
-            address owner = _owners[i];
-            require(owner != address(0), 'Invalid owner');
-            require(!isOwner[owner], 'duplicated owner');
-            owners.push(owner);
-            isOwner[owner] = true;
-        }
+    constructor(address _token1, address _owner1, address _token2, address _owner2) {
+        token1 = IERC20(_token1);
+        owner1 = _owner1;
+        token2 = IERC20(_token2);
+        owner2 = _owner2;
     }
-
-    struct Transaction {
-        address to;
-        bytes data;
-        uint256 confirms;
-        bool executed;
-    }
-    Transaction[] transactions;
-
-    modifier onlyOwner() {
-        require(isOwner[msg.sender], 'not owner');
-        _;
-    }
-    modifier txExist(uint256 txId) {
-        require(txId < transactions.length, 'Tx does not exist');
-        _;
-    }
-    modifier notConfirm(uint256 txId) {
-        require(!isConfirm[txId][msg.sender], 'Tx is confirmed');
-        _;
-    }
-    modifier notExcuted(uint256 txId) {
-        Transaction storage transaction = transactions[txId];
-        require(!transaction.executed, 'Tx is already executed');
+    modifier isOwner() {
+        require(msg.sender == owner1 || msg.sender == owner2, 'Not owner');
         _;
     }
 
-    function submitTransaction(address to, bytes memory data)
-        public 
-        onlyOwner {
-            uint256 txId = transactions.length;
-            Transaction memory transaction = Transaction({
-                to: to,
-                data: data,
-                confirms: 0,
-                executed: false
-            });
-            transactions.push(transaction);
-            emit SubmitTx(msg.sender, txId);
-        }
-    function confirmTransaction(uint256 txId)
-    public
-    onlyOwner
-    txExist(txId)
-    notConfirm(txId)
-    notExcuted(txId) {
-        Transaction storage transaction = transactions[txId];
-        transaction.confirms += 1;
-        isConfirm[txId][msg.sender] = true;
-        emit ConfirmTx(msg.sender, txId);
+    function swap(uint256 amount1, uint256 amount2) public isOwner {
+        require(token1.allowance(owner1, address(this)) >= amount1, 'allowance in token1 is too low');
+        require(token2.allowance(owner2, address(this)) >= amount2, 'allowance in token2 is too low');
+        _transferFrom(token1, owner1, owner2, amount1);
+        _transferFrom(token2, owner2, owner1, amount2);
     }
 
-    function revertTransaction(uint256 txId)
-    public 
-    onlyOwner
-    txExist(txId)
-    notExcuted(txId) {
-        require(isConfirm[txId][msg.sender], 'not confirm');
-        transactions[txId].confirms -= 1;
-        isConfirm[txId][msg.sender] = false;
-
-        emit RevokeTx(msg.sender, txId);
+    function _transferFrom(IERC20 token, address from, address to, uint256 amount) public {
+        token.transferFrom(from, to, amount);
     }
-
-    function executeTransaction(uint256 txId)
-        public
-        onlyOwner
-        txExist(txId)
-        notExcuted(txId) {
-            Transaction storage transaction = transactions[txId];
-            require(transaction.confirms >= numConfirm, 'not enough confirms');
-            transaction.executed = true;
-            (bool success, ) = transaction.to.call(transaction.data);
-            require(success, 'Failed to call dummy');
-
-            emit ExecuteTx(msg.sender, txId);
-    }
-
-    function getOwners() public view returns(address[] memory) {
-        return owners;
-    }
-
-    receive() external payable {}
-    fallback() external payable {}
 }

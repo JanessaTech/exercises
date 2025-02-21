@@ -5,201 +5,74 @@ const { extendProvider } = require("hardhat/config");
 
 describe('Redo', function () {
     async function deployRedoFixture() {
-        const [account1, account2, account3, account4, account5,...others] = await ethers.getSigners()
-        const Dummy = await ethers.getContractFactory('Dummy', account1)
-        const dummy = await Dummy.deploy()
-        const data = '0x4ed3885e000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000047465737400000000000000000000000000000000000000000000000000000000'
-        const Redo = await ethers.getContractFactory('Redo', account1)
-        const owners = []
-        owners.push(account1.address)
-        owners.push(account2.address)
-        owners.push(account3.address)
-        owners.push(account4.address)
-        const numConfirm = 3 
-        const redo = await Redo.deploy(owners, numConfirm)
-        return {redo, account1, account2, account3, account4, account5, dummy, data}
+        const [deployer1, deployer2, deployer3, Alice, Bob, nonOwner, ...others] = await ethers.getSigners()
+        const Token1 = await ethers.getContractFactory('MyERC20', deployer1)
+        const token1Name = 'token1Name'
+        const token1Symbol = 'token1Symbol'
+        const token1 = await Token1.deploy(token1Name, token1Symbol)
+        const aliceAmount = 1000
+        await token1.transfer(Alice.address, aliceAmount)
+
+        const Token2 = await ethers.getContractFactory('MyERC20', deployer2)
+        const token2Name = 'token2Name'
+        const token2Symbol = 'token2Symbol'
+        const token2 = await Token2.deploy(token2Name, token2Symbol)
+        const bobAmount = 500
+        await token2.transfer(Bob.address, bobAmount)
+
+        const Redo = await ethers.getContractFactory('Redo', deployer3)
+        const redo = await Redo.deploy(token1.getAddress(), Alice.address, token2.getAddress(), Bob.address)
+
+        await token1.connect(Alice).approve(redo.getAddress(), aliceAmount)
+        await token2.connect(Bob).approve(redo.getAddress(), bobAmount)
+
+        return {redo, token1, token2, Alice, Bob, aliceAmount, bobAmount, nonOwner}
     }
-
     describe('init', function () {
-        it('It fails to init when owners is empty', async function () {
-            const [account1,  ...others] = await ethers.getSigners()
-            const Redo = await ethers.getContractFactory('Redo', account1)
-            const owners = []
-            const numConfirm = 3
-            await expect(Redo.deploy(owners, numConfirm)).to.be.revertedWith('owners is empty')
-        })
-        it('It fails to init when _numConfirm is larger than the number of owners', async function () {
-            const [account1,  account2, ...others] = await ethers.getSigners()
-            const Redo = await ethers.getContractFactory('Redo', account1)
-            const owners = []
-            owners.push(account1.address)
-            owners.push(account2.address)
-            const numConfirm = 3
-            await expect(Redo.deploy(owners, numConfirm)).to.be.revertedWith('invalid _numConfirm')
-        })
-        it('It fails to init when _numConfirm is 0', async function () {
-            const [account1,  account2, ...others] = await ethers.getSigners()
-            const Redo = await ethers.getContractFactory('Redo', account1)
-            const owners = []
-            owners.push(account1.address)
-            owners.push(account2.address)
-            const numConfirm = 0
-            await expect(Redo.deploy(owners, numConfirm)).to.be.revertedWith('invalid _numConfirm')
-        })
-        it('It fails to init when there is valid owner is owners', async function () {
-            const [account1,  account2, ...others] = await ethers.getSigners()
-            const Redo = await ethers.getContractFactory('Redo', account1)
-            const owners = []
-            owners.push(ethers.ZeroAddress)
-            owners.push(account1.address)
-            owners.push(account2.address)
-            const numConfirm = 3
-            await expect(Redo.deploy(owners, numConfirm)).to.be.revertedWith('Invalid owner')
-        })
-        it('It fails to init when there is duplicated owner in owners', async function() {
-            const [account1,  account2, ...others] = await ethers.getSigners()
-            const Redo = await ethers.getContractFactory('Redo', account1)
-            const owners = []
-            owners.push(account1.address)
-            owners.push(account1.address)
-            const numConfirm = 2
-            await expect(Redo.deploy(owners, numConfirm)).to.be.revertedWith('duplicated owner')
-        })
-        it('It inits successfully', async function() {
-            const {redo, account1, account2, account3, account4}  = await loadFixture(deployRedoFixture)
-            const owners = await redo.getOwners()
-            expect(owners).to.include(account1.address)
-            expect(owners).to.include(account2.address)
-            expect(owners).to.include(account3.address)
-            expect(owners).to.include(account4.address)
+        it('init', async function () {
+            const {redo, token1, token2, Alice, Bob, aliceAmount, bobAmount} = await loadFixture(deployRedoFixture)
+            const balanceAlice = await token1.balanceOf(Alice.address)
+            const balanceBob = await token2.balanceOf(Bob.address)
+            const allowanceAlice = await token1.allowance(Alice.address, redo.getAddress())
+            const allowanceBob = await token2.allowance(Bob.address, redo.getAddress())
+
+            expect(balanceAlice).to.be.equal(aliceAmount)
+            expect(balanceBob).to.be.equal(bobAmount)
+            expect(allowanceAlice).to.be.equal(aliceAmount)
+            expect(allowanceBob).to.be.equal(bobAmount)
         })
     })
 
-    describe('submitTransaction', function () {
-        it('It fails to submit a new transaction when it is not owner', async function () {
-            const {redo, account5, dummy, data} = await loadFixture(deployRedoFixture)
-            await expect(redo.connect(account5).submitTransaction(dummy.getAddress(), data)).to.be.revertedWith('not owner')
+    describe('swap', function () {
+        it('It should fail to swap when it is not owner', async function () {
+            const {redo, nonOwner} = await loadFixture(deployRedoFixture)
+            const amount1 = 2000, amount2 = 1000
+            await expect(redo.connect(nonOwner).swap(amount1, amount2)).to.be.revertedWith('Not owner')
         })
-        it('it created a new transaction successfully', async function () {
-            const {redo, dummy, data} = await loadFixture(deployRedoFixture)
-            await expect(redo.submitTransaction(dummy.getAddress(), data)).to.emit(redo, 'SubmitTx')
+        it('it should fail to swap when amount1 is greater than the allowance in token1', async function () {
+            const {redo, Alice} = await loadFixture(deployRedoFixture)
+            const amount1 = 2000, amount2 = 1000
+            await expect(redo.connect(Alice).swap(amount1, amount2)).to.be.revertedWith('allowance in token1 is too low')
         })
-    })
+        it('it should fail to swap when amount2 is greater than the allowance in token2', async function () {
+            const {redo, Alice} = await loadFixture(deployRedoFixture)
+            const amount1 = 800, amount2 = 600
+            await expect(redo.connect(Alice).swap(amount1, amount2)).to.be.revertedWith('allowance in token2 is too low')
+        })
+        it('It should swap successfully', async function () {
+            const {redo, Alice, Bob, token1, token2, aliceAmount, bobAmount} = await loadFixture(deployRedoFixture)
+            const amount1 = 800, amount2 = 400
+            await redo.connect(Alice).swap(amount1, amount2)
 
-    describe('confirmTransaction', function () {
-        it('It fails to confirm tx when it is not owner', async function () {
-            const {redo, account5, dummy, data} = await loadFixture(deployRedoFixture)
-            await redo.submitTransaction(dummy.getAddress(), data)
+            const leftAmountAliceInToken1 = await token1.balanceOf(Alice.address)
+            const leftAmountBobInToken2 = await token2.balanceOf(Bob.address)
+            const newAmountBobIntoken1 = await token1.balanceOf(Bob.address)
+            const newAmountAliceInToken2 = await token2.balanceOf(Alice.address)
 
-            await expect(redo.connect(account5).confirmTransaction(0)).to.be.revertedWith('not owner')
+            expect(leftAmountAliceInToken1).to.be.equal(aliceAmount - amount1)
+            expect(leftAmountBobInToken2).to.be.equal(bobAmount - amount2)
+            expect(newAmountBobIntoken1).to.be.equal(amount1)
+            expect(newAmountAliceInToken2).to.be.equal(amount2)
         })
-        it('It fails to confirm tx when it does not exist', async function () {
-            const {redo, account5, dummy, data} = await loadFixture(deployRedoFixture)
-            await redo.submitTransaction(dummy.getAddress(), data)
-
-            await expect(redo.confirmTransaction(1)).to.be.revertedWith('Tx does not exist')
-        })
-        it('It confirms tx successfully', async function () {
-            const {redo, dummy, data} = await loadFixture(deployRedoFixture)
-            await redo.submitTransaction(dummy.getAddress(), data)
-            await expect(redo.confirmTransaction(0)).to.emit(redo, 'ConfirmTx')
-        })
-        it('It fails to confirm tx when it is already confirmed', async function () {
-            const {redo, dummy, data} = await loadFixture(deployRedoFixture)
-            await redo.submitTransaction(dummy.getAddress(), data)
-            await redo.confirmTransaction(0)
-            await expect(redo.confirmTransaction(0)).to.be.revertedWith('Tx is confirmed')
-        })
-        it('It fails to confirm tx when it is executed', async function () {
-            const {redo, dummy, data, account2, account3, account4} = await loadFixture(deployRedoFixture)
-            await redo.submitTransaction(dummy.getAddress(), data)
-            await redo.confirmTransaction(0)
-            await redo.connect(account2).confirmTransaction(0)
-            await redo.connect(account3).confirmTransaction(0)
-            await redo.executeTransaction(0)
-
-            await expect(redo.connect(account4).confirmTransaction(0)).to.be.revertedWith('Tx is already executed')
-        })
-    })
-
-    describe('revertTransaction', function () {
-        it('It fails to revert tx when it is not owner', async function () {
-            const {redo, dummy, data, account5} = await loadFixture(deployRedoFixture)
-            await redo.submitTransaction(dummy.getAddress(), data)
-            await redo.confirmTransaction(0)
-            await expect(redo.connect(account5).revertTransaction(0)).to.be.revertedWith('not owner')
-        })
-        it('It fails to revert tx when it does not exist', async function () {
-            const {redo, dummy, data, account5} = await loadFixture(deployRedoFixture)
-            await redo.submitTransaction(dummy.getAddress(), data)
-            await expect(redo.revertTransaction(1)).to.be.revertedWith('Tx does not exist')
-        })
-        it('It fails to confirm tx when it is not confirmed', async function () {
-            const {redo, dummy, data} = await loadFixture(deployRedoFixture)
-            await redo.submitTransaction(dummy.getAddress(), data)
-            await expect(redo.revertTransaction(0)).to.be.revertedWith('not confirm')
-        })
-        it('It revoked the tx successfully', async function () {
-            const {redo, dummy, data} = await loadFixture(deployRedoFixture)
-            await redo.submitTransaction(dummy.getAddress(), data)
-            await redo.confirmTransaction(0)
-            await expect(redo.revertTransaction(0)).to.emit(redo, 'RevokeTx')
-        })
-        it('It fails to revoke tx when it is executed', async function () {
-            const {redo, dummy, data, account2, account3, account4} = await loadFixture(deployRedoFixture)
-            await redo.submitTransaction(dummy.getAddress(), data)
-            await redo.confirmTransaction(0)
-            await redo.connect(account2).confirmTransaction(0)
-            await redo.connect(account3).confirmTransaction(0)
-            await redo.executeTransaction(0)
-
-            await expect(redo.revertTransaction(0)).to.be.revertedWith('Tx is already executed')
-        })
-    })
-
-    describe('executeTransaction', function () {
-        it('It fails to execute tx when it is not owner', async function () {
-            const {redo, dummy, data, account5} = await loadFixture(deployRedoFixture)
-            await redo.submitTransaction(dummy.getAddress(), data)
-            await redo.confirmTransaction(0)
-
-            await expect(redo.connect(account5).executeTransaction(0)).to.be.revertedWith('not owner')
-        })
-        it('It fails to execute tx when the tx does not exist', async function () {
-            const {redo, dummy, data} = await loadFixture(deployRedoFixture)
-            await redo.submitTransaction(dummy.getAddress(), data)
-            await redo.confirmTransaction(0)
-
-            await expect(redo.executeTransaction(1)).to.be.revertedWith('Tx does not exist')
-        })
-        it('It fails to execute tx when there is not enough confirms', async function () {
-            const {redo, dummy, data, account2} = await loadFixture(deployRedoFixture)
-            await redo.submitTransaction(dummy, data)
-            await redo.confirmTransaction(0)
-            
-            await expect(redo.executeTransaction(0)).to.be.revertedWith('not enough confirms')
-        })
-        it('It executes the tx succesfully', async function () {
-            const {redo, dummy, data, account2, account3} = await loadFixture(deployRedoFixture)
-            await redo.submitTransaction(dummy, data)
-            await redo.confirmTransaction(0)
-            await redo.connect(account2).confirmTransaction(0)
-            await redo.connect(account3).confirmTransaction(0)
-
-            await expect(redo.executeTransaction(0)).to.emit(redo, 'ExecuteTx')
-            const mesg = await dummy.get()
-            expect(mesg).to.equal('test')
-        })
-        it('It fails to execute tx when it is executed', async function () {
-            const {redo, dummy, data, account2, account3, account4} = await loadFixture(deployRedoFixture)
-            await redo.submitTransaction(dummy.getAddress(), data)
-            await redo.confirmTransaction(0)
-            await redo.connect(account2).confirmTransaction(0)
-            await redo.connect(account3).confirmTransaction(0)
-            await redo.executeTransaction(0)
-
-            await expect(redo.executeTransaction(0)).to.be.revertedWith('Tx is already executed')
-        })
-
     })
 })

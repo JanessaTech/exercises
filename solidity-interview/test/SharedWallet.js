@@ -66,6 +66,5 @@ describe('SharedWallet', function () {
             await sharedWallet.connect(nonOwner).deposit({value: amount})
             await expect(sharedWallet.withdraw(withdrawAmount)).to.emit(sharedWallet, 'WithDraw').withArgs(anyValue, withdrawAmount)
         })
-        
     })
 })

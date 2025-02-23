@@ -1,5 +1,5 @@
-const PriorityQueue =  require('js-priority-queue')
-
+//const PriorityQueue =  require('js-priority-queue')
+const PriorityQueue =  require('datastructures-js')
 /**
  * @param {number} n
  * @param {number[][]} edges
@@ -9,44 +9,35 @@ const PriorityQueue =  require('js-priority-queue')
 
 var findTheCity = function(n, edges, distanceThreshold) {
     const dists = []
-    for (let i = 0; i < n; i++) {
+    for (let i = 0; i < n ; i++) {
         dists.push(Array(n).fill(Infinity))
         dists[i][i] = 0
     }
     const graph = Array(n).fill(undefined).map((_, i) => [])
-    for (let edge of edges) {
-        const u = edge[0]
-        const v = edge[1]
-        const w = edge[2]
-        graph[u].push([v, w])
-        graph[v].push([u, w])
-        dists[u][v] = w
-        dists[v][u] = w
+    for (let [from, to, weight] of edges) {
+        graph[from].push([to, weight])
+        graph[to].push([from, weight])
     }
 
-    floyd(n, dists)
     for (let i = 0; i < n; i++) {
-        //bellman(n, edges, dists[i], i)
-        //dijkstra(n, graph, dists[i], i)
+        dijkstra(graph, dists[i], i)
     }
+
     let minCity = -1
     let minCnt = n
-    
     for (let i = 0; i < n; i++) {
         let cnt = 0
         for (let j = 0; j < n; j++) {
             if (i ===j) continue
-            if (dists[i][j] <= distanceThreshold) cnt++
+            if(dists[i][j] <= distanceThreshold) cnt++
         }
         if (cnt <= minCnt) {
             minCnt = cnt
             minCity = i
         }
     }
-
     return minCity
-    
-};
+}
 
 function bellman(n, edges, dist, src) {
     let M = dist
@@ -65,8 +56,8 @@ function bellman(n, edges, dist, src) {
 }
 
 //for leetcode
-function dijkstra(n, graph, dist, src) {
-    const minPQ = new PriorityQueue({compare: (a, b) => a[1] - b[1]})
+function dijkstra(graph, dist, src) {
+    const minPQ = new PriorityQueue((a, b) => a[1] - b[1])
     minPQ.enqueue([src, 0])
     while (!minPQ.isEmpty()) {
         const [cur, dis] = minPQ.dequeue()

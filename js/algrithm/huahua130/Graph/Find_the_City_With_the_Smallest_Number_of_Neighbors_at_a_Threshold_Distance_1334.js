@@ -50,7 +50,7 @@ function bellman(n, edges, dist, src) {
         }
         M = [...N]
     }
-    for (let i = 0; i <dist.length; i++) {
+    for (let i = 0; i < dist.length; i++) {
         dist[i] = M[i]
     }
 }

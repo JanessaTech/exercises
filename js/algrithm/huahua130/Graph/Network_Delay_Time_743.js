@@ -121,22 +121,22 @@ var networkDelayTime3 = function(times, n, k) {
     return max !== Infinity ? max : -1
 };
 
-function dijkstra(digraph, dists, k) {
-    const pq = new PriorityQueue({compare: (a, b) => a[1] - b[1]})
-    pq.enqueue([k - 1, 0])
-    while (!pq.isEmpty()) {
+function dijkstra(digraph, dists, src) {
+    const pq = new PriorityQueue((a, b) => a[1] - b[1])
+    pq.enqueue([src, 0])
+    while(!pq.isEmpty()) {
         const [cur, dis] = pq.dequeue()
         if (dis > dists[cur]) continue
         for (let [next, wei] of digraph[cur]) {
             const newDist = dis + wei
             if (newDist < dists[next]) {
-                dists[next] = newDist
                 pq.enqueue([next, newDist])
+                dists[next] = newDist
             }
         }
     }
-
 }
+
 
 const times = [[2,1,1],[2,3,1],[3,4,1]], n = 4, k = 2
 const res = networkDelayTime(times, n, k)

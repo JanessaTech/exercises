@@ -23,7 +23,7 @@ describe('AdvancedDelegator', function () {
         const num1 = await advancedDelegator.num()
         expect(num1).to.be.equal(10)
         const name = await advancedDelegator.getName()
-        console.log(name)
+        expect(name).to.be.equal('Callee1')
     })
     it('It should call delegatecall on callee2 successfully', async function () {
         const {advancedDelegator, callee2} = await loadFixture(deployAdvancedDelegatorFixture)
@@ -31,5 +31,7 @@ describe('AdvancedDelegator', function () {
         await advancedDelegator.setVars(10)
         const num1 = await advancedDelegator.num()
         expect(num1).to.be.equal(20)
+        const name = await advancedDelegator.getName()
+        expect(name).to.be.equal('Callee2')
     })
 })

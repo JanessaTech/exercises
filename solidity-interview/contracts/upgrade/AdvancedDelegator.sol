@@ -59,10 +59,9 @@ contract AdvancedDelegator {
     }
     function getName() external view returns(string memory) {
         address target = _getImplementation();
-        //(bool success, ) = target.delegatecall(abi.encodeWithSignature("getName()"));
-        //require(success, 'failed to call delegatecall');
-        //return abi.decode(res, (string));
-        return 'aa';
+        (bool success,bytes memory res) = target.staticcall(abi.encodeWithSignature("getName()"));
+        require(success, 'failed to call delegatecall');
+        return abi.decode(res, (string));
     }
 
     receive() external payable {}

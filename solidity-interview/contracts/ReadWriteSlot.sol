@@ -15,15 +15,17 @@ library StorageLib {
         }
     }
 }
+
+
 contract ReadWriteSlot {
-    bytes32 private constant test_slot  = keccak256("aaaaa");
-    function write(string memory name) public {
-        StorageLib.StorageSlot storage data = StorageLib.get(test_slot);
-        data.value = name;
-        
-    }
-    function read() public view returns(string memory) {
-        StorageLib.StorageSlot storage data = StorageLib.get(test_slot);
-        return data.value;
-    }
+  bytes32 private constant test_slot = keccak256("hahaha");
+  function write(string memory name) public {
+    StorageLib.StorageSlot storage data = StorageLib.get(test_slot);
+    data.value = name;
+  }
+
+  function read() public view returns(string memory) {
+    StorageLib.StorageSlot storage data = StorageLib.get(test_slot);
+    return data.value;
+  }
 }

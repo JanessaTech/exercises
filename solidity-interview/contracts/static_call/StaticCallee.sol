@@ -14,4 +14,8 @@ contract StaticCallee {
     function getName(uint256 id) public view returns(string memory) {
         return names[id];
     }
+
+    function getHardCodeName() public pure returns(string memory) {
+        return 'StaticCallee';
+    }
 }

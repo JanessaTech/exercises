@@ -13,4 +13,10 @@ contract StaticCaller {
         require(ok, 'failed to call staticcall');
         return abi.decode(res, (string));
     }
+
+    function getHardCodeName(address callee) public view returns(string memory) {
+        (bool ok, bytes memory res) = callee.staticcall(abi.encodeWithSignature('getHardCodeName()'));
+        require(ok, 'failed to call staticcall');
+        return abi.decode(res, (string));
+    }
 }

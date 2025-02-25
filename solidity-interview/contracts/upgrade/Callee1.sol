@@ -20,4 +20,8 @@ contract Callee1 {
         value = msg.value;
     }
 
+    function getName() external pure returns(string memory) {
+        return 'Callee1';
+    }
+
 }

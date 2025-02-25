@@ -19,4 +19,9 @@ describe('StaticCaller', function () {
 
         expect(name).to.be.equal('test1')
     })
+    it('getHardCodeName', async function () {
+        const {staticCaller, staticCallee} = await loadFixture(deployStaticCallerFixture)
+        const name = await staticCaller.getHardCodeName(staticCallee.getAddress())
+        expect(name).to.be.equal('StaticCallee')
+    })
 })

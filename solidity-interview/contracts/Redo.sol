@@ -3,33 +3,46 @@ pragma solidity ^0.8.20;
 
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Redo {
-    IERC20 token1;
-    address owner1;
-    IERC20 token2;
-    address owner2;
-
-    constructor(address _token1, address _owner1, address _token2, address _owner2) {
-        token1 = IERC20(_token1);
-        owner1 = _owner1;
-        token2 = IERC20(_token2);
-        owner2 = _owner2;
+    struct Person {
+        uint id;
+        string name;
     }
-    modifier isOwner() {
-        require(msg.sender == owner1 || msg.sender == owner2, 'Not owner');
-        _;
-    }
+    uint idx;
+    Person[] persons;
+    mapping(uint => uint) idxMapping;
+    mapping(uint => bool) inserted;
 
-    function swap(uint256 amount1, uint256 amount2) public isOwner {
-        require(token1.allowance(owner1, address(this)) >= amount1, 'allowance in token1 is too low');
-        require(token2.allowance(owner2, address(this)) >= amount2, 'allowance in token2 is too low');
-        _transferFrom(token1, owner1, owner2, amount1);
-        _transferFrom(token2, owner2, owner1, amount2);
+    function create(string memory _name) public {
+        uint _id = idx;
+        idx++;
+        persons.push(Person({id: _id, name: _name}));
+        idxMapping[_id] = persons.length - 1;
+        inserted[_id] = true;
     }
 
-    function _transferFrom(IERC20 token, address from, address to, uint256 amount) public {
-        token.transferFrom(from, to, amount);
+    function remove(uint _id) public {
+        require(inserted[_id], 'invalid id');
+        uint _idx = idxMapping[_id];
+        Person storage last = persons[persons.length - 1];
+        persons[_idx] = Person({id: last.id, name: last.name});
+        idxMapping[last.id] = _idx;
+        delete idxMapping[_id];
+        delete inserted[_id];
+        persons.pop();
     }
+
+    function getAll() public view returns (Person[] memory) {
+        return persons;
+    }
+
+    function get(uint _id) public view 
+        returns(uint id,
+            string memory name) {
+            require(inserted[_id], 'invalid id');
+            Person storage person = persons[idxMapping[_id]];
+            return (person.id, person.name);
+    }
+
 }

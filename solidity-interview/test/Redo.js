@@ -3,76 +3,98 @@ const { ethers } = require("hardhat");
 const {loadFixture} = require("@nomicfoundation/hardhat-toolbox/network-helpers");
 const { extendProvider } = require("hardhat/config");
 
+/*
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+// Uncomment this line to use console.log
+// import "hardhat/console.sol";
+
+contract Redo {
+    struct Person {
+        uint id;
+        string name;
+    }
+    uint idx;
+    Person[] persons;
+    mapping(uint => uint) idxMapping;
+    mapping(uint => bool) inserted;
+
+    function create(string memory _name) public {
+        uint _id = idx;
+        idx++;
+        persons.push(Person({id: _id, name: _name}));
+        idxMapping[_id] = persons.length - 1;
+        inserted[_id] = true;
+    }
+
+    function remove(uint _id) public {
+        require(inserted[_id], 'invalid id');
+        uint _idx = idxMapping[_id];
+        Person storage last = persons[persons.length - 1];
+        persons[_idx] = Person({id: last.id, name: last.name});
+        idxMapping[last.id] = _idx;
+        delete idxMapping[_id];
+        delete inserted[_id];
+        persons.pop();
+    }
+
+    function getAll() public view returns (Person[] memory) {
+        return persons;
+    }
+
+    function get(uint _id) public view 
+        returns(uint id,
+            string memory name) {
+            require(inserted[_id], 'invalid id');
+            Person storage person = persons[idxMapping[_id]];
+            return (person.id, person.name);
+    }
+}
+
 describe('Redo', function () {
     async function deployRedoFixture() {
-        const [deployer1, deployer2, deployer3, Alice, Bob, nonOwner, ...others] = await ethers.getSigners()
-        const Token1 = await ethers.getContractFactory('MyERC20', deployer1)
-        const token1Name = 'token1Name'
-        const token1Symbol = 'token1Symbol'
-        const token1 = await Token1.deploy(token1Name, token1Symbol)
-        const aliceAmount = 1000
-        await token1.transfer(Alice.address, aliceAmount)
-
-        const Token2 = await ethers.getContractFactory('MyERC20', deployer2)
-        const token2Name = 'token2Name'
-        const token2Symbol = 'token2Symbol'
-        const token2 = await Token2.deploy(token2Name, token2Symbol)
-        const bobAmount = 500
-        await token2.transfer(Bob.address, bobAmount)
-
-        const Redo = await ethers.getContractFactory('Redo', deployer3)
-        const redo = await Redo.deploy(token1.getAddress(), Alice.address, token2.getAddress(), Bob.address)
-
-        await token1.connect(Alice).approve(redo.getAddress(), aliceAmount)
-        await token2.connect(Bob).approve(redo.getAddress(), bobAmount)
-
-        return {redo, token1, token2, Alice, Bob, aliceAmount, bobAmount, nonOwner}
+        const Redo = await ethers.getContractFactory('Redo')
+        const redo = await Redo.deploy()
+        return {redo}
     }
-    describe('init', function () {
-        it('init', async function () {
-            const {redo, token1, token2, Alice, Bob, aliceAmount, bobAmount} = await loadFixture(deployRedoFixture)
-            const balanceAlice = await token1.balanceOf(Alice.address)
-            const balanceBob = await token2.balanceOf(Bob.address)
-            const allowanceAlice = await token1.allowance(Alice.address, redo.getAddress())
-            const allowanceBob = await token2.allowance(Bob.address, redo.getAddress())
+    describe('test', function () {
+        it('create & delete', async function () {
+            const {redo} = await loadFixture(deployRedoFixture)
+            await redo.create('Jane0')
+            await redo.create('Jane1')
+            await redo.create('Jane2')
+            await redo.remove(1)
+            await redo.create('Jane3')
+            await redo.create('Jane4')
+            await redo.remove(3)
 
-            expect(balanceAlice).to.be.equal(aliceAmount)
-            expect(balanceBob).to.be.equal(bobAmount)
-            expect(allowanceAlice).to.be.equal(aliceAmount)
-            expect(allowanceBob).to.be.equal(bobAmount)
+            const person0 = await redo.get(0)
+            const person2 = await redo.get(2)
+            const person4 = await redo.get(4)
+            const persons = await redo.getAll()
+            expect(persons.length).to.be.equal(3)
+            expect(person0.name).to.be.equal('Jane0')
+            expect(person2.name).to.be.equal('Jane2')
+            expect(person4.name).to.be.equal('Jane4')
+            await expect(redo.get(1)).to.be.revertedWith('invalid id')
+            await expect(redo.get(3)).to.be.revertedWith('invalid id')
+        })
+    })
+}) */
+
+    describe('Redo', function () {
+        async function deployRedoFixture() {
+            const Redo = await ethers.getContractFactory('Redo')
+            const redo = await Redo.deploy()
+            return {redo}
+        }
+
+        describe('test', function () {
+            
         })
     })
 
-    describe('swap', function () {
-        it('It should fail to swap when it is not owner', async function () {
-            const {redo, nonOwner} = await loadFixture(deployRedoFixture)
-            const amount1 = 2000, amount2 = 1000
-            await expect(redo.connect(nonOwner).swap(amount1, amount2)).to.be.revertedWith('Not owner')
-        })
-        it('it should fail to swap when amount1 is greater than the allowance in token1', async function () {
-            const {redo, Alice} = await loadFixture(deployRedoFixture)
-            const amount1 = 2000, amount2 = 1000
-            await expect(redo.connect(Alice).swap(amount1, amount2)).to.be.revertedWith('allowance in token1 is too low')
-        })
-        it('it should fail to swap when amount2 is greater than the allowance in token2', async function () {
-            const {redo, Alice} = await loadFixture(deployRedoFixture)
-            const amount1 = 800, amount2 = 600
-            await expect(redo.connect(Alice).swap(amount1, amount2)).to.be.revertedWith('allowance in token2 is too low')
-        })
-        it('It should swap successfully', async function () {
-            const {redo, Alice, Bob, token1, token2, aliceAmount, bobAmount} = await loadFixture(deployRedoFixture)
-            const amount1 = 800, amount2 = 400
-            await redo.connect(Alice).swap(amount1, amount2)
 
-            const leftAmountAliceInToken1 = await token1.balanceOf(Alice.address)
-            const leftAmountBobInToken2 = await token2.balanceOf(Bob.address)
-            const newAmountBobIntoken1 = await token1.balanceOf(Bob.address)
-            const newAmountAliceInToken2 = await token2.balanceOf(Alice.address)
 
-            expect(leftAmountAliceInToken1).to.be.equal(aliceAmount - amount1)
-            expect(leftAmountBobInToken2).to.be.equal(bobAmount - amount2)
-            expect(newAmountBobIntoken1).to.be.equal(amount1)
-            expect(newAmountAliceInToken2).to.be.equal(amount2)
-        })
-    })
-})
+

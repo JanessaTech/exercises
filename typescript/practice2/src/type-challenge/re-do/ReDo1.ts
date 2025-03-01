@@ -1,67 +1,27 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
-type NodeA = {
-  type: 'A'
-  name: string
-  flag: number
-}
-
-type NodeB = {
-  type: 'B'
-  id: number
-  flag: number
-}
-
-type NodeC = {
-  type: 'C'
-  name: string
-  flag: number
-}
-
-type ReplacedNodeA = {
-  type: 'A'
-  name: number
-  flag: string
-}
-
-type ReplacedNodeB = {
-  type: 'B'
-  id: number
-  flag: string
-}
-
-type ReplacedNodeC = {
-  type: 'C'
-  name: number
-  flag: string
-}
-
-type NoNameNodeA = {
-  type: 'A'
-  flag: number
-  name: never
-}
-
-type NoNameNodeC = {
-  type: 'C'
-  flag: number
-  name: never
-}
-
-type Nodes = NodeA | NodeB | NodeC
-type ReplacedNodes = ReplacedNodeA | ReplacedNodeB | ReplacedNodeC
-type NodesNoName = NoNameNodeA | NoNameNodeC | NodeB
-
 type cases = [
-  Expect<Equal<ReplaceKeys<Nodes, 'name' | 'flag', { name: number, flag: string }>, ReplacedNodes>>,
-  Expect<Equal<ReplaceKeys<Nodes, 'name', { aa: number }>, NodesNoName>>,
+  Expect<Equal<Subsequence<[1, 2]>, [] | [1] | [2] | [1, 2]>>,
+  Expect<Equal<Subsequence<[1, 2, 3]>, [] | [1] | [2] | [1, 2] | [3] | [1, 3] | [2, 3] | [1, 2, 3]>>,
+  Expect<Equal<Subsequence<[1, 2, 3, 4, 5]>, [] |
+  [1] | [2] | [3] | [4] | [5] |
+  [1, 2] | [1, 3] | [1, 4] | [1, 5] | [2, 3] | [2, 4] | [2, 5] | [3, 4] | [3, 5] | [4, 5] |
+  [1, 2, 3] | [1, 2, 4] | [1, 2, 5] | [1, 3, 4] | [1, 3, 5] | [1, 4, 5] | [2, 3, 4] | [2, 3, 5] | [2, 4, 5] | [3, 4, 5] |
+  [1, 2, 3, 4] | [1, 2, 3, 5] | [1, 2, 4, 5] | [1, 3, 4, 5] | [2, 3, 4, 5] |
+  [1, 2, 3, 4, 5] >>,
+  Expect<Equal<Subsequence<['a', 'b', 'c']>, [] |
+  ['a'] | ['b'] | ['c'] |
+  ['a', 'b'] | ['a', 'c'] | ['b', 'c'] |
+  ['a', 'b', 'c'] >>,
+  Expect<Equal<Subsequence<['x', 'y']>, [] |
+  ['x'] | ['y'] |
+  ['x', 'y'] >>,
 ]
 
-type ReplaceKeys<U, T, Y> = U extends any
-  ? { [P in keyof U]: P extends T
-      ? P extends keyof Y
-        ? Y[P]
-        : never
-      : U[P]
-  }
-  : never
+type Merge<L extends unknown[], E> = L extends any
+? [E, ...L]
+: never
+
+type Subsequence<T extends any[]> = T extends [infer F, ...infer R]
+? Merge<Subsequence<R>, F> | Subsequence<R>
+: []

@@ -1,37 +1,48 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
-type Case0 = ['', '', '']
-type Case1 = ['+', '', '']
-type Case2 = ['+', '1', '']
-type Case3 = ['+', '100', '']
-type Case4 = ['+', '100', '%']
-type Case5 = ['', '100', '%']
-type Case6 = ['-', '100', '%']
-type Case7 = ['-', '100', '']
-type Case8 = ['-', '1', '']
-type Case9 = ['', '', '%']
-type Case10 = ['', '1', '']
-type Case11 = ['', '100', '']
+declare const a: Chainable
+
+const result1 = a
+  .option('foo', 123)
+  .option('bar', { value: 'Hello World' })
+  .option('name', 'type-challenges')
+  .get()
+
+const result2 = a
+  .option('name', 'another name')
+  // @ts-expect-error
+  .option('name', 'last name')
+  .get()
+
+const result3 = a
+  .option('name', 'another name')
+  // @ts-expect-error
+  .option('name', 123)
+  .get()
 
 type cases = [
-  Expect<Equal<PercentageParser<''>, Case0>>,
-  Expect<Equal<PercentageParser<'+'>, Case1>>,
-  Expect<Equal<PercentageParser<'+1'>, Case2>>,
-  Expect<Equal<PercentageParser<'+100'>, Case3>>,
-  Expect<Equal<PercentageParser<'+100%'>, Case4>>,
-  Expect<Equal<PercentageParser<'100%'>, Case5>>,
-  Expect<Equal<PercentageParser<'-100%'>, Case6>>,
-  Expect<Equal<PercentageParser<'-100'>, Case7>>,
-  Expect<Equal<PercentageParser<'-1'>, Case8>>,
-  Expect<Equal<PercentageParser<'%'>, Case9>>,
-  Expect<Equal<PercentageParser<'1'>, Case10>>,
-  Expect<Equal<PercentageParser<'100'>, Case11>>,
+  Expect<Alike<typeof result1, Expected1>>,
+  Expect<Alike<typeof result2, Expected2>>,
+  Expect<Alike<typeof result3, Expected3>>,
 ]
 
-type PercentageParser<A extends string, sign = '', num = '', unit = ''> = A extends ''
-? [sign, num, unit]
-: A extends `${infer S extends '+' | '-'}${infer R}`
-  ? PercentageParser<R, S, num, unit>
-  : A extends `${infer N}%`
-    ? PercentageParser<'', sign, N, '%'>
-    : PercentageParser<'', sign, A, unit>
+type Expected1 = {
+  foo: number
+  bar: {
+    value: string
+  }
+  name: string
+}
+
+type Expected2 = {
+  name: string
+}
+
+type Expected3 = {
+  name: number
+}
+
+type Chainable<O = {}> = {
+  option<K extends string, V>(key: K extends keyof O ? never : K, value: V): Chainable<Omit<O, K> & {[P in K]: V}>
+  get(): O
+}

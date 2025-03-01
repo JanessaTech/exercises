@@ -1,21 +1,37 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
+type Case0 = ['', '', '']
+type Case1 = ['+', '', '']
+type Case2 = ['+', '1', '']
+type Case3 = ['+', '100', '']
+type Case4 = ['+', '100', '%']
+type Case5 = ['', '100', '%']
+type Case6 = ['-', '100', '%']
+type Case7 = ['-', '100', '']
+type Case8 = ['-', '1', '']
+type Case9 = ['', '', '%']
+type Case10 = ['', '1', '']
+type Case11 = ['', '100', '']
+
 type cases = [
-  Expect<Equal<MapTypes<{ stringToArray: string }, { mapFrom: string, mapTo: [] }>, { stringToArray: [] }>>,
-  Expect<Equal<MapTypes<{ stringToNumber: string }, { mapFrom: string, mapTo: number }>, { stringToNumber: number }>>,
-  Expect<Equal<MapTypes<{ stringToNumber: string, skipParsingMe: boolean }, { mapFrom: string, mapTo: number }>, { stringToNumber: number, skipParsingMe: boolean }>>,
-  Expect<Equal<MapTypes<{ date: string }, { mapFrom: string, mapTo: Date } | { mapFrom: string, mapTo: null }>, { date: null | Date }>>,
-  Expect<Equal<MapTypes<{ date: string }, { mapFrom: string, mapTo: Date | null }>, { date: null | Date }>>,
-  Expect<Equal<MapTypes<{ fields: Record<string, boolean> }, { mapFrom: Record<string, boolean>, mapTo: string[] }>, { fields: string[] }>>,
-  Expect<Equal<MapTypes<{ name: string }, { mapFrom: boolean, mapTo: never }>, { name: string }>>,
-  Expect<Equal<MapTypes<{ name: string, date: Date }, { mapFrom: string, mapTo: boolean } | { mapFrom: Date, mapTo: string }>, { name: boolean, date: string }>>,
+  Expect<Equal<PercentageParser<''>, Case0>>,
+  Expect<Equal<PercentageParser<'+'>, Case1>>,
+  Expect<Equal<PercentageParser<'+1'>, Case2>>,
+  Expect<Equal<PercentageParser<'+100'>, Case3>>,
+  Expect<Equal<PercentageParser<'+100%'>, Case4>>,
+  Expect<Equal<PercentageParser<'100%'>, Case5>>,
+  Expect<Equal<PercentageParser<'-100%'>, Case6>>,
+  Expect<Equal<PercentageParser<'-100'>, Case7>>,
+  Expect<Equal<PercentageParser<'-1'>, Case8>>,
+  Expect<Equal<PercentageParser<'%'>, Case9>>,
+  Expect<Equal<PercentageParser<'1'>, Case10>>,
+  Expect<Equal<PercentageParser<'100'>, Case11>>,
 ]
-type MapTypes<T, R extends {[K in 'mapFrom'  | 'mapTo']: unknown}> = {
-  [P in keyof T]: T[P] extends R['mapFrom']
-    ? R extends any
-      ? R extends {mapFrom: T[P]}
-        ? R['mapTo']
-        : never
-      : never
-    : T[P]
-}
+
+type PercentageParser<A extends string, sign = '', num = '', unit = ''> = A extends ''
+? [sign, num, unit]
+: A extends `${infer S extends '+' | '-'}${infer R}`
+  ? PercentageParser<R, S, num, unit>
+  : A extends `${infer N}%`
+    ? PercentageParser<'', sign, N, '%'>
+    : PercentageParser<'', sign, A, unit>

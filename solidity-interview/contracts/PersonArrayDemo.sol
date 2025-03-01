@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
 
-contract Redo {
+contract PersonArrayDemo {
     struct Person {
         uint id;
         string name;
@@ -39,6 +39,4 @@ contract Redo {
         Person storage person = persons[idxMapping[_id]];
         return (person.id, person.name);
     }
-
-
 }

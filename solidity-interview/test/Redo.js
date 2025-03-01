@@ -1,7 +1,6 @@
 const {expect} = require("chai")
 const { ethers } = require("hardhat");
 const {loadFixture} = require("@nomicfoundation/hardhat-toolbox/network-helpers");
-const { extendProvider } = require("hardhat/config");
 
 /*
 // SPDX-License-Identifier: MIT
@@ -50,7 +49,7 @@ contract Redo {
             Person storage person = persons[idxMapping[_id]];
             return (person.id, person.name);
     }
-}
+}*/
 
 describe('Redo', function () {
     async function deployRedoFixture() {
@@ -81,8 +80,8 @@ describe('Redo', function () {
             await expect(redo.get(3)).to.be.revertedWith('invalid id')
         })
     })
-}) */
-
+}) 
+/*
     describe('Redo', function () {
         async function deployRedoFixture() {
             const Redo = await ethers.getContractFactory('Redo')
@@ -95,6 +94,6 @@ describe('Redo', function () {
         })
     })
 
-
+*/
 
 

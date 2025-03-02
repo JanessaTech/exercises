@@ -1,99 +1,59 @@
 const {expect} = require("chai")
 const { ethers } = require("hardhat");
-const {loadFixture} = require("@nomicfoundation/hardhat-toolbox/network-helpers");
+const {loadFixture, time} = require("@nomicfoundation/hardhat-toolbox/network-helpers");
 
-/*
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
-
-// Uncomment this line to use console.log
-// import "hardhat/console.sol";
-
-contract Redo {
-    struct Person {
-        uint id;
-        string name;
-    }
-    uint idx;
-    Person[] persons;
-    mapping(uint => uint) idxMapping;
-    mapping(uint => bool) inserted;
-
-    function create(string memory _name) public {
-        uint _id = idx;
-        idx++;
-        persons.push(Person({id: _id, name: _name}));
-        idxMapping[_id] = persons.length - 1;
-        inserted[_id] = true;
-    }
-
-    function remove(uint _id) public {
-        require(inserted[_id], 'invalid id');
-        uint _idx = idxMapping[_id];
-        Person storage last = persons[persons.length - 1];
-        persons[_idx] = Person({id: last.id, name: last.name});
-        idxMapping[last.id] = _idx;
-        delete idxMapping[_id];
-        delete inserted[_id];
-        persons.pop();
-    }
-
-    function getAll() public view returns (Person[] memory) {
-        return persons;
-    }
-
-    function get(uint _id) public view 
-        returns(uint id,
-            string memory name) {
-            require(inserted[_id], 'invalid id');
-            Person storage person = persons[idxMapping[_id]];
-            return (person.id, person.name);
-    }
-}*/
 
 describe('Redo', function () {
-    async function deployRedoFixture() {
+    async function deployRedoFixture() {      
+        const [acc1, acc2, acc3, acc4, ...others] =  await ethers.getSigners()
         const Redo = await ethers.getContractFactory('Redo')
         const redo = await Redo.deploy()
-        return {redo}
+        return {redo, acc1, acc2, acc3, acc4}
     }
-    describe('test', function () {
-        it('create & delete', async function () {
+
+    describe('init', function () {
+        it('init', async function () {
             const {redo} = await loadFixture(deployRedoFixture)
-            await redo.create('Jane0')
-            await redo.create('Jane1')
-            await redo.create('Jane2')
-            await redo.remove(1)
-            await redo.create('Jane3')
-            await redo.create('Jane4')
-            await redo.remove(3)
-
-            const person0 = await redo.get(0)
-            const person2 = await redo.get(2)
-            const person4 = await redo.get(4)
-            const persons = await redo.getAll()
-            expect(persons.length).to.be.equal(3)
-            expect(person0.name).to.be.equal('Jane0')
-            expect(person2.name).to.be.equal('Jane2')
-            expect(person4.name).to.be.equal('Jane4')
-            await expect(redo.get(1)).to.be.revertedWith('invalid id')
-            await expect(redo.get(3)).to.be.revertedWith('invalid id')
         })
     })
-}) 
-/*
-    describe('Redo', function () {
-        async function deployRedoFixture() {
-            const Redo = await ethers.getContractFactory('Redo')
-            const redo = await Redo.deploy()
-            return {redo}
-        }
-
-        describe('test', function () {
-            
+    describe('add & update', function () {
+        it('add', async function (){
+            const {redo, acc1} = await loadFixture(deployRedoFixture)
+            await redo.set(acc1.address, 'acc1')
+            const keys = await redo.getKeys()
+            expect(keys).to.include.members([acc1.address])
+        })
+        it('update', async function (){
+            const {redo, acc1} = await loadFixture(deployRedoFixture)
+            await redo.set(acc1.address, 'acc1')
+            await redo.set(acc1.address, 'acc1_new')
+            const value = await redo.getValue(acc1.address)
+            expect(value).to.be.equal('acc1_new')
         })
     })
+    describe('remove', function () {
+        it('it failed to remove when it does not exist', async function (){
+            const {redo, acc1} = await loadFixture(deployRedoFixture)
+            await expect(redo.remove(acc1.address)).to.be.revertedWith('invalid key')
+        })
+        it('it removed successully', async function () {
+            const {redo, acc1, acc2, acc3} = await loadFixture(deployRedoFixture)
+            await redo.set(acc1.address, 'acc1')
+            await redo.set(acc2.address, 'acc2')
+            await redo.set(acc3.address, 'acc3')
 
-*/
+            await redo.remove(acc2.address)
+            const keys = await redo.getKeys()
+            const value1  = await redo.getValue(acc1.address)
+            const value3  = await redo.getValue(acc3.address)
+            expect(keys).to.include.members([acc1.address,acc3.address])
+            expect(value1).to.be.equal('acc1')
+            expect(value3).to.be.equal('acc3')
+            await expect(redo.getValue(acc2.address)).to.be.revertedWith('invalid key')
+        })
+    })
+})
+
+
 
 

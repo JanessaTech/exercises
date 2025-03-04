@@ -1,48 +1,18 @@
 
 const PositionTest1 = () => {
     return (
-        <div>
-            <div className="w-full h-10 bg-slate-500 text-white text-center sticky top-5">Header</div>
-            <div className="w-full h-8 bg-green-300 my-1">test1</div>
-            <div className="w-full h-8 bg-green-300 my-1">test2</div>
-            <div className="w-full h-8 bg-green-300 my-1">test3</div>
-            <div className="w-full h-8 bg-green-300 my-1">test4</div>
-            <div className="w-full h-8 bg-green-300 my-1">test5</div>
-            <div className="w-full h-8 bg-green-300 my-1">test6</div>
-            <div className="w-full h-8 bg-green-300 my-1">test7</div>
-            <div className="w-full h-8 bg-green-300 my-1">test8</div>
-            <div className="w-full h-8 bg-green-300 my-1">test1</div>
-            <div className="w-full h-8 bg-green-300 my-1">test2</div>
-            <div className="w-full h-8 bg-green-300 my-1">test3</div>
-            <div className="w-full h-8 bg-green-300 my-1">test4</div>
-            <div className="w-full h-8 bg-green-300 my-1">test5</div>
-            <div className="w-full h-8 bg-green-300 my-1">test6</div>
-            <div className="w-full h-8 bg-green-300 my-1">test7</div>
-            <div className="w-full h-8 bg-green-300 my-1">test8</div>
-            <div className="w-full h-8 bg-green-300 my-1">test1</div>
-            <div className="w-full h-8 bg-green-300 my-1">test2</div>
-            <div className="w-full h-8 bg-green-300 my-1">test3</div>
-            <div className="w-full h-8 bg-green-300 my-1">test4</div>
-            <div className="w-full h-8 bg-green-300 my-1">test5</div>
-            <div className="w-full h-8 bg-green-300 my-1">test6</div>
-            <div className="w-full h-8 bg-green-300 my-1">test7</div>
-            <div className="w-full h-8 bg-green-300 my-1">test8</div>
-            <div className="w-full h-8 bg-green-300 my-1">test1</div>
-            <div className="w-full h-8 bg-green-300 my-1">test2</div>
-            <div className="w-full h-8 bg-green-300 my-1">test3</div>
-            <div className="w-full h-8 bg-green-300 my-1">test4</div>
-            <div className="w-full h-8 bg-green-300 my-1">test5</div>
-            <div className="w-full h-8 bg-green-300 my-1">test6</div>
-            <div className="w-full h-8 bg-green-300 my-1">test7</div>
-            <div className="w-full h-8 bg-green-300 my-1">test8</div>
-            <div className="w-full h-8 bg-green-300 my-1">test1</div>
-            <div className="w-full h-8 bg-green-300 my-1">test2</div>
-            <div className="w-full h-8 bg-green-300 my-1">test3</div>
-            <div className="w-full h-8 bg-green-300 my-1">test4</div>
-            <div className="w-full h-8 bg-green-300 my-1">test5</div>
-            <div className="w-full h-8 bg-green-300 my-1">test6</div>
-            <div className="w-full h-8 bg-green-300 my-1">test7</div>
-            <div className="w-full h-8 bg-green-300 my-1">test8</div>
+        <div className="grid grid-cols-2 grid-rows-3 gap-3">
+            <div className="bg-blue-200 w-full h-40">
+                <div className="bg-lime-300 mx-8 w-80 h-32 static">
+                    <div className="bg-red-600 w-20 h-20 absolute bottom-0 left-0">absolute1</div>
+                </div>
+            </div>
+
+            <div className="bg-blue-200 w-full h-40">
+                <div className="bg-lime-300 mx-8 w-80 h-32 relative">
+                    <div className="bg-red-600 w-20 h-20 absolute bottom-0 left-0">absolute2</div>
+                </div>
+            </div>
             
         </div>
     )

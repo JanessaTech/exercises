@@ -5,50 +5,43 @@ pragma solidity ^0.8.20;
 // import "hardhat/console.sol";
 
 contract Redo {
+    struct Person {
+        uint id;
+        string name;
+    }
+    uint idx;
+    Person[] persons;
+    mapping(uint => uint) idxMapping;
+    mapping(uint => bool) inserted;
 
-    event Set(address indexed key, string value);
-    event Update(address indexed key, string value);
+    event Create(address indexed from);
 
-    struct CustomMap {
-        address[] keys;
-        mapping(address => uint) idxMapping;
-        mapping(address => string) values;
-        mapping(address => bool) inserted;
+    function create(string memory _name) public {
+        uint _id = idx;
+        idx++;
+        persons.push(Person({id: _id, name: _name}));
+        idxMapping[_id] = persons.length - 1;
+        inserted[_id] = true;
     }
 
-    CustomMap myMap;
-
-    function set(address key, string memory value) public {
-        if (myMap.inserted[key]) {
-            //update
-            myMap.values[key] = value;
-            emit Update(key, value);
-        } else {
-            myMap.keys.push(key);
-            myMap.idxMapping[key] = myMap.keys.length - 1;
-            myMap.inserted[key] = true;
-            myMap.values[key] = value;
-            emit Set(key, value);
-        }
+    function remove(uint _id) public {
+        require(inserted[_id], 'invalid id');
+        uint _idx = idxMapping[_id];
+        Person storage last = persons[persons.length - 1];
+        persons[_idx] = Person({id:last.id, name: last.name});
+        idxMapping[last.id] = _idx;
+        delete idxMapping[_id];
+        delete inserted[_id];
+        persons.pop();
     }
 
-    function remove(address key) public {
-        require(myMap.inserted[key], 'invalid key');
-        uint idx = myMap.idxMapping[key];
-        address last = myMap.keys[myMap.keys.length - 1];
-        myMap.keys[idx] = last;
-        delete myMap.idxMapping[key];
-        delete myMap.values[key];
-        delete myMap.inserted[key];
-        myMap.keys.pop();
+    function get(uint _id) public view returns(uint id, string memory name) {
+        require(inserted[_id], 'invalid id');
+        Person storage person = persons[idxMapping[_id]];
+        return (person.id, person.name);
     }
 
-    function getValue(address key) public view returns(string memory) {
-        require(myMap.inserted[key], 'invalid key');
-        return myMap.values[key];
-    }
-
-    function getKeys() public view returns(address[] memory) {
-        return myMap.keys;
+    function getAll() public view returns(Person[] memory) {
+        return persons;
     }
 }

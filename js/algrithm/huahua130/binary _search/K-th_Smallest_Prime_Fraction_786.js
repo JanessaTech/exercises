@@ -25,7 +25,7 @@ var kthSmallestPrimeFraction = function(arr, k) {
             var j = i + 1
             while (j < n && arr[i] / arr[j] >= mid) j++
             cnt += n - j
-            if (maxFrac < arr[i] / arr[j]) {
+            if (j < n && maxFrac < arr[i] / arr[j]) {
                 maxFrac = arr[i] /arr[j]
                 ab[0] = arr[i]
                 ab[1] = arr[j]

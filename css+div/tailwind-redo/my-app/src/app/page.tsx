@@ -12,20 +12,16 @@ export default function Home() {
 
   const [selected, setSelected] = useState<number>(0)
   const [showMenu, setShowMenu] = useState<boolean>(true)
-
-  const handleSelected = (index: number) => {
-    setSelected(index)
-  }
-
+  
   return (
     <div className="container">
-      <div className="grid md:grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-3 gap-5">
         <div className="md:col-span-1">
-          <div className="flex justify-between">
-            <div className="py-5 border-b-[1px] border-zinc-200"><span className="text-2xl uppercase">Janessa food</span></div>
+          <div className="flex justify-between border-b-[1px] border-zinc-200">
+            <div className="py-3"><span className="text-3xl uppercase">Janessa Food</span></div>
             <svg xmlns="http://www.w3.org/2000/svg" 
+              className="w-8 cursor-pointer hover:text-zinc-400 md:hidden"
               onClick={() => setShowMenu(!showMenu)}
-              className="w-8 cursor-pointer hover:text-zinc-500 md:hidden"
               fill="none" 
               viewBox="0 0 24 24" 
               strokeWidth="1.5" 
@@ -34,92 +30,99 @@ export default function Home() {
             </svg>
           </div>
           <ul className={`${showMenu ? '' : 'hidden'}`}>
-            <li className="group my-3" onClick={() => handleSelected(0)}>
-              <div className={`flex justify-end border-r-[4px]
-                        group-hover:border-blue-600 
-                       group-hover:text-blue-600 cursor-pointer ${selected === 0 ? 'border-blue-600 text-blue-600' : 'border-white'}`}>
+            <li className="my-3 group" onClick={() => setSelected(0)}>
+              <div className={`flex justify-end cursor-pointer border-r-[4px] 
+               group-hover:text-blue-700 ${selected === 0 ? 'border-blue-700 text-blue-700' : 'border-white'}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                </svg>
-                <span className="mx-2">Home</span>
+                  </svg>
+                  <span className="mx-1">Home</span>
               </div>
             </li>
-            <li className="group" onClick={() => handleSelected(1)}>
-              <div className={`flex justify-end border-r-[4px]
-                        group-hover:border-blue-600 
-                       group-hover:text-blue-600 cursor-pointer ${selected === 1 ? 'border-blue-600 text-blue-600' : 'border-white'}`}>
+            <li className="my-3 group" onClick={() => setSelected(1)}>
+              <div className={`flex justify-end cursor-pointer border-r-[4px] 
+               group-hover:text-blue-700 ${selected === 1 ? 'border-blue-700 text-blue-700' : 'border-white'}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                </svg>
-                <span className="mx-2">Home</span>
+                  </svg>
+                  <span className="mx-1">Home</span>
               </div>
             </li>
           </ul>
         </div>
         <div className="md:col-span-2">
           <div className="my-10">
-            <div className="flex md:justify-end justify-center">
-              <Link href='#' className="text-xl px-2 py-1 border-2 
-                    border-red-400 rounded-full text-red-500 
-                    hover:text-white hover:bg-red-300
-                    transition ease-in-out duration-150">Login</Link>
-              <Link href='#' className="text-xl px-2 py-1 border-2 
-                    border-red-400 rounded-full text-red-500 
-                    hover:text-white hover:bg-red-300
-                    transition ease-in-out duration-150 ml-3">Logout</Link>
+            <div className="flex justify-center md:justify-end">
+              <Link href='#' className="tetx-xl text-red-500 border-2 border-red-400 px-2 py-1 rounded-full hover:text-white hover:bg-red-300 transition ease-in-out duration-150">Login</Link>
+              <Link href='#' className="tetx-xl text-red-500 border-2 border-red-400 px-2 py-1 rounded-full hover:text-white hover:bg-red-300 transition ease-in-out duration-150 ml-2">Logout</Link>
             </div>
-
             <div>
               <div className="text-6xl font-semibold">Receipes</div>
               <div className="text-zinc-400">Janessa</div>
             </div>
-            <div className="border-b-[1px] border-zinc-300 mt-8 mb-5">
-              <div className="font-semibold text-xl py-2">Latest Receipes</div>
+            <div className="border-b-[1px] border-zinc-200 mt-8 mb-5">
+              <div className="font-semibold py-2">Latest receipes</div>
             </div>
-            <div className="grid md:grid-cols-2 gap-5">
+            <div className="grid md:grid-cols-2 gap-4">
               <div className="card">
-                <Image src={noodles} alt="noodles" className="w-full object-cover"/>
-                <div className="p-5">
+                <Image src={noodles} alt="" className="w-full object-cover"/>
+                <div className="m-4">
                   <div className="font-semibold">Veg noodles</div>
-                  <div className="text-zinc-400 text-sm">Recipe by Mario</div>
+                  <div className="text-sm text-zinc-400">Recipe by Mario</div>
                 </div>
-                <div className="flex bg-zinc-500 absolute top-2 left-2 px-2 rounded-full text-white">
-                    <svg className="w-5 mx-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                    </svg>
-                  <span>25 mins</span>
-                </div>
-              </div>
-              <div className="card">
-                <Image src={noodles} alt="noodles" className="w-full object-cover"/>
-                <div className="p-5">
-                  <div className="font-semibold">Veg noodles</div>
-                  <div className="text-zinc-400 text-sm">Recipe by Mario</div>
-                </div>
-                <div className="flex bg-zinc-500 absolute top-2 left-2 px-2 rounded-full text-white">
-                    <svg className="w-5 mx-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                    </svg>
-                  <span>25 mins</span>
-                </div>
-              </div>
-              <div className="card">
-                <Image src={noodles} alt="noodles" className="w-full object-cover"/>
-                <div className="p-5">
-                  <div className="font-semibold">Veg noodles</div>
-                  <div className="text-zinc-400 text-sm">Recipe by Mario</div>
-                </div>
-                <div className="flex bg-zinc-500 absolute top-2 left-2 px-2 rounded-full text-white">
-                    <svg className="w-5 mx-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                <div className="flex bg-zinc-200 rounded-full py-1 px-2 absolute top-2 left-2">
+                    <svg className= 'w-5 mr-1' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
                   <span>25 mins</span>
                 </div>
               </div>
 
+              <div className="card">
+                <Image src={noodles} alt="" className="w-full object-cover"/>
+                <div className="m-4">
+                  <div className="font-semibold">Veg noodles</div>
+                  <div className="text-sm text-zinc-400">Recipe by Mario</div>
+                </div>
+                <div className="flex bg-zinc-200 rounded-full py-1 px-2 absolute top-2 left-2">
+                    <svg className= 'w-5 mr-1' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                  <span>25 mins</span>
+                </div>
+              </div>
+
+              <div className="card">
+                <Image src={noodles} alt="" className="w-full object-cover"/>
+                <div className="m-4">
+                  <div className="font-semibold">Veg noodles</div>
+                  <div className="text-sm text-zinc-400">Recipe by Mario</div>
+                </div>
+                <div className="flex bg-zinc-200 rounded-full py-1 px-2 absolute top-2 left-2">
+                    <svg className= 'w-5 mr-1' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                  <span>25 mins</span>
+                </div>
+              </div>
+
+              <div className="card">
+                <Image src={noodles} alt="" className="w-full object-cover"/>
+                <div className="m-4">
+                  <div className="font-semibold">Veg noodles</div>
+                  <div className="text-sm text-zinc-400">Recipe by Mario</div>
+                </div>
+                <div className="flex bg-zinc-200 rounded-full py-1 px-2 absolute top-2 left-2">
+                    <svg className= 'w-5 mr-1' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                  <span>25 mins</span>
+                </div>
+              </div>
             </div>
+            
+
           </div>
-
         </div>
       </div>
     </div>

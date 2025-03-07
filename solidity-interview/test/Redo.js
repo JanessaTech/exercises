@@ -11,30 +11,31 @@ describe('Redo', function () {
     }
 
     describe('create', function () {
-        it('it should create person successfully', async function () {
+        it('it create a new person successfully', async function () {
             const {redo} = await loadFixture(deployRedoFixture)
-            await redo.create('person1')
-            const person = await redo.get(0)
-
-            expect(person.name).to.be.equal('person1')
+            await redo.create('person0')
+            const person0 = await redo.get(0)
+            expect(person0.name).to.be.equal('person0')
         })
     })
 
     describe('remove', function () {
-        it('it failed to remove when it is invalid id', async function () {
+        it('it failed to remove a person when the id is invalid', async function () {
             const {redo} = await loadFixture(deployRedoFixture)
             await expect(redo.remove(0)).to.be.revertedWith('invalid id')
         })
-        it('it removed the person successfuuly', async function () {
+        it('it removed the person successfully', async function () {
             const {redo} = await loadFixture(deployRedoFixture)
             await redo.create('person0')
             await redo.create('person1')
             await redo.create('person2')
 
-            await expect(redo.remove(1)).not.to.be.reverted
+            await redo.remove(1)
+            const persons = await redo.getAll()
             const person0 = await redo.get(0)
             const person2 = await redo.get(2)
             await expect(redo.get(1)).to.be.revertedWith('invalid id')
+            expect(persons.length).to.be.equal(2)
             expect(person0.name).to.be.equal('person0')
             expect(person2.name).to.be.equal('person2')
         })

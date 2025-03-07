@@ -9,17 +9,15 @@ contract Redo {
         uint id;
         string name;
     }
-    uint idx;
     Person[] persons;
+    uint idx;
     mapping(uint => uint) idxMapping;
     mapping(uint => bool) inserted;
-
-    event Create(address indexed from);
 
     function create(string memory _name) public {
         uint _id = idx;
         idx++;
-        persons.push(Person({id: _id, name: _name}));
+        persons.push(Person({id:_id, name:_name}));
         idxMapping[_id] = persons.length - 1;
         inserted[_id] = true;
     }
@@ -28,7 +26,7 @@ contract Redo {
         require(inserted[_id], 'invalid id');
         uint _idx = idxMapping[_id];
         Person storage last = persons[persons.length - 1];
-        persons[_idx] = Person({id:last.id, name: last.name});
+        persons[_idx] = Person({id: last.id, name: last.name});
         idxMapping[last.id] = _idx;
         delete idxMapping[_id];
         delete inserted[_id];

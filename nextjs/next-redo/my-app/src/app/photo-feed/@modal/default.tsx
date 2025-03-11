@@ -1,5 +1,5 @@
 export default function Default() {
     return (
-        <div>cccccc</div>
+        <div>default value for modal</div>
     );
   }

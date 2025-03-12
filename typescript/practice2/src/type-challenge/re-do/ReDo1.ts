@@ -9,9 +9,8 @@ type cases = [
 ]
 
 type StringToUnion<S> = S extends `${infer F}${infer R}`
-  ? F | StringToUnion<R>
-  : never
-
+? F | StringToUnion<R>
+: never
 type ArrayToString<A> = A extends any
 ? A extends [infer F, ...infer R]
   ? `${string &F}${ArrayToString<R>}`
@@ -19,13 +18,12 @@ type ArrayToString<A> = A extends any
 : never
 
 type Com<U, path extends unknown[] = [], acc = never, A = U> = [U] extends [never]
-? ArrayToString<acc | path>
+? ArrayToString<path | acc>
 : U extends any
-  ? Com<Exclude<A, U>, [...path, U], acc | path>
+  ? Com<Exclude<A, U>, [...path, U], path | acc>
   : never
 
 type AllCombinations<S> = Com<StringToUnion<S>>
 
 type test = StringToUnion<'AB'>
-
 type test1 = Com<StringToUnion<'AB'>>

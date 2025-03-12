@@ -26,7 +26,7 @@ export default function AuthLayout({
             {
                 navLinks.map((link) => {
                     const isActive = pathName.startsWith(link.href)
-                    return (<Link href={link.href} className={`mr-4 ${isActive ? 'font-bold' : 'text-blue-400'}`}>{link.name}</Link>)
+                    return (<Link key={link.name} href={link.href} className={`mr-4 ${isActive ? 'font-bold' : 'text-blue-400'}`}>{link.name}</Link>)
                 })
             }
             {children}

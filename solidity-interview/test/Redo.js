@@ -6,24 +6,24 @@ const {loadFixture, time} = require("@nomicfoundation/hardhat-toolbox/network-he
 describe('Redo', function () {
     async function deployRedoFixture() {
         const Redo = await ethers.getContractFactory('Redo')
-        const redo = await Redo.deploy() 
+        const redo = await Redo.deploy()
         return {redo}
     }
-
     describe('create', function () {
-        it('it created a new person successfully', async function () {
+        it('it create a new person successfully', async function () {
             const {redo} = await loadFixture(deployRedoFixture)
             await redo.create('person0')
             const person0 = await redo.get(0)
             expect(person0.name).to.be.equal('person0')
         })
     })
+
     describe('remove', function () {
-        it('it failed to remove when the _id is invalid', async function () {
+        it('it failed to remove person when the id is invalid', async function () {
             const {redo} = await loadFixture(deployRedoFixture)
             await expect(redo.remove(0)).to.be.revertedWith('invalid id')
         })
-        it('it remove the person successfully', async function () {
+        it('it removed person successfully', async function () {
             const {redo} = await loadFixture(deployRedoFixture)
             await redo.create('person0')
             await redo.create('person1')
@@ -31,12 +31,10 @@ describe('Redo', function () {
             await redo.remove(1)
 
             const person0 = await redo.get(0)
-            // const persons = await redo.getAll()
-            // console.log(persons)
             const person2 = await redo.get(2)
-            await expect(redo.get(1)).to.be.revertedWith('invalid id')
             expect(person0.name).to.be.equal('person0')
             expect(person2.name).to.be.equal('person2')
+            await expect(redo.get(1)).to.be.revertedWith('invalid id')
         })
     })
 })

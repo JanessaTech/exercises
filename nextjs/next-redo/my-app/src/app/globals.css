@@ -76,3 +76,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+.image-slider-container {
+  margin: 0 auto;
+  width: 400px;
+}
+
+.image-slider-container .slick-prev:before,
+.image-slider-container .slick-next:before {
+  color: black;
+}
+

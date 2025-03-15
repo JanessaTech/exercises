@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useEffect, useRef, useState } from "react"
 
-export default function UseRefDemo1() {
+export default function UseRefDemoOne() {
     const [value, setValue] = useState<string>('')
     const pre = useRef('')
     useEffect(() => {

@@ -1,23 +1,27 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
+type Foo = {
+  name: string
+  age: string
+}
+type Bar = {
+  name: string
+  age: string
+  gender: number
+}
+type Coo = {
+  name: string
+  gender: number
+}
+
 type cases = [
-  Expect<Equal<ReplaceAll<'foobar', 'bar', 'foo'>, 'foofoo'>>,
-  Expect<Equal<ReplaceAll<'foobar', 'bag', 'foo'>, 'foobar'>>,
-  Expect<Equal<ReplaceAll<'foobarbar', 'bar', 'foo'>, 'foofoofoo'>>,
-  Expect<Equal<ReplaceAll<'t y p e s', ' ', ''>, 'types'>>,
-  Expect<Equal<ReplaceAll<'foobarbar', '', 'foo'>, 'foobarbar'>>,
-  Expect<Equal<ReplaceAll<'barfoo', 'bar', 'foo'>, 'foofoo'>>,
-  Expect<Equal<ReplaceAll<'foobarfoobar', 'ob', 'b'>, 'fobarfobar'>>,
-  Expect<Equal<ReplaceAll<'foboorfoboar', 'bo', 'b'>, 'foborfobar'>>,
-  Expect<Equal<ReplaceAll<'', '', ''>, ''>>,
+  Expect<Equal<Diff<Foo, Bar>, { gender: number }>>,
+  Expect<Equal<Diff<Bar, Foo>, { gender: number }>>,
+  Expect<Equal<Diff<Foo, Coo>, { age: string, gender: number }>>,
+  Expect<Equal<Diff<Coo, Foo>, { age: string, gender: number }>>,
 ]
 
 
-
-type ReplaceAll<S extends string, From extends string, To extends string, acc extends string = ''> = From extends ''
-? S
-: S extends ''
-  ? acc
-  : S extends `${infer L}${From}${infer R}`
-    ? ReplaceAll<R, From, To, `${acc}${L}${To}`>
-    : ReplaceAll<'', From, To, `${acc}${S}`>
+type Diff<O, O1> = {
+  [P in keyof (O & O1) as P extends keyof (O | O1) ? never : P] : (O & O1)[P]
+}

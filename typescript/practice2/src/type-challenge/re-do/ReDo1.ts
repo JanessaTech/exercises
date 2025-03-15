@@ -1,68 +1,29 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
 type cases = [
-  Expect<Equal<DeepReadonly<X1>, Expected1>>,
-  Expect<Equal<DeepReadonly<X2>, Expected2>>,
+  Expect<Equal<AllCombinations<''>, ''>>,
+  Expect<Equal<AllCombinations<'A'>, '' | 'A'>>,
+  Expect<Equal<AllCombinations<'AB'>, '' | 'A' | 'B' | 'AB' | 'BA'>>,
+  Expect<Equal<AllCombinations<'ABC'>, '' | 'A' | 'B' | 'C' | 'AB' | 'AC' | 'BA' | 'BC' | 'CA' | 'CB' | 'ABC' | 'ACB' | 'BAC' | 'BCA' | 'CAB' | 'CBA'>>,
+  Expect<Equal<AllCombinations<'ABCD'>, '' | 'A' | 'B' | 'C' | 'D' | 'AB' | 'AC' | 'AD' | 'BA' | 'BC' | 'BD' | 'CA' | 'CB' | 'CD' | 'DA' | 'DB' | 'DC' | 'ABC' | 'ABD' | 'ACB' | 'ACD' | 'ADB' | 'ADC' | 'BAC' | 'BAD' | 'BCA' | 'BCD' | 'BDA' | 'BDC' | 'CAB' | 'CAD' | 'CBA' | 'CBD' | 'CDA' | 'CDB' | 'DAB' | 'DAC' | 'DBA' | 'DBC' | 'DCA' | 'DCB' | 'ABCD' | 'ABDC' | 'ACBD' | 'ACDB' | 'ADBC' | 'ADCB' | 'BACD' | 'BADC' | 'BCAD' | 'BCDA' | 'BDAC' | 'BDCA' | 'CABD' | 'CADB' | 'CBAD' | 'CBDA' | 'CDAB' | 'CDBA' | 'DABC' | 'DACB' | 'DBAC' | 'DBCA' | 'DCAB' | 'DCBA'>>,
 ]
 
-type X1 = {
-  a: () => 22
-  b: string
-  c: {
-    d: boolean
-    e: {
-      g: {
-        h: {
-          i: true
-          j: 'string'
-        }
-        k: 'hello'
-      }
-      l: [
-        'hi',
-        {
-          m: ['hey']
-        },
-      ]
-    }
-  }
-}
-
-type X2 = { a: string } | { b: number }
-
-type Expected1 = {
-  readonly a: () => 22
-  readonly b: string
-  readonly c: {
-    readonly d: boolean
-    readonly e: {
-      readonly g: {
-        readonly h: {
-          readonly i: true
-          readonly j: 'string'
-        }
-        readonly k: 'hello'
-      }
-      readonly l: readonly [
-        'hi',
-        {
-          readonly m: readonly ['hey']
-        },
-      ]
-    }
-  }
-}
-
-type Expected2 = { readonly a: string } | { readonly b: number }
-
-type DeepArray<L> = L extends [infer F, ...infer R]
-? [DeepReadonly<F>, ...DeepArray<R>]
-: []
-
-type DeepReadonly<T> = T extends any
-? T extends {[P in any]: unknown}
-  ? {readonly [K in keyof T]: DeepReadonly<T[K]>}
-  : T extends unknown[]
-    ? readonly [...DeepArray<T>]
-    : T
+type StringToUnion<S> = S extends `${infer F}${infer R}`
+? F | StringToUnion<R>
 : never
+type ArrayToString<A> = A extends any
+? A extends [infer F, ...infer R]
+  ? `${string &F}${ArrayToString<R>}`
+  : ''
+: never
+
+type Com<U, path extends unknown[] = [], acc = never, A = U>  = [U] extends [never]
+? ArrayToString<acc | path>
+: U extends any
+  ? Com<Exclude<A, U>, [...path, U], acc | path>
+  : never
+
+type AllCombinations<S> = Com<StringToUnion<S>>
+
+type test = StringToUnion<'AB'>
+type test1 = Com<StringToUnion<'AB'>>

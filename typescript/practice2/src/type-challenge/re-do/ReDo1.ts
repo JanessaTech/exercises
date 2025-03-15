@@ -1,25 +1,68 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
 type cases = [
-  Expect<Equal<IsUnion<string>, false>>,
-  Expect<Equal<IsUnion<string | number>, true>>,
-  Expect<Equal<IsUnion<'a' | 'b' | 'c' | 'd'>, true>>,
-  Expect<Equal<IsUnion<undefined | null | void | ''>, true>>,
-  Expect<Equal<IsUnion<{ a: string } | { a: number }>, true>>,
-  Expect<Equal<IsUnion<{ a: string | number }>, false>>,
-  Expect<Equal<IsUnion<[string | number]>, false>>,
-  // Cases where T resolves to a non-union type.
-  Expect<Equal<IsUnion<string | never>, false>>,
-  Expect<Equal<IsUnion<string | unknown>, false>>,
-  Expect<Equal<IsUnion<string | any>, false>>,
-  Expect<Equal<IsUnion<string | 'a'>, false>>,
-  Expect<Equal<IsUnion<never>, false>>,
+  Expect<Equal<DeepReadonly<X1>, Expected1>>,
+  Expect<Equal<DeepReadonly<X2>, Expected2>>,
 ]
 
-type IsUnion<T, A = T> = [T] extends [never]
-? false
-: T extends any
-  ? [A] extends [T]
-    ? false
-    : true
-  : never
+type X1 = {
+  a: () => 22
+  b: string
+  c: {
+    d: boolean
+    e: {
+      g: {
+        h: {
+          i: true
+          j: 'string'
+        }
+        k: 'hello'
+      }
+      l: [
+        'hi',
+        {
+          m: ['hey']
+        },
+      ]
+    }
+  }
+}
+
+type X2 = { a: string } | { b: number }
+
+type Expected1 = {
+  readonly a: () => 22
+  readonly b: string
+  readonly c: {
+    readonly d: boolean
+    readonly e: {
+      readonly g: {
+        readonly h: {
+          readonly i: true
+          readonly j: 'string'
+        }
+        readonly k: 'hello'
+      }
+      readonly l: readonly [
+        'hi',
+        {
+          readonly m: readonly ['hey']
+        },
+      ]
+    }
+  }
+}
+
+type Expected2 = { readonly a: string } | { readonly b: number }
+
+type DeepArray<L> = L extends [infer F, ...infer R]
+? [DeepReadonly<F>, ...DeepArray<R>]
+: []
+
+type DeepReadonly<T> = T extends any
+? T extends {[P in any]: unknown}
+  ? {readonly [K in keyof T]: DeepReadonly<T[K]>}
+  : T extends unknown[]
+    ? readonly [...DeepArray<T>]
+    : T
+: never

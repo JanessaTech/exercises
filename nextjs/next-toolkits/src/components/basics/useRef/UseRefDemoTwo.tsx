@@ -7,7 +7,6 @@ export default function UseRefDemoTwo() {
     const inner = useRef(null)
 
     const onClick = (e: MouseEvent<HTMLDivElement>) => {
-        //console.log(e)
         if (e.target === outer.current) {
             console.log('you click outer')
         }

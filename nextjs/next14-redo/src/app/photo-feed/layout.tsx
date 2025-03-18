@@ -1,7 +1,6 @@
-import React from "react";
-
-
-export default function PhotoFeedLayout({children, modal}: {children: React.ReactNode, modal: React.ReactNode}) {
+export default function PhotoFeedLayout({children, modal}: 
+    Readonly<{children: React.ReactNode, 
+        modal: React.ReactNode}>) {
     return (
         <div>
             {modal}

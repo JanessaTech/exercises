@@ -9,7 +9,7 @@ export type WonderImage = {
     src: StaticImageData
 }
 
-const wonderImages:WonderImage[] = [
+const wonderImages: WonderImage[] = [
     {id: '1', name: 'curry', src: curry},
     {id: '2', name: 'noodles', src: noodles},
     {id: '3', name: 'stew', src: stew},

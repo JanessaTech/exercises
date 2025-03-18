@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+    <head></head>
+    <title>Try flex in column layout</title>
+    <style>
+        body {
+                margin: 0
+            }
+        #ioc {
+            width: 200px;
+            height: 700px;
+            background-color: bisque;  
+            display: flex;
+            flex-direction: column
+        }
+        .row1 {
+            background-color: blueviolet;
+            width: 100%;
+            height: 100px
+        }
+        .row2 {
+            background-color: burlywood;
+            width: 100%;
+            flex:1
+        }
+        .row3 {
+            background-color: coral;
+            width: 100%;
+            height: 40px;
+        }
+        
+    </style>
+    <body>
+        <div id="ioc">
+            <div class="row1"></div>
+            <div class="row2"></div>
+            <div class="row3"></div>
+        </div>
+    </body>
+</html>

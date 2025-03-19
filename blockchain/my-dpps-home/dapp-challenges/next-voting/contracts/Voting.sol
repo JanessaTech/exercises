@@ -33,11 +33,11 @@ contract Voting {
         _;
     }
 
-    function startVoting() public{
+    function start() public isOwner{
         require(!started, 'started');
         started = true;
     }
-    function endVoting() public {
+    function end() public isOwner{
         require(started, 'not started');
         require(!ended, 'ended');
         ended = true;
@@ -46,7 +46,7 @@ contract Voting {
     function vote(uint id)  public {
         require(started, 'Not started');
         require(!ended, 'ended');
-        require(id >= candidates.length, 'invalid id');
+        require(id < candidates.length, 'invalid id');
         Candidate storage candidate = candidates[id];
         require(candidate.votedBy == address(0), 'already voted');
         candidate.votedBy = msg.sender;
@@ -57,9 +57,9 @@ contract Voting {
     function unvote(uint id) public {
         require(started, 'Not started');
         require(!ended, 'ended');
-        require(id >= candidates.length, 'invalid id');
+        require(id < candidates.length, 'invalid id');
         Candidate storage candidate = candidates[id];
-        require(candidate.votedBy != msg.sender, 'not allow to unvote');
+        require(candidate.votedBy == msg.sender, 'not allow to unvote');
         candidate.votedBy = address(0);
 
         emit Unvote(msg.sender, id);

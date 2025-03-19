@@ -15,3 +15,12 @@ npm run start
 ```
 npx hardhat test .\test\VotingTest.js
 ```
+
+### create this project from scratch
+
+```
+npm install ethers@6.13.2
+create file under root
+
+
+```

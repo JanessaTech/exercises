@@ -13,6 +13,7 @@ import { connectState, type ConnectState } from "@/lib/Atoms"
 import { useEffect } from "react"
 import { useRecoilState } from "recoil"
 import { useRouter } from "next/navigation"
+import { ethers } from "ethers"
 
 type HomeProps = {}
 const HomePage:React.FC<HomeProps> = () => {
@@ -21,7 +22,7 @@ const HomePage:React.FC<HomeProps> = () => {
 
     useEffect(() => {
         if(connect.connected) {
-
+            updateState()
         } else {
             router.push('/')
         }
@@ -31,6 +32,20 @@ const HomePage:React.FC<HomeProps> = () => {
         setConnect({connected: false})
         router.push('/')
     }
+
+    const requestAccount = async () => {
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+    }
+
+    const updateState = async () => {
+        const provider = new ethers.BrowserProvider(window.ethereum)
+        await requestAccount()
+        const signer = await provider.getSigner()
+        const address = await signer.getAddress()
+        console.log('address:', address)
+        
+    }
+
 
     return (
         <div className="w-full">

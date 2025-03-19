@@ -5,7 +5,8 @@ const {loadFixture, time} = require("@nomicfoundation/hardhat-toolbox/network-he
 describe('Voting', function () {
     async function deplyVotingFixture() {
         const Voting = await ethers.getContractFactory('Voting')
-        const voting = await Voting.deploy()
+        const names = ['Alic', 'Bob', 'Jane']
+        const voting = await Voting.deploy(names)
         return {voting}
     }
     describe('init', function () {

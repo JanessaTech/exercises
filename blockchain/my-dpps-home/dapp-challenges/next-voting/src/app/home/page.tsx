@@ -1,3 +1,5 @@
+'use client'
+
 import {
     Table,
     TableBody,
@@ -7,14 +9,37 @@ import {
     TableHeader,
     TableRow,
   } from "@/components/ui/table"
+import { connectState, type ConnectState } from "@/lib/Atoms"
+import { useEffect } from "react"
+import { useRecoilState } from "recoil"
+import { useRouter } from "next/navigation"
 
-export default function HomePage() {
+type HomeProps = {}
+const HomePage:React.FC<HomeProps> = () => {
+    const router = useRouter()
+    const [connect, setConnect] = useRecoilState<ConnectState>(connectState)
+
+    useEffect(() => {
+        if(connect.connected) {
+
+        } else {
+            router.push('/')
+        }
+    }, [])
+
+    const logout = (e:React.MouseEvent<HTMLButtonElement>) => {
+        setConnect({connected: false})
+        router.push('/')
+    }
 
     return (
         <div className="w-full">
-            <div className="ml-2 mb-2">
-                <span>Status:</span>
-                <span className="font-semibold mx-1">In progressing</span>
+            <div className="ml-2 mb-2 flex justify-between items-center">
+                <div>
+                    <span>Status:</span><span className="font-semibold mx-1">In progressing</span>
+                </div>
+                <div><button className="bg-zinc-400 px-2 py-1 text-sm font-semibold rounded-full 
+                hover:bg-zinc-500 hover:text-white" onClick={logout}>Logout</button></div>
             </div>
             <div>
             <Table>
@@ -58,3 +83,5 @@ export default function HomePage() {
         </div>
     )
 }
+
+export default HomePage

@@ -20,7 +20,7 @@ npx hardhat test .\test\VotingTest.js
 
 ```
 npm install ethers@6.13.2
-create file under root
+create file web3.d.ts under root
 
 
 ```

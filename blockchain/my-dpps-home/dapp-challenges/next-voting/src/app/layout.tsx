@@ -28,7 +28,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="w-1/2 mx-auto my-32 rounded-lg shadow-md border-2 border-zinc-400 p-5 bg-zinc-200">
+          <div className="flex flex-col items-center mb-8 my-2">
+            <div className="text-6xl font-semibold py-5">Welcome to voting!</div>
+            {children}
+          </div>
+        </div>
       </body>
     </html>
   );

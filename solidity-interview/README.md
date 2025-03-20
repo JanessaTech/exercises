@@ -29,7 +29,7 @@ npx hardhat ignition deploy ./ignition/modules/Lock.js
 ## Install dependences
 
 ```
-npm install @openzeppelin
+npm install @openzeppelin/contracts
 ```
 
 ## How to run the codes

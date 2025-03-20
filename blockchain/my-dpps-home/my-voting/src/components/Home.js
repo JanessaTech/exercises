@@ -77,9 +77,12 @@ export default function Home() {
         }
         
         const contract = new ethers.Contract(contractAddr, abi, signer)
-        const candidates = await contract.getCandidates()
-        const registeredName = await contract.getRegisterName()
         const isEnd = await contract.isEnd()
+        console.log('isEnd:', isEnd)
+        const candidates = await contract.getCandidates()
+        console.log('candidates:', candidates)
+        const registeredName = await contract.getRegisterName()
+        
         console.log("registeredName:", registeredName)
         let newRegisteredNames = state.registeredNames
         if (registeredName) {

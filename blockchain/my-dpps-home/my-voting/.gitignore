@@ -25,4 +25,4 @@ yarn-error.log*
 # others
 /cache
 /artifacts
-contracts/artifacts
+/contracts/artifacts

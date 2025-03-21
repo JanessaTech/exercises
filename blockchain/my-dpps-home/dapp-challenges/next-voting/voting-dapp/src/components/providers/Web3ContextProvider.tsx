@@ -1,6 +1,7 @@
 'use client'
 import { createContext, useContext } from "react"
-import useWalletManager, { WalletState } from "../hooks/useWalletmanger"
+import useWalletManager, { WalletState } from "../hooks/useWalletManger";
+
 
 
 export interface IWeb3Context {
@@ -10,7 +11,6 @@ export interface IWeb3Context {
 }
 
 const Web3Context = createContext<IWeb3Context | undefined>(undefined)
-
 
 type Web3ContextProviderProps = {
     children: React.ReactNode

@@ -1,4 +1,6 @@
-import { AuthState, ConnectState, authState } from "@/lib/Atoms";
+import { abi, contractAddress } from "@/lib/ABI";
+import { AuthState, authState } from "@/lib/Atoms";
+import { Contract } from "ethers";
 import { ethers } from "ethers"
 import { useState } from "react"
 import { useRecoilState } from "recoil";
@@ -8,7 +10,7 @@ export interface WalletState {
     provider: ethers.BrowserProvider | undefined;
     signer: ethers.JsonRpcSigner | undefined;
     address: string | undefined;
-    isAuthenticated: boolean;
+    contract: Contract | undefined
 }
 
 const defaultWalletState: WalletState = {
@@ -16,7 +18,7 @@ const defaultWalletState: WalletState = {
     provider: undefined,
     signer: undefined,
     address: undefined,
-    isAuthenticated: false
+    contract: undefined
 }
 const useWalletManager = () => {
     console.log('useWalletManager is called')
@@ -25,6 +27,10 @@ const useWalletManager = () => {
 
     const connectWallet = async () => {
         console.log('connectWallet ...')
+        if (auth.connected) {
+            console.log('already connected')
+            return
+        }
         if (typeof window !== undefined && typeof window.ethereum !== undefined) {
             const {ethereum} = window
             const provider = new ethers.BrowserProvider(ethereum)
@@ -32,14 +38,16 @@ const useWalletManager = () => {
             const signer = await provider.getSigner()
             const address = await signer.getAddress()
             const chainId = Number((await provider.getNetwork()).chainId)
-            console.log('address: ', address)
-            console.log('chain: ', chainId)
+            const contract = new Contract(contractAddress, abi, signer)
+            setState({...state, chainId: chainId, provider: provider, signer: signer, address: address, contract: contract})
+            setAuth({connected: true})
         } else {
             console.error('window or window.ethereum cannot be found')
         }
     }
     const disConnectWallet = async () => {
         console.log('disConnectWallet ...')
+        setAuth({connected: false})
     }
 
     return {connectWallet, disConnectWallet, state}

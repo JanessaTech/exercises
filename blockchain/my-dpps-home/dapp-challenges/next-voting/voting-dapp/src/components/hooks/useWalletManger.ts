@@ -2,7 +2,7 @@ import { abi, contractAddress } from "@/lib/ABI";
 import { AuthState, authState } from "@/lib/Atoms";
 import { Contract } from "ethers";
 import { ethers } from "ethers"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRecoilState } from "recoil";
 
 export interface WalletState {
@@ -25,12 +25,24 @@ const useWalletManager = () => {
     const [state, setState] = useState<WalletState>(defaultWalletState)
     const [auth, setAuth] = useRecoilState<AuthState>(authState)
 
+    useEffect(() => {
+        if (typeof window.ethereum === "undefined") return;
+
+        window.ethereum.on("accountsChanged", (accounts: string[]) => {
+          setState({ ...state, address: accounts[0] });
+        });
+    
+        window.ethereum.on("chainChanged", (network: string) => {
+          setState({ ...state, chainId: Number(network) });
+        });
+    
+        return () => {
+          window.ethereum.removeAllListeners();
+        };
+    }, [])
+
     const connectWallet = async () => {
         console.log('connectWallet ...')
-        if (auth.connected) {
-            console.log('already connected')
-            return
-        }
         if (typeof window !== undefined && typeof window.ethereum !== undefined) {
             const {ethereum} = window
             const provider = new ethers.BrowserProvider(ethereum)

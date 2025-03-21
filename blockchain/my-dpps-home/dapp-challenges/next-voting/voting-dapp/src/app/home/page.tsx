@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation"
 import { ethers } from 'ethers';
 import { AuthState, authState } from "@/lib/Atoms"
 import { IWeb3Context, useWeb3Context } from "@/components/providers/Web3ContextProvider"
+import { Contract } from "ethers"
 
 type HomeProps = {}
 type CandidateType = {
@@ -36,17 +37,17 @@ const defaultHomeState = {
 const HomePage:React.FC<HomeProps> = () => {
     const router = useRouter()
     const [auth] = useRecoilState<AuthState>(authState)
-    const {disConnectWallet, state: {address, contract}} = useWeb3Context() as IWeb3Context
+    const {connectWallet, disConnectWallet, state: {address, contract}} = useWeb3Context() as IWeb3Context
     const [state, setState] = useState<HomeStateType>(defaultHomeState)
 
     useEffect(() => {
         (async () => {
-            if(auth.connected && contract) {
-                const rawCandiates: {[P in any]: any}[]= await contract.getCandidates()
-                const rows:CandidateType[] = []
-                rawCandiates.forEach((e) => rows.push({id: Number(e[0]), name: e[1], votedBy: e[2] === ethers.ZeroAddress ? '' : e[2]}))
-                const isEnded = await contract.isEnded()
-                setState({...state, isEnded: isEnded, candidates: rows})     
+            if(auth.connected) {
+                if (contract) {
+                    await updateState(contract)  
+                } else {
+                    await connectWallet()
+                }   
             } else {
                 router.push('/')
             }
@@ -56,6 +57,14 @@ const HomePage:React.FC<HomeProps> = () => {
     const logout = async (e:React.MouseEvent<HTMLButtonElement>) => {
         await disConnectWallet()
         router.push('/')
+    }
+
+    const updateState = async (contract: Contract) => {
+        const rawCandiates: {[P in any]: any}[]= await contract.getCandidates()
+        const rows:CandidateType[] = []
+        rawCandiates.forEach((e) => rows.push({id: Number(e[0]), name: e[1], votedBy: e[2] === ethers.ZeroAddress ? '' : e[2]}))
+        const isEnded = await contract.isEnded()
+        setState({...state, isEnded: isEnded, candidates: rows}) 
     }
 
     return (

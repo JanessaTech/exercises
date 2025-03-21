@@ -45,7 +45,7 @@ const HomePage:React.FC<HomeProps> = () => {
             if(auth.connected) {
                 if (contract) {
                     await updateState(contract)  
-                } else {
+                } else { // in case we refresh the home page when we are logined
                     await connectWallet()
                 }   
             } else {

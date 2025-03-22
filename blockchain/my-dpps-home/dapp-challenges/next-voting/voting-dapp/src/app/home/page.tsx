@@ -84,7 +84,7 @@ const HomePage:React.FC<HomeProps> = () => {
             
             <div>
             <Table>
-                <TableCaption>A list of candidates.</TableCaption>
+                <TableCaption>A list of candidates</TableCaption>
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-[100px]">ID</TableHead>

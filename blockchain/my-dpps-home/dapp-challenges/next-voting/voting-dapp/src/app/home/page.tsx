@@ -17,6 +17,7 @@ import { ethers } from 'ethers';
 import { AuthState, authState } from "@/lib/Atoms"
 import { IWeb3Context, useWeb3Context } from "@/components/providers/Web3ContextProvider"
 import { Contract } from "ethers"
+import { AwardIcon } from "lucide-react"
 
 type HomeProps = {}
 type CandidateType = {
@@ -67,12 +68,22 @@ const HomePage:React.FC<HomeProps> = () => {
         setState({...state, isEnded: isEnded, candidates: rows}) 
     }
 
+    const handleVote = async (id:number) => {
+        console.log('vote : ', id)
+        if (contract) {
+            const tx = await contract.vote(id)
+            await tx.wait() 
+            console.log(tx)
+            await updateState(contract)
+        }
+    }
+
     return (
         <div className="w-full">
             <div className="ml-2 mb-2">
                 <div className="flex justify-between">
                     <div>
-                        <span>Status:</span><span className="font-semibold mx-1">In progressing</span>
+                        <span>Status:</span><span className="font-semibold mx-1">{state.isEnded ? 'Done' : 'In progressing'}</span>
                     </div>
                     <div>
                         <button className="bg-zinc-400 px-2 py-1 text-sm font-semibold rounded-full 
@@ -104,7 +115,7 @@ const HomePage:React.FC<HomeProps> = () => {
                                     <TableCell className="text-right">
                                         <button className={`hover:bg-green-60 disabled:hover:bg-zinc-400 
                                                         text-white py-1 px-2 rounded-full ${candidate.votedBy ? 'bg-zinc-500' : 'bg-green-700'}`} 
-                                                disabled={!!candidate.votedBy}>vote</button>
+                                                disabled={!!candidate.votedBy} onClick={() => handleVote(candidate.id)}>vote</button>
                                     </TableCell>
                                 </TableRow>
                             )

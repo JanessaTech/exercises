@@ -22,17 +22,12 @@ var calcEquation = function(equations, values, queries) {
 function createGraph(equations, values) {
     const graph = new Map()
     for (let i = 0; i < equations.length; i++) {
-        const a = equations[i][0]
-        const b = equations[i][1]
-        const val = values[i]
-        if (!graph.has(a)) {
-            graph.set(a, [])
-        }
-        if (!graph.has(b)) {
-            graph.set(b, [])
-        }
-        graph.get(a).push([b, val])
-        graph.get(b).push([a, 1/ val])
+        const [a, b] = equations[i]
+        const value = values[i]
+        if (!graph.has(a)) graph.set(a, [])
+        if (!graph.has(b)) graph.set(b, [])
+        graph.get(a).push([b, value])
+        graph.get(b).push([a, 1/ value])
     }
     return graph
 }

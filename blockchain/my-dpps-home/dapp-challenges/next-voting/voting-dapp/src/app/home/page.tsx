@@ -17,7 +17,6 @@ import { ethers } from 'ethers';
 import { AuthState, authState } from "@/lib/Atoms"
 import { IWeb3Context, useWeb3Context } from "@/components/providers/Web3ContextProvider"
 import { Contract } from "ethers"
-import { AwardIcon } from "lucide-react"
 
 type HomeProps = {}
 type CandidateType = {

@@ -1,44 +1,78 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-// Uncomment this line to use console.log
-// import "hardhat/console.sol";
+import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "hardhat/console.sol";
 
 contract Redo {
-   struct Person {
-      uint id;
-      string name;
-   }
-   uint idx;
-   Person[] persons;
-   mapping(uint => uint) idxMapping;
-   mapping(uint => bool) inserted;
+   IERC721 nft;
+   uint nftId;
+   address owner;
 
-   function create(string memory _name) public {
-      uint _id = idx;
-      idx++;
-      persons.push(Person({id: _id, name: _name}));
-      idxMapping[_id] = persons.length - 1;
-      inserted[_id] = true;
-   }
+   bool started;
+   bool ended;
+   uint endAt;
 
-   function remove(uint _id) public {
-      require(inserted[_id], 'invalid id');
-      uint _idx = idxMapping[_id];
-      Person storage last = persons[persons.length - 1];
-      persons[_idx] = Person({id: last.id, name: last.name});
-      idxMapping[last.id] = _idx;
-      delete idxMapping[_id];
-      delete inserted[_id];
-      persons.pop();
-   }
-   function get(uint _id) public view returns(uint id, string memory name) {
-      require(inserted[_id], 'invalid id');
-      Person storage person = persons[idxMapping[_id]];
-      return (person.id, person.name);
+   uint highestBid;
+   address highestBidder;
+   mapping(address => uint) bids;
+
+   event Start(address indexed from);
+   event End(address indexed from);
+   event Bid(address indexed from, uint amount);
+   event Withdraw(address indexed from, uint amount);
+
+   constructor(address _nft, uint _nftId) {
+      nft = IERC721(_nft);
+      nftId = _nftId;
+      owner = msg.sender;
    }
 
-   function getAll() public view returns(Person[] memory){
-      return persons;
+   function start() public {
+      require(!started, 'started');
+      require(owner == msg.sender, 'not owner');
+      started = true;
+      endAt = block.timestamp + 7 days;
+      nft.transferFrom(msg.sender, address(this), nftId);
+
+      emit Start(msg.sender);
+   }
+
+   function end() public {
+      require(msg.sender == owner, 'not owner');
+      require(started, 'not started');
+      require(block.timestamp >= endAt, 'not ended');
+      ended = true;
+      if (highestBidder == address(0)) {
+         nft.transferFrom(address(this), owner, nftId);
+      } else {
+         nft.transferFrom(address(this), highestBidder, nftId);
+         bool sent = payable(owner).send(highestBid);
+         require(sent, 'failed to send eth to owner');
+      }
+
+      emit End(msg.sender);
+   }
+
+   function bid() public payable {
+      require(started, 'not started');
+      require(block.timestamp < endAt, 'already ended');
+      require(msg.value > highestBid, 'msg.value <= highestBid');
+
+      if (highestBidder != address(0)) {
+         bids[highestBidder] += highestBid;
+      }
+      highestBid = msg.value;
+      highestBidder = msg.sender;
+
+      emit Bid(msg.sender, msg.value);
+   }
+
+   function withdraw() public {
+      uint balance = bids[msg.sender];
+      bids[msg.sender] = 0;
+      bool sent = payable(msg.sender).send(balance);
+      require(sent, 'failed to withdraw eth');
+      emit Withdraw(msg.sender, balance);
    }
 }

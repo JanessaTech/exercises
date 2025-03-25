@@ -8,77 +8,73 @@ import "hardhat/console.sol";
 
 contract EnglishAuction  {
     IERC721 nft;
-    address seller;
-    uint256 nftId;
-    
-    uint256 highestBid = 0;
-    address highestBidder = address(0);
+   uint nftId;
+   address owner;
 
-    mapping(address => uint256) bids;
+   bool started;
+   bool ended;
+   uint endAt;
 
-    bool started = false;
-    bool ended = false;
-    uint256 endAt = 0;
+   uint highestBid;
+   address highestBidder;
+   mapping(address => uint) bids;
 
-    event Start(address indexed owner);
-    event Bid(address indexed from, uint256 bid);
-    event Withdraw(address indexed from, uint256 amount);
-    event End(address indexed owner);
+   event Start(address indexed from);
+   event End(address indexed from);
+   event Bid(address indexed from, uint amount);
+   event Withdraw(address indexed from, uint amount);
 
-    constructor(address _nft,  uint256 _nftId) {
-        nft = IERC721(_nft);
-        seller = msg.sender;
-        nftId = _nftId;
-    }
+   constructor(address _nft, uint _nftId) {
+      nft = IERC721(_nft);
+      nftId = _nftId;
+      owner = msg.sender;
+   }
 
-    function start() public {
-        require(!started, 'started');
-        require(msg.sender == seller, 'not owner');
+   function start() public {
+      require(!started, 'started');
+      require(owner == msg.sender, 'not owner');
+      started = true;
+      endAt = block.timestamp + 7 days;
+      nft.transferFrom(msg.sender, address(this), nftId);
 
-        nft.transferFrom(msg.sender, address(this), nftId);
+      emit Start(msg.sender);
+   }
 
-        started = true;
-        endAt = block.timestamp + 7 days;
-        
-        emit Start(msg.sender);
-    }
+   function end() public {
+      require(msg.sender == owner, 'not owner');
+      require(started, 'not started');
+      require(block.timestamp >= endAt, 'not ended');
+      ended = true;
+      if (highestBidder == address(0)) {
+         nft.transferFrom(address(this), owner, nftId);
+      } else {
+         nft.transferFrom(address(this), highestBidder, nftId);
+         bool sent = payable(owner).send(highestBid);
+         require(sent, 'failed to send eth to owner');
+      }
 
-    function bid() public payable {
-        require(started, 'not start');
-        require(msg.value > highestBid, 'value <= highestBid');
-        require(block.timestamp < endAt, 'ended');
+      emit End(msg.sender);
+   }
 
-        if (highestBidder != address(0)) {
-            bids[highestBidder] += highestBid;
-        }
+   function bid() public payable {
+      require(started, 'not started');
+      require(block.timestamp < endAt, 'already ended');
+      require(msg.value > highestBid, 'msg.value <= highestBid');
 
-        highestBid = msg.value;
-        highestBidder = msg.sender;
+      if (highestBidder != address(0)) {
+         bids[highestBidder] += highestBid;
+      }
+      highestBid = msg.value;
+      highestBidder = msg.sender;
 
-        emit Bid(msg.sender, msg.value);
-    }
+      emit Bid(msg.sender, msg.value);
+   }
 
-    function withDraw() public {
-        uint256 balance = bids[msg.sender];
-        bids[msg.sender] = 0;
-        bool sent = payable(msg.sender).send(balance);
-        require(sent, 'failed to withdraw');
-
-        emit Withdraw(msg.sender, balance);
-    }
-
-    function end() public {
-        require(started, 'not started');
-        require(block.timestamp >= endAt, 'not ended');
-        require(!ended, 'endeded');
-        ended = true;
-        if(highestBidder != address(0)) {
-            nft.safeTransferFrom(address(this), highestBidder, nftId);
-            bool sent = payable(seller).send(highestBid);
-            require(sent, 'failed to send eth to seller');
-        } else {
-            nft.safeTransferFrom(address(this), seller, nftId);
-        }
-        emit End(msg.sender);
-    }
+   function withdraw() public {
+      uint balance = bids[msg.sender];
+      bids[msg.sender] = 0;
+      bool sent = payable(msg.sender).send(balance);
+      require(sent, 'failed to withdraw eth');
+      emit Withdraw(msg.sender, balance);
+   }
 }

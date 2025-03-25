@@ -4,123 +4,134 @@ const {loadFixture, time} = require("@nomicfoundation/hardhat-toolbox/network-he
 const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 
 describe('EnglishAuction', function () {
-    async function deployEnglishAuctionFixture() {
-        const [nftDeployer, nftOwner, nonNftOwner, bidderA, bidderB, ...others] = await ethers.getSigners()
-        const MyERC721 = await ethers.getContractFactory('MyERC721', nftDeployer)
-        const name = 'testERC721'
-        const symbol = 'test'
-        const nft = await MyERC721.deploy(name, symbol)
-        const nftId = 1 
-        await nft.mint(nftOwner, nftId)
+    async function deployRedoFixture() {
+        const [owner, nftdeployer, nonOwner, biderA, biderB, ...others] = await ethers.getSigners()
+        const MyERC721 = await ethers.getContractFactory('MyERC721', nftdeployer)
+        const name = 'MyERC721'
+        const symbol = 'MyERC721'
+        const nftId = 0
+        const erc721 = await MyERC721.deploy(name, symbol)
+        await erc721.mint(owner,nftId)
 
-        const SEVEN_DAY_IN_SECS = 60 * 60 * 24 * 7
+        const Auction = await ethers.getContractFactory('EnglishAuction', owner)
+        const auction = await Auction.deploy(erc721.getAddress(), nftId)
 
-        const EnglishAuction = await ethers.getContractFactory('EnglishAuction', nftOwner)
-        const englishAuction = await EnglishAuction.deploy(nft, nftId)
+        const SEVEN_DAYS = 60 * 60 * 24 * 7
 
-        await nft.connect(nftOwner).approve(englishAuction.getAddress(), nftId)
-        return {englishAuction, nft, nftId, nftOwner, nonNftOwner, bidderA, bidderB, SEVEN_DAY_IN_SECS}
+        await erc721.connect(owner).approve(auction.getAddress(), nftId)
+        return {auction, erc721, nftId, owner, nonOwner, biderA, biderB, SEVEN_DAYS}
     }
 
     describe('init', function () {
-        it('It should init successfully', async function () {
-            const {englishAuction} = await loadFixture(deployEnglishAuctionFixture)
+        it('init', async function () {
+            const {auction, erc721, nftId, owner} = await loadFixture(deployRedoFixture)
+            const who = await erc721.ownerOf(nftId)
+            const spender = await erc721.getApproved(nftId)
+            expect(who).to.be.equal(await owner.getAddress())
+            expect(spender).to.be.equal(await auction.getAddress())
         })
     })
 
     describe('start', function () {
-        it('it fails to start when it is not owner', async function () {
-            const {englishAuction, nonNftOwner} = await loadFixture(deployEnglishAuctionFixture)
-            await expect(englishAuction.connect(nonNftOwner).start()).to.be.revertedWith('not owner')
-        })
-        it('It fails to start when it is already started', async function () {
-            const {englishAuction} = await loadFixture(deployEnglishAuctionFixture)
-            await englishAuction.start()
+        it('it failed to start when it not owner', async function () {
+            const {auction, nonOwner}  = await loadFixture(deployRedoFixture)
+            await expect(auction.connect(nonOwner).start()).to.be.revertedWith('not owner')
 
-            await expect(englishAuction.start()).to.be.revertedWith('started')
         })
-        it('It started successfully', async function () {
-            const {englishAuction} = await loadFixture(deployEnglishAuctionFixture)
-            await expect(englishAuction.start()).to.emit(englishAuction, 'Start')
+        it('it started successfully', async function () {
+            const {auction, erc721, nftId} = await loadFixture(deployRedoFixture)
+            await expect(auction.start()).to.emit(auction, 'Start')
+            const newOwner = await erc721.ownerOf(nftId)
+            expect(newOwner).to.be.equal(await auction.getAddress())
+        })
+        it('it failed to start when it is already started', async function () {
+            const {auction}  =await loadFixture(deployRedoFixture)
+            await auction.start()
+            await expect(auction.start()).to.be.revertedWith('started')
         })
     })
 
-    describe('bid', function () {
-        it('It fails to bid when it is not started yet', async function ()  {
-            const { englishAuction, bidderA} = await loadFixture(deployEnglishAuctionFixture)
-            await expect(englishAuction.connect(bidderA).bid()).to.be.revertedWith('not start')
-        })
-        it('It bided successfully', async function () {
-            const {englishAuction, bidderA} = await loadFixture(deployEnglishAuctionFixture)
-            await englishAuction.start()
+    describe('bid', async function () {
+        it('it failed to bid when it is not started', async function () {
+            const {auction, biderA} = await loadFixture(deployRedoFixture)
             const amount = 1000
-            await expect(englishAuction.connect(bidderA).bid({value: amount})).to.emit(englishAuction, 'Bid').withArgs(bidderA.address, amount)
+            await expect(auction.connect(biderA).bid({value: amount})).to.be.revertedWith('not started')
+
         })
-        it('It fails to bid when the value of eth is not greater than the highest bid', async function () {
-            const {englishAuction, bidderA, bidderB} = await loadFixture(deployEnglishAuctionFixture)
-            await englishAuction.start()
+        it('it failed to bid when it is already ended', async function () {
+            const {auction, biderA, SEVEN_DAYS} = await loadFixture(deployRedoFixture)
+            await auction.start()
+            const amount = 1000
+            const latest = await time.latest()
+            await time.setNextBlockTimestamp(latest + SEVEN_DAYS)
+            await expect(auction.connect(biderA).bid({value: amount})).to.be.revertedWith('already ended')
+        })
+        it('it failed to bid when the value to be sent is not the highest', async function () {
+            const {auction, biderA, biderB} =await loadFixture(deployRedoFixture)
             const amount1 = 1000
             const amount2 = 500
-            await englishAuction.connect(bidderA).bid({value: amount1})
+            await auction.start()
 
-            await expect(englishAuction.connect(bidderB).bid({value: amount2})).to.be.revertedWith('value <= highestBid')
+            await auction.connect(biderA).bid({value: amount1})
+            await expect(auction.connect(biderB).bid({value: amount2})).to.be.revertedWith('msg.value <= highestBid')
         })
-        it('It fails to bid when it is ended', async function () {
-
+        it('it bided successfully', async function () {
+            const {auction, biderA} = await loadFixture(deployRedoFixture)
+            const amount = 1000
+            await auction.start()
+            await expect(auction.connect(biderA).bid({value: amount})).to.emit(auction, 'Bid').withArgs(biderA.getAddress(), amount)
         })
-        
     })
 
-    describe('withDraw', function () {
-        it('It withdrawed successfully', async function () {
-            const {englishAuction, bidderA, bidderB} = await loadFixture(deployEnglishAuctionFixture)
+    describe('withdraw', async function () {
+        it('it withdrew successfully', async function (){
+            const {auction, biderA, biderB} = await loadFixture(deployRedoFixture)
+            await auction.start()
             const amount1 = 1000
             const amount2 = 2000
-            await englishAuction.start()
-            await englishAuction.connect(bidderA).bid({value: amount1})
-            await englishAuction.connect(bidderB).bid({value: amount2})
+            await auction.connect(biderA).bid({value: amount1})
+            await auction.connect(biderB).bid({value: amount2})
 
-            await expect(englishAuction.connect(bidderA).withDraw()).to.emit(englishAuction, 'Withdraw').withArgs(bidderA.address, amount1)
+            await expect(auction.connect(biderA).withdraw()).to.emit(auction, 'Withdraw').withArgs(biderA.getAddress(), amount1)
         })
     })
 
-    describe('end', function () {
-        it('It fails to end when it is not started yet', async function () {
-            const {englishAuction} = await loadFixture(deployEnglishAuctionFixture)
-            await expect(englishAuction.end()).to.be.revertedWith('not started')
+    describe('end', async function () {
+        it('it failed to end when it is not started', async function () {
+            const {auction} = await loadFixture(deployRedoFixture)
+            await expect(auction.end()).to.be.revertedWith('not started')
         })
-        it('It ended successfully when nothing happened', async function () {
-            const {englishAuction, nft, nftId, SEVEN_DAY_IN_SECS, nftOwner} = await loadFixture(deployEnglishAuctionFixture)
-            await englishAuction.start()
-            const latest = await time.latest()
-            await time.increaseTo(latest + SEVEN_DAY_IN_SECS)
-
-            await expect(englishAuction.end()).to.emit(englishAuction, 'End').withArgs(nftOwner.address)
-            const latestNftOwner = await nft.ownerOf(nftId)
-            expect(latestNftOwner).to.be.equal(nftOwner.address)
+        it('it failed to end when it is not owner', async function () {
+            const {auction, nonOwner}  = await loadFixture(deployRedoFixture)
+            await expect(auction.connect(nonOwner).end()).to.be.revertedWith('not owner')
         })
-        it('It ended successfully when bidderB finally got the bid', async function () {
-            const {englishAuction, nft, nftId, SEVEN_DAY_IN_SECS, nftOwner, bidderA, bidderB} = await loadFixture(deployEnglishAuctionFixture)
-            await englishAuction.start()
-            const amount1 = 500
-            const amount2 = 1500
-            await englishAuction.connect(bidderA).bid({value: amount1})
-            await englishAuction.connect(bidderB).bid({value: amount2})
-            const latest = await time.latest()
-            await time.increaseTo(latest + SEVEN_DAY_IN_SECS)
-
-            await expect(englishAuction.end()).to.emit(englishAuction, 'End').withArgs(nftOwner.address)
-            const latestNftOwner = await nft.ownerOf(nftId)
-            expect(latestNftOwner).to.be.equal(bidderB.address)
+        it('it failed to end when it the end time has not reached', async function () {
+            const {auction} = await loadFixture(deployRedoFixture)
+            await auction.start()
+            await expect(auction.end()).to.be.revertedWith('not ended')
         })
-        it('It fails to end when it is not ended', async function () {
-            const {englishAuction, SEVEN_DAY_IN_SECS} = await loadFixture(deployEnglishAuctionFixture)
-            await englishAuction.start()
+        it('it ended successfull in case when there is no bidder', async function () {
+            const {auction, SEVEN_DAYS, owner, nftId, erc721} = await loadFixture(deployRedoFixture)
+            await auction.start()
             const latest = await time.latest()
-            await time.increaseTo(latest + SEVEN_DAY_IN_SECS)
-            await englishAuction.end()
+            await time.setNextBlockTimestamp(latest + SEVEN_DAYS)
+            await auction.end()
 
-            await expect(englishAuction.end()).to.be.revertedWith('endeded')
+            const newOwner = await erc721.ownerOf(nftId)
+            expect(newOwner).to.be.equal(await owner.getAddress())
+        })
+        it('it ended successfully in case wthen there are at least one bidder', async function () {
+            const {auction, biderA, biderB, nftId, erc721, SEVEN_DAYS} = await loadFixture(deployRedoFixture)
+            await auction.start()
+            const latest = await time.latest()
+            const amount1 = 1000
+            const amount2 = 2000
+            await auction.connect(biderA).bid({value: amount1})
+            await auction.connect(biderB).bid({value: amount2})
+            await time.setNextBlockTimestamp(latest + SEVEN_DAYS)
+            await auction.end()
+            const newOwner = await erc721.ownerOf(nftId)
+            expect(newOwner).to.be.equal(await biderB.getAddress())
         })
     })
 })

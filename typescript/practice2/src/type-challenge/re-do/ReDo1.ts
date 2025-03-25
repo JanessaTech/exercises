@@ -1,27 +1,16 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
 type cases = [
-  Expect<Equal<Subsequence<[1, 2]>, [] | [1] | [2] | [1, 2]>>,
-  Expect<Equal<Subsequence<[1, 2, 3]>, [] | [1] | [2] | [1, 2] | [3] | [1, 3] | [2, 3] | [1, 2, 3]>>,
-  Expect<Equal<Subsequence<[1, 2, 3, 4, 5]>, [] |
-  [1] | [2] | [3] | [4] | [5] |
-  [1, 2] | [1, 3] | [1, 4] | [1, 5] | [2, 3] | [2, 4] | [2, 5] | [3, 4] | [3, 5] | [4, 5] |
-  [1, 2, 3] | [1, 2, 4] | [1, 2, 5] | [1, 3, 4] | [1, 3, 5] | [1, 4, 5] | [2, 3, 4] | [2, 3, 5] | [2, 4, 5] | [3, 4, 5] |
-  [1, 2, 3, 4] | [1, 2, 3, 5] | [1, 2, 4, 5] | [1, 3, 4, 5] | [2, 3, 4, 5] |
-  [1, 2, 3, 4, 5] >>,
-  Expect<Equal<Subsequence<['a', 'b', 'c']>, [] |
-  ['a'] | ['b'] | ['c'] |
-  ['a', 'b'] | ['a', 'c'] | ['b', 'c'] |
-  ['a', 'b', 'c'] >>,
-  Expect<Equal<Subsequence<['x', 'y']>, [] |
-  ['x'] | ['y'] |
-  ['x', 'y'] >>,
+  Expect<Equal<Permutation<'A'>, ['A']>>,
+  Expect<Equal<Permutation<'A' | 'B' | 'C'>, ['A', 'B', 'C'] | ['A', 'C', 'B'] | ['B', 'A', 'C'] | ['B', 'C', 'A'] | ['C', 'A', 'B'] | ['C', 'B', 'A']>>,
+  Expect<Equal<Permutation<'B' | 'A' | 'C'>, ['A', 'B', 'C'] | ['A', 'C', 'B'] | ['B', 'A', 'C'] | ['B', 'C', 'A'] | ['C', 'A', 'B'] | ['C', 'B', 'A']>>,
+  Expect<Equal<Permutation<boolean>, [false, true] | [true, false]>>,
+  Expect<Equal<Permutation<never>, []>>,
 ]
 
-type Merge<L extends unknown[], E> = L extends any
-? [E, ...L]
-: never
 
-type Subsequence<T extends any[]> = T extends [infer F, ...infer R]
-? Merge<Subsequence<R>, F> | Subsequence<R>
-: []
+type Permutation<T, path extends unknown[] = [], A = T> = [T] extends [never]
+? path
+: T extends any
+  ? Permutation<Exclude<A, T>, [...path, T]>
+  : never

@@ -11,7 +11,7 @@ describe('Redo', function () {
     }
 
     describe('create', function () {
-        it('it created a new person successfully', async function () {
+        it('create', async function () {
             const {redo} = await loadFixture(deployRedoFixture)
             await redo.create('person0')
             const person0 = await redo.get(0)
@@ -19,11 +19,11 @@ describe('Redo', function () {
         })
     })
     describe('remove', function () {
-        it('it failed to remove person when the id is invalid', async function () {
+        it('it failed to remove a person when the id is invalid', async function () {
             const {redo} = await loadFixture(deployRedoFixture)
             await expect(redo.remove(0)).to.be.revertedWith('invalid id')
         })
-        it('it removed the person sucessfully', async function () {
+        it('it remove the person successfuuly', async function () {
             const {redo} = await loadFixture(deployRedoFixture)
             await redo.create('person0')
             await redo.create('person1')

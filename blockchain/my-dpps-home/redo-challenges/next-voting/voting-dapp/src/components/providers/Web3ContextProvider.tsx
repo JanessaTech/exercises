@@ -11,7 +11,7 @@ export interface IWeb3Context {
 
 const Web3Context = createContext<IWeb3Context | undefined>(undefined)
 
-type Web3ContextProviderProps ={
+type Web3ContextProviderProps = {
     children: React.ReactNode
 }
 const Web3ContextProvider: React.FC<Web3ContextProviderProps> = ({children}) => {
@@ -22,6 +22,5 @@ const Web3ContextProvider: React.FC<Web3ContextProviderProps> = ({children}) => 
         </Web3Context.Provider>
     )
 }
-
+export const useWeb3Context = () => useContext(Web3Context)
 export default Web3ContextProvider
-export const useWebContext = () => useContext(Web3Context)

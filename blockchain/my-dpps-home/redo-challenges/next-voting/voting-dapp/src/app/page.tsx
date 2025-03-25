@@ -1,17 +1,17 @@
 'use client'
 
-import { IWeb3Context, useWebContext } from "@/components/providers/Web3ContextProvider"
+import { IWeb3Context, useWeb3Context } from "@/components/providers/Web3ContextProvider"
 import { useRouter } from "next/navigation"
 
 type LoginProps = {}
 const Login: React.FC<LoginProps> = () => {
   const router = useRouter()
-  const {connectWallet} = useWebContext() as IWeb3Context
+  const {connectWallet} = useWeb3Context() as IWeb3Context
 
-  const onClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    await connectWallet()
-    router.push('/home')
-  }
+ const onClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  await connectWallet()
+  router.push('home')
+ }
   
   return (
     <div>

@@ -6,28 +6,41 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
 
 contract Redo {
-   IERC20 token;
-   uint price;
-   uint quantity;
-   address owner;
+   struct Person {
+      uint id;
+      string name;
+   }
+   Person[] persons;
+   uint idx;
+   mapping(uint => uint) idxMapping;
+   mapping(uint => bool) inserted;
 
-   constructor(address _token, uint _price, uint _quantity, address _owner) {
-      token = IERC20(_token);
-      price = _price;
-      quantity = _quantity;
-      owner = _owner;
+   function create(string memory _name) public {
+      uint _id = idx;
+      idx++;
+      persons.push(Person({id: _id, name:_name}));
+      idxMapping[_id] = persons.length - 1;
+      inserted[_id] = true;
    }
 
-   function buy(uint _quantity) public payable {
-      uint needed = price * _quantity;
-      require(msg.value >= needed, 'not enough eth');
-      require(token.allowance(owner, address(this)) >= _quantity, 'not enough allowance');
-      uint refund = msg.value - needed;
-      bool sent = payable(msg.sender).send(refund);
-      require(sent, 'failed to refund');
-      bool success = token.transferFrom(owner, msg.sender, _quantity);
-      require(success, 'failed to transfer token to buyer');
-      bool done = payable(owner).send(needed);
-      require(done, 'failed to pay owner');
+   function remove(uint _id) public {
+      require(inserted[_id], 'invalid id');
+      uint _idx = idxMapping[_id];
+      Person storage last = persons[persons.length - 1];
+      persons[_idx] = Person({id: last.id, name: last.name});
+      idxMapping[last.id] = _idx;
+      delete idxMapping[_id];
+      delete inserted[_id];
+      persons.pop();
+   }
+
+   function get(uint _id) public view returns(uint id, string memory name) {
+      require(inserted[_id], 'invalid id');
+      Person storage person = persons[idxMapping[_id]];
+      return (person.id, person.name);
+   }
+
+   function getAll() public view returns(Person[] memory) {
+      return persons;
    }
 }

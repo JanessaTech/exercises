@@ -7,22 +7,24 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useRecoilState } from "recoil"
 
-type HomeProps = {}
-type CandiateType = {
-    id: number,
+type CandidateType = {
+    id: number;
     name: string;
     votedBy: string
 }
-type HomeStateType = {
-    isEnded: boolean; 
-    candidates: CandiateType[]
+type HomeStateType ={
+    isEnded: boolean;
+    candiates: CandidateType[]
 }
+
 const defaultHomeState: HomeStateType = {
     isEnded: false,
-    candidates: []
+    candiates: []
 }
-const Home:React.FC<HomeProps> = () => {
-    const {connectWallet, disConnectWallet, state: {address, contract}} = useWeb3Context() as IWeb3Context
+
+type HomeProps = {}
+const Home: React.FC<HomeProps> = () => {
+    const {connectWallet, disconnetWallet, state: {address, contract}} = useWeb3Context() as IWeb3Context
     const [auth] = useRecoilState<AuthState>(authState)
     const router = useRouter()
     const [state, setState] = useState<HomeStateType>(defaultHomeState)
@@ -42,20 +44,20 @@ const Home:React.FC<HomeProps> = () => {
     }, [contract])
 
     const updateState = async (contract: Contract) => {
-        const rawCandidates: {[P in any]: any}[] = await contract.getCandidates()
-        const rows: CandiateType[] = []
-        rawCandidates.forEach((e) => {
-            rows.push({id: Number(e[0]), name: e[1], votedBy: e[2]})
-        })
+        const rawCandiates: {[P in any]: any}[] = await contract.getCandidates()
+        const rows: CandidateType[] = []
+        rawCandiates.forEach((element) => {
+            rows.push({id: Number(element[0]), name: element[1], votedBy: element[2]})
+        });
         const isEnded = await contract.isEnded()
-        setState({...state, isEnded: isEnded, candidates: rows})
+        setState({isEnded: isEnded, candiates: rows})
     }
 
     console.log(state)
 
     return (
         <div>
-            <div>Address: {address}</div>
+            <div>address: {address}</div>
         </div>
     )
 }

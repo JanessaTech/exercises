@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import RecoilProvider from "@/components/providers/RecoilProvider";
+import { RecoilRoot } from "recoil";
 import Web3ContextProvider from "@/components/providers/Web3ContextProvider";
 
 const geistSans = localFont({
@@ -30,14 +30,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <RecoilProvider>
+        <RecoilRoot>
           <Web3ContextProvider>
             {children}
           </Web3ContextProvider>
-        </RecoilProvider>
-        
-        
-         
+        </RecoilRoot>
       </body>
     </html>
   );

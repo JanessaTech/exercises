@@ -12,22 +12,21 @@ type CandidateType = {
     name: string;
     votedBy: string
 }
-type HomeStateType ={
-    isEnded: boolean;
-    candiates: CandidateType[]
+type HomeStateType = {
+    isEnded: boolean,
+    candidates: CandidateType[]
 }
-
 const defaultHomeState: HomeStateType = {
     isEnded: false,
-    candiates: []
+    candidates: []
 }
 
 type HomeProps = {}
-const Home: React.FC<HomeProps> = () => {
-    const {connectWallet, disconnetWallet, state: {address, contract}} = useWeb3Context() as IWeb3Context
-    const [auth] = useRecoilState<AuthState>(authState)
-    const router = useRouter()
+const Home:React.FC<HomeProps> = () =>{
+    const {connectWallet, disconnectWallet, state: {address, contract}} = useWeb3Context() as IWeb3Context
+    const [auth, setAuth] = useRecoilState<AuthState>(authState)
     const [state, setState] = useState<HomeStateType>(defaultHomeState)
+    const router = useRouter()
 
     useEffect(() => {
         (async () => {
@@ -44,17 +43,16 @@ const Home: React.FC<HomeProps> = () => {
     }, [contract])
 
     const updateState = async (contract: Contract) => {
-        const rawCandiates: {[P in any]: any}[] = await contract.getCandidates()
+        const rawCandidates: {[P in any]: any}[] = await contract.getCandidates()
         const rows: CandidateType[] = []
-        rawCandiates.forEach((element) => {
-            rows.push({id: Number(element[0]), name: element[1], votedBy: element[2]})
-        });
-        const isEnded = await contract.isEnded()
-        setState({isEnded: isEnded, candiates: rows})
+        rawCandidates.forEach((e) => {
+            rows.push({id: Number(e[0]), name: e[1], votedBy: e[2]})
+        })
+        const isEnded =await contract.isEnded()
+        setState({isEnded: isEnded, candidates: rows})
     }
 
     console.log(state)
-
     return (
         <div>
             <div>address: {address}</div>

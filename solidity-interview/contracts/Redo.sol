@@ -6,73 +6,36 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
 
 contract Redo {
-   IERC721 nft;
-   uint nftId;
-   address owner;
+    struct Person {
+        uint id;
+        string name;
+    }
+    uint idx;
+    Person[] persons;
+    mapping(uint => uint) idxMapping;
+    mapping(uint => bool) inserted;
 
-   bool started;
-   bool ended;
-   uint endAt;
+    function create(string memory _name) public {
+        uint _id = idx;
+        idx++;
+        persons.push(Person({id: _id, name: _name}));
+        idxMapping[_id] = persons.length - 1;
+        inserted[_id] = true;
+    }
+    function remove(uint _id) public {
+        require(inserted[_id], "invalid id");
+        uint _idx = idxMapping[_id];
+        Person storage last = persons[persons.length - 1];
+        persons[_idx] = Person({id: last.id, name: last.name});
+        idxMapping[last.id] = _idx;
+        delete idxMapping[_id];
+        delete inserted[_id];
+        persons.pop();
+    }
 
-   uint highestBid;
-   address highBidder;
-   mapping(address => uint) bids;
-
-   event Start(address indexed from);
-   event Bid(address indexed from);
-   event Withdraw(address indexed from, uint amount);
-   event End(address indexed from);
-
-   constructor(address _nft, uint _nftId) {
-      nft = IERC721(_nft);
-      nftId = _nftId;
-      owner = msg.sender;
-   }
-
-   function start() public {
-      require(owner == msg.sender, 'not owner');
-      require(!started, 'started');
-      started = true;
-      endAt = block.timestamp + 7 days;
-      nft.transferFrom(owner, address(this), nftId);
-      emit Start(msg.sender);
-   }
-
-   function bid() public payable {
-      require(started, 'not started');
-      require(block.timestamp < endAt, 'ended');
-      require(msg.value > highestBid, 'not the highest value');
-      if (highBidder != address(0)) {
-         bids[highBidder] += highestBid;
-      }
-      highBidder = msg.sender;
-      highestBid = msg.value;
-
-      emit Bid(msg.sender);
-   }
-
-   function withdraw() public {
-      uint amount = bids[msg.sender];
-      if (amount > 0) {
-         bids[msg.sender] = 0;
-         bool sent = payable(msg.sender).send(amount);
-         require(sent, 'failed to withdraw');
-         emit Withdraw(msg.sender, amount);
-      }
-   }
-
-   function end() public {
-      require(owner == msg.sender, 'not owner');
-      require(started, 'not started');
-      require(block.timestamp >= endAt, 'not ended');
-      ended = true;
-      if (highBidder != address(0)) {
-         nft.transferFrom(address(this), highBidder, nftId);
-         bool sent = payable(owner).send(highestBid);
-         require(sent, 'failed to pay owner');
-      } else {
-         nft.transferFrom(address(this), owner, nftId);
-      }
-      emit End(msg.sender);
-   }
+    function get(uint _id) public view returns (uint id, string memory name) {
+        require(inserted[_id], "invalid id");
+        Person storage person = persons[idxMapping[_id]];
+        return (person.id, person.name);
+    }
 }

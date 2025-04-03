@@ -77,9 +77,8 @@
   }
 }
 
-
 @layer components {
   .card {
-    @apply rounded-lg shadow-md bg-white overflow-hidden hover:shadow-2xl cursor-pointer relative
+    @apply border-[1px] border-zinc-300 bg-white rounded-md hover:shadow-xl cursor-pointer overflow-hidden relative
   }
 }

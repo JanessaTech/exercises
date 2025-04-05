@@ -1,26 +1,31 @@
+/**
+ * @param {number} n
+ * @param {number[][]} connections
+ * @return {number}
+ */
 var minReorder = function(n, connections) {
     const graph = createGraph(n, connections)
     const visited = Array(n).fill(false)
-    const cnt = dfs(graph, visited, 0)
-    return cnt
-};
+    const res = dfs(graph, visited, 0)
+    return res
+}
 
 function dfs(graph, visited, i) {
-    let changes = 0
     visited[i] = true
-    for (let next of graph[i]) {
-        if (!visited[Math.abs(next)]) {
-            changes += dfs(graph, visited, Math.abs(next)) + (next > 0 ? 1 : 0)
+    let changes = 0
+    for (let [next, dir] of graph[i]) {
+        if (!visited[next]) {
+            changes += dfs(graph, visited, next) + dir
         }
     }
-    return changes 
+    return changes
 }
 
 function createGraph(n, connections) {
     const graph = Array(n).fill(undefined).map((_, i) => [])
     for (let [a, b] of connections) {
-        graph[a].push(b)
-        graph[b].push(-1 * a)
+        graph[a].push([b, 1])
+        graph[b].push([a, 0])
     }
     return graph
 }

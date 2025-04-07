@@ -1,5 +1,5 @@
 'use client'
-import { createContext } from "react";
+import { createContext, useContext } from "react";
 import useWalletManager, { WalletState } from "../hooks/useWalletManager";
 
 export interface IWeb3Context {
@@ -19,5 +19,7 @@ const Web3ContextProvider: React.FC<Web3ContextProviderProps> = ({children}) => 
         </Web3Context.Provider>
     )
 }
+
+export const useWeb3Context = () => useContext(Web3Context)
 
 export default Web3ContextProvider

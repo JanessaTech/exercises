@@ -47,4 +47,5 @@ npx hardhat node
    npx hardhat test
 2. Run cases defined in a file saying  .\test\EtherWallet.js
    npx hardhat test .\test\EtherWallet.js
+   npx hardhat test .\test\Redo.js
 ```

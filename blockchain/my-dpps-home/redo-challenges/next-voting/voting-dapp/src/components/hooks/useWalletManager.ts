@@ -11,22 +11,21 @@ export type WalletState = {
     address: string | undefined;
     contract: ethers.Contract | undefined
 }
-
-const defaultState: WalletState = {
+const defaultWalletState: WalletState = {
     chainId: undefined,
-    provider : undefined,
+    provider: undefined,
     signer: undefined,
     address: undefined,
     contract: undefined
 }
-
 const useWalletManager = () => {
-    const [state, setState] = useState<WalletState>(defaultState)
+    const [state, setState] = useState<WalletState>(defaultWalletState)
     const [auth, setAuth] = useRecoilState<AuthState>(authState)
+
     const connectWallet = async () => {
         if (typeof window !== undefined && typeof window.ethereum !== undefined) {
             const {ethereum} = window
-            const provider = await new ethers.BrowserProvider(ethereum)
+            const provider = new ethers.BrowserProvider(ethereum)
             await window.ethereum.request({method: 'eth_requestAccounts'})
             const signer = await provider.getSigner()
             const address = await signer.getAddress()
@@ -34,10 +33,12 @@ const useWalletManager = () => {
             const contract = new ethers.Contract(contractAddress, abi, signer)
             setState({chainId: chainId, provider: provider, signer: signer, address: address, contract: contract})
             setAuth({connected: true})
+
         } else {
-            console.log('please install MetaMask')
+            console.log('Pls install MetaMask')
         }
     }
+
     const disconnectWallet = async () => {
         setAuth({connected: false})
     }
@@ -50,11 +51,9 @@ const useWalletManager = () => {
         window.ethereum.on('accountsChanged', (accounts: string[]) => {
             setState({...state, address: accounts[0]})
         })
-        return (
-            () => {
-                window.ethereum.removeAllListeners()
-            }
-        )
+        return () => {
+            window.ethereum.removeAllListeners()
+        }
     })
 
     return {connectWallet, disconnectWallet, state}

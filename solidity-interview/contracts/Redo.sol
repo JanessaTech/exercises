@@ -24,8 +24,16 @@ contract Redo {
     }
 
     function remove(uint _id) public {
-
+        require(inserted[_id], 'invalid id');
+        uint _idx = idxMapping[_id];
+        Person storage last = persons[persons.length - 1];
+        persons[_idx] = Person({id: last.id, name: last.name});
+        idxMapping[last.id] = _idx;
+        delete idxMapping[_id];
+        delete inserted[_id];
+        persons.pop();
     }
+    
     function get(uint _id) public view returns(uint id, string memory name) {
         require(inserted[_id], 'invalid id');
         Person storage person = persons[idxMapping[_id]];

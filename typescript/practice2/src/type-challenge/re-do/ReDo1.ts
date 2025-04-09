@@ -1,23 +1,21 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
 type cases = [
-  Expect<Equal<MapTypes<{ stringToArray: string }, { mapFrom: string, mapTo: [] }>, { stringToArray: [] }>>,
-  Expect<Equal<MapTypes<{ stringToNumber: string }, { mapFrom: string, mapTo: number }>, { stringToNumber: number }>>,
-  Expect<Equal<MapTypes<{ stringToNumber: string, skipParsingMe: boolean }, { mapFrom: string, mapTo: number }>, { stringToNumber: number, skipParsingMe: boolean }>>,
-  Expect<Equal<MapTypes<{ date: string }, { mapFrom: string, mapTo: Date } | { mapFrom: string, mapTo: null }>, { date: null | Date }>>,
-  Expect<Equal<MapTypes<{ date: string }, { mapFrom: string, mapTo: Date | null }>, { date: null | Date }>>,
-  Expect<Equal<MapTypes<{ fields: Record<string, boolean> }, { mapFrom: Record<string, boolean>, mapTo: string[] }>, { fields: string[] }>>,
-  Expect<Equal<MapTypes<{ name: string }, { mapFrom: boolean, mapTo: never }>, { name: string }>>,
-  Expect<Equal<MapTypes<{ name: string, date: Date }, { mapFrom: string, mapTo: boolean } | { mapFrom: Date, mapTo: string }>, { name: boolean, date: string }>>,
+  Expect<Equal<ReplaceAll<'foobar', 'bar', 'foo'>, 'foofoo'>>,
+  Expect<Equal<ReplaceAll<'foobar', 'bag', 'foo'>, 'foobar'>>,
+  Expect<Equal<ReplaceAll<'foobarbar', 'bar', 'foo'>, 'foofoofoo'>>,
+  Expect<Equal<ReplaceAll<'t y p e s', ' ', ''>, 'types'>>,
+  Expect<Equal<ReplaceAll<'foobarbar', '', 'foo'>, 'foobarbar'>>,
+  Expect<Equal<ReplaceAll<'barfoo', 'bar', 'foo'>, 'foofoo'>>,
+  Expect<Equal<ReplaceAll<'foobarfoobar', 'ob', 'b'>, 'fobarfobar'>>,
+  Expect<Equal<ReplaceAll<'foboorfoboar', 'bo', 'b'>, 'foborfobar'>>,
+  Expect<Equal<ReplaceAll<'', '', ''>, ''>>,
 ]
 
-type MapTypes<T, R extends {[K in 'mapFrom'| 'mapTo']: any}> = {
-  [P in keyof T]: T[P] extends R['mapFrom']
-    ? R extends any
-      ? R extends {mapFrom: T[P]}
-        ? R['mapTo']
-        : never
-      : never
-    : T[P]
-}
-
+type ReplaceAll<S extends string, From extends string, To extends string, acc extends string = ''> = From extends ''
+? S
+: S extends ''
+  ? acc
+  : S extends `${infer L}${From}${infer R}`
+    ? ReplaceAll<R, From, To, `${acc}${L}${To}`>
+    : ReplaceAll<'', From, To, `${acc}${S}`>

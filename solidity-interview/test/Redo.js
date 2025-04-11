@@ -1,13 +1,13 @@
 const {expect} = require("chai")
 const { ethers } = require("hardhat");
 const {loadFixture, time} = require("@nomicfoundation/hardhat-toolbox/network-helpers");
-const { extendConfig } = require("hardhat/config");
+const { extendConfig, extendEnvironment } = require("hardhat/config");
 
 
 
 describe('Redo', function () {
     async function deployRedoFixture() {
-        const [deployer, Bob, bidder1, bidder2, ...other] = await ethers.getSigners()
+        const [deployer, Bob, nonBob, bidder1, bidder2, ...other] = await ethers.getSigners()
         const MyERC721 = await ethers.getContractFactory('MyERC721', deployer)
         const name = 'MyERC721'
         const symbol = 'MyERC721'
@@ -19,7 +19,7 @@ describe('Redo', function () {
         const auction = await Auction.deploy(erc721.getAddress(), nftId)
 
         await erc721.connect(Bob).approve(auction.getAddress(), nftId)
-        return {auction, erc721, nftId, Bob, bidder1, bidder2}
+        return {auction, erc721, nftId, Bob, nonBob, bidder1, bidder2}
     }
 
     describe('init', function () {
@@ -29,6 +29,21 @@ describe('Redo', function () {
             const spender = await erc721.getApproved(nftId)
             expect(owner).to.be.equal(await Bob.getAddress())
             expect(spender).to.be.equal(await auction.getAddress())
+        })
+    })
+    describe('start', function () {
+        it('it failed to start when it is not owner', async function () {
+            const {auction, nonBob} = await loadFixture(deployRedoFixture)
+            await expect(auction.connect(nonBob).start()).to.be.revertedWith('not owner')
+        })
+        it('it started successfully', async function () {
+            const {auction, erc721, nftId} = await loadFixture(deployRedoFixture)
+            await expect(auction.start()).to.emit(auction, 'Start')
+            const owner = await erc721.ownerOf(nftId)
+            expect(owner).to.be.equal(await auction.getAddress())
+        })
+        it('it failed to start when it is already started', async function () {
+
         })
     })
 })

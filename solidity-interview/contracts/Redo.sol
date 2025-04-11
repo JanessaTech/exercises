@@ -23,6 +23,7 @@ contract Redo {
     }
 
     function start() public {
+        require(owner == msg.sender, 'not owner');
         require(!started, 'started');
         started = true;
         nft.transferFrom(msg.sender, address(this), nftid);
@@ -39,7 +40,7 @@ contract Redo {
     }
 
     function end() public {
-        
+
     }
 
 }

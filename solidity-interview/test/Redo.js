@@ -1,44 +1,34 @@
 const {expect} = require("chai")
 const { ethers } = require("hardhat");
 const {loadFixture, time} = require("@nomicfoundation/hardhat-toolbox/network-helpers");
+const { extendConfig } = require("hardhat/config");
 
 
 
 describe('Redo', function () {
     async function deployRedoFixture() {
-        const Redo = await ethers.getContractFactory('Redo')
-        const redo = await Redo.deploy()
-        return {redo}
+        const [deployer, Bob, bidder1, bidder2, ...other] = await ethers.getSigners()
+        const MyERC721 = await ethers.getContractFactory('MyERC721', deployer)
+        const name = 'MyERC721'
+        const symbol = 'MyERC721'
+        const nftId = 0
+        const erc721 = await MyERC721.deploy(name, symbol)
+        await erc721.mint(Bob.getAddress(), nftId)
+
+        const Auction = await ethers.getContractFactory('Redo', Bob)
+        const auction = await Auction.deploy(erc721.getAddress(), nftId)
+
+        await erc721.connect(Bob).approve(auction.getAddress(), nftId)
+        return {auction, erc721, nftId, Bob, bidder1, bidder2}
     }
+
     describe('init', function () {
         it('init', async function () {
-            const {redo} = await loadFixture(deployRedoFixture)
-        })
-    })
-    describe('create', function () {
-        it('it should create a new person successfully', async function () {
-            const {redo} = await loadFixture(deployRedoFixture)
-            await redo.create('person0')
-            const person0 = await redo.get(0)
-            expect(person0.name).to.equal('person0')
-        })
-    })
-    describe('remove', function () {
-        it('it should fail to remove the person when the id is invalid', async function () {
-            const {redo} = await loadFixture(deployRedoFixture)
-            await expect(redo.remove(0)).to.be.revertedWith('invalid id')
-        })
-        it('it should remove the person by id successfully', async function () {
-            const {redo} = await loadFixture(deployRedoFixture)
-            await redo.create('person0')
-            await redo.create('person1')
-            await redo.create('person2')
-            await redo.remove(1)
-            const person0 = await redo.get(0)
-            const person2 = await redo.get(2)
-            await expect(redo.get(1)).to.be.revertedWith('invalid id')
-            expect(person0.name).to.be.equal('person0')
-            expect(person2.name).to.be.equal('person2')
+            const {auction, erc721, nftId, Bob} = await loadFixture(deployRedoFixture)
+            const owner = await erc721.ownerOf(nftId)
+            const spender = await erc721.getApproved(nftId)
+            expect(owner).to.be.equal(await Bob.getAddress())
+            expect(spender).to.be.equal(await auction.getAddress())
         })
     })
 })

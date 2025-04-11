@@ -6,37 +6,40 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
 
 contract Redo {
-    struct Person {
-        uint id;
-        string name;
-    }
-    Person[] persons;
-    uint idx;
-    mapping(uint => uint) idxMapping;
-    mapping(uint => bool) inserted;
-    function create(string memory _name) public {
-        uint _id = idx;
-        idx++;
-        persons.push(Person({id: _id, name: _name}));
-        idxMapping[_id] = persons.length - 1;
-        inserted[_id] = true;
+    IERC721 nft;
+    uint256 nftid;
+    address owner;
+
+    bool started;
+    bool ended;
+    uint endAt;
+
+    event Start(address indexed from);
+
+    constructor(address _nft, uint256 _nftid) {
+        nft = IERC721(_nft);
+        nftid = _nftid;
+        owner = msg.sender;
     }
 
-    function remove(uint _id) public {
-        require(inserted[_id], 'invalid id');
-        uint _idx = idxMapping[_id];
-        Person storage last = persons[persons.length - 1];
-        persons[_idx] = Person({id: last.id, name: last.name});
-        idxMapping[last.id] = _idx;
-        delete idxMapping[_id];
-        delete inserted[_id];
-        persons.pop();
+    function start() public {
+        require(!started, 'started');
+        started = true;
+        nft.transferFrom(msg.sender, address(this), nftid);
+
+        emit Start(msg.sender);
     }
 
-    function get(uint _id) public view returns(uint id, string memory name) {
-        require(inserted[_id], 'invalid id');
-        Person storage person = persons[idxMapping[_id]];
-        return (person.id, person.name);
+    function bid() public payable {
+
+    }
+
+    function  withdraw() public {
+        
+    }
+
+    function end() public {
+        
     }
 
 }

@@ -10,11 +10,10 @@ contract Redo {
         uint id;
         string name;
     }
-    uint idx;
     Person[] persons;
+    uint idx;
     mapping(uint => uint) idxMapping;
     mapping(uint => bool) inserted;
-
     function create(string memory _name) public {
         uint _id = idx;
         idx++;
@@ -33,14 +32,11 @@ contract Redo {
         delete inserted[_id];
         persons.pop();
     }
-    
+
     function get(uint _id) public view returns(uint id, string memory name) {
         require(inserted[_id], 'invalid id');
         Person storage person = persons[idxMapping[_id]];
         return (person.id, person.name);
+    }
 
-    }
-    function getAll() public view returns(Person[] memory) {
-        return persons;
-    }
 }

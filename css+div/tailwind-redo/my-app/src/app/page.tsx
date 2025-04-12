@@ -54,6 +54,80 @@ export default function Home() {
               <Link href='#' className="text-xl px-2 py-1 border-[3px] border-red-400 rounded-full text-red-500 hover:bg-red-300 hover:text-white transition duration-150 ease-in-out mx-2">Login</Link>
               <Link href='#' className="text-xl px-2 py-1 border-[3px] border-red-400 rounded-full text-red-500 hover:bg-red-300 hover:text-white transition duration-150 ease-in-out">Logout</Link>
             </div>
+            <div className="my-10">
+              <div className="text-6xl font-semibold">Receipes</div>
+              <div className="text-zinc-400">Janessa</div>
+            </div>
+            <div>
+              <div className="font-semibold py-3 border-b-[1px] border-zinc-200">Latest receipes</div>
+            </div>
+            <div className="grid md:grid-cols-3 gap-5">
+              <div className="card">
+                <Image src={noodles} alt='noodles' className="w-full object-cover"></Image>
+                <div className="p-3">
+                  <div className="font-semibold">Delicous foods</div>
+                  <div className="text-zinc-400 text-sm">By Janessa</div>
+                </div>
+                <div className="flex bg-zinc-200 rounded-full absolute top-2 left-1 px-2 py-1">
+                    <svg className= 'w-5' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" class="size-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                  <span className="px-1">25 mins</span>
+                </div>
+              </div>
+              <div className="card">
+                <Image src={noodles} alt='noodles' className="w-full object-cover"></Image>
+                <div className="p-3">
+                  <div className="font-semibold">Delicous foods</div>
+                  <div className="text-zinc-400 text-sm">By Janessa</div>
+                </div>
+                <div className="flex bg-zinc-200 rounded-full absolute top-2 left-1 px-2 py-1">
+                    <svg className= 'w-5' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" class="size-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                  <span className="px-1">25 mins</span>
+                </div>
+              </div>
+              <div className="card">
+                <Image src={noodles} alt='noodles' className="w-full object-cover"></Image>
+                <div className="p-3">
+                  <div className="font-semibold">Delicous foods</div>
+                  <div className="text-zinc-400 text-sm">By Janessa</div>
+                </div>
+                <div className="flex bg-zinc-200 rounded-full absolute top-2 left-1 px-2 py-1">
+                    <svg className= 'w-5' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" class="size-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                  <span className="px-1">25 mins</span>
+                </div>
+              </div>
+              <div className="card">
+                <Image src={noodles} alt='noodles' className="w-full object-cover"></Image>
+                <div className="p-3">
+                  <div className="font-semibold">Delicous foods</div>
+                  <div className="text-zinc-400 text-sm">By Janessa</div>
+                </div>
+                <div className="flex bg-zinc-200 rounded-full absolute top-2 left-1 px-2 py-1">
+                    <svg className= 'w-5' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" class="size-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                  <span className="px-1">25 mins</span>
+                </div>
+              </div>
+              <div className="card">
+                <Image src={noodles} alt='noodles' className="w-full object-cover"></Image>
+                <div className="p-3">
+                  <div className="font-semibold">Delicous foods</div>
+                  <div className="text-zinc-400 text-sm">By Janessa</div>
+                </div>
+                <div className="flex bg-zinc-200 rounded-full absolute top-2 left-1 px-2 py-1">
+                    <svg className= 'w-5' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" class="size-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                  <span className="px-1">25 mins</span>
+                </div>
+              </div>
+            </div>
             
           </div>
         </div>

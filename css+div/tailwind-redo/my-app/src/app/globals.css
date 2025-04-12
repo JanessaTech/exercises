@@ -75,10 +75,10 @@
   body {
     @apply bg-background text-foreground;
   }
-}
+} 
 
 @layer components {
   .card {
-    @apply border-[1px] border-zinc-300 bg-white rounded-md hover:shadow-xl cursor-pointer overflow-hidden relative
+    @apply border-[2px] rounded-md overflow-hidden bg-white shadow-sm hover:shadow-xl cursor-pointer relative
   }
 }

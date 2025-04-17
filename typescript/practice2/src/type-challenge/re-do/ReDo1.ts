@@ -1,68 +1,67 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
-
-type NodeA = {
-  type: 'A'
-  name: string
-  flag: number
-}
-
-type NodeB = {
-  type: 'B'
-  id: number
-  flag: number
-}
-
-type NodeC = {
-  type: 'C'
-  name: string
-  flag: number
-}
-
-type ReplacedNodeA = {
-  type: 'A'
-  name: number
-  flag: string
-}
-
-type ReplacedNodeB = {
-  type: 'B'
-  id: number
-  flag: string
-}
-
-type ReplacedNodeC = {
-  type: 'C'
-  name: number
-  flag: string
-}
-
-type NoNameNodeA = {
-  type: 'A'
-  flag: number
-  name: never
-}
-
-type NoNameNodeC = {
-  type: 'C'
-  flag: number
-  name: never
-}
-
-type Nodes = NodeA | NodeB | NodeC
-type ReplacedNodes = ReplacedNodeA | ReplacedNodeB | ReplacedNodeC
-type NodesNoName = NoNameNodeA | NoNameNodeC | NodeB
-
 type cases = [
-  Expect<Equal<ReplaceKeys<Nodes, 'name' | 'flag', { name: number, flag: string }>, ReplacedNodes>>,
-  Expect<Equal<ReplaceKeys<Nodes, 'name', { aa: number }>, NodesNoName>>,
+  Expect<Equal<DeepReadonly<X1>, Expected1>>,
+  Expect<Equal<DeepReadonly<X2>, Expected2>>,
 ]
 
-
-type ReplaceKeys<U, T, Y> = U extends any
-? {[P in keyof U] : P extends T
-    ? P extends keyof Y
-      ? Y[P]
-      : never
-    : U[P]
+type X1 = {
+  a: () => 22
+  b: string
+  c: {
+    d: boolean
+    e: {
+      g: {
+        h: {
+          i: true
+          j: 'string'
+        }
+        k: 'hello'
+      }
+      l: [
+        'hi',
+        {
+          m: ['hey']
+        },
+      ]
+    }
+  }
 }
+
+type X2 = { a: string } | { b: number }
+
+type Expected1 = {
+  readonly a: () => 22
+  readonly b: string
+  readonly c: {
+    readonly d: boolean
+    readonly e: {
+      readonly g: {
+        readonly h: {
+          readonly i: true
+          readonly j: 'string'
+        }
+        readonly k: 'hello'
+      }
+      readonly l: readonly [
+        'hi',
+        {
+          readonly m: readonly ['hey']
+        },
+      ]
+    }
+  }
+}
+
+type Expected2 = { readonly a: string } | { readonly b: number }
+
+type DeepArray<A> = A extends [infer F, ...infer R]
+? [DeepReadonly<F>, ...DeepArray<R>]
+: []
+
+type DeepReadonly<T> = T extends any
+? T extends {[P in any]: unknown}
+  ? {readonly [K in keyof T]: DeepReadonly<T[K]>}
+  : T extends unknown[]
+    ? readonly [...DeepArray<T>]
+    : T
 : never

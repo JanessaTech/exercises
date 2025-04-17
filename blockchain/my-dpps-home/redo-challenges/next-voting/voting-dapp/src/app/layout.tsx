@@ -34,8 +34,8 @@ export default function RootLayout({
           <Web3ContextProvider>
             {children} 
           </Web3ContextProvider>
-        </RecoilProvider>
-        
+          
+        </RecoilProvider> 
       </body>
     </html>
   );

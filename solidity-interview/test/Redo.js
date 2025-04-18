@@ -23,6 +23,13 @@ describe('Redo', function () {
             expect(person0.name).to.be.equal('person0')
         })
     })
+    describe('remove', function () {
+        it('it failed to remove when the id is invalid', async function () {
+            const {redo} = await loadFixture(deployRedoFixture)
+            await redo.create('person0')
+            await expect(redo.remove(1)).to.be.revertedWith('invalid id')
+        })
+    })
 
 })
 

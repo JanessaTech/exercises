@@ -6,6 +6,17 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
 
 contract Redo {
-    
+    struct Person {
+        uint id;
+        string name;
+    }
+    uint idx;
+    Person[] persons;
+    mapping(uint => uint) idxMapping;
+    mapping (uint=> bool) inserted;
+    function create(string memory _name) public {
+        
+    }
+
 
 }

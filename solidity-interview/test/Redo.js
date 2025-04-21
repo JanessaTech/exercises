@@ -39,7 +39,9 @@ describe('Redo', function () {
             expect(owner).to.be.equal(await aution.getAddress())
         })
         it('it failed to start when it is started already', async function () {
-
+            const {aution} = await loadFixture(deployAutionFixture)
+            await aution.start()
+            await expect(aution.start()).to.be.revertedWith('started')
         })
     })
 })

@@ -26,6 +26,18 @@ describe('Redo', function () {
             expect(spender).to.be.equal(await aution.getAddress())
         })
     })
+
+    describe('start', function () {
+        it('it failed to start when it is not owner', async function () {
+
+        })
+        it('it started successfull', async function () {
+
+        })
+        it('it failed to start when it is started already', async function () {
+            
+        })
+    })
 })
 
 

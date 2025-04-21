@@ -118,7 +118,17 @@ describe('Redo', function () {
             expect(owner).to.be.equal(await Bob.getAddress())
         })
         it('it ended successfully when there were at least 1 bidder ever', async function () {
-
+            const {auction, erc721, nftId, Bob, seven_days, bidderA, bidderB} = await loadFixture(deployAutionFixture)
+            await auction.start()
+            const amount1 = 1000
+            const amount2 = 2000
+            await auction.connect(bidderA).bid({value: amount1})
+            await auction.connect(bidderB).bid({value: amount2})
+            const latest = await time.latest()
+            await time.setNextBlockTimestamp(latest + seven_days)
+            await auction.end()
+            const owner = await erc721.ownerOf(nftId)
+            expect(owner).to.be.equal(await bidderB.getAddress())
         })
     })
 })

@@ -29,13 +29,17 @@ describe('Redo', function () {
 
     describe('start', function () {
         it('it failed to start when it is not owner', async function () {
-
+            const {aution, nonBob} = await loadFixture(deployAutionFixture)
+            await expect(aution.connect(nonBob).start()).to.be.revertedWith('not owner')
         })
         it('it started successfull', async function () {
-
+            const {aution, erc721, nftId} = await loadFixture(deployAutionFixture)
+            await expect(aution.start()).to.emit(aution, 'Start')
+            const owner = await erc721.ownerOf(nftId)
+            expect(owner).to.be.equal(await aution.getAddress())
         })
         it('it failed to start when it is started already', async function () {
-            
+
         })
     })
 })

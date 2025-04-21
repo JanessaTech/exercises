@@ -18,7 +18,7 @@ contract Redo {
     bool ended;
     uint endAt;
 
-    event Started(address indexed from);
+    event Start(address indexed from);
 
     constructor(address _nft, uint _nftId) {
         nft = IERC721(_nft);
@@ -32,6 +32,6 @@ contract Redo {
         nft.transferFrom(msg.sender, address(this), nftId);
         started = true;
         endAt = block.timestamp + 7 days;
-        emit Started(msg.sender);
+        emit Start(msg.sender);
     }
 }

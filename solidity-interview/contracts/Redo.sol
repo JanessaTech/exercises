@@ -19,6 +19,7 @@ contract Redo {
     uint endAt;
 
     event Start(address indexed from);
+    event Bid(address indexed from, uint amount);
 
     constructor(address _nft, uint _nftId) {
         nft = IERC721(_nft);
@@ -33,5 +34,18 @@ contract Redo {
         started = true;
         endAt = block.timestamp + 7 days;
         emit Start(msg.sender);
+    }
+
+    function bid() public payable {
+        require(started, 'not started');
+        require(block.timestamp < endAt, 'ended');
+        require(msg.value >= highestBid, 'msg.value < highestBid');
+        if (highestBidder != address(0)) {
+            bids[highestBidder] += highestBid;
+        }
+        highestBid = msg.value;
+        highestBidder = msg.sender;
+
+        emit Bid(msg.sender, msg.value);
     }
 }

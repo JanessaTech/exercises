@@ -6,5 +6,13 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
 
 contract Redo {
-    
+    IERC721 nft;
+    uint nftId;
+    address owner;
+
+    constructor(address _nft, uint _nftId) {
+        nft = IERC721(_nft);
+        nftId = _nftId;
+        owner = msg.sender;
+    }
 }

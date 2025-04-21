@@ -78,6 +78,20 @@ describe('Redo', function () {
             await expect(auction.connect(bidderB).bid({value: amount2})).to.emit(auction, 'Bid')
         })
     })
+
+    describe('withdraw', function () {
+        it('it withdrawn successfully', async function () {
+            const {auction, bidderA, bidderB} = await loadFixture(deployAutionFixture)
+            await auction.start()
+            const amount1 = 1000
+            const amount2 = 2000
+            await auction.connect(bidderA).bid({value: amount1})
+            await auction.connect(bidderB).bid({value: amount2})
+
+            await expect(auction.connect(bidderA).withdraw()).to.emit(auction, 'Withdraw').withArgs(bidderA.getAddress(), amount1)
+
+        })
+    })
 })
 
 

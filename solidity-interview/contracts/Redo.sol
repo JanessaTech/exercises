@@ -20,6 +20,7 @@ contract Redo {
 
     event Start(address indexed from);
     event Bid(address indexed from, uint amount);
+    event Withdraw(address indexed from, uint amount);
 
     constructor(address _nft, uint _nftId) {
         nft = IERC721(_nft);
@@ -47,5 +48,14 @@ contract Redo {
         highestBidder = msg.sender;
 
         emit Bid(msg.sender, msg.value);
+    }
+
+    function withdraw() public {
+        uint amount = bids[msg.sender];
+        if (amount > 0) {
+            bool sent = payable(msg.sender).send(amount);
+            require(sent, 'failed to withdraw');
+            emit Withdraw(msg.sender, amount);
+        }
     }
 }

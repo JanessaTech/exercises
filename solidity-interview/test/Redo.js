@@ -92,6 +92,28 @@ describe('Redo', function () {
 
         })
     })
+
+    describe('end', function () {
+        it('it failed to end when it is not owner', async function () {
+            const {auction, nonBob} = await loadFixture(deployAutionFixture)
+            await expect(auction.connect(nonBob).end()).to.be.revertedWith('not owner')
+        })
+        it('it failed to end when it is not started', async function () {
+            const {auction} = await loadFixture(deployAutionFixture)
+            await expect(auction.end()).to.be.revertedWith('not started')
+        })
+        it('it failed to end when it is not ended', async function () {
+            const {auction} = await loadFixture(deployAutionFixture)
+            await auction.start()
+            await expect(auction.end()).to.be.revertedWith('not ended')
+        })
+        it('it ended successfully when no bidder', async function () {
+
+        })
+        it('it ended successfully when there were at least 1 bidder ever', async function () {
+
+        })
+    })
 })
 
 

@@ -21,6 +21,7 @@ contract Redo {
     event Start(address indexed from);
     event Bid(address indexed from, uint amount);
     event Withdraw(address indexed from, uint amount);
+    event End(address indexed from);
 
     constructor(address _nft, uint _nftId) {
         nft = IERC721(_nft);
@@ -57,5 +58,20 @@ contract Redo {
             require(sent, 'failed to withdraw');
             emit Withdraw(msg.sender, amount);
         }
+    }
+
+    function end() public {
+        require(msg.sender == owner, 'not owner');
+        require(started, 'not started');
+        require(block.timestamp >= endAt, 'not ended');
+        if (highestBidder != address(0)) {
+            nft.transferFrom(address(this), highestBidder, nftId);
+            bool sent = payable(owner).send(highestBid);
+            require(sent, 'failed to pay owner');
+        } else {
+            nft.transferFrom(address(this), owner, nftId);
+        }
+
+        emit End(msg.sender);
     }
 }

@@ -8,6 +8,15 @@ describe('Redo', function () {
         const redo = await Redo.deploy()
         return {redo}
     }
+
+    describe('create', function () {
+        it('create', async function () {
+            const {redo} = await loadFixture(deployRedoFixture)
+            await redo.create('person0')
+            const person0 = await redo.get(0)
+            expect(person0.name).to.be.equal('person0')
+        })
+    })
 })
 
 

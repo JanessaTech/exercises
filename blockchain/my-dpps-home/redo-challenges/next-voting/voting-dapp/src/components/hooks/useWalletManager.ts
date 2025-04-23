@@ -56,7 +56,7 @@ const useWalletManager = () => {
         return () => {
             window.ethereum.removeAllListeners()
         }
-    })
+    }, [])
 
     return {connectWallet, disconnectWallet, state}
 }

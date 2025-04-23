@@ -29,7 +29,7 @@ const useWalletManager = () => {
         if (typeof window !== undefined && typeof window.ethereum !== undefined) {
             const {ethereum} = window
             await window.ethereum.request({method: 'eth_requestAccounts'})
-            const provider = await new ethers.BrowserProvider(ethereum)
+            const provider = new ethers.BrowserProvider(ethereum)
             const signer = await provider.getSigner()
             const address = await signer.getAddress()
             const chainId = Number((await provider.getNetwork()).chainId)

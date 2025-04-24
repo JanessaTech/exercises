@@ -1,30 +1,27 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
 type cases = [
-  Expect<Equal<AllCombinations<''>, ''>>,
-  Expect<Equal<AllCombinations<'A'>, '' | 'A'>>,
-  Expect<Equal<AllCombinations<'AB'>, '' | 'A' | 'B' | 'AB' | 'BA'>>,
-  Expect<Equal<AllCombinations<'ABC'>, '' | 'A' | 'B' | 'C' | 'AB' | 'AC' | 'BA' | 'BC' | 'CA' | 'CB' | 'ABC' | 'ACB' | 'BAC' | 'BCA' | 'CAB' | 'CBA'>>,
-  Expect<Equal<AllCombinations<'ABCD'>, '' | 'A' | 'B' | 'C' | 'D' | 'AB' | 'AC' | 'AD' | 'BA' | 'BC' | 'BD' | 'CA' | 'CB' | 'CD' | 'DA' | 'DB' | 'DC' | 'ABC' | 'ABD' | 'ACB' | 'ACD' | 'ADB' | 'ADC' | 'BAC' | 'BAD' | 'BCA' | 'BCD' | 'BDA' | 'BDC' | 'CAB' | 'CAD' | 'CBA' | 'CBD' | 'CDA' | 'CDB' | 'DAB' | 'DAC' | 'DBA' | 'DBC' | 'DCA' | 'DCB' | 'ABCD' | 'ABDC' | 'ACBD' | 'ACDB' | 'ADBC' | 'ADCB' | 'BACD' | 'BADC' | 'BCAD' | 'BCDA' | 'BDAC' | 'BDCA' | 'CABD' | 'CADB' | 'CBAD' | 'CBDA' | 'CDAB' | 'CDBA' | 'DABC' | 'DACB' | 'DBAC' | 'DBCA' | 'DCAB' | 'DCBA'>>,
+  Expect<Equal<Subsequence<[1, 2]>, [] | [1] | [2] | [1, 2]>>,
+  Expect<Equal<Subsequence<[1, 2, 3]>, [] | [1] | [2] | [1, 2] | [3] | [1, 3] | [2, 3] | [1, 2, 3]>>,
+  Expect<Equal<Subsequence<[1, 2, 3, 4, 5]>, [] |
+  [1] | [2] | [3] | [4] | [5] |
+  [1, 2] | [1, 3] | [1, 4] | [1, 5] | [2, 3] | [2, 4] | [2, 5] | [3, 4] | [3, 5] | [4, 5] |
+  [1, 2, 3] | [1, 2, 4] | [1, 2, 5] | [1, 3, 4] | [1, 3, 5] | [1, 4, 5] | [2, 3, 4] | [2, 3, 5] | [2, 4, 5] | [3, 4, 5] |
+  [1, 2, 3, 4] | [1, 2, 3, 5] | [1, 2, 4, 5] | [1, 3, 4, 5] | [2, 3, 4, 5] |
+  [1, 2, 3, 4, 5] >>,
+  Expect<Equal<Subsequence<['a', 'b', 'c']>, [] |
+  ['a'] | ['b'] | ['c'] |
+  ['a', 'b'] | ['a', 'c'] | ['b', 'c'] |
+  ['a', 'b', 'c'] >>,
+  Expect<Equal<Subsequence<['x', 'y']>, [] |
+  ['x'] | ['y'] |
+  ['x', 'y'] >>,
 ]
 
-type StringToUion<S> = S extends `${infer F}${infer R}`
-? F | StringToUion<R>
+type Merge<E, L extends unknown[]> = L extends any
+? [E, ...L]
 : never
 
-type ArrayToString<A> = A extends any
-? A extends [infer F, ...infer R]
-  ? `${string &F}${ArrayToString<R>}`
-  : ''
-: never
-
-type Com<U, path extends unknown[] = [], acc = never, A = U> = [U] extends [never]
-? ArrayToString<path | acc>
-: U extends any
-  ? Com<Exclude<A, U>, [...path, U], path | acc>
-  : never
-
-type AllCombinations<S> = Com<StringToUion<S>>
-
-type test = StringToUion<'AB'>
-type test2 = Com<StringToUion<'AB'>>
+type Subsequence<T extends any[]> = T extends [infer F, ...infer R]
+? Merge<F, Subsequence<R>> | Subsequence<R>
+: []

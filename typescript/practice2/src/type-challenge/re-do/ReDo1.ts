@@ -1,10 +1,19 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
 
-
 type cases = [
-  Expect<Equal<Unshift<[], 1>, [1]>>,
-  Expect<Equal<Unshift<[1, 2], 0>, [0, 1, 2]>>,
-  Expect<Equal<Unshift<['1', 2, '3'], boolean>, [boolean, '1', 2, '3']>>,
+  Expect<Equal<Absolute<0>, '0'>>,
+  Expect<Equal<Absolute<-0>, '0'>>,
+  Expect<Equal<Absolute<10>, '10'>>,
+  Expect<Equal<Absolute<-5>, '5'>>,
+  Expect<Equal<Absolute<'0'>, '0'>>,
+  Expect<Equal<Absolute<'-0'>, '0'>>,
+  Expect<Equal<Absolute<'10'>, '10'>>,
+  Expect<Equal<Absolute<'-5'>, '5'>>,
+  Expect<Equal<Absolute<-1_000_000n>, '1000000'>>,
+  Expect<Equal<Absolute<9_999n>, '9999'>>,
 ]
-type Unshift<T extends any[], U> = [U, ...T]
+
+type Absolute<T extends number | string | bigint> = `${T}` extends `-${infer N}`
+? N
+: `${T}`

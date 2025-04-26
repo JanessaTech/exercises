@@ -1,38 +1,16 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
-
-type Case0 = ['', '', '']
-type Case1 = ['+', '', '']
-type Case2 = ['+', '1', '']
-type Case3 = ['+', '100', '']
-type Case4 = ['+', '100', '%']
-type Case5 = ['', '100', '%']
-type Case6 = ['-', '100', '%']
-type Case7 = ['-', '100', '']
-type Case8 = ['-', '1', '']
-type Case9 = ['', '', '%']
-type Case10 = ['', '1', '']
-type Case11 = ['', '100', '']
+const tuple = [1] as const
 
 type cases = [
-  Expect<Equal<PercentageParser<''>, Case0>>,
-  Expect<Equal<PercentageParser<'+'>, Case1>>,
-  Expect<Equal<PercentageParser<'+1'>, Case2>>,
-  Expect<Equal<PercentageParser<'+100'>, Case3>>,
-  Expect<Equal<PercentageParser<'+100%'>, Case4>>,
-  Expect<Equal<PercentageParser<'100%'>, Case5>>,
-  Expect<Equal<PercentageParser<'-100%'>, Case6>>,
-  Expect<Equal<PercentageParser<'-100'>, Case7>>,
-  Expect<Equal<PercentageParser<'-1'>, Case8>>,
-  Expect<Equal<PercentageParser<'%'>, Case9>>,
-  Expect<Equal<PercentageParser<'1'>, Case10>>,
-  Expect<Equal<PercentageParser<'100'>, Case11>>,
+  Expect<Equal<Concat<[], []>, []>>,
+  Expect<Equal<Concat<[], [1]>, [1]>>,
+  Expect<Equal<Concat<typeof tuple, typeof tuple>, [1, 1]>>,
+  Expect<Equal<Concat<[1, 2], [3, 4]>, [1, 2, 3, 4]>>,
+  Expect<Equal<Concat<['1', 2, '3'], [false, boolean, '4']>, ['1', 2, '3', false, boolean, '4']>>,
 ]
 
-type PercentageParser<A extends string, sign extends string = '', num extends string = '', unit extends string = ''> = A extends ''
-? [sign, num, unit]
-: A extends `${infer S extends '+' | '-'}${infer R}`
-  ? PercentageParser<R, S, num, unit>
-  : A extends `${infer N}%`
-    ? PercentageParser<'', sign, N, '%'>
-    : PercentageParser<'', sign, A, unit>
+// @ts-expect-error
+type error = Concat<null, undefined>
+
+type Concat<T extends readonly unknown[], U extends readonly unknown[]> = [...T, ...U]

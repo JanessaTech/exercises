@@ -1,18 +1,23 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
-const tesla = ['tesla', 'model 3', 'model X', 'model Y'] as const
-const spaceX = ['FALCON 9', 'FALCON HEAVY', 'DRAGON', 'STARSHIP', 'HUMAN SPACEFLIGHT'] as const
+
+const tuple = ['tesla', 'model 3', 'model X', 'model Y'] as const
+const tupleNumber = [1, 2, 3, 4] as const
+const sym1 = Symbol(1)
+const sym2 = Symbol(2)
+const tupleSymbol = [sym1, sym2] as const
+const tupleMix = [1, '2', 3, '4', sym1] as const
 
 type cases = [
-  Expect<Equal<Length<typeof tesla>, 4>>,
-  Expect<Equal<Length<typeof spaceX>, 5>>,
-  // @ts-expect-error
-  Length<5>,
-  // @ts-expect-error
-  Length<'hello world'>,
+  Expect<Equal<TupleToObject<typeof tuple>, { 'tesla': 'tesla', 'model 3': 'model 3', 'model X': 'model X', 'model Y': 'model Y' }>>,
+  Expect<Equal<TupleToObject<typeof tupleNumber>, { 1: 1, 2: 2, 3: 3, 4: 4 }>>,
+  Expect<Equal<TupleToObject<typeof tupleSymbol>, { [sym1]: typeof sym1, [sym2]: typeof sym2 }>>,
+  Expect<Equal<TupleToObject<typeof tupleMix>, { 1: 1, '2': '2', 3: 3, '4': '4', [sym1]: typeof sym1 }>>,
 ]
 
+// @ts-expect-error
+type error = TupleToObject<[[1, 2], {}]>
 
-type Length<T extends readonly unknown[]> = T['length']
-
-type test = typeof tesla
+type TupleToObject<T extends readonly (string | number | symbol)[]> = {
+  [K in T[number]]: K
+}

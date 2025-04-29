@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { useRecoilState } from "recoil";
 
 
-type WalletState = {
+export type WalletState = {
     chainId: number | undefined;
     provider: ethers.BrowserProvider | undefined;
     signer: ethers.JsonRpcSigner | undefined;
@@ -20,7 +20,7 @@ const defaultWalletStatement: WalletState = {
     contract: undefined
 }
 
-const useWalletManager = async () => {
+const useWalletManager = () => {
     const [state, setState] = useState<WalletState>(defaultWalletStatement)
     const [auth, setAuth] = useRecoilState<AuthState>(authState)
 

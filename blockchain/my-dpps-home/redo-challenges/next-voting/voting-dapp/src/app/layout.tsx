@@ -4,7 +4,6 @@ import "./globals.css";
 import RecoilProvider from "@/components/providers/RecoilProvider";
 import Web3ContextProvider from "@/components/providers/Web3ContextProvider";
 
-
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -33,10 +32,9 @@ export default function RootLayout({
       >
         <RecoilProvider>
           <Web3ContextProvider>
-          {children} 
+          {children}
           </Web3ContextProvider>
         </RecoilProvider>
-        
       </body>
     </html>
   );

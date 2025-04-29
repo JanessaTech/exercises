@@ -3,7 +3,7 @@
 import { createContext, useContext } from "react";
 import useWalletManager, { WalletState } from "../hooks/useWalletManager";
 
-interface IWeb3Context {
+export interface IWeb3Context {
     connectWallet: () => Promise<void>;
     disconnectWallet: () => Promise<void>;
     state: WalletState
@@ -22,5 +22,5 @@ const Web3ContextProvider: React.FC<Web3ContextProviderProps> = ({children}) => 
         </Web3Context.Provider>
     )
 }
-const useWeb3Context = () => useContext(Web3Context)
+export const useWeb3Context = () => useContext(Web3Context)
 export default Web3ContextProvider

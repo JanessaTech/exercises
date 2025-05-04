@@ -21,6 +21,7 @@ contract Redo is ERC20, AccessControl {
         _grantRole(MINTER_ROLE, minter);
         _grantRole(BURNER_ROLE, burner);
     }
+
     function mint(address to, uint256 amount) external onlyRole(MINTER_ROLE) {
         _mint(to, amount);
     }

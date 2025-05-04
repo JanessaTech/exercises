@@ -55,6 +55,4 @@ describe('Proxy', function () {
             expect(val).to.be.equal(value * 2)
         })
     })
-
-
 })

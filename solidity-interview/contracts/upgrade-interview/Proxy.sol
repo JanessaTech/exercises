@@ -2,13 +2,13 @@
 pragma solidity ^0.8.20;
 
 contract Proxy {
+    uint256 private _valuePlaceholder;  // 与 LogicV1.value 共享 Slot 0
+
     // Unstructured storage slot for implementation address (ERC1967 standard)
-    bytes32 private constant _IMPLEMENTATION_SLOT =
-        0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc;
+    bytes32 private constant _IMPLEMENTATION_SLOT = keccak256('implementation_slot');
 
     // Unstructured storage slot for admin (optional, but recommended)
-    bytes32 private constant _ADMIN_SLOT =
-        0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103;
+    bytes32 private constant _ADMIN_SLOT = keccak256('owner_slot');
 
     constructor(address _implementation) {
         // Store implementation address in fixed slot
@@ -22,6 +22,10 @@ contract Proxy {
         assembly {
             sstore(slot, caller())
         }
+    }
+
+    function value() external view returns (uint256) {
+        return _valuePlaceholder;
     }
 
     // Get current implementation address
@@ -50,40 +54,30 @@ contract Proxy {
     }
 
     function _delegate(address _implementation) private {
-        (bool success, ) = _implementation.delegatecall(msg.data);
-        require(success, 'fail to call delegatecall');
-        //console.logBytes(msg.data);
-        // assembly {
-        //     calldatacopy(0, 0, calldatasize())
-        //     let result := delegatecall(gas(), _implementation, 0, calldatasize(), 0, 0)
-        //     returndatacopy(0, 0, returndatasize())
-        //     switch result case 0 {revert(0, 0)} default {return (0, returndatasize())}
-        // } 
+        assembly {
+            // Copy calldata to memory
+            calldatacopy(0, 0, calldatasize())
+
+            // Delegatecall to implementation
+            let result := delegatecall(gas(), _implementation, 0, calldatasize(), 0, 0)
+
+            // Copy returndata to memory
+            returndatacopy(0, 0, returndatasize())
+
+            // Revert or return based on result
+            switch result
+            case 0 { revert(0, returndatasize()) }
+            default { return(0, returndatasize()) }
+        }
     }
 
     // Delegate all calls to the implementation contract
     fallback() external payable {
-        // address impl = implementation();
-        // assembly {
-        //     // Copy calldata to memory
-        //     calldatacopy(0, 0, calldatasize())
-
-        //     // Delegatecall to implementation
-        //     let result := delegatecall(gas(), impl, 0, calldatasize(), 0, 0)
-
-        //     // Copy returndata to memory
-        //     returndatacopy(0, 0, returndatasize())
-
-        //     // Revert or return based on result
-        //     switch result
-        //     case 0 { revert(0, returndatasize()) }
-        //     default { return(0, returndatasize()) }
-        // }
         _delegate(implementation());
     }
     receive() external payable {}
 
-    function getCalldata(uint256 value) public pure returns(bytes memory) {
-        return abi.encodeWithSignature("setValue(uint256)", value);
+    function getCalldata(uint256 _value) public pure returns(bytes memory) {
+        return abi.encodeWithSignature("setValue(uint256)", _value);
     }
 }

@@ -25,7 +25,6 @@ describe('SimpleProxy', function () {
             //how to get calldata using ethers? see: https://ethereum.stackexchange.com/questions/141344/is-there-a-tool-for-building-calldata-for-calling-methods
             const iface = new ethers.Interface(ABI);
             const cdata = iface.encodeFunctionData("setVars(uint256)", [10]);
-            console.log(cdata)
             const tx  = {
                 to: simpleProxy.getAddress(),
                 data: cdata

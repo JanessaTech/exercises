@@ -53,15 +53,24 @@ contract SimpleProxy {
     }
 
     function _delegate(address _implementation) private {
-        (bool success, ) = _implementation.delegatecall(msg.data);
-        require(success, 'fail to call delegatecall');
+        // (bool success, ) = _implementation.delegatecall(msg.data);
+        // require(success, 'fail to call delegatecall');
         //console.logBytes(msg.data);
-        // assembly {
-        //     calldatacopy(0, 0, calldatasize())
-        //     let result := delegatecall(gas(), _implementation, 0, calldatasize(), 0, 0)
-        //     returndatacopy(0, 0, returndatasize())
-        //     switch result case 0 {revert(0, 0)} default {return (0, returndatasize())}
-        // } 
+        assembly {
+            // Copy calldata to memory
+            calldatacopy(0, 0, calldatasize())
+
+            // Delegatecall to implementation
+            let result := delegatecall(gas(), _implementation, 0, calldatasize(), 0, 0)
+
+            // Copy returndata to memory
+            returndatacopy(0, 0, returndatasize())
+
+            // Revert or return based on result
+            switch result
+            case 0 { revert(0, returndatasize()) }
+            default { return(0, returndatasize()) }
+        } 
     }
 
     receive() external payable {}

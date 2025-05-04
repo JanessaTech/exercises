@@ -8,6 +8,7 @@ node_modules
 /cache
 /artifacts
 /contracts/artifacts
+/contracts/*/artifacts
 
 # TypeChain files
 /typechain

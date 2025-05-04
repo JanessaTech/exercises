@@ -4,6 +4,9 @@ pragma solidity ^0.8.20;
 // Uncomment this line to use console.log
 import "hardhat/console.sol";
 
+// The code has problem: once we call setVars (send calldata in transaction), 
+// the change is applied in SimpleProxy, no Callee1 or Callee2
+
 contract SimpleProxy {
     // Important: pls make sure the order of variables defined below should be as exactly same as Callee1.sol and Callee2.sol
     uint256 public num;
@@ -43,6 +46,10 @@ contract SimpleProxy {
         assembly {
             sstore(slot, _contract)
         }
+    }
+
+    function getCalldata(uint256 _num) public pure returns(bytes memory) {
+        return abi.encodeWithSignature("setVars(uint256)", _num);
     }
 
     function _delegate(address _implementation) private {

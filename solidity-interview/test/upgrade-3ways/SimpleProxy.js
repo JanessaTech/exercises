@@ -25,6 +25,7 @@ describe('SimpleProxy', function () {
             //how to get calldata using ethers? see: https://ethereum.stackexchange.com/questions/141344/is-there-a-tool-for-building-calldata-for-calling-methods
             const iface = new ethers.Interface(ABI);
             const cdata = iface.encodeFunctionData("setVars(uint256)", [10]);
+            console.log(cdata)
             const tx  = {
                 to: simpleProxy.getAddress(),
                 data: cdata
@@ -32,6 +33,8 @@ describe('SimpleProxy', function () {
             await deployer.sendTransaction(tx)
             const num1 = await simpleProxy.num() 
             expect(num1).to.be.equal(10)
+            const num = await callee1.num()
+            console.log('num:', num)
         })
         it('call callee2 successfully', async function () {
             const {simpleProxy, deployer, callee2} = await loadFixture(deploySimpleProxyFixture)

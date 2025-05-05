@@ -7,18 +7,26 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract Redo {
-    function  sumArray(uint256[] memory arr) public pure returns (uint256) {
-        uint256 sum;
-        assembly {
-            let length := mload(arr)
-            let ptr := add(arr, 0x20)
-            for {let i := 0 } lt(i, length) { i := add(i, 1)} {
-                sum := add(sum, mload(ptr))
-                ptr := add(ptr, 0x20)
-            }
-        }
-        return sum;
+contract Redo is ERC20, AccessControl {
+    bytes32 public constant MINTER_ROLE = keccak256('MINTER_ROLE');
+    bytes32 public constant BURNER_ROLE = keccak256('BURNER_ROLE');
+
+    constructor(
+        string memory name,
+        string memory symbol,
+        address admin,
+        address minter,
+        address burner
+    ) ERC20(name, symbol) {
+        _grantRole(DEFAULT_ADMIN_ROLE, admin);
+        _grantRole(MINTER_ROLE, minter);
+        _grantRole(BURNER_ROLE, burner);
+    }
+    function mint(address to, uint256 amount) external onlyRole(MINTER_ROLE) {
+        _mint(to, amount);
+    }
+    function burn(address from, uint256 amount) external onlyRole(BURNER_ROLE) {
+        _burn(from, amount);
     }
 }
 

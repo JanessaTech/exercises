@@ -1,36 +1,74 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol"; // 元数据扩展
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
-contract Redo is ERC721, ERC721URIStorage {
-    uint256 private _nextTokenId;
+contract Redo {
+    uint256 _valuePlaceHolder;
+    bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
+    bytes32 private constant IMPLEMENTATION_SLOT = keccak256('IMPLEMENTATION_SLOT');
 
-    constructor() ERC721('ERC721','ERC721') {}
-
-    function supportsInterface(bytes4 interfaceId) public view override(ERC721, ERC721URIStorage) returns (bool) {
-        return super.supportsInterface(interfaceId);
+    constructor(address _implementation) {
+        bytes32 slot = IMPLEMENTATION_SLOT;
+        assembly {
+            sstore(slot, _implementation)
+        }
+        slot = ADMIN_SLOT;
+        assembly {
+            sstore(slot, caller())
+        }
     }
 
-    function tokenURI(uint256 tokenId) 
-        public view override(ERC721, ERC721URIStorage) 
-        returns (string memory) {
-        return super.tokenURI(tokenId);
+    function value() external view returns(uint256) {
+        return _valuePlaceHolder;
     }
 
-    function _baseURI() internal pure  override returns (string memory) {
-        return "http://test.com/";
-    } 
-
-    function getNextTokenId() external view returns(uint256) {
-        return _nextTokenId;
+    function admin() public view returns(address adm) {
+        bytes32 slot = ADMIN_SLOT;
+        assembly {
+            adm := sload(slot)
+        }
+    }
+    function impelmentation() public view returns(address impl) {
+        bytes32 slot = IMPLEMENTATION_SLOT;
+        assembly {
+            impl := sload(slot)
+        }
+    }
+    function upgradeTo(address _implemenation) external {
+        require(msg.sender == admin(), 'not owner');
+        bytes32 slot = IMPLEMENTATION_SLOT;
+        assembly {
+            sstore(slot, _implemenation)
+        }
     }
 
-    function safeMint(address to, string memory _tokenURI) public {
-        uint256 tokenId = _nextTokenId++;
-        _safeMint(to, tokenId);
-        _setTokenURI(tokenId, _tokenURI);
+    function getCallData(uint256 _value) external pure returns(bytes memory) {
+        return abi.encodeWithSignature('setValue(uint256)', _value);
     }
+
+    function _delegate(address _implementation) internal {
+        (bool success, ) = _implementation.delegatecall(msg.data);
+        require(success, 'failed to call delegatecall');
+        // assembly {
+        //     // Copy calldata to memory
+        //     calldatacopy(0, 0, calldatasize())
+
+        //     // Delegatecall to implementation
+        //     let result := delegatecall(gas(), _implementation, 0, calldatasize(), 0, 0)
+
+        //     // Copy returndata to memory
+        //     returndatacopy(0, 0, returndatasize())
+
+        //     // Revert or return based on result
+        //     switch result
+        //     case 0 { revert(0, returndatasize()) }
+        //     default { return(0, returndatasize()) }
+        // }
+    }
+
+    fallback() external payable {
+        _delegate(impelmentation());
+    }
+    receive() external payable {}
+    
 }

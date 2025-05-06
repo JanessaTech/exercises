@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-
 contract Redo {
-    uint256 _valuePlaceHolder;
+    uint256 private valuePlaceHolder;
     bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
-    bytes32 private constant IMPLEMENTATION_SLOT = keccak256('IMPLEMENTATION_SLOT');
+    bytes32 private constant IMPLEMENTATION = keccak256('IMPLEMENTATION');
 
     constructor(address _implementation) {
-        bytes32 slot = IMPLEMENTATION_SLOT;
+        bytes32 slot = IMPLEMENTATION;
         assembly {
             sstore(slot, _implementation)
         }
@@ -18,27 +17,23 @@ contract Redo {
         }
     }
 
-    function value() external view returns(uint256) {
-        return _valuePlaceHolder;
-    }
-
     function admin() public view returns(address adm) {
         bytes32 slot = ADMIN_SLOT;
         assembly {
             adm := sload(slot)
         }
     }
-    function impelmentation() public view returns(address impl) {
-        bytes32 slot = IMPLEMENTATION_SLOT;
+    function implementation() public view returns(address imp) {
+        bytes32 slot = IMPLEMENTATION;
         assembly {
-            impl := sload(slot)
+            imp := sload(slot)
         }
     }
-    function upgradeTo(address _implemenation) external {
-        require(msg.sender == admin(), 'not owner');
-        bytes32 slot = IMPLEMENTATION_SLOT;
+
+    function upgradeTo(address _newImplementation) external {
+        bytes32 slot = IMPLEMENTATION;
         assembly {
-            sstore(slot, _implemenation)
+            sstore(slot, _newImplementation)
         }
     }
 
@@ -46,29 +41,17 @@ contract Redo {
         return abi.encodeWithSignature('setValue(uint256)', _value);
     }
 
-    function _delegate(address _implementation) internal {
+    function value() external view returns(uint256) {
+        return valuePlaceHolder;
+    }
+
+    function _delegate(address _implementation) private {
         (bool success, ) = _implementation.delegatecall(msg.data);
         require(success, 'failed to call delegatecall');
-        // assembly {
-        //     // Copy calldata to memory
-        //     calldatacopy(0, 0, calldatasize())
-
-        //     // Delegatecall to implementation
-        //     let result := delegatecall(gas(), _implementation, 0, calldatasize(), 0, 0)
-
-        //     // Copy returndata to memory
-        //     returndatacopy(0, 0, returndatasize())
-
-        //     // Revert or return based on result
-        //     switch result
-        //     case 0 { revert(0, returndatasize()) }
-        //     default { return(0, returndatasize()) }
-        // }
     }
 
     fallback() external payable {
-        _delegate(impelmentation());
+        _delegate(implementation());
     }
     receive() external payable {}
-    
 }

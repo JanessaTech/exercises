@@ -14,25 +14,37 @@ describe('Redo', function () {
         const redo = await Redo.deploy(logicV1.getAddress())
         return {redo, logicV1, logicV2, admin, nonadmin}
     }
-    describe('LogicV1', function () {
+    describe('Logic', function () {
         it('LogicV1', async function () {
             const {redo, admin} = await loadFixture(deployRedoFixture)
-            const abi = ['function setValue(uint256)']
+            const abi = ['function setValue(uint256) external']
             const iface = new ethers.Interface(abi)
             const value = 10
             const cdata = iface.encodeFunctionData('setValue(uint256)', [value])
-            console.log(cdata)
             const tx = {
                 to: redo.getAddress(),
                 data: cdata
             }
             await admin.sendTransaction(tx)
             const val = await redo.value()
-            expect(val).to.be.equal(10)
-            
+            expect(val).to.be.equal(value)
+        })
+        it('LogicV2', async function () {
+            const {redo, admin, logicV2} = await loadFixture(deployRedoFixture)
+            await redo.upgradeTo(logicV2.getAddress())
+            const abi = ['function setValue(uint256) external']
+            const iface = new ethers.Interface(abi)
+            const value = 10
+            const cdata = iface.encodeFunctionData('setValue(uint256)', [value])
+            const tx = {
+                to: redo.getAddress(),
+                data: cdata
+            }
+            await admin.sendTransaction(tx)
+            const val = await redo.value()
+            expect(val).to.be.equal(value * 2)
         })
     })
-    
 })
 
 

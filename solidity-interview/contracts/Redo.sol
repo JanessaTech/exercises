@@ -1,57 +1,34 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
+// Uncomment this line to use console.log
+// import "hardhat/console.sol";
 
-contract Redo {
-    uint256 private valuePlaceHolder;
-    bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
-    bytes32 private constant IMPLEMENTATION = keccak256('IMPLEMENTATION');
+import {ERC1155} from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-    constructor(address _implementation) {
-        bytes32 slot = IMPLEMENTATION;
-        assembly {
-            sstore(slot, _implementation)
+contract Redo is ERC1155, Ownable {
+    uint256 public constant sword = 1;
+    uint256 public constant potion = 2;
+    uint256 public constant shield = 3;
+
+    constructor(address initOwner) 
+        ERC1155("http://test/{id}.json")
+        Ownable(initOwner) {
+            _mint(msg.sender, sword, 1000, '');
+            _mint(msg.sender, potion, 2000, '');
+            _mint(msg.sender, shield, 3000, '');
+    }
+    function batchMint(address to, 
+            uint256[] memory ids, 
+            uint256[] memory values, 
+            bytes memory data) public onlyOwner {
+            _mintBatch(to, ids, values, data);
+    }
+
+    function batchTransfer(address[] memory recipients, uint256 id, uint256 amountEach) public {
+        require(balanceOf(msg.sender, id) >= amountEach * recipients.length, 'not enough');
+        for (uint256 i = 0; i < recipients.length; i++) {
+            safeTransferFrom(msg.sender, recipients[i], id, amountEach, '');
         }
-        slot = ADMIN_SLOT;
-        assembly {
-            sstore(slot, caller())
-        }
-    }
-
-    function admin() public view returns(address adm) {
-        bytes32 slot = ADMIN_SLOT;
-        assembly {
-            adm := sload(slot)
-        }
-    }
-    function implementation() public view returns(address imp) {
-        bytes32 slot = IMPLEMENTATION;
-        assembly {
-            imp := sload(slot)
-        }
-    }
-
-    function upgradeTo(address _newImplementation) external {
-        bytes32 slot = IMPLEMENTATION;
-        assembly {
-            sstore(slot, _newImplementation)
-        }
-    }
-
-    function getCallData(uint256 _value) external pure returns(bytes memory) {
-        return abi.encodeWithSignature('setValue(uint256)', _value);
-    }
-
-    function value() external view returns(uint256) {
-        return valuePlaceHolder;
-    }
-
-    function _delegate(address _implementation) private {
-        (bool success, ) = _implementation.delegatecall(msg.data);
-        require(success, 'failed to call delegatecall');
-    }
-
-    fallback() external payable {
-        _delegate(implementation());
-    }
-    receive() external payable {}
+    } 
 }

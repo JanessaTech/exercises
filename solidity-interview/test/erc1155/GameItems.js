@@ -5,13 +5,13 @@ const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 
 describe('GameItems', function () {
     async function deployGameItemsFixture() {
-        const [owner, nonOwner, Bob, ...others] = await ethers.getSigners()
+        const [owner, nonOwner, Bob, Alice, ...others] = await ethers.getSigners()
         const GameItems = await ethers.getContractFactory('GameItems')
         const gameItems = await GameItems.deploy(owner)
         const INIT_SWORD = 1000, SWORD_TOKEN = 1
         const INIT_POTION= 2000, POTION_TOKEN = 2
         const INIT_SHIELD = 3000, SHIELD_TOKEN = 3
-        return {gameItems, owner, nonOwner, Bob, INIT_SWORD, SWORD_TOKEN, INIT_POTION, POTION_TOKEN, INIT_SHIELD, SHIELD_TOKEN}
+        return {gameItems, owner, nonOwner, Bob, Alice, INIT_SWORD, SWORD_TOKEN, INIT_POTION, POTION_TOKEN, INIT_SHIELD, SHIELD_TOKEN}
     }
     describe('init', function () {
         it('init', async function () {
@@ -37,6 +37,18 @@ describe('GameItems', function () {
             const balance_shield = await gameItems.balanceOf(Bob.getAddress(), SHIELD_TOKEN)
             expect(balance_sword).to.be.equal(values[0])
             expect(balance_shield).to.be.equal(values[1])
+        })
+    })
+
+    describe('batchTransfer', function () {
+        it('batchTransfer', async function () {
+            const {gameItems, owner, Bob, Alice, SWORD_TOKEN, INIT_SWORD} = await loadFixture(deployGameItemsFixture)
+            const recipients = [Bob.getAddress(), Alice.getAddress()]
+            const id = SWORD_TOKEN
+            const amountEach = 100
+            await gameItems.batchTransfer(recipients, id, amountEach)
+            const left = await gameItems.balanceOf(owner.getAddress(), id)
+            expect(left).to.be.equal(INIT_SWORD - 2 * amountEach)
         })
     })
 })

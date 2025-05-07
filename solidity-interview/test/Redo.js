@@ -5,48 +5,50 @@ const { boolean } = require("hardhat/internal/core/params/argumentTypes");
 
 describe('Redo', function () {
     async function deployRedoFixture() {
-        const [owner, nonOwner, Bob, Alice, ...others] = await ethers.getSigners()
-        const Redo = await ethers.getContractFactory('Redo')
-        const redo = await Redo.deploy(owner)
-        const sword_token = 1, sword_init = 1000
-        const potion_token = 2, potion_init= 2000
-        const shield_token = 3, shield_init = 3000
-
-        return {redo, owner, Bob, Alice, sword_token, sword_init, potion_token, potion_init, shield_token, shield_init}
+        const [admin, nonadmin, ...others] = await ethers.getSigners()
+        const LogicV1  = await ethers.getContractFactory('LogicV1')
+        const logicV1 = await LogicV1.deploy()
+        const LogicV2  = await ethers.getContractFactory('LogicV2')
+        const logicV2 = await LogicV2.deploy()
+        const Redo = await ethers.getContractFactory('Redo', admin)
+        const redo = await Redo.deploy(logicV1.getAddress())
+        return {redo, admin, logicV1, logicV2}
     }
-    describe('init', function () {
-        it('init', async function () {
-            const {redo, owner, sword_token, sword_init, potion_token, potion_init, shield_token, shield_init} = await loadFixture(deployRedoFixture)
-            const balance_sword = await redo.balanceOf(owner.getAddress(), sword_token)
-            const balance_potion = await redo.balanceOf(owner.getAddress(), potion_token)
-            const balance_shield = await redo.balanceOf(owner.getAddress(), shield_token)
-            expect(balance_sword).to.be.equal(sword_init)
-            expect(balance_potion).to.be.equal(potion_init)
-            expect(balance_shield).to.be.equal(shield_init)
+
+    describe('Logic', function () {
+        it('LogicV1', async function () {
+            const {redo, admin} = await loadFixture(deployRedoFixture)
+            const abi = ['function setValue(uint256) external']
+            const iface = new ethers.Interface(abi)
+            const value = 10
+            const cdata = iface.encodeFunctionData('setValue(uint256)', [value])
+            console.log(cdata)
+            const tx = {
+                to: redo.getAddress(),
+                data: cdata
+            }
+            await admin.sendTransaction(tx)
+            const val = await redo.value()
+            expect(val).to.be.equal(value)
+        })
+        it('LogicV2', async function () {
+            const {redo, admin, logicV2} = await loadFixture(deployRedoFixture)
+            await redo.upgradeTo(logicV2.getAddress())
+            const abi = ['function setValue(uint256) external']
+            const iface = new ethers.Interface(abi)
+            const value = 10
+            const cdata = iface.encodeFunctionData('setValue(uint256)', [value])
+            console.log(cdata)
+            const tx = {
+                to: redo.getAddress(),
+                data: cdata
+            }
+            await admin.sendTransaction(tx)
+            const val = await redo.value()
+            expect(val).to.be.equal(value * 2)
         })
     })
-    describe('batchMint', function () {
-        it('batchMint', async function () {
-            const {redo, Bob, Alice,sword_token, shield_token} = await loadFixture(deployRedoFixture)
-            const ids = [sword_token, shield_token]
-            const values = [100, 200]
-            await redo.batchMint(Bob.getAddress(), ids, values, '0x1234')
-            const balance_sword = await redo.balanceOf(Bob.getAddress(), sword_token)
-            const balance_shield = await redo.balanceOf(Bob.getAddress(), shield_token)
-            expect(balance_sword).to.be.equal(100)
-            expect(balance_shield).to.be.equal(200)
-        })
-    })
-    describe('batchTransfer', function () {
-        it('batchTransfer', async function () {
-            const {redo, owner, Bob, Alice, sword_token, sword_init} = await loadFixture(deployRedoFixture)
-            const recipients = [Bob.getAddress(), Alice.getAddress()]
-            const amount = 100
-            await redo.batchTransfer(recipients, sword_token, 100)
-            const balanceLeft = await redo.balanceOf(owner.getAddress(), sword_token)
-            expect(balanceLeft).to.be.equal(sword_init - 2 * amount)
-        })
-    })
+    
 })
 
 

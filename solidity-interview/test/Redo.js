@@ -5,47 +5,17 @@ const { boolean } = require("hardhat/internal/core/params/argumentTypes");
 
 describe('Redo', function () {
     async function deployRedoFixture() {
-        const [admin, nonadmin, ...others] = await ethers.getSigners()
-        const LogicV1  = await ethers.getContractFactory('LogicV1')
-        const logicV1 = await LogicV1.deploy()
-        const LogicV2  = await ethers.getContractFactory('LogicV2')
-        const logicV2 = await LogicV2.deploy()
-        const Redo = await ethers.getContractFactory('Redo', admin)
-        const redo = await Redo.deploy(logicV1.getAddress())
-        return {redo, admin, logicV1, logicV2}
+        const [owner, ...others] = await ethers.getSigners()
+        const Redo = await ethers.getContractFactory('Redo')
+        const redo = await Redo.deploy()
+        return {redo, owner}
     }
-
-    describe('Logic', function () {
-        it('LogicV1', async function () {
-            const {redo, admin} = await loadFixture(deployRedoFixture)
-            const abi = ['function setValue(uint256) external']
-            const iface = new ethers.Interface(abi)
-            const value = 10
-            const cdata = iface.encodeFunctionData('setValue(uint256)', [value])
-            console.log(cdata)
-            const tx = {
-                to: redo.getAddress(),
-                data: cdata
-            }
-            await admin.sendTransaction(tx)
-            const val = await redo.value()
-            expect(val).to.be.equal(value)
-        })
-        it('LogicV2', async function () {
-            const {redo, admin, logicV2} = await loadFixture(deployRedoFixture)
-            await redo.upgradeTo(logicV2.getAddress())
-            const abi = ['function setValue(uint256) external']
-            const iface = new ethers.Interface(abi)
-            const value = 10
-            const cdata = iface.encodeFunctionData('setValue(uint256)', [value])
-            console.log(cdata)
-            const tx = {
-                to: redo.getAddress(),
-                data: cdata
-            }
-            await admin.sendTransaction(tx)
-            const val = await redo.value()
-            expect(val).to.be.equal(value * 2)
+    describe('withdraw', function () {
+        it('withdraw', async function () {
+            const {redo, owner} = await loadFixture(deployRedoFixture)
+            const amount = 1000
+            await redo.deposit({value: amount})
+            await expect(redo.withdraw()).to.emit(redo, 'Withdraw').withArgs(owner.getAddress(), amount)
         })
     })
     

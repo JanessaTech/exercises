@@ -4,57 +4,40 @@ pragma solidity ^0.8.20;
 // import "hardhat/console.sol";
 
 contract Redo {
-    uint256 _valuePlaceHolder;
-    bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
-    bytes32 private constant IMPLEMENTATION_SLOT = keccak256('IMPLEMENTATION_SLOT');
+    mapping(address => uint256) balances;
 
-    constructor(address _implementation) {
-        bytes32 slot = IMPLEMENTATION_SLOT;
-        assembly {
-            sstore(slot, _implementation)
+    event Deposit(address indexed from, uint256 amount);
+    event Withdraw(address indexed from, uint256 amount);
+
+    bool private locking;
+    modifier noReentrant() {
+        require(!locking, 'Reentrant is called');
+        locking = true;
+        _;
+        locking = false;
+    }
+    
+    function deposit() external payable {
+        balances[msg.sender] += msg.value;
+        emit Deposit(msg.sender, msg.value);
+    }
+
+    function withdraw() external noReentrant {
+        uint256 amount = balances[msg.sender];
+        require(amount > 0, 'zero balance');
+
+        balances[msg.sender] = 0;
+
+        (bool success, ) = payable(msg.sender).call{
+            value: amount,
+            gas: 2300
+        }("");
+        
+        if  (!success) {
+            balances[msg.sender] += amount;
+            revert('failed to withdraw');
         }
-        slot = ADMIN_SLOT;
-        assembly {
-            sstore(slot, caller())
-        }
+        emit Withdraw(msg.sender, amount);
     }
-
-    function value() external view returns(uint256) {
-        return _valuePlaceHolder;
-    }
-
-    function admin() public view returns(address adm) {
-        bytes32 slot = ADMIN_SLOT;
-        assembly {
-            adm := sload(slot)
-        }
-    }
-    function implementation() public view returns(address imp) {
-        bytes32 slot = IMPLEMENTATION_SLOT;
-        assembly {
-            imp := sload(slot)
-        }
-    }
-
-    function getCallData(uint256 _value) external pure returns(bytes memory) {
-        return abi.encodeWithSignature('setValue(uint256)', _value);
-    }
-    function upgradeTo(address _newImplementation) public {
-        require(msg.sender == admin(), 'not admin');
-        bytes32 slot = IMPLEMENTATION_SLOT;
-        assembly {
-            sstore(slot, _newImplementation)
-        }
-    }
-
-    function _deletegate(address _implementation) private {
-        (bool success, ) = _implementation.delegatecall(msg.data);
-        require(success, 'it failed to call delegatecall');
-    }
-
-    fallback() external payable {
-        _deletegate(implementation());
-    }
-    receive() external payable {}
 
 }

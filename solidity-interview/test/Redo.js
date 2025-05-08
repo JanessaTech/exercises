@@ -10,12 +10,11 @@ describe('Redo', function () {
         const redo = await Redo.deploy()
         return {redo, owner}
     }
-    describe('withdraw', function () {
-        it('withdraw', async function () {
+    describe('sumArray', function () {
+        it('sumArray', async function () {
             const {redo, owner} = await loadFixture(deployRedoFixture)
-            const amount = 1000
-            await redo.deposit({value: amount})
-            await expect(redo.withdraw()).to.emit(redo, 'Withdraw').withArgs(owner.getAddress(), amount)
+            const sum = redo.sumArray([1, 2,3])
+            expect(sum).to.be.equal(6)
         })
     })
     

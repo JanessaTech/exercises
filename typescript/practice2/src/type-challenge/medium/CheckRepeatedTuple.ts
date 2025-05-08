@@ -11,14 +11,14 @@ type cases = [
   Expect<Equal<CheckRepeatedTuple<[never, any, never]>, true>>,
 ]
 
-type Include<E, T extends unknown[]> = T extends [infer F, ...infer R]
+type Include<E, L> = L extends [infer F, ...infer R]
 ? Equal<E, F> extends true
   ? true
   : Include<E, R>
 : false
 
 type CheckRepeatedTuple<T extends unknown[]> = T extends [infer F, ...infer R]
-? Include<F, R> extends true 
+? Include<F, R> extends true
   ? true
   : CheckRepeatedTuple<R>
 : false

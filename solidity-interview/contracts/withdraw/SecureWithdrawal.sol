@@ -44,11 +44,8 @@ contract SecureWithdrawal {
             gas: 2300  // 限制gas防止复杂重入
         }("");
         
-        // 失败回滚状态
-        if (!success) {
-            balances[msg.sender] = amount; // 恢复余额
-            revert("Transfer failed");
-        }
+        require(success, "Transfer failed");
+        
         emit Withdraw(msg.sender, amount);
     }
 

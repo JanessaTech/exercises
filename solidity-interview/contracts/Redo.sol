@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 
 contract Redo {
 
-    mapping(address => uint) balances;
+    mapping(address => uint256) balances;
     bool private locking;
 
     event Deposit(address indexed from, uint256 amount);
@@ -23,9 +23,9 @@ contract Redo {
         emit Deposit(msg.sender, msg.value);
     }
 
-    function withdraw() external noReentrant{
+    function withdraw() external noReentrant {
         uint256 amount = balances[msg.sender];
-        require(amount > 0, 'no eth');
+        require(amount > 0, 'no enough eth');
 
         balances[msg.sender] = 0;
 
@@ -33,11 +33,7 @@ contract Redo {
             value: amount,
             gas: 2300
         }("");
-        if(!success) {
-            balances[msg.sender] += amount;
-            revert('failed to withdraw');
-        }
-
+        require(success, "transfer failed");
         emit Withdraw(msg.sender, amount);
     }
 }

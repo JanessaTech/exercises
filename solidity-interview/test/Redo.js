@@ -13,7 +13,7 @@ describe('Redo', function () {
     describe('sumArray', function () {
         it('sumArray', async function () {
             const {redo, owner} = await loadFixture(deployRedoFixture)
-            const sum = redo.sumArray([1, 2,3])
+            const sum = await redo.sumArray([1, 2, 3])
             expect(sum).to.be.equal(6)
         })
     })

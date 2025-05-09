@@ -2,18 +2,23 @@
 pragma solidity ^0.8.20;
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
+import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract Redo {
-    function sumArray(uint256[] memory arr) public pure returns(uint256) {
-        uint256 sum;
-        assembly {
-            let length := mload(arr)
-            let ptr := add(arr, 0x20)
-            for { let i := 0 } lt(i, length) { i := add(i, 1)} {
-                sum := add(sum, mload(ptr))
-                ptr := add(ptr, 0x20)
-            }
-        }
-        return sum
+contract Redo is ERC20, AccessControl {
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    bytes32 public constant BURNER_ROLE = keccak256('BURNER_ROLE');
+
+    constructor(address defaultAdmin, address minter, address burner) ERC20("MyToken", "MTK") {
+        _grantRole(DEFAULT_ADMIN_ROLE, defaultAdmin);
+        _grantRole(MINTER_ROLE, minter);
+        _grantRole(BURNER_ROLE, burner);
+    }
+
+    function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
+        _mint(to, amount);
+    }
+    function burn(address to, uint256 amount) public onlyRole(BURNER_ROLE) {
+        _burn(to, amount);
     }
 }

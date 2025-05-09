@@ -2,55 +2,38 @@
 pragma solidity ^0.8.20;
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
-import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
-import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
-contract Redo {
-    uint256 _valuePlaceHolder;
-    bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
-    bytes32 private constant IMPLEMENTATION_SLOT = keccak256('IMPLEMENTATION_SLOT');
+contract Redo{
+    mapping(address => uint256) balances;
+    bool private locking;
 
-    constructor(address _implementation) {
-        bytes32 slot = IMPLEMENTATION_SLOT;
-        assembly {
-            sstore(slot, _implementation)
-        }
-        slot = ADMIN_SLOT;
-        assembly {
-            sstore(slot, caller())
-        }
-    }
-    function value() external view returns(uint256) {
-        return _valuePlaceHolder;
-    }
+    event Deposit(address indexed from, uint256 amount);
+    event Withdraw(address indexed from, uint256 amount);
 
-    function admin() public view returns(address adm) {
-        bytes32 slot = ADMIN_SLOT;
-        assembly {
-            adm := sload(slot)
-        }
+    modifier noReentrant() {
+        require(!locking, 'reentrance');
+        locking = true;
+        _;
+        locking = false;
     }
-    function implementation() public view returns(address impl) {
-        bytes32 slot = IMPLEMENTATION_SLOT;
-        assembly {
-            impl := sload(slot)
-        }
+    function deposit() external payable {
+        balances[msg.sender] += msg.value;
+        emit Deposit(msg.sender, msg.value);
     }
+    function withdraw() external noReentrant {
+        uint256 amount = balances[msg.sender];
+        require(amount > 0, 'no eough eth');
 
-    function upgradeTo(address _newImplementation) public {
-        bytes32 slot = IMPLEMENTATION_SLOT;
-        assembly {
-            sstore(slot, _newImplementation)
-        }
+        balances[msg.sender] = 0;
+
+        (bool success, ) = payable(msg.sender).call{
+            value: amount,
+            gas: 2300
+        }("");
+        require(success, 'failed to withdraw');
+        emit Withdraw(msg.sender, amount);
     }
 
-    function _deletegate(address _implementation) private {
-        (bool success, ) = _implementation.delegatecall(msg.data);
-        require(success, 'failed to call delegatecall');
-    }
-
-    fallback() external payable {
-        _deletegate(implementation());
-    }
-    receive() external payable {}
 }

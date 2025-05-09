@@ -2,42 +2,39 @@
 pragma solidity ^0.8.20;
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
-import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
-contract Redo is ERC721, ERC721URIStorage {
-    uint256 private nextTokenId;
-    constructor() ERC721("MyToken", "MTK") {}
+contract Redo {
+    struct Person {
+        uint id;
+        string name;
+    }
+    uint256 idx;
+    Person[] persons;
+    mapping(uint => uint) idxMapping;
+    mapping(uint => bool) inserted;
 
-    // The following functions are overrides required by Solidity.
-
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override(ERC721, ERC721URIStorage)
-        returns (string memory)
-    {
-        return super.tokenURI(tokenId);
+    function create(string memory _name)public {
+        uint256 _id = idx++;
+        persons.push(Person({id: _id, name: _name}));
+        idxMapping[_id] = persons.length - 1;
+        inserted[_id] = true;
     }
 
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        override(ERC721, ERC721URIStorage)
-        returns (bool)
-    {
-        return super.supportsInterface(interfaceId);
+    function remove(uint256 _id) public {
+        require(inserted[_id], 'invalid id');
+        uint256 _idx = idxMapping[_id];
+        Person storage last = persons[persons.length - 1];
+        persons[_idx] = Person({id: last.id, name: last.name});
+        idxMapping[last.id] = _idx;
+        delete idxMapping[_id];
+        delete inserted[_id];
+        persons.pop();
     }
 
-    function getNextTokenId() public view returns(uint256) {
-        return nextTokenId;
-    }
-
-    function safeMint(address to, string memory _tokenURI) public {
-        uint256 tokenId = nextTokenId++;
-        _safeMint(to, tokenId);
-        _setTokenURI(tokenId, _tokenURI);
+    function get(uint256 _id) public view returns(uint256 id, string memory name){
+        require(inserted[_id], 'invalid id');
+        Person storage person = persons[idxMapping[_id]];
+        return (person.id, person.name);
     }
 }

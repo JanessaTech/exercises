@@ -6,35 +6,23 @@ const { extendEnvironment } = require("hardhat/config");
 
 describe('Redo', function () {
     async function deployRedoFixture() {
-        const [admin, Bob, Alice, ...others] = await ethers.getSigners()
-        const Redo = await ethers.getContractFactory('Redo')
-        const redo = await Redo.deploy(admin)
-        return {redo, admin, Bob, Alice}
+        const [admin, Bob, userA, userB, ...others] = await ethers.getSigners()
+        const MyERC721 = await ethers.getContractFactory('MyERC721')
+        const erc721 = await MyERC721.deploy('MyERC721', 'MyERC721')
+        const nftId = 0;
+        await erc721.mint(Bob.getAddress(), nftId)
+        const Redo = await ethers.getContractFactory('Redo', Bob)
+        const redo = await Redo.deploy(erc721.getAddress(), nftId)
+        await erc721.connect(Bob).approve(redo.getAddress(), nftId)
+        return {redo, erc721, nftId, Bob, userA, userB}
     }
-    describe('mintBatch', function () {
-        it('mintBatch', async function () {
-            const {redo, admin, Bob} = await loadFixture(deployRedoFixture)
-            const ids = [1, 2]
-            const values = [100, 200]
-            await redo.connect(admin).mintBatch(Bob.getAddress(), ids, values, '0x112233')
-            const balance1 = await redo.balanceOf(Bob.getAddress(), 1)
-            expect(balance1).to.be.equal(100)
-            const balance2 = await redo.balanceOf(Bob.getAddress(), 2)
-            expect(balance2).to.be.equal(200)
-        })
-    })
-    describe('batchTransfer', function () {
-        it('batchTransfer', async function () {
-            const {redo, admin, Bob, Alice} = await loadFixture(deployRedoFixture)
-            const ids = [1, 2]
-            const values = [1000, 2000]
-            await redo.connect(admin).mintBatch(Bob.getAddress(), ids, values, '0x112233')
-            const recipients = [await Alice.getAddress()]
-            await redo.connect(Bob).batchTransfer(recipients, 2, 300)
-            const balance2_Bob = await redo.balanceOf(Bob.getAddress(), 2)
-            const balance2_Alice = await redo.balanceOf(Alice.getAddress(), 2)
-            expect(balance2_Bob).to.be.equal(1700)
-            expect(balance2_Alice).to.be.equal(300)
+    describe('init', function () {
+        it('init', async function () {
+            const {redo, erc721, nftId, Bob} = await loadFixture(deployRedoFixture)
+            const owner = await erc721.ownerOf(nftId)
+            const spender = await erc721.getApproved(nftId)
+            expect(owner).to.be.equal(await Bob.getAddress())
+            expect(spender).to.be.equal(await redo.getAddress())
         })
     })
 })

@@ -5,33 +5,29 @@ const { boolean } = require("hardhat/internal/core/params/argumentTypes");
 const { extendEnvironment } = require("hardhat/config");
 
 describe('Redo', function () {
-    async function deployredoFixture() {
+    async function deployRedoFixture() {
         const Redo = await ethers.getContractFactory('Redo')
-        const redo = await Redo.deploy()
+        const redo  = await Redo.deploy()
         return {redo}
     }
-
     describe('create', function () {
         it('create', async function () {
-            const {redo} = await loadFixture(deployredoFixture)
+            const {redo} = await loadFixture(deployRedoFixture)
             await redo.create('person0')
+            await redo.create('person1')
             const person0 = await redo.get(0)
+            const person1 = await redo.get(1)
             expect(person0.name).to.be.equal('person0')
+            expect(person1.name).to.be.equal('person1')
         })
-        
     })
     describe('remove', function () {
-        it('it failed to remove the person by id', async function () {
-            const {redo} = await loadFixture(deployredoFixture)
-            await expect(redo.remove(0)).to.be.revertedWith('invalid id')
-        })
-        it('it remove the person by id successfully', async function () {
-            const {redo} = await loadFixture(deployredoFixture)
+        it('remove', async function () {
+            const {redo} = await loadFixture(deployRedoFixture)
             await redo.create('person0')
             await redo.create('person1')
             await redo.create('person2')
             await redo.remove(1)
-
             const person0 = await redo.get(0)
             await expect(redo.get(1)).to.be.revertedWith('invalid id')
             const person2 = await redo.get(2)

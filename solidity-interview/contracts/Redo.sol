@@ -5,30 +5,35 @@ pragma solidity ^0.8.20;
 import {ERC1155} from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Redo is ERC1155, Ownable {
-    uint256 public constant SWORD = 1;
-    uint256 public constant POTION = 2;
-    uint256 public constant SHIELD = 3;
-
-    constructor(address _owner)
-    ERC1155("http://test.com/{id}.json")
-    Ownable(_owner) {
-        _mint(msg.sender, SWORD, 1000, '');
-        _mint(msg.sender, POTION, 2000, '');
-        _mint(msg.sender, SHIELD, 3000, '');
+contract Redo {
+    struct Person {
+        uint256 id;
+        string name;
     }
-    function setURI(string memory newuri) public onlyOwner {
-        _setURI(newuri);
-    }
+    uint idx;
+    Person[] people;
+    mapping(uint => uint) idxMapping;
+    mapping(uint => bool) inserted;
 
-    function batchMint(address to, uint256[] memory ids, uint256[] memory values, bytes memory data) public {
-        _mintBatch(to, ids, values, data);
+    function create(string memory _name) public {
+        uint256 _id = idx++;
+        people.push(Person({id: _id, name: _name}));
+        idxMapping[_id] = people.length - 1;
+        inserted[_id] = true;
     }
 
-    function batchTransfer(address[] memory recipients, uint256 id, uint256 amount) public {
-        require(balanceOf(msg.sender, id) > recipients.length * amount, 'no enough eth');
-        for (uint256 i = 0; i < recipients.length; i++) {
-            safeTransferFrom(msg.sender, recipients[i], id, amount, '');
-        }
+    function remove(uint256 _id) public {
+        require(inserted[_id], 'invalid id');
+        uint256 _idx = idxMapping[_id];
+        Person storage last = people[people.length - 1];
+        people[_idx] = last;
+        idxMapping[last.id] = _idx;
+        delete idxMapping[_id];
+        delete inserted[_id];
+    }
+    function get(uint256 _id) public view returns(uint id, string memory name) {
+        require(inserted[_id], 'invalid id');
+        Person storage person = people[idxMapping[_id]];
+        return (person.id, person.name);
     }
 }

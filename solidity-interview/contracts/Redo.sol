@@ -2,41 +2,34 @@
 pragma solidity ^0.8.20;
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
-import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import {ERC1155} from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Redo is ERC721, ERC721URIStorage {
-    uint256 private nextTokenId;
+contract Redo is ERC1155, Ownable {
+    uint256 public constant SWORD = 1;
+    uint256 public constant POTION = 2;
+    uint256 public constant SHIELD = 3;
 
-    constructor() ERC721("MyToken", "MTK") {}
-
-    function _baseURI() internal pure override returns (string memory) {
-        return "http://test.com/";
+    constructor(address initialOwner) ERC1155("http://test.com/{id}.json") Ownable(initialOwner) {
+        _mint(msg.sender, SWORD, 1000, '');
+        _mint(msg.sender, POTION, 2000, '');
+        _mint(msg.sender, SHIELD, 3000, '');
     }
 
-    // The following functions are overrides required by Solidity.
-
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override(ERC721, ERC721URIStorage)
-        returns (string memory)
-    {
-        return super.tokenURI(tokenId);
+    function setURI(string memory newuri) public onlyOwner {
+        _setURI(newuri);
     }
 
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        override(ERC721, ERC721URIStorage)
-        returns (bool)
-    {
-        return super.supportsInterface(interfaceId);
+    function mintBatch(address to, 
+            uint256[] memory ids, 
+            uint256[] memory values, 
+            bytes memory data) public onlyOwner {
+        _mintBatch(to, ids, values, data);
     }
-
-    function safeMint(address to, string memory _tokenURI) public {
-        uint256 tokenId = nextTokenId++;
-        _safeMint(to, tokenId);
-        _setTokenURI(tokenId, _tokenURI);
+    function batchTransfer(address[] memory recipients, uint256 id, uint256 amount) public {
+        require(balanceOf(msg.sender, id) >= recipients.length * amount);
+        for (uint256 i = 0; i < recipients.length; i++) {
+            _safeTransferFrom(msg.sender, recipients[i], id, amount, '');
+        }
     }
 }

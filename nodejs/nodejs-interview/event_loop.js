@@ -65,10 +65,10 @@ function test3() {
 function test4() {
   const stream = fs.createReadStream('hello.js')
   stream.on('data', (chunk) => {
-    console.log(`Received ${chunk.length} bytes of data.`);
+    console.log(`Received ${chunk.length} bytes of data.`);
   })
   stream.on('end', () => {
-    console.log('Finished reading file.');
+    console.log('Finished reading file.');
   })
 }
 test4()

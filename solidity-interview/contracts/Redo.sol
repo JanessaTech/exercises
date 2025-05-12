@@ -2,57 +2,24 @@
 pragma solidity ^0.8.20;
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
-import {ERC1155} from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract Redo {
-    uint256 public _valuePlaceHolder;
-    bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
-    bytes32 private constant IMPLEMENTATION = keccak256('IMPLEMENTATION');
+contract Redo is ERC20, AccessControl{
+    bytes32 public constant MINTER_ROLE = keccak256('MINTER_ROLE');
+    bytes32 public constant BURNER_ROLE = keccak256('BURNER_ROLE');
 
-    constructor(address _implemenation) {
-        bytes32 slot = IMPLEMENTATION;
-        assembly {
-            sstore(slot, _implemenation)
-        }
-        slot = ADMIN_SLOT;
-        assembly {
-            sstore(slot, caller())
-        }
+    constructor(address admin, address minter, address burner) ERC20('ERC20', 'ERC20'){
+        _grantRole(DEFAULT_ADMIN_ROLE, admin);
+        _grantRole(MINTER_ROLE, minter);
+        _grantRole(BURNER_ROLE, burner);
     }
 
-    function admin() public view returns(address adm) {
-        bytes32 slot = ADMIN_SLOT;
-        assembly {
-            adm := sload(slot)
-        }
-    }
-    function implementation() public view returns(address impl) {
-        bytes32 slot = IMPLEMENTATION;
-        assembly {
-            impl := sload(slot)
-        }
+    function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
+        _mint(to, amount);
     }
 
-    function value() public view returns(uint256) {
-        return _valuePlaceHolder;
+    function burn(address to, uint256 amount) public onlyRole(BURNER_ROLE) {
+        _burn(to, amount);
     }
-
-    function upgradeTo(address _newImplementation) public {
-        bytes32 slot = IMPLEMENTATION;
-        assembly {
-            sstore(slot, _newImplementation)
-        }
-    }
-
-    function _deletegate(address _implementation) private {
-        (bool success,) = _implementation.delegatecall(msg.data);
-        require(success, 'failed to call delegatecall');
-    }
-
-    fallback() external payable {
-        _deletegate(implementation());
-    }
-
-    receive() external payable {}
 }

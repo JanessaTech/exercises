@@ -44,7 +44,7 @@ function test2() {
     });
 }
 
-test2()
+//test2()
 
 function test3() {
     setTimeout(() => console.log('Timeout 1'), 0);
@@ -60,5 +60,15 @@ function test3() {
     Promise.resolve().then(() => console.log('Promise'));
     process.nextTick(() => console.log('nextTick'));
 }
-test3()
+//test3()
 
+function test4() {
+  const stream = fs.createReadStream('hello.js')
+  stream.on('data', (chunk) => {
+    console.log(`Received ${chunk.length} bytes of data.`);
+  })
+  stream.on('end', () => {
+    console.log('Finished reading file.');
+  })
+}
+test4()

@@ -1,18 +1,44 @@
 import { Alike, Expect, Equal, NotEqual, ExpectExtends } from "../test-utils";
 
+type Foo = {
+  [key: string]: any
+  foo(): void
+}
+
+type Bar = {
+  [key: number]: any
+  bar(): void
+  0: string
+}
+
+const foobar = Symbol('foobar')
+type FooBar = {
+  [key: symbol]: any
+  [foobar](): void
+}
+
+type Baz = {
+  bar(): void
+  baz: string
+}
+
 type cases = [
-  Expect<Equal<Absolute<0>, '0'>>,
-  Expect<Equal<Absolute<-0>, '0'>>,
-  Expect<Equal<Absolute<10>, '10'>>,
-  Expect<Equal<Absolute<-5>, '5'>>,
-  Expect<Equal<Absolute<'0'>, '0'>>,
-  Expect<Equal<Absolute<'-0'>, '0'>>,
-  Expect<Equal<Absolute<'10'>, '10'>>,
-  Expect<Equal<Absolute<'-5'>, '5'>>,
-  Expect<Equal<Absolute<-1_000_000n>, '1000000'>>,
-  Expect<Equal<Absolute<9_999n>, '9999'>>,
+  Expect<Equal<RemoveIndexSignature<Foo>, { foo(): void }>>,
+  Expect<Equal<RemoveIndexSignature<Bar>, { bar(): void, 0: string }>>,
+  Expect<Equal<RemoveIndexSignature<FooBar>, { [foobar](): void }>>,
+  Expect<Equal<RemoveIndexSignature<Baz>, { bar(): void, baz: string }>>,
 ]
 
-type Absolute<T extends number | string | bigint> = `${T}` extends `-${infer N}`
-? N
-: `${T}`
+type Filter<T> = string extends T
+? never
+: symbol extends T
+  ? never
+  : number extends T
+    ? never
+    : T
+
+type RemoveIndexSignature<T> = {
+  [K in keyof T as Filter<K>] : T[K]
+}
+
+type test = RemoveIndexSignature<Bar>

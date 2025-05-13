@@ -1,40 +1,48 @@
 import { Alike, Expect, Equal, NotEqual, ExpectExtends } from "../test-utils";
 
-type Case0 = ['', '', '']
-type Case1 = ['+', '', '']
-type Case2 = ['+', '1', '']
-type Case3 = ['+', '100', '']
-type Case4 = ['+', '100', '%']
-type Case5 = ['', '100', '%']
-type Case6 = ['-', '100', '%']
-type Case7 = ['-', '100', '']
-type Case8 = ['-', '1', '']
-type Case9 = ['', '', '%']
-type Case10 = ['', '1', '']
-type Case11 = ['', '100', '']
+declare const a: Chainable
+
+const result1 = a
+  .option('foo', 123)
+  .option('bar', { value: 'Hello World' })
+  .option('name', 'type-challenges')
+  .get()
+
+const result2 = a
+  .option('name', 'another name')
+  // @ts-expect-error
+  .option('name', 'last name')
+  .get()
+
+const result3 = a
+  .option('name', 'another name')
+  // @ts-expect-error
+  .option('name', 123)
+  .get()
 
 type cases = [
-  Expect<Equal<Subsequence<[1, 2]>, [] | [1] | [2] | [1, 2]>>,
-  Expect<Equal<Subsequence<[1, 2, 3]>, [] | [1] | [2] | [1, 2] | [3] | [1, 3] | [2, 3] | [1, 2, 3]>>,
-  Expect<Equal<Subsequence<[1, 2, 3, 4, 5]>, [] |
-  [1] | [2] | [3] | [4] | [5] |
-  [1, 2] | [1, 3] | [1, 4] | [1, 5] | [2, 3] | [2, 4] | [2, 5] | [3, 4] | [3, 5] | [4, 5] |
-  [1, 2, 3] | [1, 2, 4] | [1, 2, 5] | [1, 3, 4] | [1, 3, 5] | [1, 4, 5] | [2, 3, 4] | [2, 3, 5] | [2, 4, 5] | [3, 4, 5] |
-  [1, 2, 3, 4] | [1, 2, 3, 5] | [1, 2, 4, 5] | [1, 3, 4, 5] | [2, 3, 4, 5] |
-  [1, 2, 3, 4, 5] >>,
-  Expect<Equal<Subsequence<['a', 'b', 'c']>, [] |
-  ['a'] | ['b'] | ['c'] |
-  ['a', 'b'] | ['a', 'c'] | ['b', 'c'] |
-  ['a', 'b', 'c'] >>,
-  Expect<Equal<Subsequence<['x', 'y']>, [] |
-  ['x'] | ['y'] |
-  ['x', 'y'] >>,
+  Expect<Alike<typeof result1, Expected1>>,
+  Expect<Alike<typeof result2, Expected2>>,
+  Expect<Alike<typeof result3, Expected3>>,
 ]
 
-type Merge<E, L extends unknown[]> = L extends any
-? [E, ...L]
-: never
+type Expected1 = {
+  foo: number
+  bar: {
+    value: string
+  }
+  name: string
+}
 
-type Subsequence<T extends any[]> = T extends [infer F, ...infer R]
-? Merge<F, Subsequence<R>> | Subsequence<R>
-: []
+type Expected2 = {
+  name: string
+}
+
+type Expected3 = {
+  name: number
+}
+
+type Chainable<O = {}> = {
+  option<K extends string, V>(key: K extends keyof O ? never : K, value: V): Chainable<Omit<O, K> & {[P in K]: V}>
+  get(): O
+}

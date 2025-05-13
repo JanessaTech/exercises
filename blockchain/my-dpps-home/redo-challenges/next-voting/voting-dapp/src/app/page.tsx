@@ -8,7 +8,6 @@ type LoginProps = {}
 const Login: React.FC<LoginProps> = () => {
     const {connectWallet} = useWeb3Context() as IWeb3Context
     const router = useRouter()
-
     const onClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
         await connectWallet()
         router.push('/home')

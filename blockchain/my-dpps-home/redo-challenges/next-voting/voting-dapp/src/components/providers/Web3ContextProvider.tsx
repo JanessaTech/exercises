@@ -5,7 +5,7 @@ import useWalletManager, { WalletState } from "../hooks/useWalletManager";
 
 export interface IWeb3Context {
     connectWallet: () => Promise<void>;
-    disconnectWallet: () => Promise<void>;
+    disconnectwallet: () => Promise<void>;
     state: WalletState
 }
 
@@ -15,12 +15,13 @@ type Web3ContextProviderProps = {
     children: React.ReactNode
 }
 const Web3ContextProvider: React.FC<Web3ContextProviderProps> = ({children}) => {
-    const {connectWallet, disconnectWallet, state} = useWalletManager()
+    const {connectWallet, disconnectwallet, state} = useWalletManager()
     return (
-        <Web3Context.Provider value={{connectWallet, disconnectWallet, state}}>
+        <Web3Context.Provider value={{connectWallet, disconnectwallet, state}}>
             {children}
         </Web3Context.Provider>
     )
 }
+
 export const useWeb3Context = () => useContext(Web3Context)
 export default Web3ContextProvider

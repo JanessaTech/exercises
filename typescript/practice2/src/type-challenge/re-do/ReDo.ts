@@ -1,21 +1,14 @@
 import { Alike, Expect, Equal, NotEqual, ExpectExtends } from "../test-utils";
 
-type cases = [
-  Expect<Equal<ReplaceAll<'foobar', 'bar', 'foo'>, 'foofoo'>>,
-  Expect<Equal<ReplaceAll<'foobar', 'bag', 'foo'>, 'foobar'>>,
-  Expect<Equal<ReplaceAll<'foobarbar', 'bar', 'foo'>, 'foofoofoo'>>,
-  Expect<Equal<ReplaceAll<'t y p e s', ' ', ''>, 'types'>>,
-  Expect<Equal<ReplaceAll<'foobarbar', '', 'foo'>, 'foobarbar'>>,
-  Expect<Equal<ReplaceAll<'barfoo', 'bar', 'foo'>, 'foofoo'>>,
-  Expect<Equal<ReplaceAll<'foobarfoobar', 'ob', 'b'>, 'fobarfobar'>>,
-  Expect<Equal<ReplaceAll<'foboorfoboar', 'bo', 'b'>, 'foborfobar'>>,
-  Expect<Equal<ReplaceAll<'', '', ''>, ''>>,
-]
+function foo(arg1: string, arg2: number): void {}
+function bar(arg1: boolean, arg2: { a: 'A' }): void {}
+function baz(): void {}
 
-type ReplaceAll<S extends string, From extends string, To extends string, acc extends string = ''> = From extends ''
-? S
-: S extends ''
-  ? acc
-  : S extends `${infer L}${From}${infer R}`
-    ? ReplaceAll<R, From, To, `${acc}${L}${To}`>
-    : ReplaceAll<'', From, To, `${acc}${S}`>
+type cases = [
+  Expect<Equal<MyParameters<typeof foo>, [string, number]>>,
+  Expect<Equal<MyParameters<typeof bar>, [boolean, { a: 'A' }]>>,
+  Expect<Equal<MyParameters<typeof baz>, []>>,
+]
+type MyParameters<T extends (...args: any[]) => any> = T extends (...args: infer P) => any
+? P
+: never

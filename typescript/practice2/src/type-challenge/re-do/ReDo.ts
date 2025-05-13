@@ -1,15 +1,21 @@
 import { Alike, Expect, Equal, NotEqual, ExpectExtends } from "../test-utils";
 
 type cases = [
-  Expect<Equal<Permutation<'A'>, ['A']>>,
-  Expect<Equal<Permutation<'A' | 'B' | 'C'>, ['A', 'B', 'C'] | ['A', 'C', 'B'] | ['B', 'A', 'C'] | ['B', 'C', 'A'] | ['C', 'A', 'B'] | ['C', 'B', 'A']>>,
-  Expect<Equal<Permutation<'B' | 'A' | 'C'>, ['A', 'B', 'C'] | ['A', 'C', 'B'] | ['B', 'A', 'C'] | ['B', 'C', 'A'] | ['C', 'A', 'B'] | ['C', 'B', 'A']>>,
-  Expect<Equal<Permutation<boolean>, [false, true] | [true, false]>>,
-  Expect<Equal<Permutation<never>, []>>,
+  Expect<Equal<ReplaceAll<'foobar', 'bar', 'foo'>, 'foofoo'>>,
+  Expect<Equal<ReplaceAll<'foobar', 'bag', 'foo'>, 'foobar'>>,
+  Expect<Equal<ReplaceAll<'foobarbar', 'bar', 'foo'>, 'foofoofoo'>>,
+  Expect<Equal<ReplaceAll<'t y p e s', ' ', ''>, 'types'>>,
+  Expect<Equal<ReplaceAll<'foobarbar', '', 'foo'>, 'foobarbar'>>,
+  Expect<Equal<ReplaceAll<'barfoo', 'bar', 'foo'>, 'foofoo'>>,
+  Expect<Equal<ReplaceAll<'foobarfoobar', 'ob', 'b'>, 'fobarfobar'>>,
+  Expect<Equal<ReplaceAll<'foboorfoboar', 'bo', 'b'>, 'foborfobar'>>,
+  Expect<Equal<ReplaceAll<'', '', ''>, ''>>,
 ]
 
-type Permutation<T, path extends unknown[] = [], A = T> = [T] extends [never]
-? path
-: T extends any
-  ? Permutation<Exclude<A, T>, [...path, T]>
-  : never
+type ReplaceAll<S extends string, From extends string, To extends string, acc extends string = ''> = From extends ''
+? S
+: S extends ''
+  ? acc
+  : S extends `${infer L}${From}${infer R}`
+    ? ReplaceAll<R, From, To, `${acc}${L}${To}`>
+    : ReplaceAll<'', From, To, `${acc}${S}`>

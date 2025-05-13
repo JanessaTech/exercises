@@ -1,67 +1,37 @@
 import { Alike, Expect, Equal, NotEqual, ExpectExtends } from "../test-utils";
 
-type NodeA = {
-  type: 'A'
-  name: string
-  flag: number
-}
-
-type NodeB = {
-  type: 'B'
-  id: number
-  flag: number
-}
-
-type NodeC = {
-  type: 'C'
-  name: string
-  flag: number
-}
-
-type ReplacedNodeA = {
-  type: 'A'
-  name: number
-  flag: string
-}
-
-type ReplacedNodeB = {
-  type: 'B'
-  id: number
-  flag: string
-}
-
-type ReplacedNodeC = {
-  type: 'C'
-  name: number
-  flag: string
-}
-
-type NoNameNodeA = {
-  type: 'A'
-  flag: number
-  name: never
-}
-
-type NoNameNodeC = {
-  type: 'C'
-  flag: number
-  name: never
-}
-
-type Nodes = NodeA | NodeB | NodeC
-type ReplacedNodes = ReplacedNodeA | ReplacedNodeB | ReplacedNodeC
-type NodesNoName = NoNameNodeA | NoNameNodeC | NodeB
+type Case0 = ['', '', '']
+type Case1 = ['+', '', '']
+type Case2 = ['+', '1', '']
+type Case3 = ['+', '100', '']
+type Case4 = ['+', '100', '%']
+type Case5 = ['', '100', '%']
+type Case6 = ['-', '100', '%']
+type Case7 = ['-', '100', '']
+type Case8 = ['-', '1', '']
+type Case9 = ['', '', '%']
+type Case10 = ['', '1', '']
+type Case11 = ['', '100', '']
 
 type cases = [
-  Expect<Equal<ReplaceKeys<Nodes, 'name' | 'flag', { name: number, flag: string }>, ReplacedNodes>>,
-  Expect<Equal<ReplaceKeys<Nodes, 'name', { aa: number }>, NodesNoName>>,
+  Expect<Equal<PercentageParser<''>, Case0>>,
+  Expect<Equal<PercentageParser<'+'>, Case1>>,
+  Expect<Equal<PercentageParser<'+1'>, Case2>>,
+  Expect<Equal<PercentageParser<'+100'>, Case3>>,
+  Expect<Equal<PercentageParser<'+100%'>, Case4>>,
+  Expect<Equal<PercentageParser<'100%'>, Case5>>,
+  Expect<Equal<PercentageParser<'-100%'>, Case6>>,
+  Expect<Equal<PercentageParser<'-100'>, Case7>>,
+  Expect<Equal<PercentageParser<'-1'>, Case8>>,
+  Expect<Equal<PercentageParser<'%'>, Case9>>,
+  Expect<Equal<PercentageParser<'1'>, Case10>>,
+  Expect<Equal<PercentageParser<'100'>, Case11>>,
 ]
 
-type ReplaceKeys<U, T, Y> = U extends any
-? {[P in keyof U]: P extends T
-    ? P extends keyof Y
-      ? Y[P]
-      : never
-    : U[P]
-}
-: never
+type PercentageParser<A extends string, sign = '', num = '', unit = ''> = A extends ''
+? [sign, num, unit]
+: A extends `${infer S extends '+' | '-'}${infer R}`
+  ? PercentageParser<R, S, num, unit>
+  : A extends `${infer N}%`
+    ? PercentageParser<'', sign, N, '%'>
+    : PercentageParser<'', sign, A, unit>

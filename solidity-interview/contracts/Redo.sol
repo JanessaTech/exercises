@@ -30,10 +30,10 @@ contract Redo {
     }
 
     function start() public {
-        require(msg.sender != owner, 'not owner');
+        require(msg.sender == owner, 'not owner');
         require(!started, 'started');
         started = true; 
-        endAt = block.timestamp;
+        endAt = block.timestamp + 7 days;
 
         nft.transferFrom(msg.sender, address(this), nftId);
         emit Start(msg.sender);
@@ -42,7 +42,7 @@ contract Redo {
     function bid() public payable {
         require(started, 'not started');
         require(block.timestamp < endAt, 'ended');
-        require(msg.value > highestBid, 'msg.value < highestBid');
+        require(msg.value > highestBid, 'msg.value <= highestBid');
         if (highestBidder != address(0)) {
             bids[highestBidder] = highestBid;
         }
@@ -63,7 +63,7 @@ contract Redo {
     }
 
     function end() public {
-        require(msg.sender != owner, 'not owner');
+        require(msg.sender == owner, 'not owner');
         require(started, 'not started');
         require(block.timestamp >= endAt, 'not ended');
         if (highestBidder != address(0)) {

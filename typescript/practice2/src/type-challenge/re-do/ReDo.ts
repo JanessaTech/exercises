@@ -1,12 +1,22 @@
 import { Alike, Expect, Equal, NotEqual, ExpectExtends } from "../test-utils";
 
 type cases = [
-  Expect<Equal<StringToUnion<''>, never>>,
-  Expect<Equal<StringToUnion<'t'>, 't'>>,
-  Expect<Equal<StringToUnion<'hello'>, 'h' | 'e' | 'l' | 'l' | 'o'>>,
-  Expect<Equal<StringToUnion<'coronavirus'>, 'c' | 'o' | 'r' | 'o' | 'n' | 'a' | 'v' | 'i' | 'r' | 'u' | 's'>>,
+  Expect<Equal<Trunc<0.1>, '0'>>,
+  Expect<Equal<Trunc<0.2>, '0'>>,
+  Expect<Equal<Trunc<1.234>, '1'>>,
+  Expect<Equal<Trunc<12.345>, '12'>>,
+  Expect<Equal<Trunc<-5.1>, '-5'>>,
+  Expect<Equal<Trunc<'.3'>, '0'>>,
+  Expect<Equal<Trunc<'1.234'>, '1'>>,
+  Expect<Equal<Trunc<'-.3'>, '-0'>>,
+  Expect<Equal<Trunc<'-10.234'>, '-10'>>,
+  Expect<Equal<Trunc<10>, '10'>>,
 ]
 
-type StringToUnion<T extends string> = T extends `${infer F}${infer R}`
-? F | StringToUnion<R>
-: never
+type Trunc<T extends string | number> = `${T}` extends `${infer F}.${infer R}`
+? F extends ''
+  ? '0'
+  : F extends '-'
+    ? '-0'
+    : F
+: `${T}`

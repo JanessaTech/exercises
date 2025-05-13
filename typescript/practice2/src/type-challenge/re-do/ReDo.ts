@@ -1,25 +1,26 @@
 import { Alike, Expect, Equal, NotEqual, ExpectExtends } from "../test-utils";
 
+type Foo = {
+  a: number
+  b: string
+}
+type Bar = {
+  b: number
+  c: boolean
+}
+
 type cases = [
-  Expect<Equal<IsUnion<string>, false>>,
-  Expect<Equal<IsUnion<string | number>, true>>,
-  Expect<Equal<IsUnion<'a' | 'b' | 'c' | 'd'>, true>>,
-  Expect<Equal<IsUnion<undefined | null | void | ''>, true>>,
-  Expect<Equal<IsUnion<{ a: string } | { a: number }>, true>>,
-  Expect<Equal<IsUnion<{ a: string | number }>, false>>,
-  Expect<Equal<IsUnion<[string | number]>, false>>,
-  // Cases where T resolves to a non-union type.
-  Expect<Equal<IsUnion<string | never>, false>>,
-  Expect<Equal<IsUnion<string | unknown>, false>>,
-  Expect<Equal<IsUnion<string | any>, false>>,
-  Expect<Equal<IsUnion<string | 'a'>, false>>,
-  Expect<Equal<IsUnion<never>, false>>,
+  Expect<Equal<Merge<Foo, Bar>, {
+    a: number
+    b: number
+    c: boolean
+  }>>,
 ]
 
-type IsUnion<T, A = T> = [T] extends [never]
-? false
-: T extends any
-? [A] extends [T]
-  ? false
-  : true
-: never
+type Merge<F, S extends {[P in any]: any}> = {
+  [K in keyof (F & S)] : K extends keyof F
+  ? K extends keyof S
+    ? S[K]
+    : F[K]
+  : S[K]
+}

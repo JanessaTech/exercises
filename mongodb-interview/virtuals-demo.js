@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     toJSON: { virtuals: true }
 })
 
-userSchema.plugin(toJSON)
+//userSchema.plugin(toJSON)
 userSchema.virtual('refereals', {
     ref: 'User',
     localField: '_id',

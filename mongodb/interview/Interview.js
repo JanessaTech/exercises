@@ -60,7 +60,7 @@ const authorSchema = new Schema({
             }
         }
     },
-    toObject:{virtuals: true}
+    toJSON: { virtuals: true }
 })
 authorSchema.virtual('books', {
     ref: 'Book',
@@ -107,9 +107,11 @@ async function createData() {
 
 async function queryAuthors() {
     const authors = await Author.find({gender: 'female', age: {$gt: 20}}).sort({age: 1}).populate('books')
-    console.log(authors)
-    // const res = await Book.find({price: {$gt: 100}, 'author.age' : {lte: 30}}).sort({price: 1}).populate('author')
-    // console.log(res)
+    console.log(JSON.stringify(authors, null, 2))
+    //console.log(authors[0].books)
+    //console.log(authors[1].books)
+    //const res = await Book.find({price: {$gt: 100}, 'author.age' : {lte: 30}}).sort({price: 1}).populate('author')
+    //console.log(res)
 }
 
 async function queryBooks() {
@@ -170,9 +172,9 @@ async function aggregate() {
 async function run() {
     await connect('mongodb://127.0.0.1:27017/demo')
     //await createData()
-    //await queryAuthors()
+    await queryAuthors()
     //await queryBooks()
-    await aggregate()
+    //await aggregate()
     
 
     console.log('Run ended')

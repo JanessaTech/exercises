@@ -160,9 +160,9 @@ async function aggregate() {
 async function main() {
     await connect("mongodb://127.0.0.1:27017/demo")
     //await createData()
-    //await queryAuthors()
+    await queryAuthors()
     //await queryBooks()
-    await aggregate()
+    //await aggregate()
     console.log('ended')
 }
 

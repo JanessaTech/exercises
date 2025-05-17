@@ -43,7 +43,7 @@ const authorSchema = new Schema({
         type: String,
         enum: {
             values: ['female', 'male'],
-            message: '{VALLUE} is not supported'
+            message: '{VALUE} is not supported'
         },
         default: 'male',
         require: [true, 'gender is required']
@@ -114,7 +114,7 @@ async function create() {
 }
 
 async function queryAuthors() {
-    const res = await Author.find({age: {$gte: 20}, gender: 'female'}).sort({age: 1}).populate('books')
+    const res = await Author.find({$and: [{gender: {$ne: "male"}}, {age: {$gte: 20}}, {age: {$exists: true}}]}).sort({age: 1}).populate('books')
     console.log(JSON.stringify(res, null, 2))
 }
 
@@ -195,10 +195,10 @@ async function aggragate() {
 async function main() {
     try {
         connect()
-        //await create()
+        await create()
         //await queryAuthors()
         //await queryBooks()
-        await aggragate()
+        //await aggragate()
     } catch(err) {
         console.log(err)
         process.exit(1)

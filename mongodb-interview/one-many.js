@@ -3,37 +3,33 @@ const {default: mongoose, Schema} = require('mongoose')
 const bookSchema = new Schema({
     title: {
         type: String,
-        require: [true, 'title is required']
+        require:[true, 'title is required']
     },
     author: {
-        type: Schema.Types.ObjectId,
-        ref: 'Author',
-        require: [true, 'author id is required']
-    }, 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Author'
+    },
     price: {
         type: Number,
         min: [0, 'price >= 0'],
-        default: 0,
-        require: [true, 'price is rerquired']
+        require: [true, 'price is required']
     },
     isbn: {
         type: String,
         validate: {
             validator: function(v) {
-
+                const re = /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/
+                return re.test(v)
             },
-            message: props => `${props} is an invalid isbn`
-        }, 
-        require:[true, 'isbn is required']
+            message: props => `${props.value} is an invalid isbn`
+        }
     }
 })
-
-
 const authorSchema = new Schema({
     firstName: {
         type: String,
         require: [true, 'firstName is required']
-    }, 
+    },
     lastName: {
         type: String,
         require: [true, 'lastName is required']
@@ -41,14 +37,14 @@ const authorSchema = new Schema({
     age: {
         type: Number,
         min: [18, 'age >= 18'],
-        require:[true, 'age is required']
+        require: [true, 'age is required']
     },
     gender: {
         type: String,
-        enume: {
-            values: ['male', 'female'],
-            message: '{VALUE} is not supported'
-        }, 
+        enum: {
+            values: ['female', 'male'],
+            message: '{VALLUE} is not supported'
+        },
         default: 'male',
         require: [true, 'gender is required']
     }
@@ -59,7 +55,7 @@ const authorSchema = new Schema({
                 return this.firstName + ' ' + this.lastName
             }
         }
-    }, 
+    },
     toJSON: {virtuals: true}
 })
 
@@ -71,8 +67,6 @@ authorSchema.virtual('books', {
 
 const Book = mongoose.model('Book', bookSchema)
 const Author = mongoose.model('Author', authorSchema)
-
-
 function connect() {
     mongoose.connect('mongodb://127.0.0.1/interview')
     let db = mongoose.connection
@@ -80,11 +74,11 @@ function connect() {
         console.log('connected to database')
     })
     db.on('error', (err) => {
-        console.log('database error: ', err)
+        console.log('database err:', err)
     })
-
 }
-async function create(){
+
+async function create() {
     const author1 = new Author({ firstName: 'John', lastName: 'Tomas', age: 45, gender: 'male'})
     const author2 = new Author({ firstName: 'jineffer', lastName: 'Jwong', age: 22, gender: 'female'})
     const author3 = new Author({ firstName: 'Linda', lastName: 'Huala', age: 38, gender: 'female'})
@@ -118,18 +112,21 @@ async function create(){
     }
     console.log('data is created')
 }
+
 async function queryAuthors() {
-    const res = await Author.find({age: {$gt : 20}}).sort({age: 1}).populate('books')
+    const res = await Author.find({age: {$gte: 20}, gender: 'female'}).sort({age: 1}).populate('books')
     console.log(JSON.stringify(res, null, 2))
 }
+
 async function queryBooks() {
     const res = await Book.find({price: {$lte: 50}})
-                            .sort({price: 1})
-                            .select({title: 1, price: 1})
-                            .populate('author', 'firstName lastName gender')
-    console.log(JSON.stringify(res, null, 2))
+                                .sort({price: 1})
+                                .select({title: 1, price: 1})
+                                .populate('author', 'firstName lastName gender')
+    console.log(res)
+
 }
-async function aggregate() {
+async function aggragate() {
     const agg = await Book.aggregate([
         {
             $lookup: /**
@@ -142,11 +139,11 @@ async function aggregate() {
             */
            {
              from: "authors",
-             localField:"author",
+             localField: "author",
              foreignField: "_id",
              as: "R"
            }
-        }, 
+        },
         {
             $unwind: /**
             * path: Path to the array field.
@@ -168,7 +165,7 @@ async function aggregate() {
            {
              title: 1,
              price: 1,
-             gender: "$R.gender"
+             author_gender: "$R.gender"
            }
         },
         {
@@ -176,23 +173,22 @@ async function aggregate() {
             * query: The query in MQL.
             */
            {
-             price:{$gte: 100}
+             price: {$gte: 100}
            }
-        }, 
+        },
         {
             $group: /**
             * _id: The id of the group.
             * fieldN: The first field name.
             */
            {
-             _id: "$gender",
-             totalPrice: {
+             _id: "$author_gender",
+             sumPrice: {
                $sum: "$price"
              }
            }
         }
     ])
-
     console.log(agg)
 }
 
@@ -201,9 +197,9 @@ async function main() {
         connect()
         //await create()
         //await queryAuthors()
-        await queryBooks()
-        await aggregate()
-    } catch (err) {
+        //await queryBooks()
+        await aggragate()
+    } catch(err) {
         console.log(err)
         process.exit(1)
     }
@@ -212,4 +208,3 @@ async function main() {
 main().then().catch((err) => {
     console.log(err)
 })
-

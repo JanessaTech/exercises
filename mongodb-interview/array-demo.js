@@ -35,11 +35,11 @@ async function create() {
                                 })
         const arr2 = new MyArray({name: 'arr2', 
                                   score: [60, 90, 120], 
-                                  tags: ["school", "book"],
+                                  tags: ["book", "school"],
                                   children: [{ "product": "abc", "score": 8 },
                                     { "product": "xyz", "score": 7 }]
                                 })
-        const arr3 = new MyArray({name: 'arr2', 
+        const arr3 = new MyArray({name: 'arr3', 
                                   score: [200, 300, 400], 
                                   tags: ["electronics", "school"],
                                   children: [{ "product": "abc", "score": 7 },
@@ -53,14 +53,17 @@ async function create() {
     console.log('data is created')
 }
 
+// pick up documents with tags which have "school" and "book" in the array
 async function query1() {
     const res = await MyArray.find({tags: {$all: ["school", "book"]}})
     console.log(JSON.stringify(res, null, 2))
 }
+// pick up documents with score in which there is at least one element which is > 40 and < 110
 async function query2() {
     const res = await MyArray.find({score: {$elemMatch: {$gt: 40, $lt: 110}}})
     console.log(JSON.stringify(res, null, 2))
 }
+// pick up documents with children in which there is at least one element whose product is 'xyz' and score > 6
 async function query3() {
     const res = await MyArray.find({children: {$elemMatch: {product: 'xyz', score: {$gt : 6}}}})
     console.log(JSON.stringify(res, null, 2))

@@ -69,13 +69,27 @@ async function query3() {
     console.log(JSON.stringify(res, null, 2))
 }
 
+// pick up the first document, whose score has 60
+async function query4() {
+    const res = await MyArray.findOne({score: 60})
+    console.log(JSON.stringify(res, null, 2))
+}
+
+// pick up all documents, of which score don't have 100
+async function query5() {
+    const res = await MyArray.find({score: {$ne : 100}})
+    console.log(res)
+}
+
 async function main() {
     try {
         connect()
         //await create()
         //await query1()
         //await query2()
-        await query3()
+        //await query3()
+        //await query4()
+        await query5()
     } catch (err) {
         console.log(err)
     }

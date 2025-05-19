@@ -36,16 +36,16 @@ async function create() {
         t1.nested.addr = 'xian'
         t1.lucky = [1, 2, 3, 4]
         t1.mixed = [{xx: 'aa'}, [12]]
-        t1.map = new Map([['1', 'value1'], ['2', 'value2']])
+        t1.map = new Map([['1', 'value1'], ['2', 'value2']])  // the key must be string type
 
         const t2 = new MyType
         t2.name = 'Leo'
         t2.age = 11
         t2.birtheday = new Date()
         t2.nested.addr = 'beijing'
-        t2.lucky = [1, 2, 3, 4]
+        t2.lucky.unshift(5, 6, 7, 8)  // pay attention to how to insert elements into array
         t2.mixed = [{xx: 'aa'}, [12]]
-        t2.map = new Map([['3', 'value3'], ['4', 'value4']])
+        t2.map = new Map([['3', 'value3'], ['4', 'value4']])  // the key must be string type
 
         await t1.save()
         await t2.save()
@@ -85,7 +85,7 @@ async function query() {
 async function main() {
     try {
         connect()
-        //await create()
+        await create()
         await query()
     } catch (err) {
         console.log(err)

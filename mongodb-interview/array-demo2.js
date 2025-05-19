@@ -131,6 +131,65 @@ async function update_$_position() {
         }
     )
 }
+//pick up the first document in which rating has 88 in it,  
+// insert 100, 200, 300 to rating at position 1
+// once insertion is done, slice 3 elements from the head as the rating
+async function update_$_slice() {
+    await Exam.updateOne(
+        {rating: 88},
+        {$push: {
+            rating: {
+                $each: [100, 200, 300],
+                $position: 1,
+                $slice: 3
+            }
+        }}
+    )
+}
+
+// pick up the first document in which rating has 88 in it,
+// insert {grade: 190, mean: 92, std: 7}, {grade: 160, mean: 92, std: 5}, {grade: 181, mean: 92, std: 9} to grades
+// sort grades by grade in ascending order
+// slice 3 elements from grades as the result
+async function update_$_sort() {
+    await Exam.updateOne(
+        {rating: 88},
+        {
+            $push: {
+                grades: {
+                    $each: [{grade: 190, mean: 92, std: 7}, {grade: 160, mean: 92, std: 5}, {grade: 181, mean: 92, std: 9}],
+                    $slice: 3,
+                    $sort: {grade: 1}
+                }
+            }
+        }
+    )
+}
+
+// first
+// pick up the first document in which rating has 88 in it, remove elements >= 90 from rating
+// second
+// pick up the first document in which rating has 88 in it, remove elements in grades in which grade =185 and mean>=90
+async function update_$_pull() {
+    //first
+    await Exam.updateOne(
+        {rating: 88},
+        {$pull: {rating: {$gte: 90}}}
+    )
+    //second
+    await Exam.updateOne(
+        {rating: 88},
+        {$pull: {grades: {grade: {$eq:185}, mean: {$gte: 90}}}}
+    )
+}
+
+//pick up the first document in which rating has 88 in it, remove elements specified by [90, 92, 93] from rating
+async function update_$_pullAll() {
+    await Exam.updateOne(
+        {rating: 88},
+        {$pullAll: {rating: [90, 92, 93]}}
+    )
+}
 
 async function main() {
     try {
@@ -146,7 +205,11 @@ async function main() {
         //await update_$_addToSet()
         //await update_$_pop()
         //await update_$_push()
-        await update_$_position()
+        //await update_$_position()
+        //await update_$_slice()
+        await update_$_sort()
+        //await update_$_pull()
+        //await update_$_pullAll()
     } catch (err) {
         console.log(err)
     }

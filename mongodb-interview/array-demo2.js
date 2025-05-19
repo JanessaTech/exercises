@@ -82,16 +82,71 @@ async function update_$_identifier() {
         {arrayFilters: [ {"elem" : {$gte: 90}} ]}
     )
 }
+
+//pick up the first document in which rating has 88 in it, update elements whose grade == 185 and mean >=90
+async function update_$_identifier_embbeded() {
+    await Exam.updateOne(
+        {rating: 88},
+        {$set: {"grades.$[elem].std" : 20}},
+        //{ arrayFilters: [ { "elem.grade": { $gte: 80 }, "elem.std": { $gte: 5 } } ] }
+        {arrayFilters: [{"elem.grade": {$eq: 185}, "elem.mean": {$gte: 90}}]}
+    )
+}
+
+//pick up the first document in which rating has 88 in it, add 93 into rating array(92 will be ignored)
+async function update_$_addToSet() {
+    await Exam.updateOne(
+        {rating: 88},
+        { $addToSet: {rating: [92, 93]}}
+    )
+}
+//pick up the first document in which rating has 88 in it, 
+// remove the first element in grades ({grades: 1} means remove the last element in grades)
+async function update_$_pop() {
+    await Exam.updateOne(
+        {rating: 88},
+        {$pop: {grades: -1}}
+    )
+}
+
+//pick up the first document in which rating has 88 in it,  
+// append 100, 200, 300 to rating array
+async function update_$_push() {
+    await Exam.updateOne(
+        {rating: 88},
+        {$push : {rating: {$each: [100, 200, 300]}}}
+    )
+}
+//pick up the first document in which rating has 88 in it,  
+// insert 100, 200, 300 to rating at position 1
+async function update_$_position() {
+    await Exam.updateOne(
+        {rating: 88},
+        {$push: {
+            rating: {
+                    $each: [ 100,200, 300],
+                    $position: 1
+                }
+            }
+        }
+    )
+}
+
 async function main() {
     try {
         connect()
-        await create()
+        //await create()
         //await update_$()
         //await update_$_embbeded()
         //await update_$_multiple()
         //await update_$_all()
         //await update_$_all_embbeded()
-        await update_$_identifier()
+        //await update_$_identifier()
+        //await update_$_identifier_embbeded()
+        //await update_$_addToSet()
+        //await update_$_pop()
+        //await update_$_push()
+        await update_$_position()
     } catch (err) {
         console.log(err)
     }

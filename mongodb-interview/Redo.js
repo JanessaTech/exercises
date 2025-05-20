@@ -55,18 +55,18 @@ async function create() {
 
 // pick up documents with tags which have "school" and "book" in the array
 async function query1() {
-    const res  = await MyArray.find({tags: {$all: ["school", "book"]}})
+    const res = await MyArray.find({tags: {$all: ["school", "book"]}})
     console.log(res)
 }
 // pick up documents with score in which there is at least one element which is > 40 and < 110
 async function query2() {
-    const res = await MyArray.find({score: {$elemMatch: {$gt : 40, $lt : 100}}})
+    const res = await MyArray.find({score: {$elemMatch: {$gt : 40, $lt: 110}}})
     console.log(res)
 }
 // pick up documents with children in which there is at least one element whose product is 'xyz' and score > 6
 async function query3() {
-   const res = await MyArray.find({children: {$elemMatch: {product: 'xyz', score: {$gt : 6}}}})
-   console.log(res)
+   const res = await MyArray.find({children: {$elemMatch: {product: 'xyz', score: {$gt: 6}}}})
+   console.log(JSON.stringify(res, null, 2))
 }
 
 // pick up the first document, whose score has 60
@@ -85,11 +85,11 @@ async function main() {
     try {
         connect()
         //await create()
-        //await query1()
+        await query1()
         //await query2()
         //await query3()
         //await query4()
-        await query5()
+        //await query5()
     } catch (err) {
         console.log(err)
     }

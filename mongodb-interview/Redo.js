@@ -3,17 +3,17 @@ const {default: mongoose, Schema} = require('mongoose')
 const bookSchema = new Schema({
     title: {
         type: String,
-        require:[true, 'title is required']
-    },
+        require: [true, 'title is required']
+    }, 
     author: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'Author'
     },
     price: {
         type: Number,
-        min: [0, 'price >= 0'],
+        min: [0, 'pirce >= 0'],
         require: [true, 'price is required']
-    },
+    }, 
     isbn: {
         type: String,
         validate: {
@@ -32,30 +32,32 @@ const authorSchema = new Schema({
     },
     lastName: {
         type: String,
-        require: [true, 'lastName is required']
+        require: [true, 'firstName is lastName']
     },
     age: {
         type: Number,
         min: [18, 'age >= 18'],
         require: [true, 'age is required']
+
     },
     gender: {
         type: String,
         enum: {
-            values: ['female', 'male'],
+            values:['female', 'male'],
             message: '{VALUE} is not supported'
         },
         default: 'male',
         require: [true, 'gender is required']
     }
+
 }, {
     virtuals: {
         fullName: {
             get() {
-                return this.firstName + ' ' + this.lastName
+                return this.firstName + ' '  + this.lastName
             }
         }
-    },
+    }, 
     toJSON: {virtuals: true}
 })
 
@@ -75,7 +77,7 @@ function connect() {
         console.log('connected to database')
     })
     db.on('error', (err) => {
-        console.log('database err:', err)
+        console.log('database failed: ', err)
     })
 }
 
@@ -115,19 +117,19 @@ async function create() {
 }
 
 async function queryAuthors() {
-    const res = await Author.find({$and: [{gender: {$ne: "male"}}, {age: {$gte: 20}}, {age: {$exists: true}}]}).sort({age: 1}).populate('books')
+    const res = await Author.find({age: {$gt:20}, gender: 'female'}).sort({age: 1}).populate('books')
     console.log(JSON.stringify(res, null, 2))
 }
 
 async function queryBooks() {
-    const res = await Book.find({price: {$lte: 50}})
-                                .sort({price: 1})
-                                .select({title: 1, price: 1})
-                                .populate('author', 'firstName lastName gender')
-    console.log(res)
-
+    const res = await Book.find({price: {$lte : 50}})
+                           .sort({price: 1})
+                           .select({title: 1, price: 1})
+                           .populate('author', 'firstName lastName gender')
+    console.log(JSON.stringify(res, null, 2))
 }
-async function aggragate() {
+
+async function aggregate() {
     const agg = await Book.aggregate([
         {
             $lookup: /**
@@ -154,10 +156,9 @@ async function aggragate() {
             */
            {
              path: "$R",
-             includeArrayIndex: 'string',
              preserveNullAndEmptyArrays: true
            }
-        },
+        }, 
         {
             $project: /**
             * specifications: The fields to
@@ -165,16 +166,16 @@ async function aggragate() {
             */
            {
              title: 1,
-             price: 1,
-             author_gender: "$R.gender"
+             price:1,
+             gender:"$R.gender"
            }
         },
         {
-            $match: /**
+            $match:/**
             * query: The query in MQL.
             */
            {
-             price: {$gte: 100}
+             price:{$gte:100}
            }
         },
         {
@@ -183,29 +184,29 @@ async function aggragate() {
             * fieldN: The first field name.
             */
            {
-             _id: "$author_gender",
-             sumPrice: {
+             _id: "$gender",
+             totoalPrice: {
                $sum: "$price"
              }
            }
         }
     ])
+
     console.log(agg)
+
 }
 
 async function main() {
     try {
         connect()
-        await create()
+        //await create()
         //await queryAuthors()
         //await queryBooks()
-        //await aggragate()
+        await aggregate()
     } catch(err) {
         console.log(err)
-        process.exit(1)
     }
 }
-
 main().then().catch((err) => {
     console.log(err)
 })

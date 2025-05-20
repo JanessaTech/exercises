@@ -34,10 +34,12 @@ async function create() {
     console.log('data is created!')
 }
 
+// for stu1, increment age by 2
 async function update_inc() {
     const res = await Student.findOneAndUpdate({name: 'stu1'}, {$inc: {age: 2}}, {new: true})
     console.log(JSON.stringify(res, null, 2))
 }
+// for stu2, set age=40 and add=shanghai
 async function update_set() {
     const res = await Student.findOneAndUpdate({name: 'stu2'}, {$set: {age: 40, addr: 'shanghai'}}, {new: true})
     console.log(JSON.stringify(res, null, 2))

@@ -3,35 +3,24 @@ pragma solidity ^0.8.20;
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
 
-contract Redo {
+import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-    bool private locking;
-    mapping(address => uint256) balances;
+contract Redo is ERC20, AccessControl {
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
 
-    event Deposit(address indexed from, uint256 amount);
-    event Withdraw(address indexed from, uint256 amount);
-
-    modifier nonReentrant() {
-        require(!locking, 'reentrance');
-        locking = true;
-        _;
-        locking = false;
+    constructor(address defaultAdmin, address minter, address burner) ERC20("MyToken", "MTK") {
+        _grantRole(DEFAULT_ADMIN_ROLE, defaultAdmin);
+        _grantRole(MINTER_ROLE, minter);
+        _grantRole(BURNER_ROLE, burner);
     }
 
-    function deposit() public payable {
-        balances[msg.sender] += msg.value;
-        emit Deposit(msg.sender, msg.value);
+    function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
+        _mint(to, amount);
     }
 
-    function withdraw() public nonReentrant {
-        uint256 amount = balances[msg.sender];
-        balances[msg.sender] = 0;
-        (bool success, ) = payable(msg.sender).call{
-            value: amount,
-            gas: 2300
-        }("");
-        require(success, 'failed to withdraw');
-        emit Withdraw(msg.sender, amount);
+    function burn(address from, uint256 amount) public onlyRole(BURNER_ROLE) {
+        _burn(from, amount);
     }
-
 }

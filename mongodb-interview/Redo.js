@@ -108,19 +108,11 @@ async function update_$_identifier_embbeded() {
 //pick up the first document in which rating has 88 in it, add 93 into rating array(92 will be ignored)
 async function update_$_addToSet() {
     await init()
-    await Exam.updateOne(
-        {rating: 88},
-        {$addToSet: {rating : [92, 93]}}
-    )
 }
 //pick up the first document in which rating has 88 in it, 
 // remove the first element in grades ({grades: 1} means remove the last element in grades)
 async function update_$_pop() {
     await init()
-    await Exam.updateOne(
-        {rating: 88},
-        {$pop : {grades : -1}}
-    )
     
 }
 
@@ -128,44 +120,19 @@ async function update_$_pop() {
 // append 100, 200, 300 to rating array
 async function update_$_push() {
     await init()
-    await Exam.updateOne(
-        {rating : 88},
-        {$push : {
-            rating : {
-                $each: [100, 200, 300]
-            }
-        }}
-    )
+    
 }
 //pick up the first document in which rating has 88 in it,  
 // insert 100, 200, 300 to rating at position 1
 async function update_$_position() {
     await init()
-    await Exam.updateOne(
-        {rating : 88},
-        {$push : {
-            rating: {
-                $each: [100, 200, 300],
-                $position: 1
-            }
-        }}
-    )
+    
 }
 //pick up the first document in which rating has 88 in it,  
 // insert 100, 200, 300 to rating at position 1
 // once insertion is done, slice 3 elements from the head as the rating
 async function update_$_slice() {
     await init()
-    await Exam.updateOne(
-        {rating: 88},
-        {$push : {
-            rating:{
-                $each: [100, 200, 300],
-                $position : 1,
-                $slice: 3
-            }
-        }}
-    )
     
 }
 
@@ -175,16 +142,6 @@ async function update_$_slice() {
 // slice 3 elements from grades as the result
 async function update_$_sort() {
     await init()
-    await Exam.updateOne(
-        {rating: 88},
-        {$push : {
-            grades: {
-                $each: [{grade: 190, mean: 92, std: 7}, {grade: 160, mean: 92, std: 5}, {grade: 181, mean: 92, std: 9}],
-                $slice: 3,
-                $sort: {grade: 1}
-            }
-        }}
-    )
     
 }
 
@@ -194,26 +151,13 @@ async function update_$_sort() {
 // pick up the first document in which rating has 88 in it, remove elements in grades in which grade =185 and mean>=90
 async function update_$_pull() {
     await init()
-    await Exam.updateOne(
-        {rating: 88},
-        {$pull : {rating : {$gte : 90}}},
-    )
-    await Exam.updateOne(
-        {rating : 88},
-        {$pull : {
-            grades: {grade: {$eg: 185}, mean: {$gt: 90}}
-        }}
-    )
-    
+   
 }
 
 //pick up the first document in which rating has 88 in it, remove elements specified by [90, 92, 93] from rating
 async function update_$_pullAll() {
     await init()
-    await Exam.updateOne(
-        {rating : 88},
-        {$pullAll: {rating : [90, 92, 93]}}
-    )
+    
 }
 
 async function main() {

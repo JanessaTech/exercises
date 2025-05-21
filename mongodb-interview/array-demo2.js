@@ -47,7 +47,7 @@ async function init() {
     await Exam.collection.drop()
     await create()
 }
-// pick up the first document with rating which has 80 in it. update the the first 80 with the new value
+// pick up the first document with rating which has 80 in it. update the the first 80 to 100
 // pay more attention: the array field must appear as part of the query document
 async function update_$() {
     await init()

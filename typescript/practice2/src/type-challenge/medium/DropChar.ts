@@ -11,16 +11,10 @@ type cases = [
     Expect<Equal<DropChar<' b u t t e r f l y ! ', 't'>, ' b u   e r f l y ! '>>,
   ]
 
-  type DropChar<S, C, acc extends string = ''> = S extends `${infer F}${infer R}`
-  ? F extends C
-    ? DropChar<R, C, acc>
-    : DropChar<R, C, `${acc}${F}`>
-  : acc
-
-//   type DropChar<T, S> = T extends `${infer F}${infer R}`
-// ? F extends S
-//   ? DropChar<R, S>
-//   : `${F}${DropChar<R, S>}`
-// : 
-
-type test = DropChar<' b u t t e r f l y ! ', 't'>
+  type DropChar<S extends string, C extends string, acc extends string = ''> = C extends ''
+  ? S
+  : S extends ''
+    ? acc
+    : S extends `${infer L }${C}${infer R}`
+      ? DropChar<R, C, `${acc}${L}`>
+      : DropChar<'', C, `${acc}${S}`>

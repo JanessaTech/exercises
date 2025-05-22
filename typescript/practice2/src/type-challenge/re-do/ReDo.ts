@@ -1,33 +1,20 @@
 import { Alike, Expect, Equal, NotEqual, ExpectExtends } from "../test-utils";
 
-type Foo = {
-  name: string
-  age: string
-}
-type Bar = {
-  name: string
-  age: string
-  gender: number
-}
-type Coo = {
-  name: string
-  gender: number
-}
-
 type cases = [
-  Expect<Equal<Diff<Foo, Bar>, { gender: number }>>,
-  Expect<Equal<Diff<Bar, Foo>, { gender: number }>>,
-  Expect<Equal<Diff<Foo, Coo>, { age: string, gender: number }>>,
-  Expect<Equal<Diff<Coo, Foo>, { age: string, gender: number }>>,
+  // @ts-expect-error
+  Expect<Equal<DropChar<'butter fly!', ''>, 'butterfly!'>>,
+  Expect<Equal<DropChar<'butter fly!', ' '>, 'butterfly!'>>,
+  Expect<Equal<DropChar<'butter fly!', '!'>, 'butter fly'>>,
+  Expect<Equal<DropChar<'    butter fly!        ', ' '>, 'butterfly!'>>,
+  Expect<Equal<DropChar<' b u t t e r f l y ! ', ' '>, 'butterfly!'>>,
+  Expect<Equal<DropChar<' b u t t e r f l y ! ', 'b'>, '  u t t e r f l y ! '>>,
+  Expect<Equal<DropChar<' b u t t e r f l y ! ', 't'>, ' b u   e r f l y ! '>>,
 ]
-type Diff<O, O1> = {
-  [P in keyof(O & O1) as P extends keyof(O | O1) ? never : P] : P extends keyof O
-  ? O[P]
-  : P extends keyof O1
-    ? O1[P]
-    : never
-}
 
-// type Diff<O, O1> = {
-//   [P in keyof(O & O1) as P extends keyof(O | O1) ? never : P] : (O & O1)[P]
-// }
+type DropChar<S extends string, C extends string, acc extends string = ''> =  C extends ''
+? S
+: S extends ''
+  ? acc
+  : S extends `${infer L}${C}${infer R}`
+    ? DropChar<R, C, `${acc}${L}`>
+    : DropChar<'', C, `${acc}${S}`>

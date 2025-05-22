@@ -6,10 +6,11 @@ import { ethers } from "ethers"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useRecoilState } from "recoil"
+
 type Candidate = {
-    id : number;
-    name: string;
-    votedBy: string
+    id: Number;
+    name: String;
+    votedBy: String
 }
 type HomeState = {
     isEnded: boolean;
@@ -22,14 +23,14 @@ const defaultHomeState: HomeState = {
 
 type HomeProps = {}
 const Home: React.FC<HomeProps> = () => {
-    const {connectWallet, disconnectwallet, state: {address, contract}} = useWeb3Context() as IWeb3Context
+    const [state, setState] = useState<HomeState>(defaultHomeState)
+    const {connectWallet, disconnectWallet, state: {address, contract}} = useWeb3Context() as IWeb3Context
     const [auth, setAuth] = useRecoilState<AuthState>(authState)
     const router = useRouter()
-    const [state, setState] = useState<HomeState>(defaultHomeState)
 
     useEffect(() => {
         (async () => {
-            if (auth.connected) {
+            if(auth.connected){
                 if (contract) {
                     await updateState(contract)
                 } else {
@@ -42,17 +43,18 @@ const Home: React.FC<HomeProps> = () => {
     }, [contract])
 
     const updateState = async (contract: ethers.Contract) => {
-        const rawCandiates:any[] = await contract.getCandidates()
-        const rows: Candidate[] = []
-        rawCandiates.forEach((e) => {
+        const rawCandiates: any[] = await contract.getCandidates()
+        const rows : Candidate[] = []
+        rawCandiates.forEach(e => {
             rows.push({id: Number(e[0]), name: e[1], votedBy: e[2]})
-        })
+        });
         const isEnded = await contract.isEnded()
         setState({isEnded: isEnded, candidates: rows})
+    
     }
 
     console.log(state)
-
+    
     return (
         <div>
             <div>address: {address}</div>

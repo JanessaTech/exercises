@@ -1,20 +1,21 @@
 import { Alike, Expect, Equal, NotEqual, ExpectExtends } from "../test-utils";
 
-type cases = [
-  // @ts-expect-error
-  Expect<Equal<DropChar<'butter fly!', ''>, 'butterfly!'>>,
-  Expect<Equal<DropChar<'butter fly!', ' '>, 'butterfly!'>>,
-  Expect<Equal<DropChar<'butter fly!', '!'>, 'butter fly'>>,
-  Expect<Equal<DropChar<'    butter fly!        ', ' '>, 'butterfly!'>>,
-  Expect<Equal<DropChar<' b u t t e r f l y ! ', ' '>, 'butterfly!'>>,
-  Expect<Equal<DropChar<' b u t t e r f l y ! ', 'b'>, '  u t t e r f l y ! '>>,
-  Expect<Equal<DropChar<' b u t t e r f l y ! ', 't'>, ' b u   e r f l y ! '>>,
-]
+const tuple = ['tesla', 'model 3', 'model X', 'model Y'] as const
+const tupleNumber = [1, 2, 3, 4] as const
+const sym1 = Symbol(1)
+const sym2 = Symbol(2)
+const tupleSymbol = [sym1, sym2] as const
+const tupleMix = [1, '2', 3, '4', sym1] as const
 
-type DropChar<S extends string, C extends string, acc extends string = ''> =  C extends ''
-? S
-: S extends ''
-  ? acc
-  : S extends `${infer L}${C}${infer R}`
-    ? DropChar<R, C, `${acc}${L}`>
-    : DropChar<'', C, `${acc}${S}`>
+type cases = [
+  Expect<Equal<TupleToObject<typeof tuple>, { 'tesla': 'tesla', 'model 3': 'model 3', 'model X': 'model X', 'model Y': 'model Y' }>>,
+  Expect<Equal<TupleToObject<typeof tupleNumber>, { 1: 1, 2: 2, 3: 3, 4: 4 }>>,
+  Expect<Equal<TupleToObject<typeof tupleSymbol>, { [sym1]: typeof sym1, [sym2]: typeof sym2 }>>,
+  Expect<Equal<TupleToObject<typeof tupleMix>, { 1: 1, '2': '2', 3: 3, '4': '4', [sym1]: typeof sym1 }>>,
+]
+// @ts-expect-error
+type error = TupleToObject<[[1, 2], {}]>
+
+type TupleToObject<T extends readonly (number | symbol | string)[]> = {
+  [P in T[number]]: P
+}

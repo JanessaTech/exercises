@@ -6,35 +6,47 @@ const { extendEnvironment } = require("hardhat/config");
 
 describe('Redo', function () {
     async function deployRedoFixture() {
-        const [admin, minter, buner, Bob, other, ...others] = await ethers.getSigners()
+        const [admin, Bob, Alice, ...others] = await ethers.getSigners()
         const Redo = await ethers.getContractFactory('Redo')
-        const redo = await Redo.deploy(admin, minter, buner)
-        return {redo, admin, minter, buner, Bob, other}
+        const redo = await Redo.deploy(admin)
+        return {redo, admin, Bob, Alice}
     }
-    describe('mint', function () {
-        it('it minted successfully', async function () {
-           const {redo, minter, Bob, other} = await loadFixture(deployRedoFixture)
-           const amount = 1000
-           await redo.connect(minter).mint(Bob.getAddress(), amount)
-           const balance = await redo.balanceOf(Bob.getAddress())
-           expect(balance).to.be.equal(amount)
+    describe('init', function () {
+        it('init', async function () {
+           const {redo, admin} = await loadFixture(deployRedoFixture)
+           const balance_sword = await redo.balanceOf(admin.getAddress(), 1)
+           const balance_potion = await redo.balanceOf(admin.getAddress(), 2)
+           const balance_sheild = await redo.balanceOf(admin.getAddress(), 3)
+           expect(balance_sword).to.be.equal(1000)
+           expect(balance_potion).to.be.equal(2000)
+           expect(balance_sheild).to.be.equal(3000)
         })
-        it('it failed to mint', async function() {
-            const {redo, other, Bob} = await loadFixture(deployRedoFixture)
-            const amount = 1000
-            await expect(redo.connect(other).mint(Bob.getAddress(), amount)).to.be.revertedWithCustomError(redo, 'AccessControlUnauthorizedAccount')
+        
+    })
+    describe('mintBatch', function () {
+        it('mintBatch', async function () {
+            const {redo, Bob} = await loadFixture(deployRedoFixture)
+            const ids = [1, 2]
+            const values = [100, 200]
+            await redo.mintBatch(Bob.getAddress(), ids, values, '0x123456')
+            const balance1 = await redo.balanceOf(Bob.getAddress(), 1)
+            const balance2 = await redo.balanceOf(Bob.getAddress(), 2)
+            expect(balance1).to.be.equal(100)
+            expect(balance2).to.be.equal(200)
         })
     })
-    describe('burn', function () {
-        it('it burned successfully', async function () {
-            const {redo, buner, Bob, minter} = await loadFixture(deployRedoFixture)
-            const amount = 1000
-            const toburn = 300
-            await redo.connect(minter).mint(Bob.getAddress(), amount)
-            await redo.connect(buner).burn(Bob.getAddress(), toburn)
-            const balance  = await redo.balanceOf(Bob.getAddress())
-            expect(balance).to.be.equal(amount - toburn)
-
+    describe('transferBatch', function () {
+        it('transferBatch', async function () {
+            const {redo, admin, Bob, Alice} = await loadFixture(deployRedoFixture)
+            const recipients = [await Bob.getAddress(), await Alice.getAddress()]
+            const id = 1, amount  = 100
+            await redo.transferBatch(recipients, id, amount)
+            const balance_admin = await redo.balanceOf(admin.getAddress(), 1)
+            const balance_bob = await redo.balanceOf(Bob.getAddress(), 1)
+            const balance_alice = await redo.balanceOf(Alice.getAddress(), 1)
+            expect(balance_admin).to.be.equal(800)
+            expect(balance_bob).to.be.equal(100)
+            expect(balance_alice).to.be.equal(100)
         })
     })
     

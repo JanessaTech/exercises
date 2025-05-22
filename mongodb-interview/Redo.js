@@ -53,15 +53,15 @@ async function update_$() {
     await init()
     await Exam.updateOne(
         {rating: 80},
-        {$set: {"rating.$": 100}}
+        {$set: {'rating.$': 100}}
     )
 }
 // pick up the fist document with grades which has grade being 185, update  std to 20 for the first matched element in grades
 async function update_$_embbeded() {
     await init()
     await Exam.updateOne(
-        {"grades.grade": 185},
-        {$set: {"grades.$.std": 20}}
+        {'grades.grade': 185},
+        {$set: {'grades.$.std': 20}}
     )
     
 }
@@ -89,7 +89,7 @@ async function update_$_all(){
 // pick up the the first document in which rating has 88 in it, update std to 20 in all elements in the grades for the matched document
 async function update_$_all_embbeded() {
     await init()
-    await Exam.updateOne(
+    await  Exam.updateOne(
         {rating: 88},
         {$set: {"grades.$[].std": 20}}
     )
@@ -102,7 +102,7 @@ async function update_$_identifier() {
     await Exam.updateOne(
         {rating: 88},
         {$set: {"rating.$[elem]": 100}},
-        {arrayFilters: [{"elem":{$gte: 90}}]}
+        {arrayFilters: [{"elem": {$gte: 90}}]}
     )
 }
 
@@ -112,7 +112,7 @@ async function update_$_identifier_embbeded() {
     await Exam.updateOne(
         {rating: 88},
         {$set: {"grades.$[elem].std": 20}},
-        {arrayFilters: [{"elem.grade" : {$eq: 185}, "elem.mean" :{$gt: 80}}]}
+        {arrayFilters: [{"elem.grade": {$eg: 85}, "elem.mean": {$gte : 80}}]}
     )
 }
 

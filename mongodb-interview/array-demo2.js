@@ -64,12 +64,9 @@ async function update_$_embbeded() {
 async function update_$_multiple() {
     await init()
     await Exam.updateOne(
-        {
-            grades: {$elemMatch: {grade: {$gt: 200}, mean: {$lt: 90}}}
-        },
-        {
-            $set:{"grades.$.std": 200}
-        })
+        {grades: {$elemMatch: {grade: {$gt: 200}, mean: {$lt: 90}}}},
+        {$set: {'grades.$.std': 200}}
+    )
 }
 
 // pick up the the first document in which rating has 88 in it, update all elements in the array to 888 

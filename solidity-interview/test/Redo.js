@@ -6,47 +6,52 @@ const { extendEnvironment } = require("hardhat/config");
 
 describe('Redo', function () {
     async function deployRedoFixture() {
-        const [admin, Bob, Alice, ...others] = await ethers.getSigners()
-        const Redo = await ethers.getContractFactory('Redo')
-        const redo = await Redo.deploy(admin)
-        return {redo, admin, Bob, Alice}
+        const [admin, ...others] = await ethers.getSigners()
+        const LogicV1 = await ethers.getContractFactory('LogicV1')
+        const logicV1 = await LogicV1.deploy()
+        const LogicV2 = await ethers.getContractFactory('LogicV2')
+        const logicV2 = await LogicV2.deploy()
+
+        const Proxy = await ethers.getContractFactory('Redo')
+        const proxy = await Proxy.deploy(logicV1.getAddress())
+        return {proxy, admin, logicV1, logicV2}
     }
+
     describe('init', function () {
         it('init', async function () {
-           const {redo, admin} = await loadFixture(deployRedoFixture)
-           const balance_sword = await redo.balanceOf(admin.getAddress(), 1)
-           const balance_potion = await redo.balanceOf(admin.getAddress(), 2)
-           const balance_sheild = await redo.balanceOf(admin.getAddress(), 3)
-           expect(balance_sword).to.be.equal(1000)
-           expect(balance_potion).to.be.equal(2000)
-           expect(balance_sheild).to.be.equal(3000)
-        })
-        
-    })
-    describe('mintBatch', function () {
-        it('mintBatch', async function () {
-            const {redo, Bob} = await loadFixture(deployRedoFixture)
-            const ids = [1, 2]
-            const values = [100, 200]
-            await redo.mintBatch(Bob.getAddress(), ids, values, '0x123456')
-            const balance1 = await redo.balanceOf(Bob.getAddress(), 1)
-            const balance2 = await redo.balanceOf(Bob.getAddress(), 2)
-            expect(balance1).to.be.equal(100)
-            expect(balance2).to.be.equal(200)
+            const {proxy} = await loadFixture(deployRedoFixture)
         })
     })
-    describe('transferBatch', function () {
-        it('transferBatch', async function () {
-            const {redo, admin, Bob, Alice} = await loadFixture(deployRedoFixture)
-            const recipients = [await Bob.getAddress(), await Alice.getAddress()]
-            const id = 1, amount  = 100
-            await redo.transferBatch(recipients, id, amount)
-            const balance_admin = await redo.balanceOf(admin.getAddress(), 1)
-            const balance_bob = await redo.balanceOf(Bob.getAddress(), 1)
-            const balance_alice = await redo.balanceOf(Alice.getAddress(), 1)
-            expect(balance_admin).to.be.equal(800)
-            expect(balance_bob).to.be.equal(100)
-            expect(balance_alice).to.be.equal(100)
+
+    describe('LogicV1 & LogicV2', function () {
+        it('LogicV1', async function () {
+            const {proxy, admin} = await loadFixture(deployRedoFixture)
+            const abi = ['function setValue(uint256) external']
+            const iface = new ethers.Interface(abi)
+            const value = 10
+            const cdata = iface.encodeFunctionData('setValue(uint256)', [value])
+            const tx = {
+                to: await proxy.getAddress(),
+                data: cdata
+            }
+            await admin.sendTransaction(tx)
+            const val = await proxy.value()
+            expect(val).to.be.equal(value)
+        })
+        it('LogicV1', async function () {
+            const {proxy, admin, logicV2} = await loadFixture(deployRedoFixture)
+            await proxy.upgradeTo(await logicV2.getAddress())
+            const abi = ['function setValue(uint256) external']
+            const iface = new ethers.Interface(abi)
+            const value = 10
+            const cdata = iface.encodeFunctionData('setValue(uint256)', [value])
+            const tx = {
+                to: await proxy.getAddress(),
+                data: cdata
+            }
+            await admin.sendTransaction(tx)
+            const val = await proxy.value()
+            expect(val).to.be.equal(value * 2)
         })
     })
     

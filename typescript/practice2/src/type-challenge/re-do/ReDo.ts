@@ -1,21 +1,22 @@
 import { Alike, Expect, Equal, NotEqual, ExpectExtends } from "../test-utils";
 
-const tuple = ['tesla', 'model 3', 'model X', 'model Y'] as const
-const tupleNumber = [1, 2, 3, 4] as const
-const sym1 = Symbol(1)
-const sym2 = Symbol(2)
-const tupleSymbol = [sym1, sym2] as const
-const tupleMix = [1, '2', 3, '4', sym1] as const
-
 type cases = [
-  Expect<Equal<TupleToObject<typeof tuple>, { 'tesla': 'tesla', 'model 3': 'model 3', 'model X': 'model X', 'model Y': 'model Y' }>>,
-  Expect<Equal<TupleToObject<typeof tupleNumber>, { 1: 1, 2: 2, 3: 3, 4: 4 }>>,
-  Expect<Equal<TupleToObject<typeof tupleSymbol>, { [sym1]: typeof sym1, [sym2]: typeof sym2 }>>,
-  Expect<Equal<TupleToObject<typeof tupleMix>, { 1: 1, '2': '2', 3: 3, '4': '4', [sym1]: typeof sym1 }>>,
+  Expect<Equal<AnyOf<[1, 'test', true, [1], { name: 'test' }, { 1: 'test' }]>, true>>,
+  Expect<Equal<AnyOf<[1, '', false, [], {}]>, true>>,
+  Expect<Equal<AnyOf<[0, 'test', false, [], {}]>, true>>,
+  Expect<Equal<AnyOf<[0, '', true, [], {}]>, true>>,
+  Expect<Equal<AnyOf<[0, '', false, [1], {}]>, true>>,
+  Expect<Equal<AnyOf<[0, '', false, [], { name: 'test' }]>, true>>,
+  Expect<Equal<AnyOf<[0, '', false, [], { 1: 'test' }]>, true>>,
+  Expect<Equal<AnyOf<[0, '', false, [], { name: 'test' }, { 1: 'test' }]>, true>>,
+  Expect<Equal<AnyOf<[0, '', false, [], {}, undefined, null]>, false>>,
+  Expect<Equal<AnyOf<[]>, false>>,
 ]
-// @ts-expect-error
-type error = TupleToObject<[[1, 2], {}]>
 
-type TupleToObject<T extends readonly (number | symbol | string)[]> = {
-  [P in T[number]]: P
-}
+type falsy = [0, '', false, [], {[P in any]: never}, undefined, null][number]
+
+type AnyOf<T extends readonly any[]> = T extends [infer F, ...infer R]
+? F extends falsy
+  ? AnyOf<R>
+  : true
+: false

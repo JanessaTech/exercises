@@ -2,38 +2,49 @@
 pragma solidity ^0.8.20;
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
+import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "hardhat/console.sol";
 
 contract Redo {
-    struct Person {
-        uint256 id;
-        string name;
-    }
-    Person[] people;
-    uint256 idx;
-    mapping(uint256 => uint256) idxMapping;
-    mapping(uint256 => bool) inserted;
+    IERC721 nft;
+    uint256 nftId;
 
-    function create(string memory _name) public {
-        uint256 _id = idx++;
-        people.push(Person({id: _id, name: _name}));
-        idxMapping[_id] = people.length - 1;
-        inserted[_id] = true;
-    }
+    address owner;
 
-    function remove(uint256 _id) public {
-        require(inserted[_id], 'invalid id');
-        uint256 _idx = idxMapping[_id];
-        Person storage last = people[people.length - 1];
-        people[_idx] = last;
-        idxMapping[last.id] = _idx;
-        delete idxMapping[_id];
-        delete inserted[_id];
-        people.pop();
+    bool started;
+    uint256 endAt;
+
+    mapping(address => uint256) bids;
+    address highestBider;
+    uint256 highestBid;
+
+    event Start(address indexed from);
+    event End(address indexed from);
+    event Bid(address indexed from, uint256 amount);
+    event Withraw(address indexed from, uint256 amount);
+
+    constructor(address _nft, uint256 _nftId) {
+        nft = IERC721(_nft);
+        nftId = _nftId;
+        owner = msg.sender;
     }
 
-    function get(uint256 _id) public view returns(uint256 id, string memory name) {
-        require(inserted[_id], 'invalid id');
-        Person storage last = people[idxMapping[_id]];
-        return (last.id, last.name);
+    function start() public {
+        require(msg.sender == owner,'not owner');
+        require(!started, 'started');
+        started = true;
+        endAt = block.timestamp + 7 days;
+        nft.transferFrom(msg.sender, address(this), nftId);
+        emit Start(msg.sender);
+    }
+
+    function bid() public {
+        
+    }
+    function withdraw() public {
+
+    }
+    function end() public {
+
     }
 }

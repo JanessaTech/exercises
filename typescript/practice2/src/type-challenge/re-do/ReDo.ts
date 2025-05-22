@@ -21,7 +21,7 @@ type cases = [
   Expect<Equal<Diff<Coo, Foo>, { age: string, gender: number }>>,
 ]
 
-type Diff<O, O1> = {
-  [K in keyof (O & O1) as Exclude<K, keyof(O | O1)>] : (O & O1)[K]
-}
 
+type Diff<O, O1> = {
+  [P in keyof(O & O1) as P extends keyof(O | O1) ? never : P] : (O & O1)[P]
+}

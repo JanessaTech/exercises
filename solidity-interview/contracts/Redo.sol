@@ -38,12 +38,27 @@ contract Redo {
         emit Start(msg.sender);
     }
 
-    function bid() public {
-        
+    function bid() public payable {
+        require(started, 'not started');
+        require(block.timestamp < endAt, 'ended');
+        require(msg.value > highestBid, 'msg.value <= highestBid');
+        if (highestBider != address(0)) {
+            bids[highestBider] += highestBid;
+        }
+        highestBid = msg.value;
+        highestBider = msg.sender;
+        emit Bid(msg.sender, msg.value);
     }
-    function withdraw() public {
 
+    function withdraw() public {
+        uint256 amount = bids[msg.sender];
+        if (amount > 0) {
+            bool success = payable(msg.sender).send(amount);
+            require(success, 'failed to withdraw');
+        }
+        emit Withraw(msg.sender, amount);
     }
+
     function end() public {
 
     }

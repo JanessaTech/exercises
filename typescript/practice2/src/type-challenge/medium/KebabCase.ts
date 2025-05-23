@@ -21,3 +21,5 @@ type KebabCase<T extends string, acc extends string = ''> = T extends `${infer F
     : KebabCase<R, `${acc}-${Lowercase<F>}`>
   : KebabCase<R, `${acc}${F}`>
 : acc
+
+// type KebabCase<T extends string> = any

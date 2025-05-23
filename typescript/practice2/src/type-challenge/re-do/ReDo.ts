@@ -1,28 +1,24 @@
 import { Alike, Expect, Equal, NotEqual, ExpectExtends } from "../test-utils";
 
 
-type Foo = {
-  a: number
-  b: string
-}
-type Bar = {
-  b: number
-  c: boolean
-}
-
 type cases = [
-  Expect<Equal<Merge<Foo, Bar>, {
-    a: number
-    b: number
-    c: boolean
-  }>>,
+  Expect<Equal<Absolute<0>, '0'>>,
+  Expect<Equal<Absolute<-0>, '0'>>,
+  Expect<Equal<Absolute<10>, '10'>>,
+  Expect<Equal<Absolute<-5>, '5'>>,
+  Expect<Equal<Absolute<'0'>, '0'>>,
+  Expect<Equal<Absolute<'-0'>, '0'>>,
+  Expect<Equal<Absolute<'10'>, '10'>>,
+  Expect<Equal<Absolute<'-5'>, '5'>>,
+  Expect<Equal<Absolute<-1_000_000n>, '1000000'>>,
+  Expect<Equal<Absolute<9_999n>, '9999'>>,
 ]
 
 
-type Merge<F, S extends {[K in any]: unknown}> = {
-  [P in keyof (F & S)] : P extends keyof F
-    ? P extends keyof S
-      ? S[P]
-      : F[P]
-    : S[P]
-}
+type num = 1_000_000n
+type str = `${num}`
+
+
+type Absolute<T extends string | number | bigint> = `${T}` extends `-${infer N}`
+? N
+: `${T}`

@@ -17,3 +17,5 @@ type Absolute<T extends string | number | bigint> = `${T}` extends `-${infer N}`
 
   type num = 1_000_000n
   type str = `${num}`
+
+// type Absolute<T> = any

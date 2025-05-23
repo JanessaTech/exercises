@@ -25,3 +25,5 @@ type Foo = {
         : F[P]
     : S[P]
   }
+
+//type Merge<F, S> = any

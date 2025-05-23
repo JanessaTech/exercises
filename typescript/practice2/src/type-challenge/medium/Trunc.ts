@@ -21,6 +21,8 @@ type Tr<T extends string> = T extends `${infer rest}${'.'}${any}`
 : T
 
 
+//type Trunc<T extends string> = any
+
 type Trunc<T extends number | string> = Tr<`${T}`>
 
 

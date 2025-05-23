@@ -15,3 +15,5 @@ type MyParameters<T extends (...args: any[]) => any> =  T extends (...args: infe
 : never
 
 
+//type MyParameters<T extends (...args: any[]) => any> = any
+

@@ -41,3 +41,5 @@ type Permutation<A, acc = never, path extends unknown[] = [], T = A> = [T] exten
   : T extends any
     ? Permutation<Exclude<A, T>, acc, [...path, T]>
     : never
+
+//type Permutation<A> = any

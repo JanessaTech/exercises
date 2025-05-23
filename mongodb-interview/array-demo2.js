@@ -65,7 +65,7 @@ async function update_$_multiple() {
     await init()
     await Exam.updateOne(
         {grades: {$elemMatch: {grade: {$gt: 200}, mean: {$lt: 90}}}},
-        {$set: {'grades.$.std': 200}}
+        {$set: {"grades.$.std": 200}}
     )
 }
 

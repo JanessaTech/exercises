@@ -121,7 +121,7 @@ async function update_$_addToSet() {
     await init()
     await Exam.updateOne(
         {rating: 88},
-        { $addToSet: {rating: [92, 93]}}
+        {$addToSet: {rating: [92, 93]}}
     )
 }
 //pick up the first document in which rating has 88 in it, 
@@ -139,8 +139,8 @@ async function update_$_pop() {
 async function update_$_push() {
     await init()
     await Exam.updateOne(
-        {rating: 88},
-        {$push : {rating: {$each: [100, 200, 300]}}}
+        {rating:88},
+        {$push: {rating: {$each: [100, 200, 300]}}}
     )
 }
 //pick up the first document in which rating has 88 in it,  
@@ -151,11 +151,10 @@ async function update_$_position() {
         {rating: 88},
         {$push: {
             rating: {
-                    $each: [ 100,200, 300],
-                    $position: 1
-                }
+                $each: [100, 200, 300],
+                $position: 1
             }
-        }
+        }}
     )
 }
 //pick up the first document in which rating has 88 in it,  

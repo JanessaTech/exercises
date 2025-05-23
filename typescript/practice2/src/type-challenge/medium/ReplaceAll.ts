@@ -21,3 +21,5 @@ type ReplaceAll<S extends string, From extends string, To extends string, acc ex
 
 
 type test = ReplaceAll<'foobar', 'bar', 'foo'>
+
+//type ReplaceAll<S extends string, From extends string, To extends string, acc extends string= ''> = any

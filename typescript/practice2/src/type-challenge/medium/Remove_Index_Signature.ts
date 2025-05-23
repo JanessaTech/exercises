@@ -40,3 +40,5 @@ type Foo = {
   type RemoveIndexSignature<T> = {
     [P in keyof T as Filter<P>]: T[P]
   }
+
+  //type RemoveIndexSignature<T> = any

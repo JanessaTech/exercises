@@ -43,6 +43,11 @@ type Expected3 = {
   name: number
 }
 
+// type Chainable = {
+//   option(key: string, value: any): any
+//   get(): any
+// }
+
 type Chainable<O = {}> = {
     option<K  extends string, V>(
         key: K extends keyof O

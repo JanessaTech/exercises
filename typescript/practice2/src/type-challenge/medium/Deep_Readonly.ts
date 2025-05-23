@@ -59,6 +59,9 @@ type cases = [
   ? DeepReadonlyArray<R, [...acc, DeepReadonly<F>]> 
   : acc
   
+  
+//type DeepReadonly<T> = any 
+
   type DeepReadonly<T> = T extends any
   ? T extends {[P in any]: unknown}
     ? { readonly [K in keyof T] : DeepReadonly<T[K]> }

@@ -1,16 +1,26 @@
 import { Alike, Expect, Equal, NotEqual, ExpectExtends } from "../test-utils";
 
 
-function foo(arg1: string, arg2: number): void {}
-function bar(arg1: boolean, arg2: { a: 'A' }): void {}
-function baz(): void {}
-
 type cases = [
-  Expect<Equal<MyParameters<typeof foo>, [string, number]>>,
-  Expect<Equal<MyParameters<typeof bar>, [boolean, { a: 'A' }]>>,
-  Expect<Equal<MyParameters<typeof baz>, []>>,
+  Expect<Equal<IsUnion<string>, false>>,
+  Expect<Equal<IsUnion<string | number>, true>>,
+  Expect<Equal<IsUnion<'a' | 'b' | 'c' | 'd'>, true>>,
+  Expect<Equal<IsUnion<undefined | null | void | ''>, true>>,
+  Expect<Equal<IsUnion<{ a: string } | { a: number }>, true>>,
+  Expect<Equal<IsUnion<{ a: string | number }>, false>>,
+  Expect<Equal<IsUnion<[string | number]>, false>>,
+  // Cases where T resolves to a non-union type.
+  Expect<Equal<IsUnion<string | never>, false>>,
+  Expect<Equal<IsUnion<string | unknown>, false>>,
+  Expect<Equal<IsUnion<string | any>, false>>,
+  Expect<Equal<IsUnion<string | 'a'>, false>>,
+  Expect<Equal<IsUnion<never>, false>>,
 ]
 
-type MyParameters<T extends (...args: any[]) => any> = T extends (...args: infer P) => any
-? P
-: never
+type IsUnion<T, A = T> = [T] extends [never]
+? false
+: T extends any
+  ? [A] extends [T]
+    ? false
+    : true
+  : never

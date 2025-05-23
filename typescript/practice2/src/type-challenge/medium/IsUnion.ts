@@ -23,3 +23,5 @@ type IsUnion<T, C = T> = [T] extends [never]
         ? false 
         : true 
     : never
+
+//type IsUnion<T> = any

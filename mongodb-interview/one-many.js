@@ -113,12 +113,15 @@ async function create() {
     }
     console.log('data is created')
 }
-
+// find authors, of whihc gender is female and age >= 20, age exists
+// sort by sort by ascending sort, populate books
 async function queryAuthors() {
     const res = await Author.find({$and: [{gender: {$ne: "male"}}, {age: {$gte: 20}}, {age: {$exists: true}}]}).sort({age: 1}).populate('books')
     console.log(JSON.stringify(res, null, 2))
 }
 
+// find books, of which the price <= 50, sort by price by ascending sort, 
+// select title and price fields, populate author with these fields shown: firstName lastName gender
 async function queryBooks() {
     const res = await Book.find({price: {$lte: 50}})
                                 .sort({price: 1})

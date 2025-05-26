@@ -30,7 +30,13 @@ async function create() {
     console.log('data is created')
 }
 
+async function init() {
+    await Bulk.collection.drop()
+    await create()
+}
+
 async function bulkOp() {
+    await init()
     const res = await Bulk.bulkWrite([
         {insertOne: {document: {_id: 4, data: "data4"}}},
         {updateOne: {filter: {_id: 2}, update: { $set: {data: 'data_new'}}}},

@@ -6,37 +6,18 @@ const { extendEnvironment } = require("hardhat/config");
 
 describe('Redo', function () {
     async function deployRedoFixture() {
-        const [admin, minter, burner, Bob, oth, ...others] = await ethers.getSigners()
         const Redo = await ethers.getContractFactory('Redo')
-        const redo = await Redo.deploy(admin, minter, burner)
-        return {redo, admin, minter, burner, Bob, oth}
+        const redo = await Redo.deploy()
+        return {redo}
     }
 
-    describe('mint', function () {
-        it('it minted successfully', async function () {
-            const {redo, Bob, minter} = await loadFixture(deployRedoFixture)
-            const amount = 1000
-            await redo.connect(minter).mint(Bob.getAddress(), amount)
-            const balance = await redo.balanceOf(Bob.getAddress())
-            expect(balance).to.be.equal(amount)
+    describe('sumArray', function () {
+        it('sumArray', async function () {
+            const {redo} = await loadFixture(deployRedoFixture)
+            const amount = await redo.sumArray([1, 2, 3])
+            expect(amount).to.be.equal(6)
         })
-        it('it failed to mint when role is not minter', async function () {
-            const {redo, oth, Bob} = await loadFixture(deployRedoFixture)
-            const amount = 1000
-            await expect(redo.connect(oth).mint(Bob.getAddress(), amount)).to.be.revertedWithCustomError(redo, 'AccessControlUnauthorizedAccount')
-        })
-    })
-
-    describe('burn', function () {
-        it('it burned successfully', async function () {
-            const {redo, minter, burner, Bob} = await loadFixture(deployRedoFixture)
-            const amount = 1000
-            const toBurn = 300
-            await redo.connect(minter).mint(Bob.getAddress(), amount)
-            await redo.connect(burner).burn(Bob.getAddress(), toBurn)
-            const balance = await redo.balanceOf(Bob.getAddress())
-            expect(balance).to.be.equal(amount - toBurn)
-        })
+        
     })
 })
 

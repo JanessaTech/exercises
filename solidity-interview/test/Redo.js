@@ -6,45 +6,36 @@ const { extendEnvironment } = require("hardhat/config");
 
 describe('Redo', function () {
     async function deployRedoFixture() {
-        const [admin, nonadmin, ...others] = await ethers.getSigners()
-        const LogicV1 = await ethers.getContractFactory('LogicV1')
-        const logicV1 = await LogicV1.deploy()
-        const LogicV2 = await ethers.getContractFactory('LogicV2')
-        const logicV2 = await LogicV2.deploy()
-
-        const Proxy = await ethers.getContractFactory('Redo')
-        const proxy = await Proxy.deploy(logicV1.getAddress())
-        return {proxy, admin, logicV1, logicV2}
+        const [admin, minter, burner, Bob, oth, ...others] = await ethers.getSigners()
+        const Redo = await ethers.getContractFactory('Redo')
+        const redo = await Redo.deploy(admin, minter, burner)
+        return {redo, admin, minter, burner, Bob, oth}
     }
-    describe('LogicV1 & LogicV1', function () {
-        it('LogicV1', async function () {
-            const {proxy, admin} = await loadFixture(deployRedoFixture)
-            const abi = ['function setValue(uint256) external']
-            const iface = new ethers.Interface(abi)
-            const amount = 10
-            const cdata = iface.encodeFunctionData('setValue(uint256)', [amount])
-            const tx = {
-                to: await proxy.getAddress(),
-                data: cdata
-            }
-            await admin.sendTransaction(tx)
-            const val = await proxy.value()
-            expect(val).to.be.equal(amount)
+
+    describe('mint', function () {
+        it('it minted successfully', async function () {
+            const {redo, Bob, minter} = await loadFixture(deployRedoFixture)
+            const amount = 1000
+            await redo.connect(minter).mint(Bob.getAddress(), amount)
+            const balance = await redo.balanceOf(Bob.getAddress())
+            expect(balance).to.be.equal(amount)
         })
-        it('LogicV2', async function () {
-            const {proxy, admin, logicV2} = await loadFixture(deployRedoFixture)
-            await proxy.upgradeTo(logicV2.getAddress())
-            const abi = ['function setValue(uint256) external']
-            const iface = new ethers.Interface(abi)
-            const amount = 10
-            const cdata = iface.encodeFunctionData('setValue(uint256)', [amount])
-            const tx = {
-                to: await proxy.getAddress(),
-                data: cdata
-            }
-            await admin.sendTransaction(tx)
-            const val = await proxy.value()
-            expect(val).to.be.equal(amount * 2)
+        it('it failed to mint when role is not minter', async function () {
+            const {redo, oth, Bob} = await loadFixture(deployRedoFixture)
+            const amount = 1000
+            await expect(redo.connect(oth).mint(Bob.getAddress(), amount)).to.be.revertedWithCustomError(redo, 'AccessControlUnauthorizedAccount')
+        })
+    })
+
+    describe('burn', function () {
+        it('it burned successfully', async function () {
+            const {redo, minter, burner, Bob} = await loadFixture(deployRedoFixture)
+            const amount = 1000
+            const toBurn = 300
+            await redo.connect(minter).mint(Bob.getAddress(), amount)
+            await redo.connect(burner).burn(Bob.getAddress(), toBurn)
+            const balance = await redo.balanceOf(Bob.getAddress())
+            expect(balance).to.be.equal(amount - toBurn)
         })
     })
 })

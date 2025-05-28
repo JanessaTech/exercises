@@ -2,60 +2,23 @@
 pragma solidity ^0.8.20;
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
-import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "hardhat/console.sol";
+import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract Redo {
-    uint256  valuePlaceHolder;
+contract Redo is ERC20, AccessControl {
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
 
-    bytes32 private ADMIN_SLOT = keccak256('ADMIN_SLOT');
-    bytes32 private IMPLEMENTATION_SLOT = keccak256('IMPLEMENTATION_SLOT');
-
-    constructor(address _implementation) {
-        bytes32 slot = IMPLEMENTATION_SLOT;
-        assembly {
-            sstore(slot, _implementation)
-        }
-        slot = ADMIN_SLOT;
-        assembly {
-            sstore(slot, caller())
-        }
+    constructor(address defaultAdmin, address minter, address _burner) ERC20("MyToken", "MTK") {
+        _grantRole(DEFAULT_ADMIN_ROLE, defaultAdmin);
+        _grantRole(MINTER_ROLE, minter);
+        _grantRole(BURNER_ROLE, _burner);
     }
 
-    function admin() public view returns(address adm) {
-        bytes32 slot = ADMIN_SLOT;
-        assembly {
-            adm := sload(slot)
-        }
+    function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
+        _mint(to, amount);
     }
-
-    function implementation() public view returns(address impl) {
-        bytes32 slot = IMPLEMENTATION_SLOT;
-        assembly {
-            impl := sload(slot)
-        }
+    function burn(address to, uint256 amount) public onlyRole(BURNER_ROLE) {
+        _burn(to, amount);
     }
-
-    function value() public view returns(uint256) {
-        return valuePlaceHolder;
-    }
-
-    function upgradeTo(address _newImplementation) public {
-        require(msg.sender == admin(), 'not owner');
-        bytes32 slot = IMPLEMENTATION_SLOT;
-        assembly {
-            sstore(slot, _newImplementation)
-        }
-    }
-
-    function _delegate(address _implemantion) private {
-        (bool success, ) = _implemantion.delegatecall(msg.data);
-        require(success, 'failed to call delegate');
-    }
-
-
-    fallback() external payable {
-        _delegate(implementation());
-    }
-    receive() external payable {}
 }

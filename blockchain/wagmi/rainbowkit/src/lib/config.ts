@@ -7,6 +7,7 @@ import {
   arbitrum,
   base,
   sepolia,
+  hardhat
 } from 'wagmi/chains';
 import {http } from "wagmi";
 import {
@@ -35,7 +36,7 @@ export const config = getDefaultConfig({
     polygon,
     arbitrum,
     base,
-    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true' ? [sepolia] : []),
+    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true' ? [sepolia, hardhat] : []),
   ],
   transports: {
     // RPC URL for each chain
@@ -46,6 +47,7 @@ export const config = getDefaultConfig({
     [base.id]: http(`https://base-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`),
     [arbitrum.id]: http(`https://arb-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`),
     [sepolia.id]: http(`https://eth-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`),
+    [hardhat.id]: http('http://127.0.0.1:8545')
   },
   ssr: true,
 });

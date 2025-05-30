@@ -20,8 +20,8 @@ contract Hello {
         _message = message;
     }
 
-    function say() public view returns (string memory) {
-        return _message;
+    function setMessage(string memory newMsg) public {
+        _message = newMsg;
     }
 
     function getMessage() public view returns(string memory) {

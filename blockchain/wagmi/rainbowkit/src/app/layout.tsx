@@ -31,11 +31,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-
-          <ConnectButton accountStatus='address'/>
-          {children}
+          <div className="ml-10">
+            <ConnectButton accountStatus='address'/>
+            {children}
+          </div>
         </Providers>
-        
       </body>
     </html>
   );

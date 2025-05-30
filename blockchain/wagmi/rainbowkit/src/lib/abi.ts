@@ -1,5 +1,4 @@
 
-
 export const ABI =[
 	{
 		"inputs": [
@@ -26,16 +25,16 @@ export const ABI =[
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "say",
-		"outputs": [
+		"inputs": [
 			{
 				"internalType": "string",
-				"name": "",
+				"name": "newMsg",
 				"type": "string"
 			}
 		],
-		"stateMutability": "view",
+		"name": "setMessage",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]

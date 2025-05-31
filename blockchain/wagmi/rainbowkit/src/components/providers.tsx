@@ -10,14 +10,21 @@ import {
     type AuthenticationStatus} from '@rainbow-me/rainbowkit';
 
 import { config } from '../lib/config';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { createAuthenticationAdapter } from '@rainbow-me/rainbowkit';
 import { createSiweMessage } from 'viem/siwe';
 
 const queryClient = new QueryClient();
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [authStatus, setAuthStatus] = useState<AuthenticationStatus>('unauthenticated')
+  const [authStatus, setAuthStatus] = useState<AuthenticationStatus>('loading')
+
+  useEffect(() => {
+    if (typeof window !== undefined) {
+      const auth = (localStorage.getItem('auth') || 'unauthenticated') as AuthenticationStatus
+      setAuthStatus(auth)
+    }
+  }, [authStatus])
 
   const authAdapter = useMemo(() => {
     return createAuthenticationAdapter({
@@ -50,7 +57,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
           const authenticated = Boolean(response.ok);
 
           if (authenticated) {
-            setAuthStatus(authenticated ? 'authenticated' : 'unauthenticated');
+            const  auth = authenticated ? 'authenticated' : 'unauthenticated'
+            setAuthStatus(auth);
+            localStorage.setItem('auth', auth)
           }
 
           return authenticated;
@@ -63,6 +72,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       signOut: async () => {
         await fetch('/api/logout');
         setAuthStatus('unauthenticated');
+        localStorage.setItem('auth', 'unauthenticated')
       },
     });
   }, []);

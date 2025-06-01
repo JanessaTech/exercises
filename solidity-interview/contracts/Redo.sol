@@ -8,13 +8,12 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Redo {
     bool private locking;
-
     event Deposit(address indexed from, uint256 amount);
-    event Withdraw(address indexed from , uint256 amount);
+    event Withraw(address indexed from, uint256 amount);
 
     mapping(address => uint256) balances;
 
-    modifier reentrance() {
+    modifier nonReentrant() {
         require(!locking, "reentrance");
         locking = true;
         _;
@@ -26,15 +25,15 @@ contract Redo {
         emit Deposit(msg.sender, msg.value);
     }
 
-    function withdraw() public reentrance {
+   function withdraw() external nonReentrant {
         uint256 amount = balances[msg.sender];
-        require(amount > 0, 'zero balance');
+        require(amount > 0, 'not enough eth to withdraw');
         balances[msg.sender] = 0;
-        (bool success,) = payable(msg.sender).call{
+        (bool success, ) = payable(msg.sender).call{
             value: amount,
             gas: 2300
         }("");
-        require(success, "failed to withdraw");
-        emit Withdraw(msg.sender, amount);
+        require(success, 'failed to withdraw');
+        emit Withraw(msg.sender, amount);
     }
 }

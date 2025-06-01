@@ -5,13 +5,17 @@ pragma solidity ^0.8.20;
 // import "hardhat/console.sol";
 
 contract Hello {
-    string public _message = '';
+    string private _message = '';
 
     constructor(string memory message) {
         _message = message;
     }
 
     function say() public view returns (string memory) {
+        return _message;
+    }
+
+    function getMessage() public view returns(string memory) {
         return _message;
     }
 }

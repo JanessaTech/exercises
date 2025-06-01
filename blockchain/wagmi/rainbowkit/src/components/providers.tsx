@@ -2,7 +2,7 @@
 
 import type React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { WagmiProvider } from 'wagmi';
+import { WagmiProvider, useAccount } from 'wagmi';
 import { 
     RainbowKitProvider, 
     darkTheme,

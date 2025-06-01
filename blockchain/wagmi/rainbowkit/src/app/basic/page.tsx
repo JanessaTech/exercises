@@ -2,7 +2,6 @@
 
 import { useAccount, 
     useBalance, 
-    useBlockNumber, 
     useBlock,  
     useChainId,
     useChains} from 'wagmi';

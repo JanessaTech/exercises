@@ -12,7 +12,6 @@ import {
 import {http } from "wagmi";
 import {
   walletConnectWallet,
-  injectedWallet,
   okxWallet,
   uniswapWallet,
   trustWallet
@@ -29,7 +28,7 @@ export const config = getDefaultConfig({
   projectId: projectId,
   wallets: [{
     groupName: 'Recommended',
-    wallets: [walletConnectWallet,injectedWallet,okxWallet,uniswapWallet,trustWallet],
+    wallets: [walletConnectWallet,okxWallet,uniswapWallet,trustWallet],
   }],
   chains: [
     mainnet,
@@ -44,8 +43,8 @@ export const config = getDefaultConfig({
       `https://eth-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
     ),
     [polygon.id]: http(`https://polygon-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`),
-    [base.id]: http(`https://base-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`),
     [arbitrum.id]: http(`https://arb-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`),
+    [base.id]: http(`https://base-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`),
     [sepolia.id]: http(`https://eth-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`),
     [hardhat.id]: http('http://127.0.0.1:8545')
   },

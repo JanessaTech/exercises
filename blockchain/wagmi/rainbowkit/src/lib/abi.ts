@@ -1,5 +1,5 @@
 
-export const ABI =[
+export const ABI = [
 	{
 		"inputs": [
 			{
@@ -10,6 +10,25 @@ export const ABI =[
 		],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "msg",
+				"type": "string"
+			}
+		],
+		"name": "SendMessage",
+		"type": "event"
 	},
 	{
 		"inputs": [],
@@ -38,5 +57,4 @@ export const ABI =[
 		"type": "function"
 	}
 ]
-
 export const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'

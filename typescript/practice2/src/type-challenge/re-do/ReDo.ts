@@ -9,7 +9,7 @@ type cases = [
   Expect<Equal<Unique<[unknown, unknown, any, any, never, never]>, [unknown, any, never]>>,
 ]
 
-type Include<L, E> = L extends [infer F, ...infer R]
+type Include<L extends unknown[], E>  = L extends [infer F, ...infer R]
 ? Equal<F, E> extends true
   ? true
   : Include<R, E>

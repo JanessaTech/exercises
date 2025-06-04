@@ -1,6 +1,6 @@
 ### About this project
 
-This project is to show how to use zustand
+This project is to show how to use zustand to implement login/logout and protect routes
 
 ### how to create this project from scratch
 

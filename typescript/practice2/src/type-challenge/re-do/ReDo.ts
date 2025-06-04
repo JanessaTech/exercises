@@ -2,21 +2,20 @@ import { Alike, Expect, Equal, NotEqual, ExpectExtends } from "../test-utils";
 
 
 type cases = [
-  Expect<Equal<Unique<[1, 1, 2, 2, 3, 3]>, [1, 2, 3]>>,
-  Expect<Equal<Unique<[1, 2, 3, 4, 4, 5, 6, 7]>, [1, 2, 3, 4, 5, 6, 7]>>,
-  Expect<Equal<Unique<[1, 'a', 2, 'b', 2, 'a']>, [1, 'a', 2, 'b']>>,
-  Expect<Equal<Unique<[string, number, 1, 'a', 1, string, 2, 'b', 2, number]>, [string, number, 1, 'a', 2, 'b']>>,
-  Expect<Equal<Unique<[unknown, unknown, any, any, never, never]>, [unknown, any, never]>>,
+  // @ts-expect-error
+  Expect<Equal<DropChar<'butter fly!', ''>, 'butterfly!'>>,
+  Expect<Equal<DropChar<'butter fly!', ' '>, 'butterfly!'>>,
+  Expect<Equal<DropChar<'butter fly!', '!'>, 'butter fly'>>,
+  Expect<Equal<DropChar<'    butter fly!        ', ' '>, 'butterfly!'>>,
+  Expect<Equal<DropChar<' b u t t e r f l y ! ', ' '>, 'butterfly!'>>,
+  Expect<Equal<DropChar<' b u t t e r f l y ! ', 'b'>, '  u t t e r f l y ! '>>,
+  Expect<Equal<DropChar<' b u t t e r f l y ! ', 't'>, ' b u   e r f l y ! '>>,
 ]
 
-type Include<L extends unknown[], E>  = L extends [infer F, ...infer R]
-? Equal<F, E> extends true
-  ? true
-  : Include<R, E>
-: false
+type DropChar<S extends string, C extends string, acc extends string = ''> = C extends ''
+? S
+: S extends `${infer L}${C}${infer R}`
+  ? DropChar<R, C, `${acc}${L}`>
+  : `${acc}${S}`
 
-type Unique<T, acc extends unknown[] = []> = T extends [infer F, ...infer R]
-? Include<acc, F> extends true
-  ? Unique<R, acc>
-  : Unique<R, [...acc, F]>
-: acc
+  type test = DropChar<'butter fly!', ' '>

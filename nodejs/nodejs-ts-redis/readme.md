@@ -31,7 +31,7 @@ GET   http://127.0.0.1:3000/cache/mykey
 
 ```
 
-## Install and start redis in docker bedore starting node
+## Install and start redis in docker before starting node
 
 ```
 run command:

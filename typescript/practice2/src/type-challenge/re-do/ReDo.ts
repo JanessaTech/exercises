@@ -29,5 +29,6 @@ type Com<U, path extends unknown[] = [], acc = never, A = U> = [U] extends [neve
 type AllCombinations<S extends string> = Com<StringToUnion<S>>
 
 
+
 type test = StringToUnion<'AB'>
 type test1 = Com<StringToUnion<'AB'>>

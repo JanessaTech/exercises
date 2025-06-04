@@ -4,23 +4,23 @@ import { create } from 'zustand'
 
 type State = {
     firstName: string,
-    lastName: string
+    lastName : string
 }
 type Action = {
-    updateFirstName:(firstName: string) => void,
-    updateLastName: (lastName: string) => void
+    updateFirstName: (firstName: string) => void,
+    updaetLastName: (lastName: string) => void
 }
-const usePersonStore = create<State & Action>((set) => ({
+
+const usePersonStore = create<State & Action>()((set) => ({
     firstName: '',
     lastName: '',
     updateFirstName: (firstName) => set(() => ({firstName: firstName})),
-    updateLastName: (lastName) => set(() => ({lastName: lastName}))
+    updaetLastName: (lastName) => set(() => ({lastName: lastName}))
 }))
-
 
 const UpdateStatePage = () => {
     const firstName = usePersonStore((state) => state.firstName)
-    const updateFirstName = usePersonStore((state => state.updateFirstName))
+    const updateFirstName = usePersonStore((state) => state.updateFirstName)
 
     return (
         <>

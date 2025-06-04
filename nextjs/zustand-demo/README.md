@@ -2,16 +2,25 @@
 
 This project is to show how to use zustand
 
+### how to create this project from scratch
+
+```
+npx create-next-app@14.2.24    (choose default options)
+enter the dir just created
+npx shadcn@latest init    (choose default options)
+
+npm install zustand
+npm install cookies-next@4.3.0
+```
+
 ### How to run
 
 ```
 npm run dev
 ```
 
+### Installed dependences
 
-### an issue needed to address
-when refresh http://localhost:3000/dashboard, an error showing up at the bottom: 
 ```
-saying Error: Hydration failed because the initial UI does not match what was rendered on the server.
-See more info here: https://nextjs.org/docs/messages/react-hydration-error
+npm install cookies-next@4.3.0
 ```

@@ -16,8 +16,8 @@ export function middleware(request: NextRequest) {
   
   export const config = {
     matcher: [
-        '/((?!_next/static|favicon.ico).*)', // exclude static resource
-        '/api/:path*'                        // all routes all api are allowed
+        '/((?!_next/static|favicon.ico).*)', // exclude static resources
+        '/api/:path*'                        // all api routes  are allowed
       ]
   }
   

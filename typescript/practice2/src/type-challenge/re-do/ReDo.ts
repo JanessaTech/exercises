@@ -2,20 +2,12 @@ import { Alike, Expect, Equal, NotEqual, ExpectExtends } from "../test-utils";
 
 
 type cases = [
-  // @ts-expect-error
-  Expect<Equal<DropChar<'butter fly!', ''>, 'butterfly!'>>,
-  Expect<Equal<DropChar<'butter fly!', ' '>, 'butterfly!'>>,
-  Expect<Equal<DropChar<'butter fly!', '!'>, 'butter fly'>>,
-  Expect<Equal<DropChar<'    butter fly!        ', ' '>, 'butterfly!'>>,
-  Expect<Equal<DropChar<' b u t t e r f l y ! ', ' '>, 'butterfly!'>>,
-  Expect<Equal<DropChar<' b u t t e r f l y ! ', 'b'>, '  u t t e r f l y ! '>>,
-  Expect<Equal<DropChar<' b u t t e r f l y ! ', 't'>, ' b u   e r f l y ! '>>,
+  Expect<Equal<TupleToNestedObject<['a'], string>, { a: string }>>,
+  Expect<Equal<TupleToNestedObject<['a', 'b'], number>, { a: { b: number } }>>,
+  Expect<Equal<TupleToNestedObject<['a', 'b', 'c'], boolean>, { a: { b: { c: boolean } } }>>,
+  Expect<Equal<TupleToNestedObject<[], boolean>, boolean>>,
 ]
 
-type DropChar<S extends string, C extends string, acc extends string = ''> = C extends ''
-? S
-: S extends `${infer L}${C}${infer R}`
-  ? DropChar<R, C, `${acc}${L}`>
-  : `${acc}${S}`
-
-  type test = DropChar<'butter fly!', ' '>
+type TupleToNestedObject<T, U> = T extends [infer F extends string, ...infer R]
+? {[P in F]: TupleToNestedObject<R, U>}
+: U

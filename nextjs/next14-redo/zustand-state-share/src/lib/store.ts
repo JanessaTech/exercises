@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 
 interface NoteState {
-    notes: string[],
+    notes: string[];
     addNote: (note: string) => void
 }
 
 const useAddNote = create<NoteState>()((set) => ({
     notes: [],
-    addNote: (note) => set((state) => ({notes: [...state.notes, note]}))
+    addNote: (newNote) => set((state) => ({notes: [...state.notes, newNote]}))
 }))
 
 export default useAddNote

@@ -8,56 +8,54 @@ export type WalletState = {
     chainId: Number | undefined;
     provider: ethers.BrowserProvider | undefined;
     signer: ethers.JsonRpcSigner | undefined;
-    address: String | undefined;
+    address: string | undefined;
     contract: ethers.Contract | undefined
+
 }
 const defaultWalletState: WalletState = {
     chainId: undefined,
     provider: undefined,
     signer: undefined,
-    address : undefined,
+    address: undefined,
     contract: undefined
 }
 
 const useWalletManager = () => {
     const [state, setState] = useState<WalletState>(defaultWalletState)
-    const [auth, setAuth] = useRecoilState<AuthState>(authState)
+    const [auth, setAuth]= useRecoilState<AuthState>(authState)
 
-    const connectWallet = async () => {
+    const connectWallet = async ()  => {
         if (typeof window !== undefined && typeof window.ethereum !== undefined) {
             const {ethereum} = window
             const provider = new ethers.BrowserProvider(ethereum)
-            await window.ethereum.request({method: "eth_requestAccounts"})
+            await window.ethereum.request({method: 'eth_requestAccounts'})
             const signer = await provider.getSigner()
             const address = await signer.getAddress()
             const chainId = Number((await provider.getNetwork()).chainId)
             const contract = new ethers.Contract(contractAddress, abi, signer)
-            setState({chainId: chainId, provider: provider, signer: signer, address: address, contract: contract})
+            setState({chainId: chainId, provider: provider, signer: signer, contract: contract, address: address})
             setAuth({connected: true})
         } else {
-            console.log("Pls install MetaMask")
+            console.log('pls install MetaMask')
         }
     }
-
     const disconnectWallet = async () => {
         setAuth({connected: false})
     }
 
     useEffect(() => {
-        if (typeof window === undefined && typeof window.ethereum === undefined) return
-        window.ethereum.on('chainChanged', (network: String) => {
+        window.ethereum.on('chainChanged', (network: string) => {
             setState({...state, chainId: Number(network)})
         })
-        window.ethereum.on('accountsChanged', (accounts: String[]) => {
+        window.ethereum.on('accountsChanged', (accounts: string[]) => {
             setState({...state, address: accounts[0]})
         })
-        return () => {
-            window.ethereum.removeAllListeners()
-        }
+       return () => {
+        window.ethereum.removeAllListeners()
+       } 
     }, [])
 
     return {connectWallet, disconnectWallet, state}
 }
-
 
 export default useWalletManager

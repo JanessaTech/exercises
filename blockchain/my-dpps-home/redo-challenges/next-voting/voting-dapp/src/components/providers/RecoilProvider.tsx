@@ -1,10 +1,7 @@
 'use client'
-
 import { RecoilRoot } from "recoil"
 
-type RecoilProviderProps = {
-    children: React.ReactNode
-}
+type RecoilProviderProps = {children: React.ReactNode}
 const RecoilProvider: React.FC<RecoilProviderProps> = ({children}) => {
     return (
         <RecoilRoot>

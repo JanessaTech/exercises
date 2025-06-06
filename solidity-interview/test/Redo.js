@@ -6,40 +6,39 @@ const { extendEnvironment } = require("hardhat/config");
 
 describe('Redo', function () {
     async function deployRedoFixture() {
-        const [admin, minter, burner, Bob, non, ...others] = await ethers.getSigners()
         const Redo = await ethers.getContractFactory('Redo')
-        const redo = await Redo.deploy(admin, minter, burner)
-        return {redo, admin, minter, burner, Bob, non}
+        const redo = await Redo.deploy();
+        return {redo}
     }
-
-    describe('mint', function () {
-        it('it minted successfull', async function () {
-            const {redo, Bob, minter} = await loadFixture(deployRedoFixture)
-            const amount = 1000
-            await redo.connect(minter).mint(Bob.getAddress(), amount)
-            const balance = await redo.balanceOf(Bob.getAddress())
-            expect(balance).to.be.equal(amount)
-
-        })   
-    })
-    describe('burn', function () {
-        it('it burned successfully', async function () {
-            const {redo, Bob, minter, burner} = await loadFixture(deployRedoFixture)
-            const amount = 1000
-            const toBurn = 300
-            await redo.connect(minter).mint(Bob.getAddress(), amount)
-            await redo.connect(burner).burn(Bob.getAddress(), toBurn)
-            const balance = await redo.balanceOf(Bob.getAddress())
-            expect(balance).to.be.equal(amount - toBurn)
-        })
-        it('it failed to burn when it is not burner', async function () {
-            const {redo, Bob, minter, non} = await loadFixture(deployRedoFixture)
-            const amount = 1000
-            const toBurn = 300
-            await redo.connect(minter).mint(Bob.getAddress(), amount)
-            await expect(redo.connect(non).burn(Bob.getAddress(), toBurn)).to.be.revertedWithCustomError(redo, 'AccessControlUnauthorizedAccount')
+    describe('create', function () {
+        it('create', async function () {
+            const {redo} = await loadFixture(deployRedoFixture)
+            await redo.create('person0') 
+            await redo.create('person1')
+            const person0 = await redo.get(0)
+            const person1 = await redo.get(1)
+            expect(person0.name).to.be.equal('person0')
+            expect(person1.name).to.be.equal('person1')
         })
     })
+    describe('remove', function () {
+        it('remove', async function () {
+            const {redo} = await loadFixture(deployRedoFixture)
+            await redo.create('person0')
+            await redo.create('person1')
+            await redo.create('person2')
+
+            await redo.remove(1)
+
+            const person0 = await redo.get(0)
+            const person2 = await redo.get(2)
+            await expect(redo.get(1)).to.be.revertedWith('invalid id')
+            expect(person0.name).to.be.equal('person0')
+            expect(person2.name).to.be.equal('person2')
+        })
+    })
+
+    
 })
 
 

@@ -28,3 +28,5 @@ type MapTypes<T, M extends {[p in 'mapFrom' | 'mapTo'] : unknown}> = {
 //       : never
 //     : T[P]
 //   }
+
+// type MapTypes<T, M> =any

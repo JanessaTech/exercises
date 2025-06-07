@@ -15,7 +15,7 @@ const useAddNote = create<NoteState>()(
             notes: [],
             isDone: false,
             addNote: (newNote) => set((state) => ({notes: [...state.notes, newNote]})),
-            setIsDone: (done) => set(({isDone: done})),
+            setIsDone: (done) => set({isDone: done}),
             clear: () => {
                 localStorage.removeItem('storage-key'),
                 set({notes: []})

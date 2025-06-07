@@ -4,20 +4,20 @@
 import useAddNote from "@/lib/store"
 
 type SideBarProps = {}
-const SideBar: React.FC<SideBarProps> = () => {
-
-    const {notes} = useAddNote()
+const Sidebar: React.FC<SideBarProps> = () => {
+    const {notes, isDone} = useAddNote()
     return (
-        <div className="col-span-1 h-96 bg-green-100 p-10">
+        <div className="p-5 col-span-1 h-96 bg-red-100">
             <ul>
                 {
+                    isDone ? 
                     notes.map((note, index) => (
-                        <li key={index}>{note}</li>
-                    ))
+                        <div key={index}>{note}</div>
+                    )) : <div>Loading...</div>
                 }
             </ul>
         </div>
     )
 }
 
-export default SideBar
+export default Sidebar

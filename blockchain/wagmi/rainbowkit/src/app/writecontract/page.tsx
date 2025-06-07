@@ -17,7 +17,7 @@ const WriteContract = () => {
     hash 
     })
 
-    const setMessage = (newMsg: String) => {
+    const setMessage = (newMsg: string) => {
         writeContract({
           address: contractAddress,
           abi: ABI,

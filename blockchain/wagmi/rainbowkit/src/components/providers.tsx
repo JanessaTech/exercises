@@ -2,7 +2,7 @@
 
 import type React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { WagmiProvider, useAccount } from 'wagmi';
+import { WagmiProvider } from 'wagmi';
 import { 
     RainbowKitProvider, 
     darkTheme,
@@ -57,9 +57,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
           const authenticated = Boolean(response.ok);
 
           if (authenticated) {
-            const  auth = authenticated ? 'authenticated' : 'unauthenticated'
-            setAuthStatus(auth);
-            localStorage.setItem('auth', auth)
+            setAuthStatus('authenticated');
+            localStorage.setItem('auth', 'authenticated')
           }
 
           return authenticated;

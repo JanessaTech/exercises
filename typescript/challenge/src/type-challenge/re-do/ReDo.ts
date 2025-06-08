@@ -1,74 +1,37 @@
-import { Alike, Expect, Equal, NotEqual, ExpectExtends } from "../test-utils";
+import { Equal, Expect } from "../test-utils"
 
+type Case0 = ['', '', '']
+type Case1 = ['+', '', '']
+type Case2 = ['+', '1', '']
+type Case3 = ['+', '100', '']
+type Case4 = ['+', '100', '%']
+type Case5 = ['', '100', '%']
+type Case6 = ['-', '100', '%']
+type Case7 = ['-', '100', '']
+type Case8 = ['-', '1', '']
+type Case9 = ['', '', '%']
+type Case10 = ['', '1', '']
+type Case11 = ['', '100', '']
 
 type cases = [
-  Expect<Equal<DeepReadonly<X1>, Expected1>>,
-  Expect<Equal<DeepReadonly<X2>, Expected2>>,
+  Expect<Equal<PercentageParser<''>, Case0>>,
+  Expect<Equal<PercentageParser<'+'>, Case1>>,
+  Expect<Equal<PercentageParser<'+1'>, Case2>>,
+  Expect<Equal<PercentageParser<'+100'>, Case3>>,
+  Expect<Equal<PercentageParser<'+100%'>, Case4>>,
+  Expect<Equal<PercentageParser<'100%'>, Case5>>,
+  Expect<Equal<PercentageParser<'-100%'>, Case6>>,
+  Expect<Equal<PercentageParser<'-100'>, Case7>>,
+  Expect<Equal<PercentageParser<'-1'>, Case8>>,
+  Expect<Equal<PercentageParser<'%'>, Case9>>,
+  Expect<Equal<PercentageParser<'1'>, Case10>>,
+  Expect<Equal<PercentageParser<'100'>, Case11>>,
 ]
 
-type X1 = {
-  a: () => 22
-  b: string
-  c: {
-    d: boolean
-    e: {
-      g: {
-        h: {
-          i: true
-          j: 'string'
-        }
-        k: 'hello'
-      }
-      l: [
-        'hi',
-        {
-          m: ['hey']
-        },
-      ]
-    }
-  }
-}
-
-type X2 = { a: string } | { b: number }
-
-type Expected1 = {
-  readonly a: () => 22
-  readonly b: string
-  readonly c: {
-    readonly d: boolean
-    readonly e: {
-      readonly g: {
-        readonly h: {
-          readonly i: true
-          readonly j: 'string'
-        }
-        readonly k: 'hello'
-      }
-      readonly l: readonly [
-        'hi',
-        {
-          readonly m: readonly ['hey']
-        },
-      ]
-    }
-  }
-}
-
-type Expected2 = { readonly a: string } | { readonly b: number }
-
-type DeepArray<A> = A extends [infer F, ...infer R]
-? [DeepReadonly<F>, ...DeepArray<R>]
-: []
-
-type DeepReadonly<T> = T extends any
-? T extends {[K in any]: unknown}
-  ? {readonly [P in keyof T]: DeepReadonly<T[P]>}
-  : T extends unknown[]
-    ? readonly [...DeepArray<T>]
-    : T
-: never 
-
-
-type test = DeepReadonly<X1>
-
-
+type PercentageParser<T, sign = '', num= '', unit = ''> = T extends ''
+? [sign, num, unit]
+: T extends `${infer S extends '+' | '-'}${infer R}`
+  ? PercentageParser<R, S, num, unit>
+  : T extends `${infer N}%`
+    ? PercentageParser<'', sign, N, '%'>
+    : PercentageParser<'', sign, T, unit>

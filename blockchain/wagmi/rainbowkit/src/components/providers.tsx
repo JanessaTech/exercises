@@ -6,25 +6,18 @@ import { WagmiProvider } from 'wagmi';
 import { 
     RainbowKitProvider, 
     darkTheme,
-    RainbowKitAuthenticationProvider,
-    type AuthenticationStatus} from '@rainbow-me/rainbowkit';
+    RainbowKitAuthenticationProvider} from '@rainbow-me/rainbowkit';
 
 import { config } from '../lib/config';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { createAuthenticationAdapter } from '@rainbow-me/rainbowkit';
 import { createSiweMessage } from 'viem/siwe';
+import useAuthState from '@/lib/store';
 
 const queryClient = new QueryClient();
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [authStatus, setAuthStatus] = useState<AuthenticationStatus>('loading')
-
-  useEffect(() => {
-    if (typeof window !== undefined) {
-      const auth = (localStorage.getItem('auth') || 'unauthenticated') as AuthenticationStatus
-      setAuthStatus(auth)
-    }
-  }, [authStatus])
+  const {connected, setState, isDone} = useAuthState()
 
   const authAdapter = useMemo(() => {
     return createAuthenticationAdapter({
@@ -56,9 +49,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
           const authenticated = Boolean(response.ok);
 
-          if (authenticated) {
-            setAuthStatus('authenticated');
-            localStorage.setItem('auth', 'authenticated')
+          if(authenticated) {
+            setState('authenticated')
+            console.log('setState(authenticated)')
           }
 
           return authenticated;
@@ -70,8 +63,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
       signOut: async () => {
         await fetch('/api/logout');
-        setAuthStatus('unauthenticated');
-        localStorage.setItem('auth', 'unauthenticated')
+        setState('unauthenticated')
       },
     });
   }, []);
@@ -81,7 +73,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <RainbowKitAuthenticationProvider
         adapter={authAdapter}
-        status={authStatus}
+        status={isDone? connected: 'loading'}
         >
           <RainbowKitProvider 
             theme={darkTheme()} 

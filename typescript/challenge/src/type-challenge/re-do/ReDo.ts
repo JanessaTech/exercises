@@ -1,25 +1,25 @@
 import { Equal, Expect } from "../test-utils"
 
 type cases = [
-  Expect<Equal<KebabCase<'FooBarBaz'>, 'foo-bar-baz'>>,
-  Expect<Equal<KebabCase<'fooBarBaz'>, 'foo-bar-baz'>>,
-  Expect<Equal<KebabCase<'foo-bar'>, 'foo-bar'>>,
-  Expect<Equal<KebabCase<'foo_bar'>, 'foo_bar'>>,
-  Expect<Equal<KebabCase<'Foo-Bar'>, 'foo--bar'>>,
-  Expect<Equal<KebabCase<'ABC'>, 'a-b-c'>>,
-  Expect<Equal<KebabCase<'-'>, '-'>>,
-  Expect<Equal<KebabCase<''>, ''>>,
-  Expect<Equal<KebabCase<'😎'>, '😎'>>,
+  Expect<Equal<ReplaceAll<'foobar', 'bar', 'foo'>, 'foofoo'>>,
+  Expect<Equal<ReplaceAll<'foobar', 'bag', 'foo'>, 'foobar'>>,
+  Expect<Equal<ReplaceAll<'foobarbar', 'bar', 'foo'>, 'foofoofoo'>>,
+  Expect<Equal<ReplaceAll<'t y p e s', ' ', ''>, 'types'>>,
+  Expect<Equal<ReplaceAll<'foobarbar', '', 'foo'>, 'foobarbar'>>,
+  Expect<Equal<ReplaceAll<'barfoo', 'bar', 'foo'>, 'foofoo'>>,
+  Expect<Equal<ReplaceAll<'foobarfoobar', 'ob', 'b'>, 'fobarfobar'>>,
+  Expect<Equal<ReplaceAll<'foboorfoboar', 'bo', 'b'>, 'foborfobar'>>,
+  Expect<Equal<ReplaceAll<'', '', ''>, ''>>,
 ]
 
 
-type UPPERCASE = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'G' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z'
 
+type test = ReplaceAll<'foobar', 'bar', 'foo'>
 
-type KebabCase<T extends string, acc extends string = ''> = T extends `${infer F}${infer R}`
-? F extends UPPERCASE
-  ? acc extends ''
-    ? KebabCase<R, `${Lowercase<F>}`>
-    : KebabCase<R, `${acc}-${Lowercase<F>}`>
-  : KebabCase<R, `${acc}${F}`>
-: acc
+type ReplaceAll<S extends string, From extends string, To extends string, acc extends string= ''> = From extends ''
+? S
+: S extends ''
+  ? acc
+  : S extends `${infer L}${From}${infer R}`
+    ? ReplaceAll<R, From, To, `${acc}${L}${To}`>
+    : ReplaceAll<'', From, To, `${acc}${S}`>

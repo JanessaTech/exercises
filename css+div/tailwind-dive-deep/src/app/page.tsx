@@ -2,6 +2,7 @@ import ResponsiveDesign from "@/components/Responsive-designDemo/ResponsiveDesig
 import Transform from "@/components/TransformDemo/Transform";
 import FlexDemo from "@/components/flexDemo/FlexDemo";
 import Grid from "@/components/gridDemo/Grid";
+import Group from "@/components/groupDemo/Group";
 import InPut from "@/components/inputDemo/Input";
 import LayOutMain from "@/components/layout/LayoutMain";
 import LayoutDemo from "@/components/layoutDemo/Layout";
@@ -20,9 +21,11 @@ export default function Home() {
     // <Transform/>
     // <Pseudo/>
     // <ResponsiveDesign/>
+    // <Position/>
     // <Theme/>
     // <LayoutDemo/>
     // <FlexDemo/>
-    <TypographyDemo/>
+    // <TypographyDemo/>
+    <Group/>
   );
 }

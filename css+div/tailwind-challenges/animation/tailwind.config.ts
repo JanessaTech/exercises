@@ -23,11 +23,11 @@ const config: Config = {
         },
       },
       animation: {
-        "move-left": "go-left 0.5s ease-in-out both",
-        "move-right": "go-right 0.5s ease-in-out both",
+        "move-left": "go-left 1s ease-in-out both",
+        "move-right": "go-right 1s ease-in-out both",
       }
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [],
 };
 export default config;

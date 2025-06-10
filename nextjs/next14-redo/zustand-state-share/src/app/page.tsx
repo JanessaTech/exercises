@@ -1,11 +1,10 @@
 import Editor from "@/components/Editor";
-import Sidebar from "@/components/SideBar";
-
+import SideBar from "@/components/SideBar";
 
 export default function Home() {
   return (
-    <div className="grid grid-cols-5 gap-4">
-      <Sidebar/>
+    <div className="grid grid-cols-3 gap-5 p-10">
+      <SideBar/>
       <Editor/>
     </div>
   );

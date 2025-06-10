@@ -65,7 +65,7 @@ async function query2() {
 }
 // pick up documents with children in which there is at least one element whose product is 'xyz' and score > 6
 async function query3() {
-    const res = await MyArray.find({children: {$elemMatch: {product: 'xyz', score: {$gt : 6}}}})
+    const res = await MyArray.find({children: {$elemMatch: {product: 'xyz', score:{$gt: 6}}}})
     console.log(JSON.stringify(res, null, 2))
 }
 

@@ -1,15 +1,75 @@
 const {default: mongoose, Schema} = require('mongoose')
-const gradeSchema = new Schema({
-    grade: Number,
-    mean: Number,
-    std: Number
+const bookSchema = new Schema({
+    title: {
+        type: String,
+        require: [true, 'title is required']
+    },
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'Author'
+    },
+    price: {
+        type: Number,
+        min: [0, 'price >= 0'],
+        require: [true, 'price is required']
+    },
+    isbn: {
+        type: String,
+        validate: {
+            validator: function(v) {
+                const re = /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/
+                return re.test(v)
+            },
+            message: props => `${props.value} is invalid`
+        },
+        require: [true, 'isbn is required']
+    }
 })
-const examSchema = new Schema({
-    rating: [Number],
-    grades: [gradeSchema]
+const authorSchema = new Schema({
+    firstName: {
+        type: String,
+        require: [true, 'firstName is required']
+    },
+    lastName: {
+        type: String,
+        require: [true, 'lastName is required']
+    },
+    age: {
+        type: Number,
+        min: [18, 'age >= 18'],
+        require: [true, 'age is required']
+    },
+    gender: {
+        type: String,
+        enum: {
+            values: ['female', 'male'], 
+            message: '{VALUE} is required'
+        },
+        default: 'male',
+        require: [true, 'gender is required']
+    }
+}, {
+   virtuals: {
+    fullName: {
+        get() {
+            return this.firstName + ' ' + this.lastName
+        }
+    }
+   },
+   toJSON: {virtuals: true
+   }
 })
 
-const Exam = mongoose.model('Exam', examSchema)
+authorSchema.virtual('books', {
+    ref: 'Book',
+    localField: '_id',
+    foreignField: 'author'
+})
+
+const Author = mongoose.model('Author', authorSchema)
+const Book = mongoose.model('Book', bookSchema)
+
+
 
 function connect() {
     mongoose.connect('mongodb://127.0.0.1/interview')
@@ -17,214 +77,125 @@ function connect() {
     db.once('open', () => {
         console.log('connected to database')
     })
-    db.on('error', (e) => {
-        console.log(`database error : ${e}`)
+    db.on('err', (err) => {
+        console.log('database err:', err)
     })
 }
 
 async function create() {
+    const author1 = new Author({ firstName: 'John', lastName: 'Tomas', age: 45, gender: 'male'})
+    const author2 = new Author({ firstName: 'jineffer', lastName: 'Jwong', age: 22, gender: 'female'})
+    const author3 = new Author({ firstName: 'Linda', lastName: 'Huala', age: 38, gender: 'female'})
+    const book11 = new Book({title: 'hero11', author: author1._id, price: 100, isbn: '1-56619-909-1'})
+    const book12 = new Book({title: 'hero12', author: author1._id, price: 50, isbn: '1-56619-909-2'})
+    const book13 = new Book({title: 'hero13', author: author1._id, price: 200, isbn: '1-56619-909-3'})
+    const book14 = new Book({title: 'hero14', author: author1._id, price: 40, isbn: '1-56619-909-4'})
+    const book21 = new Book({title: 'hero21', author: author2._id, price: 120, isbn: '2-56619-909-1'})
+    const book22 = new Book({title: 'hero22', author: author2._id, price: 20, isbn: '2-56619-909-2'})
+    const book31 = new Book({title: 'hero31', author: author3._id, price: 40, isbn: '3-56619-909-1'})
+    const book32 = new Book({title: 'hero32', author: author3._id, price: 80, isbn: '3-56619-909-2'})
+    const book33 = new Book({title: 'hero33', author: author3._id, price: 120, isbn: '3-56619-909-3'})
+
     try {
-        await Exam.insertMany([
-            {rating: [85, 80, 80], grades:[{grade: 80, mean: 75, std:8}, 
-                                           {grade: 85, mean: 90, std:5}, 
-                                           {grade: 85, mean: 85, std:8}]},
-
-            {rating: [88, 90, 92], grades:[{grade: 180, mean: 75, std:8}, 
-                                           {grade: 185, mean: 90, std:5}, 
-                                           {grade: 185, mean: 85, std:8}]},
-
-            {rating: [80, 100, 90], grades:[{grade: 280, mean: 75, std:8}, 
-                                            {grade: 285, mean: 90, std:5}, 
-                                            {grade: 285, mean: 85, std:8}]}
-        ])
-    } catch(err) {
-        console.log(err)
+        await author1.save()
+        await author2.save()
+        await author3.save()
+        await book11.save()
+        await book12.save()
+        await book13.save()
+        await book14.save()
+        await book21.save()
+        await book22.save()
+        await book31.save()
+        await book32.save()
+        await book33.save()
+    } catch(e) {
+        console.log('Failed to save authors and books')
+        console.log(e)
+        process.exit()
     }
     console.log('data is created')
 }
-
-async function init() {
-    await Exam.collection.drop()
-    await create()
-}
-// pick up the first document with rating which has 80 in it. update the the first 80 to 100
-// pay more attention: the array field must appear as part of the query document
-async function update_$() {
-    await init()
-    await Exam.updateOne({rating: 88}, {$set: {"rating.$": 100}})
-}
-// pick up the fist document with grades which has grade being 185, update  std to 20 for the first matched element in grades
-async function update_$_embbeded() {
-    await init()
-    await Exam.updateOne({"grades.grade": 185}, {$set: {"grades.$.std": 20}})
-}
-// pick up the first document with grades, 
-// in which there is at least one element, of which the grade > 200 and mean < 90, 
-// update std to 200 for the first matched element in grades
-async function update_$_multiple() {
-    await init()
-    await Exam.updateOne(
-        {grades: {$elemMatch: {grade: {$gt: 200}, mean: {$lt: 90}}}},
-        {$set: {"grades.$.std": 200}}
-    )
+// find authors, of whihc gender is female and age >= 20, age exists
+// sort by age by ascending sort, populate books
+async function queryAuthors() {
+   const res = await Author.find({gender: 'female', age: {$gte: 20}}).sort({age: 1}).populate('books')
+   console.log(JSON.stringify(res, null, 2))
 }
 
-// pick up the the first document in which rating has 88 in it, update all elements in the array to 888 
-async function update_$_all(){
-    await init()
-    await Exam.updateOne({rating: 88}, {$set: {"rating.$[]": 888}})
+// find books, of which the price <= 50, sort by price by ascending sort, 
+// select title and price fields, populate author with these fields shown: firstName lastName gender
+async function queryBooks() {
+    const res = await Book.find({price: {$lte: 50}})
+                                .sort({price: 1})
+                                .select({title: 1, price: 1})
+                                .populate('author', 'firstName lastName gender')
+    console.log(JSON.stringify(res, null, 2))
 }
+async function aggragate() {
+    const agg = await Book.aggregate([
+        {
+            $lookup: /**
+            * from: The target collection.
+            * localField: The local join field.
+            * foreignField: The target join field.
+            * as: The name for the results.
+            * pipeline: Optional pipeline to run on the foreign collection.
+            * let: Optional variables to use in the pipeline field stages.
+            */
+           {
+             from: "authors",
+             localField: "author",
+             foreignField: "_id",
+             as: "R"
+           }
+        },
+        {
+            $project: /**
+            * specifications: The fields to
+            *   include or exclude.
+            */
+           {
+             title: 1,
+             price: 1,
+             gender: "$R.gender"
+           }
+        },
+        {
+            $match: /**
+            * query: The query in MQL.
+            */
+           {
+             price: {$gte: 100}
+           }
+        },
+        {
+            $group: /**
+            * _id: The id of the group.
+            * fieldN: The first field name.
+            */
+           {
+             _id: "$gender",
+             cnt: {
+               $sum: "$price"
+             }
+           }
+        }
+    ])
 
-// pick up the the first document in which rating has 88 in it, update std to 20 in all elements in the grades for the matched document
-async function update_$_all_embbeded() {
-    await init()
-    await Exam.updateOne({rating: 88}, {$set: {"$grades.$[].std": 20}})
-}
-
-// pick up the the first document in which rating has 88 in it, update elements greater or equal to 90 in it to 100
-async function update_$_identifier() {
-    await init()
-    await Exam.updateOne(
-        {rating: 88},
-        {$set: {"rating.$[elem]": 100}},
-        {arrayFilters: [{"elem": {$gte: 90}}]}
-    )
-}
-
-//pick up the first document in which rating has 88 in it, update std to 20 for the all elements whose grade == 185 and mean >=80 in the document
-async function update_$_identifier_embbeded() {
-    await init()
-    await Exam.updateOne(
-        {rating: 88},
-        {$set : {"grades.$[elem].std": 20 }},
-        {arrayFilters: [{"elem.grade": {$eg: 185}, "elem.mean": {$gte: 80}}]}
-    )
-}
-
-//pick up the first document in which rating has 88 in it, add 93 into rating array(92 will be ignored)
-async function update_$_addToSet() {
-    await init()
-    await Exam.updateOne(
-        {rating: 88},
-        {$addToSet: {rating: [92, 93]}}
-    )
-}
-//pick up the first document in which rating has 88 in it, 
-// remove the first element in grades ({grades: 1} means remove the last element in grades)
-async function update_$_pop() {
-    await init()
-    await Exam.updateOne(
-        {rating: 88},
-        {$pop: {grades: -1}}
-    )
-}
-
-//pick up the first document in which rating has 88 in it,  
-// append 100, 200, 300 to rating array
-async function update_$_push() {
-    await init()
-    await Exam.updateOne(
-        {rating: 88},
-        {$push: {rating: {$each: [100, 200, 300]}}}
-    )
-}
-//pick up the first document in which rating has 88 in it,  
-// insert 100, 200, 300 to rating at position 1
-async function update_$_position() {
-    await init()
-    await Exam.updateOne(
-        {rating: 88},
-        {$push: {
-            rating: {
-                $each: [100, 200, 300],
-                $position: 1
-            }
-        }}
-    )
-    
-}
-//pick up the first document in which rating has 88 in it,  
-// insert 100, 200, 300 to rating at position 1
-// once insertion is done, slice 3 elements from the head as the rating
-async function update_$_slice() {
-    await init()
-    await Exam.updateOne(
-        {rating: 88},
-        {$push: {
-            rating: {
-                $each: [100, 200, 300],
-                $position: 1,
-                $slice: 3
-            }
-        }}
-    )
-}
-
-// pick up the first document in which rating has 88 in it,
-// insert {grade: 190, mean: 92, std: 7}, {grade: 160, mean: 92, std: 5}, {grade: 181, mean: 92, std: 9} to grades
-// sort grades by grade in ascending order
-// slice 3 elements from grades as the result
-async function update_$_sort() {
-    await init()
-    await Exam.updateOne(
-        {rating: 88},
-        {$push: {
-            grades: {
-                $each: [{grade: 190, mean: 92, std: 7}, {grade: 160, mean: 92, std: 5}, {grade: 181, mean: 92, std: 9}],
-                $slice:3,
-                $sort: {grade: 1}
-            }
-        }}
-    )
-    
-}
-
-// first
-// pick up the first document in which rating has 88 in it, remove elements >= 90 from rating
-// second
-// pick up the first document in which rating has 88 in it, remove elements in grades in which grade =185 and mean>=90
-async function update_$_pull() {
-    await init()
-    await Exam.updateOne(
-        {rating: 88},
-        {$pull: {rating : {$gte: 90}}}
-    )
-    await Exam.updateOne(
-        {rating: 88},
-        {$pull: {grades: {grade: {$eq: 185}, mean: {$gte: 90}}}}
-    )
-}
-
-//pick up the first document in which rating has 88 in it, remove elements specified by [90, 92, 93] from rating
-async function update_$_pullAll() {
-    await init()
-    await Exam.updateOne(
-        {rating: 88},
-        {$pullAll: {rating: [90, 92, 93]}}
-    )
+    console.log(agg)
 }
 
 async function main() {
     try {
         connect()
         //await create()
-        //await update_$()
-        //await update_$_embbeded()
-        //await update_$_multiple()
-        //await update_$_all()
-        //await update_$_all_embbeded()
-        //await update_$_identifier()
-        //await update_$_identifier_embbeded()
-        //await update_$_addToSet()
-        //await update_$_pop()
-        //await update_$_push()
-        //await update_$_position()
-        //await update_$_slice()
-        //await update_$_sort()
-        //await update_$_pull()
-        //await update_$_pullAll()
-    } catch (err) {
+        //await queryAuthors()
+        //await queryBooks()
+        await aggragate()
+    } catch(err) {
         console.log(err)
+        process.exit(1)
     }
 }
 

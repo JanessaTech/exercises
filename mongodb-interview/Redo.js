@@ -1,17 +1,15 @@
 const {default: mongoose, Schema} = require('mongoose')
-
-const childSchema = new Schema({
-    product: String,
-    score: Number
+const gradeSchema = new Schema({
+    grade: Number,
+    mean: Number,
+    std: Number
 })
-const parentSchema = new Schema({
-    name: String,
-    score: [Number],
-    tags: [String],
-    children: [childSchema]
+const examSchema = new Schema({
+    rating: [Number],
+    grades: [gradeSchema]
 })
 
-const MyArray = mongoose.model('MyArray', parentSchema)
+const Exam = mongoose.model('Exam', examSchema)
 
 function connect() {
     mongoose.connect('mongodb://127.0.0.1/interview')
@@ -26,70 +24,211 @@ function connect() {
 
 async function create() {
     try {
-        connect()
-        const arr1 = new MyArray({name: 'arr1', 
-                                  score: [10, 50, 100], 
-                                  tags: ["school", "book", "bag", "headphone", "appliance" ],
-                                  children: [{ "product": "abc", "score": 10 },
-                                    { "product": "xyz", "score": 5 }]
-                                })
-        const arr2 = new MyArray({name: 'arr2', 
-                                  score: [60, 90, 120], 
-                                  tags: ["book", "school"],
-                                  children: [{ "product": "abc", "score": 8 },
-                                    { "product": "xyz", "score": 7 }]
-                                })
-        const arr3 = new MyArray({name: 'arr3', 
-                                  score: [200, 300, 400], 
-                                  tags: ["electronics", "school"],
-                                  children: [{ "product": "abc", "score": 7 },
-                                    { "product": "def", "score": 8 }]})
-        await arr1.save()
-        await arr2.save()
-        await arr3.save()
-    } catch (err) {
+        await Exam.insertMany([
+            {rating: [85, 80, 80], grades:[{grade: 80, mean: 75, std:8}, 
+                                           {grade: 85, mean: 90, std:5}, 
+                                           {grade: 85, mean: 85, std:8}]},
+
+            {rating: [88, 90, 92], grades:[{grade: 180, mean: 75, std:8}, 
+                                           {grade: 185, mean: 90, std:5}, 
+                                           {grade: 185, mean: 85, std:8}]},
+
+            {rating: [80, 100, 90], grades:[{grade: 280, mean: 75, std:8}, 
+                                            {grade: 285, mean: 90, std:5}, 
+                                            {grade: 285, mean: 85, std:8}]}
+        ])
+    } catch(err) {
         console.log(err)
     }
     console.log('data is created')
 }
 
-// pick up documents with tags which have "school" and "book" in the array
-async function query1() {
-    const res = await MyArray.find({tags: {$all: ["school", "book"]}})
-    console.log(JSON.stringify(res, null, 2))
+async function init() {
+    await Exam.collection.drop()
+    await create()
 }
-// pick up documents with score in which there is at least one element which is > 40 and < 110
-async function query2() {
-    const res = await MyArray.find({score: {$elemMatch: {$gt: 40, $lt: 110}}})
-    console.log(JSON.stringify(res, null, 2))
+// pick up the first document with rating which has 80 in it. update the the first 80 to 100
+// pay more attention: the array field must appear as part of the query document
+async function update_$() {
+    await init()
+    await Exam.updateOne({rating: 80}, {$set: {"rating.$": 100}})
 }
-// pick up documents with children in which there is at least one element whose product is 'xyz' and score > 6
-async function query3() {
-    const res = await MyArray.find({children: {$elemMatch: {product: 'xyz', score: {$gt: 6}}}})
-    console.log(JSON.stringify(res, null, 2))
+// pick up the fist document with grades which has grade being 185, update  std to 20 for the first matched element in grades
+async function update_$_embbeded() {
+    await init()
+    await Exam.updateOne({"grades.grade": 185}, {$set: {"grades.$.std": 20}})
+}
+// pick up the first document with grades, 
+// in which there is at least one element, of which the grade > 200 and mean < 90, 
+// update std to 200 for the first matched element in grades
+async function update_$_multiple() {
+    await init()
+    await Exam.updateOne(
+        {grades: {$elemMatch: {grade: {$gt: 200}, mean: {$lt: 90}}}},
+        {$set: {"grades.$.std": 20}}
+    )
 }
 
-// pick up the first document, whose score has 60
-async function query4() {
-    const res = await MyArray.find({score: 60})
-    console.log(JSON.stringify(res, null, 2))
+// pick up the the first document in which rating has 88 in it, update all elements in the array to 888 
+async function update_$_all(){
+    await init()
+    await Exam.updateOne({rating: 88}, {$set: {"rating.$[]": 888}})
 }
 
-// pick up all documents, of which score don't have 100
-async function query5() {
-    const res = await MyArray.find({score: {$ne: 100}})
-    console.log(res)
+// pick up the the first document in which rating has 88 in it, update std to 20 in all elements in the grades for the matched document
+async function update_$_all_embbeded() {
+    await init()
+    await Exam.updateOne(
+        {rating: 88},
+        {$set: {"grades.$[].std": 20}}
+    )
+}
+
+// pick up the the first document in which rating has 88 in it, update elements greater or equal to 90 in it to 100
+async function update_$_identifier() {
+    await init()
+    await Exam.updateOne(
+        {rating: 88},
+        {$set: {"rating.$[elem]": 100}},
+        {arrayFilters: [{"elem": {$gte: 90}}]}
+    )
+}
+
+//pick up the first document in which rating has 88 in it, update std to 20 for the all elements whose grade == 185 and mean >=80 in the document
+async function update_$_identifier_embbeded() {
+    await init()
+    await Exam.updateOne(
+        {rating: 88},
+        {$set: {"grade.$[elem].std": 20}},
+        {arrayFilters: [{"elem.grade": {$eq: 185}, "elem.mean": {$gte: 80}}]}
+    )
+}
+
+//pick up the first document in which rating has 88 in it, add 93 into rating array(92 will be ignored)
+async function update_$_addToSet() {
+    await init()
+    await Exam.updateOne(
+        {rating: 88},
+        { $addToSet: {rating: [92, 93]}}
+    )
+}
+//pick up the first document in which rating has 88 in it, 
+// remove the first element in grades ({grades: 1} means remove the last element in grades)
+async function update_$_pop() {
+    await init()
+    await Exam.updateOne(
+        {rating: 88},
+        {$pop: {grades: -1}}
+    )
+}
+
+//pick up the first document in which rating has 88 in it,  
+// append 100, 200, 300 to rating array
+async function update_$_push() {
+    await init()
+    await Exam.updateOne(
+        {rating: 88},
+        {$push : {rating: {$each: [100, 200, 300]}}}
+    )
+}
+//pick up the first document in which rating has 88 in it,  
+// insert 100, 200, 300 to rating at position 1
+async function update_$_position() {
+    await init()
+    await Exam.updateOne(
+        {rating: 88},
+        {$push: {
+            rating: {
+                    $each: [ 100,200, 300],
+                    $position: 1
+                }
+            }
+        }
+    )
+}
+//pick up the first document in which rating has 88 in it,  
+// insert 100, 200, 300 to rating at position 1
+// once insertion is done, slice 3 elements from the head as the rating
+async function update_$_slice() {
+    await init()
+    await Exam.updateOne(
+        {rating: 88},
+        {$push: {
+            rating: {
+                $each: [100, 200, 300],
+                $position: 1,
+                $slice: 3
+            }
+        }}
+    )
+}
+
+// pick up the first document in which rating has 88 in it,
+// insert {grade: 190, mean: 92, std: 7}, {grade: 160, mean: 92, std: 5}, {grade: 181, mean: 92, std: 9} to grades
+// sort grades by grade in ascending order
+// slice 3 elements from grades as the result
+async function update_$_sort() {
+    await init()
+    await Exam.updateOne(
+        {rating: 88},
+        {
+            $push: {
+                grades: {
+                    $each: [{grade: 190, mean: 92, std: 7}, {grade: 160, mean: 92, std: 5}, {grade: 181, mean: 92, std: 9}],
+                    $slice: 3,
+                    $sort: {grade: 1}
+                }
+            }
+        }
+    )
+}
+
+// first
+// pick up the first document in which rating has 88 in it, remove elements >= 90 from rating
+// second
+// pick up the first document in which rating has 88 in it, remove elements in grades in which grade =185 and mean>=90
+async function update_$_pull() {
+    await init()
+    //first
+    await Exam.updateOne(
+        {rating: 88},
+        {$pull: {rating: {$gte: 90}}}
+    )
+    //second
+    await Exam.updateOne(
+        {rating: 88},
+        {$pull: {grades: {grade: {$eq:185}, mean: {$gte: 90}}}}
+    )
+}
+
+//pick up the first document in which rating has 88 in it, remove elements specified by [90, 92, 93] from rating
+async function update_$_pullAll() {
+    await init()
+    await Exam.updateOne(
+        {rating: 88},
+        {$pullAll: {rating: [90, 92, 93]}}
+    )
 }
 
 async function main() {
     try {
         connect()
         //await create()
-        //await query1()
-        //await query2()
-        //await query3()
-        //await query4()
-        await query5()
+        //await update_$()
+        //await update_$_embbeded()
+        //await update_$_multiple()
+        //await update_$_all()
+        //await update_$_all_embbeded()
+        //await update_$_identifier()
+        //await update_$_identifier_embbeded()
+        //await update_$_addToSet()
+        //await update_$_pop()
+        //await update_$_push()
+        //await update_$_position()
+        //await update_$_slice()
+        //await update_$_sort()
+        //await update_$_pull()
+        //await update_$_pullAll()
     } catch (err) {
         console.log(err)
     }
@@ -98,5 +237,3 @@ async function main() {
 main().then().catch((err) => {
     console.log(err)
 })
-
-

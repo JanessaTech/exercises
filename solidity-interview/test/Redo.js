@@ -6,15 +6,17 @@ const { extendEnvironment } = require("hardhat/config");
 
 describe('Redo', function () {
     async function deployRedoFixture() {
+        const [admi, Bob, ...others] = await ethers.getSigners()
         const Redo = await ethers.getContractFactory('Redo')
         const redo = await Redo.deploy();
-        return {redo}
+        return {redo, Bob}
     }
-    describe('addSum', function () {
-        it('adddSum', async function () {
-            const {redo} = await loadFixture(deployRedoFixture)
-            const sum = await redo.sumArray([1, 2, 3])
-            expect(sum).to.be.equal(sum)
+    describe('Withdraw', function () {
+        it('Withdraw', async function () {
+            const {redo, Bob} = await loadFixture(deployRedoFixture)
+            const amount = 1000
+            await redo.connect(Bob).deposit({value: amount})
+            await expect(redo.connect(Bob).withdraw()).to.emit(redo, 'Withdraw').withArgs(Bob.getAddress(), amount)
         })
     })
 })

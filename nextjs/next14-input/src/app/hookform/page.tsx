@@ -46,8 +46,6 @@ const HookformDemo:React.FC<HookformDemoProps> = () => {
             checked: false})
     }
 
-    console.log("state:", state)
-
     return (
         <div className="flex justify-center items-center my-10">
             <form 

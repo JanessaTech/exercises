@@ -3,6 +3,7 @@
 The project is to show how to use the features of input element:
 
 - How to use onChange, onBlur, onClick, onKeyDown
+- How to use react-hook-form + yup to validate form data
 
 ## Indenpendences
 

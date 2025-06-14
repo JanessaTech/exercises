@@ -3,7 +3,6 @@
 import { useForm } from "react-hook-form" 
 import { yupResolver } from "@hookform/resolvers/yup"
 import SignupSchema from "@/lib/SignupSchema"
-import * as yup from "yup";
 import { useState } from "react";
 
 //type SignupFormData = yup.InferType<typeof SignupSchema>

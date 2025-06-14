@@ -1,6 +1,16 @@
 ### About this project
+
 The project is to show how to use the features of input element:
- - How to use onChange, onBlur, onClick, onKeyDown
+
+- How to use onChange, onBlur, onClick, onKeyDown
+
+## Indenpendences
+
+```
+npm install react-hook-form
+npm install @hookform/resolvers yup
+
+```
 
 ## Getting Started
 
@@ -16,3 +26,6 @@ pnpm dev
 bun dev
 ```
 
+### References
+
+1. https://react-hook-form.com/get-started

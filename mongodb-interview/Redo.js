@@ -56,8 +56,12 @@ async function update_$() {
 // pick up the fist document with grades which has grade being 185, update  std to 20 for the first matched element in grades
 async function update_$_embbeded() {
     await init()
-    await Exam.updateOne({"grades.grade": 185}, {$set: {"grades.$.std": 20}})
+    await Exam.updateOne(
+        {"grades.grade": 185},
+        {$set: {"grades.$.std": 20}}
+    )
 }
+    
 // pick up the first document with grades, 
 // in which there is at least one element, of which the grade > 200 and mean < 90, 
 // update std to 200 for the first matched element in grades
@@ -72,14 +76,20 @@ async function update_$_multiple() {
 // pick up the the first document in which rating has 88 in it, update all elements in the array to 888 
 async function update_$_all(){
     await init()
-    await Exam.updateOne({rating: 88}, {$set: {"rating.$[]": 888}})
+    await Exam.updateOne(
+        {rating: 88},
+        {$set: {"rating.$[]": 888}}
+    )
     
 }
 
 // pick up the the first document in which rating has 88 in it, update std to 20 in all elements in the grades for the matched document
 async function update_$_all_embbeded() {
     await init()
-    await Exam.updateOne({rating: 88}, {$set: {"grades.$[].std": 20}})
+    await Exam.updateOne(
+        {rating: 88},
+        {$set: {"grades.$[].std": 20}}
+    )
 }
 
 // pick up the the first document in which rating has 88 in it, update elements greater or equal to 90 in it to 100
@@ -87,8 +97,8 @@ async function update_$_identifier() {
     await init()
     await Exam.updateOne(
         {rating: 88},
-        {$set: {"rating.$[elem]": 100}},
-        {arrayFilters: [{"elem": {$gt: 90}}]}
+        {$set: {"grades.$[elem]": 100}},
+        {arrayFilters: [{"elem":{$gte: 99}}]}
     )
 }
 
@@ -96,9 +106,9 @@ async function update_$_identifier() {
 async function update_$_identifier_embbeded() {
     await init()
     await Exam.updateOne(
-        {rating: 88},
+        {rating :88},
         {$set: {"grades.$[elem].std": 20}},
-        {arrayFilters: [{"elem.grade": {$eq: 185}, "elem.mean": {$gte: 80}}]}
+        {arrayFilters: [{"elem.grade": {$eq: 185}, "elem.mean": {$gte: 85}}]}
     )
 }
 

@@ -11,12 +11,29 @@ describe('Redo', function () {
         const redo = await Redo.deploy();
         return {redo, Bob}
     }
-    describe('Withdraw', function () {
-        it('Withdraw', async function () {
-            const {redo, Bob} = await loadFixture(deployRedoFixture)
-            const amount = 1000
-            await redo.connect(Bob).deposit({value: amount})
-            await expect(redo.connect(Bob).withdraw()).to.emit(redo, 'Withdraw').withArgs(Bob.getAddress(), amount)
+    describe('create', function () {
+        it('create', async function () {
+            const {redo} = await loadFixture(deployRedoFixture)
+            await redo.create('person0')
+            await redo.create('person1')
+            const person0 = await redo.get(0)
+            const person1 = await redo.get(1)
+            expect(person0.name).to.be.equal('person0')
+            expect(person1.name).to.be.equal('person1')
+        })
+    })
+    describe('remove', function () {
+        it('remove', async function () {
+            const {redo} = await loadFixture(deployRedoFixture)
+            await redo.create('person0')
+            await redo.create('person1')
+            await redo.create('person2')
+            await redo.remove(1)
+            const person0 = await redo.get(0)
+            const person2 = await redo.get(2)
+            await expect(redo.get(1)).to.be.revertedWith('invalid id')
+            expect(person0.name).to.be.equal('person0')
+            expect(person2.name).to.be.equal('person2')
         })
     })
 })

@@ -4,8 +4,8 @@ import {persist, createJSONStorage} from 'zustand/middleware'
 
 interface NoteState {
     notes: string[];
-    isDone: boolean;
-    addNote: (note: string) => void;
+    addNote: (note:string) => void;
+    isDone: boolean
     setIsDone: (done: boolean) => void;
     clear: () => void
 }
@@ -14,15 +14,15 @@ const useAddNote = create<NoteState>()(persist(
     (set) => ({
         notes: [],
         isDone: false,
-        addNote : (note) => set((state) => ({notes: [...state.notes, note]})),
         setIsDone: (done) => set({isDone: done}),
+        addNote: (note) => set((state) => ({notes: [...state.notes, note]})),
         clear: () => {
             localStorage.removeItem('note_state')
             set({notes: []})
         }
     }),
     {
-        name: 'note_state',
+        name: '',
         storage: createJSONStorage(() => localStorage),
         onRehydrateStorage: () => (state) => {
             state?.setIsDone(true)

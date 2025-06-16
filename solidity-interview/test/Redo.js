@@ -6,51 +6,24 @@ const { extendEnvironment } = require("hardhat/config");
 
 describe('Redo', function () {
     async function deployRedoFixture() {
-        const [admin, ...others] = await ethers.getSigners()
-        const LogicV1 = await ethers.getContractFactory('LogicV1')
-        const logicV1 = await LogicV1.deploy()
-        const LogicV2 = await ethers.getContractFactory('LogicV2')
-        const logicV2 = await LogicV2.deploy()
-
-        const Proxy = await ethers.getContractFactory('Redo')
-        const proxy = await Proxy.deploy(logicV1.getAddress())
-        return {proxy, admin, logicV1, logicV2}
+        const [admin, minter, burner, non, Bob, ...others] = await ethers.getSigners()
+        const Redo = await ethers.getContractFactory('Redo')
+        const redo = await Redo.deploy(admin, minter, burner)
+        return {redo, admin, minter, burner, non, Bob}
     }
 
-    describe('LogicV1 & LogicV2', function () {
-        it('LogicV1', async function () {
-            const {proxy, admin} = await loadFixture(deployRedoFixture)
-            const abi = ['function setValue(uint256) external']
-            const iface = new ethers.Interface(abi)
+    describe('mint', function () {
+        it('it failed mint when it is not minter', async function () {
+            const {redo, non, Bob} = await loadFixture(deployRedoFixture)
             const amount = 1000
-            const cdata = iface.encodeFunctionData('setValue(uint256)', [amount])
-            const tx = {
-                to: proxy.getAddress(),
-                data: cdata
-            }
-            await admin.sendTransaction(tx)
-            const val = await proxy.value()
-            expect(val).to.be.equal(amount)
-
+            await expect(redo.connect(non).mint(Bob.getAddress(), amount)).to.be.revertedWithCustomError(redo, 'AccessControlUnauthorizedAccount')
         })
-        it('LogicV2', async function () {
-            const {proxy, admin, logicV2} = await loadFixture(deployRedoFixture)
-            await proxy.toUpgrade(logicV2.getAddress())
-            const abi = ['function setValue(uint256) external']
-            const iface = new ethers.Interface(abi)
+        it('it minted successfully', async function () {
+            const {redo, minter, Bob} = await loadFixture(deployRedoFixture)
             const amount = 1000
-            const cdata = iface.encodeFunctionData('setValue(uint256)', [amount])
-            const tx = {
-                to: proxy.getAddress(),
-                data: cdata
-            }
-            await admin.sendTransaction(tx)
-            const val = await proxy.value()
-            expect(val).to.be.equal(amount * 2)
-
+            await expect(redo.connect(minter).mint(Bob.getAddress(), amount)).not.reverted
         })
     })
-    
 })
 
 

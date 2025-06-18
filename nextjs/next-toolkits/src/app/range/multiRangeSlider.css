@@ -87,7 +87,7 @@
     width: 18px;
     margin-top: 4px;
     pointer-events: all;
-    position: relative;
+    /* position: relative; */
   }
   
   /* For Firefox browsers */

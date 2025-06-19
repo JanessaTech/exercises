@@ -66,3 +66,5 @@ type NodeA = {
       : U[P]
   }
   : never
+
+  //type ReplaceKeys<U, T, Y> = any

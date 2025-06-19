@@ -26,5 +26,7 @@ type cases = [
   type Subsequence<T extends any[]> = T extends [infer F, ...infer R]
   ? Merge<Subsequence<R>, F> | Subsequence<R>
   : []
+
+  //type Subsequence<T> = any
   
   type merge = Merge<[2] | [], 1>

@@ -36,4 +36,6 @@ type PercentageParser<T, sign = '', num= '', unit = ''> = T extends ''
         ? PercentageParser<R, sign, num, '%'>
         : PercentageParser<'', sign, T, unit>
 
+//type PercentageParser<T> = any
+
 type test = PercentageParser<'100%'>

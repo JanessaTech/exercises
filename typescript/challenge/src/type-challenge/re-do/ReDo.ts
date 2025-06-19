@@ -1,30 +1,40 @@
 import { Alike, Equal, Expect } from "../test-utils"
 
   
+type Case0 = ['', '', '']
+type Case1 = ['+', '', '']
+type Case2 = ['+', '1', '']
+type Case3 = ['+', '100', '']
+type Case4 = ['+', '100', '%']
+type Case5 = ['', '100', '%']
+type Case6 = ['-', '100', '%']
+type Case7 = ['-', '100', '']
+type Case8 = ['-', '1', '']
+type Case9 = ['', '', '%']
+type Case10 = ['', '1', '']
+type Case11 = ['', '100', '']
+
 type cases = [
-  Expect<Equal<Subsequence<[1, 2]>, [] | [1] | [2] | [1, 2]>>,
-  Expect<Equal<Subsequence<[1, 2, 3]>, [] | [1] | [2] | [1, 2] | [3] | [1, 3] | [2, 3] | [1, 2, 3]>>,
-  Expect<Equal<Subsequence<[1, 2, 3, 4, 5]>, [] |
-  [1] | [2] | [3] | [4] | [5] |
-  [1, 2] | [1, 3] | [1, 4] | [1, 5] | [2, 3] | [2, 4] | [2, 5] | [3, 4] | [3, 5] | [4, 5] |
-  [1, 2, 3] | [1, 2, 4] | [1, 2, 5] | [1, 3, 4] | [1, 3, 5] | [1, 4, 5] | [2, 3, 4] | [2, 3, 5] | [2, 4, 5] | [3, 4, 5] |
-  [1, 2, 3, 4] | [1, 2, 3, 5] | [1, 2, 4, 5] | [1, 3, 4, 5] | [2, 3, 4, 5] |
-  [1, 2, 3, 4, 5] >>,
-  Expect<Equal<Subsequence<['a', 'b', 'c']>, [] |
-  ['a'] | ['b'] | ['c'] |
-  ['a', 'b'] | ['a', 'c'] | ['b', 'c'] |
-  ['a', 'b', 'c'] >>,
-  Expect<Equal<Subsequence<['x', 'y']>, [] |
-  ['x'] | ['y'] |
-  ['x', 'y'] >>,
+  Expect<Equal<PercentageParser<''>, Case0>>,
+  Expect<Equal<PercentageParser<'+'>, Case1>>,
+  Expect<Equal<PercentageParser<'+1'>, Case2>>,
+  Expect<Equal<PercentageParser<'+100'>, Case3>>,
+  Expect<Equal<PercentageParser<'+100%'>, Case4>>,
+  Expect<Equal<PercentageParser<'100%'>, Case5>>,
+  Expect<Equal<PercentageParser<'-100%'>, Case6>>,
+  Expect<Equal<PercentageParser<'-100'>, Case7>>,
+  Expect<Equal<PercentageParser<'-1'>, Case8>>,
+  Expect<Equal<PercentageParser<'%'>, Case9>>,
+  Expect<Equal<PercentageParser<'1'>, Case10>>,
+  Expect<Equal<PercentageParser<'100'>, Case11>>,
 ]
 
-type Merge<L extends unknown[], E>  = L extends any
-? [E, ...L]
-: never
+type PercentageParser<T, sign = '', num = '', unit = ''> = T extends ''
+? [sign, num, unit]
+: T extends `${infer S extends '+' | '-'}${infer R}`
+  ? PercentageParser<R, S, num, unit>
+  : T extends `${infer N}%`
+    ? PercentageParser<'', sign, N, '%'>
+    : PercentageParser<'', sign, T, unit>
 
-type Subsequence<T extends unknown[]> = T extends [infer F, ...infer R]
-? Subsequence<R> | Merge<Subsequence<R>, F>
-: []
-
-type merge = Merge<[2] | [], 1>
+type test = PercentageParser<'100%'>

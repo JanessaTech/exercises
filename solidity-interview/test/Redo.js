@@ -7,50 +7,47 @@ const { extendEnvironment } = require("hardhat/config");
 describe('Redo', function () {
     async function deployRedoFixture() {
         const [admin, Bob, ...others] = await ethers.getSigners()
-        const Redo = await ethers.getContractFactory('Redo')
-        const redo = await Redo.deploy(admin.getAddress())
-        return {redo, admin, Bob}
+        const LogicV1 = await ethers.getContractFactory('LogicV1')
+        const logicV1 = await LogicV1.deploy()
+        const LogicV2 = await ethers.getContractFactory('LogicV2')
+        const logicV2 = await LogicV2.deploy()
+        const Proxy = await ethers.getContractFactory('Redo')
+        const proxy = await Proxy.deploy(logicV1.getAddress())
+        return {proxy, logicV1, logicV2, admin}
     }
 
-    describe('init', function () {
-        it('init', async function () {
-            const {redo, admin} = await loadFixture(deployRedoFixture)
-            const balance1 = await redo.balanceOf(admin.getAddress(), 1)
-            const balance2 = await redo.balanceOf(admin.getAddress(), 2)
-            const balance3 = await redo.balanceOf(admin.getAddress(), 3)
-            expect(balance1).to.be.equal(1000)
-            expect(balance2).to.be.equal(1000)
-            expect(balance3).to.be.equal(1000)
+    describe('logicV1 & logicV2', function () {
+        it('logicV1', async function () {
+            const {proxy, admin} = await loadFixture(deployRedoFixture)
+            const abi = ['function setValue(uint256) external']
+            const iface = new ethers.Interface(abi)
+            const value  = 10
+            const cdata = iface.encodeFunctionData('setValue(uint256)', [value])
+            const tx = {
+                to: proxy.getAddress(),
+                data: cdata
+            }
+            await admin.sendTransaction(tx)
+            const val = await proxy.value()
+            expect(val).to.be.equal(value)
+        })
+        it('logicV2', async function () {
+            const {proxy, admin, logicV2} = await loadFixture(deployRedoFixture)
+            await proxy.upgradeTo(logicV2.getAddress())
+            const abi = ['function setValue(uint256) external']
+            const iface = new ethers.Interface(abi)
+            const value  = 10
+            const cdata = iface.encodeFunctionData('setValue(uint256)', [value])
+            const tx = {
+                to: proxy.getAddress(),
+                data: cdata
+            }
+            await admin.sendTransaction(tx)
+            const val = await proxy.value()
+            expect(val).to.be.equal(value * 2)
         })
     })
-    describe('batchMint', function () {
-        it('batchMint', async function () {
-            const {redo, admin, Bob} = await loadFixture(deployRedoFixture)
-            const ids = [1, 3]
-            const values = [300, 200]
-            await redo.batchMint(Bob.getAddress(), ids, values, '0x123456')
-            const balance1Bob = await redo.balanceOf(Bob.getAddress(), 1)
-            const balance2Bob = await redo.balanceOf(Bob.getAddress(), 2)
-            const balance3Bob = await redo.balanceOf(Bob.getAddress(), 3)
-
-            expect(balance1Bob).to.be.equal(300) 
-            expect(balance2Bob).to.be.equal(0) 
-            expect(balance3Bob).to.be.equal(200) 
-         })
-    })
-    describe('batchTransfer', function () {
-        it('batchTransfer', async function () {
-            const {redo, admin, Bob} = await loadFixture(deployRedoFixture)
-            const recipients = [Bob.getAddress()]
-            const id = 1
-            const amount = 300
-            await redo.batchTransfer(recipients, id, amount)
-            const balance1Bob = await redo.balanceOf(Bob.getAddress(), 1)
-            const balance1Admin = await redo.balanceOf(admin.getAddress(), 1)
-            expect(balance1Bob + balance1Admin).to.be.equal(1000)
-
-        })
-    })
+    
 })
 
 

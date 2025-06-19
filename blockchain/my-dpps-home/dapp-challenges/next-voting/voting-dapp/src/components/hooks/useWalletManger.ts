@@ -53,6 +53,7 @@ const useWalletManager = () => {
             const contract = new Contract(contractAddress, abi, signer)
             setState({...state, chainId: chainId, provider: provider, signer: signer, address: address, contract: contract})
             setAuth({connected: true})
+
         } else {
             console.error('window or window.ethereum cannot be found')
         }
@@ -62,7 +63,11 @@ const useWalletManager = () => {
         setAuth({connected: false})
     }
 
+    console.log('walletstate+ ', state)
+
     return {connectWallet, disConnectWallet, state}
+
+    
 }
 
 export default useWalletManager

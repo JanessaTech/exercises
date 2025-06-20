@@ -1,0 +1,34 @@
+/**/
+.thumbbar,
+.thumbbar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  
+}
+.thumbbar {
+  height: 0px;
+  pointer-events: none;
+  position: absolute;
+  outline: none;
+  top:-100px
+}
+
+.thumbbar::-webkit-slider-thumb {
+  width: 1px;
+  height: 200px;
+  border: none;
+  background: #a1a1aa;
+  /* border-radius: 50%; */
+  cursor: w-resize;
+  pointer-events: all;
+}
+.thumbbar::-moz-range-thumb {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: #a1a1aa;
+  border-radius: 50%;
+  cursor: w-resize;
+  pointer-events: all;
+}
+/**/

@@ -1,5 +1,6 @@
 'use client'
 import { useCallback, useEffect, useRef, useState } from "react";
+import "./thumbbar.css"
 
 const Axis = () => {
     return <div className="w-[300px] bg-zinc-400 h-[4px] absolute top-0"></div>
@@ -80,7 +81,10 @@ const PriceSelector: React.FC<PriceSelectorProps> = ({min = 0, max = 1000}) => {
                 <div className="border-dashed border-[1px] border-white h-[200px] box-border"></div>
                 <div className="w-[300px] h-0 relative bg-zinc-900">
                     <Axis/>
-                    <div ref={range} className="bg-pink-600/30 h-[200px] absolute bottom-0" />
+                    <div ref={range} className="bg-pink-600/30 h-[200px] absolute bottom-0 group" >
+                        <div className="text-white w-fit px-2 py-1 absolute top-20 left-[-50px]">10%</div>
+                        <div className="text-white w-fit px-2 py-1 absolute top-20 right-[-50px]">10%</div>
+                    </div>
                     <input 
                         className="thumbbar w-[300px] z-10" 
                         type="range" 

@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import "./thumb.css"
 
 const Tracker = () => {
     return <div className="w-[300px] bg-zinc-400 h-[10px] absolute top-[-5px]"></div>

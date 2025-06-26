@@ -7,50 +7,36 @@ import {ERC1155} from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Redo {
-    uint256 public value;
-    
-    bytes32 private constant ADMIN_ALOT = keccak256('ADMIN_ALOT');
-    bytes32 private constant IMPLEMENTATION_SLOT = keccak256('IMPLEMENTATION_SLOT');
-
-    constructor(address _implementation) {
-        bytes32 slot = IMPLEMENTATION_SLOT;
-        assembly {
-            sstore(slot, _implementation)
-        }
-        slot = ADMIN_ALOT;
-        assembly {
-            sstore(slot, caller())
-        }
+    struct Person {
+        uint256 id;
+        string name;
     }
+    uint256 idx;
+    Person[] people;
+    mapping(uint256 => uint256) idxMapping;
+    mapping(uint256 => bool) inserted;
 
-    function admin() public view returns(address adm) {
-        bytes32 slot = ADMIN_ALOT;
-        assembly {
-            adm := sload(slot)
-        }
-    }
-    function implementation() public view returns(address impl) {
-        bytes32 slot = IMPLEMENTATION_SLOT;
-        assembly {
-            impl := sload(slot)
-        }
+    function create(string memory _name) public {
+        uint256 _id = idx++;
+        people.push(Person({id: _id, name: _name}));
+        idxMapping[_id] = people.length - 1;
+        inserted[_id] = true;
     }
 
-    function upgradeTo(address _imlementation) public {
-        require(admin() == msg.sender, 'not owner');
-        bytes32 slot = IMPLEMENTATION_SLOT;
-        assembly {
-            sstore(slot, _imlementation)
-        }
+    function remove(uint256 _id) public {
+        require(inserted[_id], 'invalid id');
+        uint256 _idx = idxMapping[_id];
+        Person storage last = people[people.length - 1];
+        people[_idx] = last;
+        idxMapping[last.id] = _idx;
+        delete idxMapping[_id];
+        delete inserted[_id];
+        people.pop();
+    }
+    function get(uint256 _id) public view returns(uint256 id, string memory name) {
+        require(inserted[_id], 'invalid id');
+        Person storage person = people[idxMapping[_id]];
+        return (person.id, person.name);
     }
 
-    function _delegate(address _implemenation) private {
-        (bool success, ) = _implemenation.delegatecall(msg.data);
-        require(success, 'failed to call delegatecall');
-    }
-
-    fallback() external payable {
-        _delegate(implementation());
-    }
-    receive() external payable {}
 }

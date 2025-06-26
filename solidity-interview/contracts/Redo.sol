@@ -8,8 +8,8 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Redo {
     uint256 public value;
-
-    bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
+    
+    bytes32 private constant ADMIN_ALOT = keccak256('ADMIN_ALOT');
     bytes32 private constant IMPLEMENTATION_SLOT = keccak256('IMPLEMENTATION_SLOT');
 
     constructor(address _implementation) {
@@ -17,19 +17,18 @@ contract Redo {
         assembly {
             sstore(slot, _implementation)
         }
-        slot = ADMIN_SLOT;
+        slot = ADMIN_ALOT;
         assembly {
             sstore(slot, caller())
         }
     }
 
     function admin() public view returns(address adm) {
-        bytes32 slot = ADMIN_SLOT;
+        bytes32 slot = ADMIN_ALOT;
         assembly {
             adm := sload(slot)
         }
     }
-
     function implementation() public view returns(address impl) {
         bytes32 slot = IMPLEMENTATION_SLOT;
         assembly {
@@ -37,17 +36,17 @@ contract Redo {
         }
     }
 
-    function upgradeTo(address _newImplementation) public{
-        require(msg.sender == admin(), 'not owner');
+    function upgradeTo(address _imlementation) public {
+        require(admin() == msg.sender, 'not owner');
         bytes32 slot = IMPLEMENTATION_SLOT;
         assembly {
-            sstore(slot, _newImplementation)
+            sstore(slot, _imlementation)
         }
     }
 
-    function _delegate(address _implementation) private {
-        (bool success, ) = _implementation.delegatecall(msg.data);
-        require(success, 'failed to call calldelegate');
+    function _delegate(address _implemenation) private {
+        (bool success, ) = _implemenation.delegatecall(msg.data);
+        require(success, 'failed to call delegatecall');
     }
 
     fallback() external payable {

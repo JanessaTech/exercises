@@ -7,6 +7,8 @@ function getProvider() {
     //const providerSepolia = new ethers.JsonRpcProvider(SEPOLIA_URL)
     //const provider = new ethers.JsonRpcProvider('http://127.0.0.1:8545/')
     const provider = new ethers.JsonRpcProvider("https://eth-mainnet.g.alchemy.com/v2/QLyqy7ll-NxAiFILvr2Am");
+    //const provider = new ethers.JsonRpcProvider("https://mainnet.infura.io/v3/c385e2e722284dc9b570de7ede60dba1"); failed to connect
+    
     return provider
 }
 

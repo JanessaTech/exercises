@@ -5,7 +5,8 @@ function getProvider() {
     // 可以在 https://chainlist.org 上找到
     //const SEPOLIA_URL = 'https://rpc.sepolia.org';
     //const providerSepolia = new ethers.JsonRpcProvider(SEPOLIA_URL)
-    const provider = new ethers.JsonRpcProvider('http://127.0.0.1:8545/')
+    //const provider = new ethers.JsonRpcProvider('http://127.0.0.1:8545/')
+    const provider = new ethers.JsonRpcProvider("https://eth-mainnet.g.alchemy.com/v2/QLyqy7ll-NxAiFILvr2Am");
     return provider
 }
 

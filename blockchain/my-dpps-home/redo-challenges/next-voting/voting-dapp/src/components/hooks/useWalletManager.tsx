@@ -30,7 +30,7 @@ const useWalletManager = () => {
             const signer = await provider.getSigner()
             const address = await signer.getAddress()
             const chainId = Number((await provider.getNetwork()).chainId)
-            const contract = new ethers.Contract(contractAddress, abi)
+            const contract = new ethers.Contract(contractAddress, abi, signer)
             setState({chainId: chainId, provider: provider, signer: signer, address: address, contract: contract})
             setAuth({connected: true})
         } else {

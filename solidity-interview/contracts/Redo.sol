@@ -6,31 +6,51 @@ import "hardhat/console.sol";
 import {ERC1155} from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract MyToken is ERC1155, Ownable {
-    uint256 public constant sword = 1;
-    uint256 public constant sheild = 2;
-    uint256 public constant portion = 3;
+contract Redo {
+    uint256 public value;
+    
+    bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
+    bytes32 private constant IMPLEMENTATION_SLOT = keccak256('IMPLEMENTATION_SLOT');
 
-    constructor(address initialOwner) 
-        ERC1155("http://test.com/{id}.json") 
-        Ownable(initialOwner) {
-            _mint(msg.sender, sword, 1000, '');
-            _mint(msg.sender, sheild, 1000, '');
-            _mint(msg.sender, portion, 1000, '');
+    constructor(address _implementation) {
+        bytes32 slot = IMPLEMENTATION_SLOT;
+        assembly {
+            sstore(slot, _implementation)
         }
-
-    function setURI(string memory newuri) public onlyOwner {
-        _setURI(newuri);
-    }
-
-    function mintBatch(address to, uint256[] memory ids, uint256[] memory values, bytes memory data) public onlyOwner {
-        require(ids.length == values.length, 'ids.length != values.length');
-        _mintBatch(to, ids, values, data);
-    }
-    function transferBatch(address[] memory recipients, uint256 id, uint256 amount) public {
-        require(balanceOf(msg.sender, id) >= recipients.length * amount);
-        for (uint256 i = 0; i < recipients.length; i++) {
-            safeTransferFrom(msg.sender, recipients[i], id, amount, '');
+        slot = ADMIN_SLOT;
+        assembly {
+            sstore(slot, caller())
         }
     }
+
+    function admin() public view returns(address adm) {
+        bytes32 slot = ADMIN_SLOT;
+        assembly {
+            adm := sload(slot)
+        }
+    }
+
+    function implementation() public view returns(address impl) {
+        bytes32 slot = IMPLEMENTATION_SLOT;
+        assembly {
+            impl := sload(slot)
+        }
+    }
+
+    function upgradeTo(address _implementation) public {
+        bytes32 slot = IMPLEMENTATION_SLOT;
+        assembly {
+            sstore(slot, _implementation)
+        }
+    }
+
+    function _delegate(address _implementation) private {
+        (bool success, ) = _implementation.delegatecall(msg.data);
+        require(success, 'failed to call delegatecall');
+    }
+
+    fallback() external payable {
+        _delegate(implementation());
+    }
+    receive() external payable {}
 }

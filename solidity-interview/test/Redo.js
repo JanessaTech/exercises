@@ -6,32 +6,25 @@ const { extendEnvironment } = require("hardhat/config");
 
 describe('Redo', function () {
     async function deployRedoFixture() {
-        const Redo = await ethers.getContractFactory('Redo')
-        const redo = await Redo.deploy()
-        return {redo}
+        const [admin , Bob, nonBob, ...others] = await ethers.getSigners()
+        const MyERC721 = await ethers.getContractFactory('MyERC721')
+        const name = 'testERC721'
+        const symbol = 'test'
+        const erc721 = await MyERC721.deploy(name, symbol)
+        const tokenId = 1
+        await erc721.mint(Bob.getAddress(), tokenId)
+        const Redo = await ethers.getContractFactory('Redo', Bob)
+        const redo = await Redo.deploy(erc721.getAddress(), tokenId)
+        await erc721.connect(Bob).approve(redo.getAddress(), tokenId)
+        return {redo, erc721, tokenId, Bob, nonBob}
     }
-
-    describe('create & remove', function () {
-        it('create', async function () {
-            const {redo} = await loadFixture(deployRedoFixture)
-            await redo.create('person0')
-            await redo.create('person1')
-            const person0 = await redo.get(0)
-            const person1 = await redo.get(1)
-            expect(person0.name).to.be.equal('person0')
-            expect(person1.name).to.be.equal('person1')
-        })
-        it('remove', async function () {
-            const {redo} = await loadFixture(deployRedoFixture)
-            await redo.create('person0')
-            await redo.create('person1')
-            await redo.create('person2')
-            await redo.remove(1)
-            const person0 = await redo.get(0)
-            const person2 = await redo.get(2)
-            expect(person0.name).to.be.equal('person0')
-            expect(person2.name).to.be.equal('person2')
-            await expect(redo.get(1)).to.be.revertedWith('invalid id')
+    describe('init', function () {
+        it('init', async function () {
+            const {redo, erc721, Bob, tokenId} = await loadFixture(deployRedoFixture)
+            const owner = await erc721.ownerOf(tokenId)
+            const spender = await erc721.getApproved(tokenId)
+            expect(owner).to.be.equal(Bob.address)
+            expect(spender).to.be.equal(await redo.getAddress())
         })
     })
     

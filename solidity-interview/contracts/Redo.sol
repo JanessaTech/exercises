@@ -3,28 +3,43 @@ pragma solidity ^0.8.20;
 // Uncomment this line to use console.log
 import "hardhat/console.sol";
 
-import {ERC1155} from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
-import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
-import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+contract Redo is ERC721, ERC721URIStorage, Ownable {
+    uint256 private nextTokenId;
+    constructor(address initialOwner)
+        ERC721("MyToken", "MTK")
+        Ownable(initialOwner)
+    {}
 
-contract Redo is ERC20, AccessControl {
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
-
-    constructor(address defaultAdmin, address minter, address burner) ERC20("MyToken", "MTK") {
-        _grantRole(DEFAULT_ADMIN_ROLE, defaultAdmin);
-        _grantRole(MINTER_ROLE, minter);
-        _grantRole(BURNER_ROLE, burner);
+    function _baseURI() internal pure override returns (string memory) {
+        return "http://test.com/";
     }
 
-    function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
-        _mint(to, amount);
+    // The following functions are overrides required by Solidity.
+
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        override(ERC721, ERC721URIStorage)
+        returns (string memory)
+    {
+        return super.tokenURI(tokenId);
     }
-    function burn(address to, uint256 amount) public onlyRole(BURNER_ROLE) {
-        require(balanceOf(to) >= amount, 'not eough to burn');
-        _burn(to, amount);
+
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC721, ERC721URIStorage)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
+    function mint(address to, string memory _tokenURI) public {
+        uint256 tokenId = nextTokenId++;
+        _safeMint(to, tokenId);
+        _setTokenURI(tokenId, _tokenURI);
     }
 }

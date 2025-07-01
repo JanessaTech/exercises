@@ -6,15 +6,33 @@ const { extendEnvironment } = require("hardhat/config");
 
 describe('Redo', function () {
     async function deployRedoFixture() {
+        const [admin, minter, burner, other, Bob, ...others] = await ethers.getSigners()
         const Redo = await ethers.getContractFactory('Redo')
-        const redo = await Redo.deploy()
-        return {redo}
+        const redo = await Redo.deploy(admin, minter, burner)
+        return {redo, admin, minter, burner, other, Bob}
     }
-    describe('sumArray', function () {
-        it('sumArray', async function () {
-            const {redo} = await loadFixture(deployRedoFixture)
-            const sum = await redo.sumArray([1, 2, 3])
-            expect(sum).to.be.equal(6)
+    describe('mint', function () {
+        it('it failed to mint when it is not minter', async function () {
+            const {redo, other, Bob} = await loadFixture(deployRedoFixture)
+            await expect(redo.connect(other).mint(Bob.getAddress(), 1000)).to.be.revertedWithCustomError(redo, 'AccessControlUnauthorizedAccount')
+        })
+        it('it minted successfully', async function () {
+            const {redo, minter, Bob} = await loadFixture(deployRedoFixture)
+            const amount = 1000
+            await redo.connect(minter).mint(Bob.getAddress(), amount)
+            const balance = await redo.balanceOf(Bob.getAddress())
+            expect(balance).to.be.equal(amount)
+        })
+    })
+    describe('burn', function () {
+        it('it burned successfully', async function () {
+            const {redo, burner, minter, Bob} = await loadFixture(deployRedoFixture)
+            const amount = 1000
+            const toburn = 300
+            await redo.connect(minter).mint(Bob.getAddress(), amount)
+            await redo.connect(burner).burn(Bob.getAddress(), toburn)
+            const balance = await redo.balanceOf(Bob.getAddress())
+            expect(balance).to.be.equal(amount - toburn)
         })
     })
    

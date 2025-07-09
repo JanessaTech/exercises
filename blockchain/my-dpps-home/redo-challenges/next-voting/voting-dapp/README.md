@@ -9,6 +9,10 @@ npx shadcn@latest add table
 ### How to start
 
 ```
+//in hardhat dir
+npx hardhat node
+remixd.cmd
+
 npm run dev
 npm run build
 npm run start

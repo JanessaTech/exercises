@@ -1,14 +1,22 @@
 ### About this project
 
-This project show how to integrate various wallets using RainbowKit libary
+This project shows how to integrate various wallets using RainbowKit libary
 
 ### How to run
 
+Before running the project, you need to start backend first. checkout backend:
+https://github.com/JanessaTech/BestDex/tree/master/backend
+
 ```
+For backend, run
+npm run ts-start-local
+
+For frontend(this project), run:
 npm run dev
+
 ```
 
-### references:
+### References:
 
 ```
 1. https://wagmi.sh/react/getting-started    (wagmi offical document)

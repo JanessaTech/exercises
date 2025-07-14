@@ -7,7 +7,7 @@ import {ERC1155} from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Redo {
-    uint256 public value;
+     uint256 public value;
      bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
      bytes32 private constant IMPLEMENTATION_SLOT = keccak256('IMPLEMENTATION_SLOT');
      constructor(address _implementation) {

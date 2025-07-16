@@ -11,12 +11,11 @@ describe('Redo', function () {
         const redo = await Redo.deploy()
         return {redo, Bob, Alice}
     }
-    describe('deposit & withdraw', function () {
-        it('deposit & withdraw', async function () {
+    describe('arraySum', function () {
+        it('arraySum', async function () {
             const {redo, Bob, Alice} = await loadFixture(deployRedoFixture)
-            await redo.connect(Bob).deposit({value: 1000})
-            await redo.connect(Alice).deposit({value: 2000})
-            await expect(redo.connect(Bob).withdraw()).to.emit(redo, 'Withdraw').withArgs(Bob.getAddress(), 1000)
+            const res = await redo.arraySum([1, 2, 3])
+            expect(res).to.be.equal(6)
         })
     })
     

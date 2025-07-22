@@ -124,13 +124,74 @@ async function queryAuthors() {
 // find books, of which the price <= 50, sort by price by ascending sort, 
 // select title and price fields, populate author with these fields shown: firstName lastName gender
 async function queryBooks() {
-    const res = await Book.find({price: {$lte: 50}}).sort({price: 1})
-                          .select({title: 1, price: 1})
-                          .populate('author', 'firstName lastName gender')
+    const res = await Book.find({price: {$lte:50}}).sort({price: 1})
+                         .select({title: 1, price: 1})
+                         .populate('author', 'firstName lastName gender')
     console.log(JSON.stringify(res, null, 2))
 }
 async function aggragate() {
-    
+    const agg = await Book.aggregate([
+        {
+            $lookup: /**
+            * from: The target collection.
+            * localField: The local join field.
+            * foreignField: The target join field.
+            * as: The name for the results.
+            * pipeline: Optional pipeline to run on the foreign collection.
+            * let: Optional variables to use in the pipeline field stages.
+            */
+           {
+             from: "authors",
+             localField: "author",
+             foreignField: "_id",
+             as: "R"
+           }
+        },
+        {
+            $unwind: /**
+            * path: Path to the array field.
+            * includeArrayIndex: Optional name for index.
+            * preserveNullAndEmptyArrays: Optional
+            *   toggle to unwind null and empty values.
+            */
+           {
+             path: "$R",
+             preserveNullAndEmptyArrays: true
+           }
+        },
+        {
+            $project: /**
+            * specifications: The fields to
+            *   include or exclude.
+            */
+           {
+             price:1,
+             gender:"$R.gender"
+           }
+        },
+        {
+            $match: /**
+            * query: The query in MQL.
+            */
+           {
+             price: {$gte:100}
+           }
+        },
+        {
+            $group: /**
+            * _id: The id of the group.
+            * fieldN: The first field name.
+            */
+           {
+             _id: "$gender",
+             sum: {
+               $sum: "$price"
+             }
+           }
+        }
+    ])
+
+    console.log(agg)
 }
 
 async function main() {
@@ -138,8 +199,8 @@ async function main() {
         connect()
         //await create()
         //await queryAuthors()
-        //await queryBooks()
-        await aggragate()
+        await queryBooks()
+        //await aggragate()
     } catch(err) {
         console.log(err)
         process.exit(1)

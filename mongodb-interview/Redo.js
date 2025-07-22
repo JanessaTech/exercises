@@ -58,7 +58,9 @@ async function create() {
 async function query() {
     const agg = await MyType.aggregate([
         {
-            $match: {birtheday: {$gte: new Date('2025-01-01T00:00:00Z')}}
+            $match: {
+                birtheday: {$gte: new Date('2025-01-01T00:00:00Z')}
+            }
         },
         {
             $group: {

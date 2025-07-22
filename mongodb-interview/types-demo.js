@@ -85,7 +85,7 @@ async function query() {
 async function main() {
     try {
         connect()
-        await create()
+        //await create()
         await query()
     } catch (err) {
         console.log(err)

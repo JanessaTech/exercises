@@ -199,7 +199,7 @@ async function aggragate() {
 async function main() {
     try {
         connect()
-        await create()
+        //await create()
         //await queryAuthors()
         //await queryBooks()
         //await aggragate()

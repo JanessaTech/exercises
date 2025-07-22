@@ -1,4 +1,5 @@
-const {default: mongoose, Schema} = require('mongoose')
+
+const {default: mongoose, Schema, mongo} = require('mongoose')
 
 const bookSchema = new Schema({
     title: {
@@ -11,7 +12,7 @@ const bookSchema = new Schema({
     },
     price: {
         type: Number,
-        min: [0, 'price >= 0'],
+        min: [],
         require: [true, 'price is required']
     },
     isbn: {
@@ -22,10 +23,10 @@ const bookSchema = new Schema({
                 return re.test(v)
             },
             message: props => `${props.value} is invalid`
-        }
+        },
+        require: [true, 'isbn is required']
     }
 })
-
 const authorSchema = new Schema({
     firstName: {
         type: String,
@@ -33,20 +34,20 @@ const authorSchema = new Schema({
     },
     lastName: {
         type: String,
-        require:  [true, 'lastName is required']
+        require: [true, 'lastName is required']
     },
     age: {
         type: Number,
-        min: [18, 'age >= 18']
+        min: [18, 'age >= 18'],
+        require: [true, 'age is required']
     },
     gender: {
         type: String,
         enum: {
-            values: ['female','male'],
+            values: ['female', 'male'],
             message: '{VALUE} is not supported'
         },
-        message: '{VALUE} is invalid',
-        default: 'male'
+        require: [true, 'gender is required']
     }
 }, {
     virtuals: {
@@ -71,12 +72,13 @@ function connect() {
     mongoose.connect('mongodb://127.0.0.1/interview')
     let db = mongoose.connection
     db.once('open', () => {
-        console.log('database is connected')
+        console.log('database connected')
     })
-    db.on('error', (err) => {
-        console.log('dataabse error:', err)
+    db.on('error', (error) => {
+        console.log('database error:', error)
     })
 }
+
 
 async function create() {
     const author1 = new Author({ firstName: 'John', lastName: 'Tomas', age: 45, gender: 'male'})
@@ -116,82 +118,19 @@ async function create() {
 // sort by age by ascending sort, populate books
 async function queryAuthors() {
    const res = await Author.find({gender: 'female', age: {$gte: 20}}).sort({age: 1}).populate('books')
-    console.log(JSON.stringify(res, null, 2))
+   console.log(JSON.stringify(res, null, 2))
 }
 
 // find books, of which the price <= 50, sort by price by ascending sort, 
 // select title and price fields, populate author with these fields shown: firstName lastName gender
 async function queryBooks() {
     const res = await Book.find({price: {$lte: 50}}).sort({price: 1})
-                            .select({title: 1, price: 1})
-                            .populate('author', 'firstName lastName gender')
-    console.log(res)
-
+                          .select({title: 1, price: 1})
+                          .populate('author', 'firstName lastName gender')
+    console.log(JSON.stringify(res, null, 2))
 }
 async function aggragate() {
-    const agg = await Book.aggregate([
-        {
-            $lookup: /**
-            * from: The target collection.
-            * localField: The local join field.
-            * foreignField: The target join field.
-            * as: The name for the results.
-            * pipeline: Optional pipeline to run on the foreign collection.
-            * let: Optional variables to use in the pipeline field stages.
-            */
-           {
-             from: "authors",
-             localField:"author",
-             foreignField: "_id",
-             as: "R"
-           }
-        },
-        {
-            $unwind: /**
-            * path: Path to the array field.
-            * includeArrayIndex: Optional name for index.
-            * preserveNullAndEmptyArrays: Optional
-            *   toggle to unwind null and empty values.
-            */
-           {
-             path: "$R",
-             preserveNullAndEmptyArrays: true
-           }
-        },
-        {
-            $project: /**
-            * specifications: The fields to
-            *   include or exclude.
-            */
-           {
-             title:1,
-             price:1,
-             gender:"$R.gender"
-           }
-        },
-        {
-            $match: /**
-            * query: The query in MQL.
-            */
-           {
-             price: {$gte:100}
-           }
-        },
-        {
-            $group: /**
-            * _id: The id of the group.
-            * fieldN: The first field name.
-            */
-           {
-             _id: "$gender",
-             sum: {
-               $sum:"$price"
-             }
-           }
-        }
-    ])
-
-    console.log(agg)
+    
 }
 
 async function main() {

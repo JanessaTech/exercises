@@ -53,12 +53,12 @@ async function init() {
 // pay more attention: the array field must appear as part of the query document
 async function update_$() {
     await init()
-    await Exam.updateOne({rating:80}, {$set: {"rating.$": 100}})
+    await Exam.updateOne({rating: 80}, {$set: {"rating.$": 100}})
 }
 // pick up the fist document with grades which has grade being 185, update  std to 20 for the first matched element in grades
 async function update_$_embbeded() {
     await init()
-    await Exam.updateOne({"grades.grade": 185}, {$set: {"grades.$.std": 20}})
+    await Exam.updateOne({'grades.grade': 185}, {$set: {'grades.$.std': 20}})
 }
 // pick up the first document with grades, 
 // in which there is at least one element, of which the grade > 200 and mean < 90, 
@@ -66,60 +66,53 @@ async function update_$_embbeded() {
 async function update_$_multiple() {
     await init()
     await Exam.updateOne(
-        {grades: {$elemMatch: {grade: {$gt: 200}, mean: {$lt: 90}}}},
-        {$set: {"grades.$.std": 200}}
-    )
+        {grades: {$elemMatch: {grade: {$gt: 200}, mean: {$lt: 90}}}}, 
+        {$set: {'grades.$.std': 200}})
 }
 
 // pick up the the first document in which rating has 88 in it, update all elements in the array to 888 
 async function update_$_all(){
     await init()
-    await Exam.updateOne({rating: 88}, {$set: {"rating.$[]": 888}})
+    await Exam.updateOne({rating: 88}, {$set: {'rating.$[]' : 888}})
 }
 
 // pick up the the first document in which rating has 88 in it, update std to 20 in all elements in the grades for the matched document
 async function update_$_all_embbeded() {
     await init()
-    await Exam.updateOne({rating: 88}, {$set: {"grades.$[].std": 20}})
+    await Exam.updateOne({rating: 88}, {$set: {'rating.$[].std': 20}})
 }
 
 // pick up the the first document in which rating has 88 in it, update elements greater or equal to 90 in it to 100
 async function update_$_identifier() {
     await init()
     await Exam.updateOne(
-        {rating: 88}, 
-        {$set: {"rating.$[elem]": 100}},
-        {arrayFilters: [ {"elem" : {$gte: 90}} ]}
+        {rating: 88},
+        {$set: {'rating.$[elem]': 88}},
+        {arrayFilters: [{"elem": {$gte: 90}}]}
     )
 }
 
 //pick up the first document in which rating has 88 in it, update std to 20 for the all elements whose grade == 185 and mean >=80 in the document
 async function update_$_identifier_embbeded() {
     await init()
-    await Exam.updateOne(
+    await Exam.updateMany(
         {rating: 88},
-        {$set: {"grades.$[elem].std" : 20}},
-        //{ arrayFilters: [ { "elem.grade": { $gte: 80 }, "elem.std": { $gte: 5 } } ] }
-        {arrayFilters: [{"elem.grade": {$eq: 185}, "elem.mean": {$gte: 80}}]}
+        {$set: {'grades.$[elem].std': 20}},
+        {arrayFilters: [{'elem.grade': {$eq: 185}, 'elem.mean': {$gte: 80}}]}
     )
 }
 
 //pick up the first document in which rating has 88 in it, add 93 into rating array(92 will be ignored)
 async function update_$_addToSet() {
     await init()
-    await Exam.updateOne(
-        {rating: 88},
-        { $addToSet: {rating: [92, 93]}}
-    )
+    await Exam.updateOne({rating: 88}, {$addToSet: {rating: [92, 93]}})
+    
 }
 //pick up the first document in which rating has 88 in it, 
 // remove the first element in grades ({grades: 1} means remove the last element in grades)
 async function update_$_pop() {
     await init()
-    await Exam.updateOne(
-        {rating: 88},
-        {$pop: {grades: -1}}
-    )
+    await Exam.updateOne({rating: 88}, {$pop: {grades: -1}})
 }
 
 //pick up the first document in which rating has 88 in it,  
@@ -127,9 +120,8 @@ async function update_$_pop() {
 async function update_$_push() {
     await init()
     await Exam.updateOne(
-        {rating: 88},
-        {$push : {rating: {$each: [100, 200, 300]}}}
-    )
+        {rating: 88}, 
+        {$push: {rating: {$each: [100, 200, 300]}}})
 }
 //pick up the first document in which rating has 88 in it,  
 // insert 100, 200, 300 to rating at position 1
@@ -137,14 +129,12 @@ async function update_$_position() {
     await init()
     await Exam.updateOne(
         {rating: 88},
-        {$push: {
-            rating: {
-                    $each: [ 100,200, 300],
-                    $position: 1
-                }
-            }
-        }
+        {rating: {
+            $each: [100, 200, 300],
+            $position: 1
+        }}
     )
+    
 }
 //pick up the first document in which rating has 88 in it,  
 // insert 100, 200, 300 to rating at position 1
@@ -153,14 +143,13 @@ async function update_$_slice() {
     await init()
     await Exam.updateOne(
         {rating: 88},
-        {$push: {
-            rating: {
-                $each: [100, 200, 300],
-                $position: 1,
-                $slice: 3
-            }
+        {rating: {
+            $each: [100, 200, 300],
+            $position: 1,
+            $slice: 3
         }}
     )
+    
 }
 
 // pick up the first document in which rating has 88 in it,
@@ -171,16 +160,13 @@ async function update_$_sort() {
     await init()
     await Exam.updateOne(
         {rating: 88},
-        {
-            $push: {
-                grades: {
-                    $each: [{grade: 190, mean: 92, std: 7}, {grade: 160, mean: 92, std: 5}, {grade: 181, mean: 92, std: 9}],
-                    $slice: 3,
-                    $sort: {grade: 1}
-                }
-            }
-        }
+        {grades: {
+            $each: [ {grade: 190, mean: 92, std: 7}, {grade: 160, mean: 92, std: 5}, {grade: 181, mean: 92, std: 9}],
+            $sort: {grade: 1},
+            $slice: 3
+        }}
     )
+    
 }
 
 // first
@@ -189,16 +175,10 @@ async function update_$_sort() {
 // pick up the first document in which rating has 88 in it, remove elements in grades in which grade =185 and mean>=90
 async function update_$_pull() {
     await init()
-    //first
     await Exam.updateOne(
         {rating: 88},
         {$pull: {rating: {$gte: 90}}}
-    )
-    //second
-    await Exam.updateOne(
-        {rating: 88},
-        {$pull: {grades: {grade: {$eq:185}, mean: {$gte: 90}}}}
-    )
+    ) 
 }
 
 //pick up the first document in which rating has 88 in it, remove elements specified by [90, 92, 93] from rating

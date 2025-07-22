@@ -1,11 +1,14 @@
 
 const {default: mongoose, Schema, mongo} = require('mongoose')
 
-const bulkSchema  = new Schema({
-    _id: Number,
-    data: String
+const studentSchema = new Schema({
+    name: String,
+    age: Number,
+    addr: String
 })
-const Bulk = mongoose.model('Bulk', bulkSchema)
+
+const Student = mongoose.model('Student', studentSchema)
+
 
 function connect() {
     mongoose.connect('mongodb://127.0.0.1/interview')
@@ -19,43 +22,37 @@ function connect() {
 }
 
 async function create() {
+    const stu1 = new Student({name: 'stu1', age: 10, addr: 'xian'})
+    const stu2 = new Student({name: 'stu2', age: 20, addr: 'xian'})
+    const stu3 = new Student({name: 'stu3', age: 30, addr: 'xian'})
     try {
-        await Bulk.insertMany([
-            {_id: 1, data: 'data1'},
-            {_id: 2, data: 'data2'},
-            {_id: 3, data: 'data3'},
-        ])
-    } catch (err) {
+        await stu1.save()
+        await stu2.save()
+        await stu3.save()
+    } catch(err) {
         console.log(err)
     }
-    console.log('data is created')
+    console.log('data is created!')
 }
 
-async function init() {
-    await Bulk.collection.drop()
-    await create()
+// for stu1, increment age by 2
+async function update_inc() {
+    const res = await Student.findOneAndUpdate({name: 'stu1'}, {$inc: {age: 2}}, {new: true})
+    console.log(JSON.stringify(res, null, 2))
 }
-
-async function bulkOp() {
-    await init()
-    await Bulk.bulkWrite([
-        {insertOne: {document: {_id:4, data: 'data4'}}}, 
-        {updateOne: {filter: {_id: 2}, update: {$set: {data: 'data_new'}}}},
-        {deleteOne: {filter: {_id: 3}}}
-    ], {ordered: true})
+// for stu2, set age=40 and addr=shanghai
+async function update_set() {
+    const res = await Student.findOneAndUpdate({name: 'stu2'}, {$set: {age: 40, addr: 'shanghai'}}, {new: true})
+    console.log(JSON.stringify(res, null, 2))
 }
-async function query() {
-    const res = await Bulk.find()
-    console.log(res)
-}
-
 async function main() {
     try {
         connect()
         //await create()
-        await bulkOp()
-        await query()
-    } catch (err) {
+        //await update_inc()
+        await update_set()
+        //await query()
+    } catch(err) {
         console.log(err)
     }
 }

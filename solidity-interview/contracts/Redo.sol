@@ -38,6 +38,7 @@ contract Redo {
       require(inserted[_id], 'invalid id');
       Person storage person = people[idxMapping[_id]];
       return (person.id, person.name);
+
    }
 
 }

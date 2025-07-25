@@ -62,7 +62,7 @@ contract Redo {
    }
 
    function end() public {
-      require(msg.sender == owner, 'not ower');
+      require(msg.sender == owner, 'not owner');
       require(started, 'not started');
       require(block.timestamp >= endAt, 'not ended');
       if (highestBider != address(0)) {

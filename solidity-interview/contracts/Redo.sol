@@ -8,37 +8,50 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 contract Redo {
-   struct Person {
-      uint256 id;
-      string name;
+   uint256 public value;
+   
+   bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
+   bytes32 private constant IPLEMENTATION_SLOT = keccak256('IPLEMENTATION_SLOT');
+   
+   constructor(address _implementation) {
+      bytes32 slot = IPLEMENTATION_SLOT;
+      assembly {
+         sstore(slot, _implementation)
+      }
+      slot = ADMIN_SLOT;
+      assembly {
+         sstore(slot, caller())
+      }
    }
-   uint256 idx;
-   Person[] people;
-   mapping(uint256 => uint256) idxMapping;
-   mapping(uint256 => bool) inserted;
+   function admin() public view returns(address adm) {
+      bytes32 slot = ADMIN_SLOT;
+      assembly {
+         adm := sload(slot)
+      }
+   }
+   function implememtation() public view returns(address impl) {
+      bytes32 slot = IPLEMENTATION_SLOT;
+      assembly {
+         impl := sload(slot)
+      }
+   }
 
-   function create(string memory _name) public {
-      uint256 _id = idx++;
-      people.push(Person({id: _id, name: _name}));
-      idxMapping[_id] = people.length - 1;
-      inserted[_id] = true;
-   }
-   function remove(uint256 _id) public {
-      require(inserted[_id], 'invalid id');
-      uint256 _idx = idxMapping[_id];
-      Person storage last = people[people.length - 1];
-      people[_idx] = last;
-      idxMapping[last.id] = _idx;
-      delete idxMapping[_id];
-      delete inserted[_id];
-      people.pop();
+   function upgradeTo(address _implementation) public {
+      require(msg.sender == admin(), 'not admin');
+      bytes32 slot = IPLEMENTATION_SLOT;
+      assembly {
+         sstore(slot, _implementation)
+      }
    }
 
-   function get(uint256 _id) public view returns(uint256 id, string memory name) {
-      require(inserted[_id], 'invalid id');
-      Person storage person = people[idxMapping[_id]];
-      return (person.id, person.name);
-
+   function _delegate(address _implementation) private {
+      (bool success, ) = _implementation.delegatecall(msg.data);
+      require(success, 'failed to call delegatecall');
    }
+
+   fallback() external payable{
+      _delegate(implememtation());
+   }
+   receive() external payable {}
 
 }

@@ -17,3 +17,9 @@ npm run dev
 npm run build
 npm run start
 ```
+
+### How to deploy in remix
+
+```
+["alice","bob","Janessa"]
+```

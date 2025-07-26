@@ -10,8 +10,8 @@ type User = {
     phone ?: string
 }
 
-type test1 = User extends Record<'phone', string> ? 1 : 0
-type test2 = User extends Record<'name', string> ? 1 : 0
+type test1 = User extends Record<'phone', string> ? 1 : 0   // here is the key
+type test2 = User extends Record<'name', string> ? 1 : 0  // here is the key
 type reqKeys = RequiredKeys<User>
 type optKeys = OptionalKeys<User>
 

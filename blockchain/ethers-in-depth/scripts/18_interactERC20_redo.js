@@ -29,97 +29,29 @@ const erc20ABI = [
     'function transferOwnership(address)'
   ]
 
-function getProvider() {
-    // 利用公共rpc节点连接以太坊网络
-    // 可以在 https://chainlist.org 上找到
-    //const SEPOLIA_URL = 'https://rpc.sepolia.org';
-    //const providerSepolia = new ethers.JsonRpcProvider(SEPOLIA_URL)
+async function main() {
     const provider = new ethers.JsonRpcProvider('http://127.0.0.1:8545/')
-    return provider
-}
-
-function getSignerA(provider) {
-    const privateKey = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
-    const signer = new ethers.Wallet(privateKey, provider)
-    return signer
-}
-
-function getSignerB(provider) {
-    const privateKey = '0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d'
-    const signer = new ethers.Wallet(privateKey, provider)
-    return signer
-}
-async function getContract() {
-    const provider = getProvider()
-    const signerA = getSignerA(provider)
+    const privateKeyA = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+    const privateKeyB = '0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d'
+    const signerA = new ethers.Wallet(privateKeyA, provider)
+    const signerB = new ethers.Wallet(privateKeyB, provider)
+    const addressA = await signerA.getAddress()
+    const addressB = await signerB.getAddress()
     const contract = new ethers.Contract(contractAddress, erc20ABI, signerA)
-    return contract
-}
 
-async function mint() {
-    const provider = getProvider()
-    const signerA = getSignerA(provider)
-    const signerB = getSignerB(provider)
-    const addressA = await signerA.getAddress()
-    const addressB = await signerB.getAddress()
-    console.log('signerA address =', addressA)
-    console.log('signerB address =', addressB)
-    const contract = await getContract()
-    const tx = await contract.mint(addressA, 1000)
-    const receipt = await tx.wait()
-    console.log('minted for ', addressA)
-    console.log('hash for approve:', tx.hash)
-    console.log(receipt)
-}
-
-async function approve() {
-    const provider = getProvider()
-    const signerB = getSignerB(provider)
-    const signerA = getSignerA(provider)
-    const addressA = await signerA.getAddress()
-    const addressB = await signerB.getAddress()
-    const contract = await getContract()
-    const tx = await contract.approve(addressB, 500)
-    const receipt = await tx.wait()
-    console.log('approved for ', addressB)
-    console.log('hash for approve:', tx.hash)
-    console.log(receipt)
-    const allowance = await contract.allowance(addressA, addressB)
-    console.log('allowance =', allowance)
-}
-
-async function transferFrom() {
-    const provider = getProvider()
-    const signerB = getSignerB(provider)
-    const signerA = getSignerA(provider)
-    const addressA = await signerA.getAddress()
-    const addressB = await signerB.getAddress()
-    const contract = await getContract()
-    const newContract = contract.connect(signerB)
-    const tx = await newContract.transferFrom(addressA, addressB, 300)
-    const receipt = await tx.wait()
-    console.log('hash for transferFrom:', tx.hash)
-    console.log(receipt)
+    await contract.mint(addressA, 1000)
+    await contract.approve(addressB, 500)
+    const newContract= contract.connect(signerB)
+    await newContract.transferFrom(addressA, addressB, 300)
     const balanceA = await contract.balanceOf(addressA)
     const balanceB = await contract.balanceOf(addressB)
     console.log('balanceA =', balanceA)
     console.log('balanceB =', balanceB)
+
 }
 
-async function main() {
-    try {
-        await mint()
-        await getContract()
-        await approve()
-        await transferFrom()
-    } catch(err) {
-        console.log('error in main:', err)
-    }
-}
-
-main().then(
-).catch((err) => {
-    console.log('err', err)
+main().then().catch((err) => {
+    console.log(err)
 })
 
 /**

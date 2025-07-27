@@ -19,3 +19,4 @@ type BackwardCompatible<T> = T & Partial<Record<OptionalKeys<T>, never>>
 type bc = BackwardCompatible<User>
 type bc1 = Partial<Record<OptionalKeys<User>, never>>
 
+

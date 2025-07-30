@@ -11,7 +11,6 @@ const { ethers } = require("hardhat");
         const [admin, Alice, Bob, ...others] = await ethers.getSigners()
         const MyERC20 = await ethers.getContractFactory('MyERC20')
         const erc20 = await MyERC20.deploy(admin.getAddress())
-
         return {erc20, Alice, Bob}
     }
 

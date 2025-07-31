@@ -12,4 +12,4 @@ npx hardhat node
 npx hardhat run scripts/deploy.ts
 ```
 
-npm install @uniswap/v3-sdk @uniswap/sdk-core @uniswap/smart-order-router
+tenderly login --authentication-method access-key --access-key 0U6L0WFUTDQiTn10r5D35BKQnVUpwJOl --force

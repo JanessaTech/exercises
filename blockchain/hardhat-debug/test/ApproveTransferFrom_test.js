@@ -59,3 +59,5 @@ describe('ApproveTransferFromDelegator', function () {
       })
     })
 })
+
+//npx hardhat test --trace .\test\ApproveTransferFrom_test.js

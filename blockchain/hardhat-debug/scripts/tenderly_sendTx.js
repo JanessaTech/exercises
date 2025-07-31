@@ -37,6 +37,6 @@ main().catch((error) => {
     process.exitCode = 1;
 });
 /**
- * 
+ * The code shows how to interact with tenderly
  */
 //npx hardhat run scripts/tenderly_sendTx.js --network virtualMainnet

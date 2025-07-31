@@ -9,6 +9,11 @@ module.exports = {
         url: "https://eth-mainnet.g.alchemy.com/v2/QLyqy7ll-NxAiFILvr2Am",
         blockNumber:23029728
       }
+    },
+    localhost: {
+      url: "http://127.0.0.1:8545",
+      // enable trace
+      loggingEnabled: true,
     }
   }
 };

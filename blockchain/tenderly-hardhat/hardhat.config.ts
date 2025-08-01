@@ -14,7 +14,7 @@ const config: HardhatUserConfig = {
   solidity: "0.8.20",
   networks:{
     virtualMainnet: {
-      url: "https://virtual.mainnet.eu.rpc.tenderly.co/97689d80-5a41-4417-9c6c-f3c760e191d6",
+      url: "https://virtual.mainnet.eu.rpc.tenderly.co/788e8993-30e7-40ea-8442-f5b91c13efd0",
       chainId: 175362 // the Chain ID you selected during creation
     }
   },

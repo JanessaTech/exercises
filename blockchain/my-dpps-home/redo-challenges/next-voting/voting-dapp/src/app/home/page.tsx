@@ -1,32 +1,31 @@
 'use client'
 
-import { IWeb3Context, useWeb3Context } from "@/components/providers/Web3ConextProvider"
+import { IWeb3Context, useWeb3Context } from "@/components/providers/Web3ContextProvider"
 import { AuthState, authState } from "@/lib/Atoms"
 import { ethers } from "ethers"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useRecoilState } from "recoil"
+
 type Candidate = {
     id: number;
-    name: string,
+    name: string;
     votedBy: string
 }
-type HomeState = {
+type HomeStateType = {
     isEnded: boolean;
     candidates: Candidate[]
 }
-
-const defaultHomeState: HomeState = {
+const defaultHomeState: HomeStateType = {
     isEnded: false,
     candidates: []
 }
 
-
 type HomeProps = {}
-const Home: React.FC<HomeProps> = () => {
-    const [state, setState] = useState<HomeState>(defaultHomeState)
-    const [auth, setAuth]  = useRecoilState<AuthState>(authState)
-    const {connectWallet, disconnectWallet, state: {contract, address}} = useWeb3Context() as IWeb3Context
+const Home:React.FC<HomeProps> = () => {
+    const [state, setState] = useState(defaultHomeState)
+    const {connectWallet, state: {address, contract}} = useWeb3Context() as IWeb3Context
+    const [auth, setAuth] = useRecoilState<AuthState>(authState)
     const router = useRouter()
 
     useEffect(() => {
@@ -44,20 +43,20 @@ const Home: React.FC<HomeProps> = () => {
     }, [contract])
 
     const updateState = async (contract: ethers.Contract) => {
-        const rawCandidates: any[] = await contract.getCandidates()
+        const rawCandidates: [] = await contract.getCandidates()
         const rows: Candidate[] = []
         rawCandidates.forEach((e) => {
-            rows.push({id: Number(e[0]), name: e[1], votedBy: e[2]} )
+            rows.push({id: Number(e[0]), name: e[1], votedBy: e[2]})
         })
         const isEnded = await contract.isEnded()
-        setState({candidates: rows, isEnded: isEnded})
+        setState({isEnded: isEnded, candidates: rows})
     }
 
     console.log(state)
-    
+
     return (
         <div>
-            <div>address: {address}</div>
+            <div>Address: {address}</div>
         </div>
     )
 }

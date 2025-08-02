@@ -58,3 +58,5 @@ describe('Weth_test', function () {
     console.log('wethBalance2 after transfer = ', wethBalance2)
   })
 })
+
+//npx hardhat test  .\test\Weth_test.js

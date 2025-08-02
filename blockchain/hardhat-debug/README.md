@@ -15,3 +15,9 @@ npx hardhat node
 ```
 npx hardhat test .\test\ApproveTransferFrom_test.js --network localhost
 ```
+
+## References
+
+```
+https://github.com/zemse/hardhat-tracer
+```

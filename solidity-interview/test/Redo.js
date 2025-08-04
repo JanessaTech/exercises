@@ -6,36 +6,47 @@ const { extendEnvironment } = require("hardhat/config");
 
 describe('Redo', function () {
     async function deployRedoFixture() {
-        const [admin, bob, alice, ...others] = await ethers.getSigners()
-        const Redo = await ethers.getContractFactory('Redo', admin)
-        const redo = await Redo.deploy(admin)
-        return {redo, admin, bob, alice}
-
+        const [admin, ...others] = await ethers.getSigners()
+        const LogicV1 = await ethers.getContractFactory('LogicV1')
+        const logicV1 = await LogicV1.deploy()
+        const LogicV2 = await ethers.getContractFactory('LogicV2')
+        const logicV2 = await LogicV2.deploy()
+        const Proxy = await ethers.getContractFactory('Redo')
+        const proxy = await Proxy.deploy(logicV1.getAddress())
+        return {proxy, logicV1, logicV2, admin}
     }
-    describe('batchMint', function () {
-        it('batchMint', async function () {
-            const {redo, bob} = await loadFixture(deployRedoFixture)
-            const ids = [1, 2]
-            const values = [100, 200]
-            await redo.batchMint(bob.getAddress(), ids, values, '0x123456')
-            const balance1 = await redo.balanceOf(bob.getAddress(), 1)
-            const balance2 = await redo.balanceOf(bob.getAddress(), 2)
-            expect(balance1).to.be.equal(100)
-            expect(balance2).to.be.equal(200)
+    describe('LogicV1 & LogicV2', function () {
+        it('LogicV1', async function () {
+            const {proxy, admin} = await loadFixture(deployRedoFixture)
+            const abi = ['function setValue(uint256) external']
+            const iface = new ethers.Interface(abi)
+            const value = 100
+            const cdata = iface.encodeFunctionData('setValue(uint256)', [100])
+            const tx = {
+                to: await proxy.getAddress(),
+                data: cdata
+            }
+            await admin.sendTransaction(tx)
+            const val = await proxy.value()
+            expect(val).to.be.equal(value)
+        })
+        it('LogicV2', async function () {
+            const {proxy, admin, logicV2} = await loadFixture(deployRedoFixture)
+            await proxy.upgradeTo(logicV2.getAddress())
+            const abi = ['function setValue(uint256) external']
+            const iface = new ethers.Interface(abi)
+            const value = 100
+            const cdata = iface.encodeFunctionData('setValue(uint256)', [100])
+            const tx = {
+                to: await proxy.getAddress(),
+                data: cdata
+            }
+            await admin.sendTransaction(tx)
+            const val = await proxy.value()
+            expect(val).to.be.equal(value * 2)
         })
     })
-    describe('batchTransfer', function () {
-        it('batchTransfer', async function () {
-            const {redo, admin, bob, alice} = await loadFixture(deployRedoFixture)
-            const recepients = [await bob.getAddress(), await alice.getAddress()]
-            const id = 1
-            const amount = 200
-            await redo.batchTransfer(recepients, id, amount)
-            const left = await redo.balanceOf(admin.getAddress(), 1)
-            expect(left).to.be.equal(600)
-
-        })
-    })
+    
     
 })
 

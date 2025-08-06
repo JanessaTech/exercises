@@ -1,70 +1,49 @@
 import {Expect, Equal, Alike, NotEqual, ExpectExtends} from "../test-utils";
 
-
-type cases = [
-  Expect<Equal<DeepReadonly<X1>, Expected1>>,
-  Expect<Equal<DeepReadonly<X2>, Expected2>>,
-]
-
-type X1 = {
-  a: () => 22
-  b: string
-  c: {
-    d: boolean
-    e: {
-      g: {
-        h: {
-          i: true
-          j: 'string'
-        }
-        k: 'hello'
-      }
-      l: [
-        'hi',
-        {
-          m: ['hey']
-        },
-      ]
-    }
+type ErrorType<name extends string = 'Error'> = Error & { name: name }
+class BaseError extends Error {
+  shortMessage: string
+  constructor(_shortMessage: string) {
+    super('default message')
+    this.shortMessage = _shortMessage
   }
 }
 
-type X2 = { a: string } | { b: number }
+type EncodeFunctionDataErrorType = 
+| AbiFunctionNotFoundErrorType
+| AbiEncodingLengthMismatchErrorType
 
-type Expected1 = {
-  readonly a: () => 22
-  readonly b: string
-  readonly c: {
-    readonly d: boolean
-    readonly e: {
-      readonly g: {
-        readonly h: {
-          readonly i: true
-          readonly j: 'string'
-        }
-        readonly k: 'hello'
-      }
-      readonly l: readonly [
-        'hi',
-        {
-          readonly m: readonly ['hey']
-        },
-      ]
-    }
+type AbiFunctionNotFoundErrorType = AbiFunctionNotFoundError & { name: 'AbiFunctionNotFoundError'}
+class AbiFunctionNotFoundError extends BaseError {
+  constructor() {
+    super('coming from AbiFunctionNotFoundError')
+  }
+}
+type AbiEncodingLengthMismatchErrorType = AbiEncodingLengthMismatchError & {name: 'AbiEncodingLengthMismatchError'}
+class AbiEncodingLengthMismatchError extends BaseError {
+  constructor() {
+    super('coming from AbiEncodingLengthMismatchError')
   }
 }
 
-type Expected2 = { readonly a: string } | { readonly b: number }
-type DeepArray<L> = L extends [infer F, ...infer R]
-? [DeepReadonly<F>, ...DeepArray<R>]
-: []
+type ContractFunctionExecutionErrorType = ContractFunctionExecutionError & {name: 'ContractFunctionExecutionError'}
+class ContractFunctionExecutionError extends BaseError {
+  abi: string
+  cause: BaseError
+  constructor(_abi: string, _cause: BaseError) {
+    super('coming from ContractFunctionExecutionError')
+    this.abi = _abi
+    this.cause = _cause
+  }
+}
+type GetContractErrorReturnType<cause = ErrorType> = Omit<
+  ContractFunctionExecutionErrorType, 
+  'cause'
+>
 
-type DeepReadonly<T> = T extends any
-? T extends {[P in any]: unknown}
-  ? { readonly [K in keyof T] : DeepReadonly<T[K]> }
-  : T extends unknown[]
-    ? readonly [...DeepArray<T>]
-    : T
-: never
+const contractFunctionExecutionError: ContractFunctionExecutionError = new ContractFunctionExecutionError('myabi', new BaseError('base error'))
+type tt = typeof contractFunctionExecutionError & {name: 'ContractFunctionExecutionError'}
 
-type test = DeepReadonly<X1>
+
+
+

@@ -6,6 +6,7 @@ class BaseError extends Error {
     this.shortMessage = _shortMessage
   }
 }
+const baseError: BaseError = new BaseError('short msg')
 
 type EncodeFunctionDataErrorType = 
 | AbiFunctionNotFoundErrorType
@@ -34,13 +35,14 @@ class ContractFunctionExecutionError extends BaseError {
     this.cause = _cause
   }
 }
-type GetContractErrorReturnType= Omit<
+type GetContractErrorReturnType<cause = ErrorType>= Omit<
   ContractFunctionExecutionErrorType, 
   'cause'
 > & {
   cause: 
-  | ContractFunctionZeroDataErrorType
-  | ContractFunctionRevertedErrorType
+    | cause
+    | ContractFunctionZeroDataErrorType
+    | ContractFunctionRevertedErrorType
 }
 
 type ContractFunctionZeroDataErrorType= ContractFunctionZeroDataError & { name: 'ContractFunctionZeroDataError'}
@@ -62,3 +64,5 @@ const contractFunctionZeroDataError: ContractFunctionZeroDataErrorType = Object.
 
 const getContractErrorReturnType: GetContractErrorReturnType = Object.assign(contractFunctionExecutionError, {cause: contractFunctionRevertedError})
 console.log(getContractErrorReturnType.cause)
+console.log(getContractErrorReturnType.cause.name)
+console.log(baseError)

@@ -6,48 +6,40 @@ const { extendEnvironment } = require("hardhat/config");
 
 describe('Redo', function () {
     async function deployRedoFixture() {
-        const [admin, ...others] = await ethers.getSigners()
-        const LogicV1 = await ethers.getContractFactory('LogicV1')
-        const logicV1 = await LogicV1.deploy()
-        const LogicV2 = await ethers.getContractFactory('LogicV2')
-        const logicV2 = await LogicV2.deploy()
-        const Proxy = await ethers.getContractFactory('Redo')
-        const proxy = await Proxy.deploy(logicV1.getAddress())
-        return {proxy, logicV1, logicV2, admin}
-    }
-    describe('LogicV1 & LogicV2', function () {
-        it('LogicV1', async function () {
-            const {proxy, admin} = await loadFixture(deployRedoFixture)
-            const abi = ['function setValue(uint256) external']
-            const iface = new ethers.Interface(abi)
-            const value = 100
-            const cdata = iface.encodeFunctionData('setValue(uint256)', [value])
-            const tx = {
-                to: await proxy.getAddress(), 
-                data: cdata
-            }
-            await admin.sendTransaction(tx)
-            const val = await proxy.value()
-            expect(val).to.be.equal(value)
+        const [admin, Bob, user1, user2, ...others] = await ethers.getSigners()
+        const MyERC721 = await ethers.getContractFactory('MyERC721')
+        const erc721 = await MyERC721.deploy('MyERC721', 'MyERC721')
+        const tokenId  = 1
+        await erc721.mint(Bob.getAddress(), tokenId)
+
+        const Redo = await ethers.getContractFactory('Redo', Bob)
+        const redo = await Redo.deploy(erc721.getAddress(), tokenId)
+        await erc721.connect(Bob).approve(redo.getAddress(), tokenId)
+
+        return {redo, erc721, tokenId, Bob, user1, user2}
+    }  
+    describe('init', function () {
+        it('init', async function () {
+            const {redo, erc721, tokenId, Bob} = await loadFixture(deployRedoFixture)
+            const owner = await erc721.ownerOf(tokenId)
+            const spender = await erc721.getApproved(tokenId)
+            expect(owner).to.be.equal(await Bob.getAddress())
+            expect(spender).to.be.equal(await redo.getAddress())
         })
-        it('LogicV2', async function () {
-            const {proxy, admin, logicV2} = await loadFixture(deployRedoFixture)
-            await proxy.upgradeTo(await logicV2.getAddress())
-            const abi = ['function setValue(uint256) external']
-            const iface = new ethers.Interface(abi)
-            const value = 100
-            const cdata = iface.encodeFunctionData('setValue(uint256)', [value])
-            const tx = {
-                to: await proxy.getAddress(), 
-                data: cdata
-            }
-            await admin.sendTransaction(tx)
-            const val = await proxy.value()
-            expect(val).to.be.equal(value * 2)
-        })
+    })  
+    describe('start', function () {
+
+    })
+    describe('bid', function () {
+
+    })
+
+    describe('withdraw', function () {
+
+    })
+    describe('end', function () {
         
     })
-    
 })
 
 

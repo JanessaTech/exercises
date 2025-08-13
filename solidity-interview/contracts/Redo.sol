@@ -14,8 +14,6 @@ import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/
 
 contract Redo {
    uint256 public value;
-
-   
    bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
    bytes32 private constant IMPLEMENTATION_SLOT = keccak256('IMPLEMENTATION_SLOT');
 
@@ -52,8 +50,8 @@ contract Redo {
       }
    }
 
-   function _delegate(address _implementation) private {
-      (bool success, ) = _implementation.delegatecall(msg.data);
+   function _delegate(address _imlementation) private {
+      (bool success,) = _imlementation.delegatecall(msg.data);
       require(success, 'failed to call delegatecall');
    }
 

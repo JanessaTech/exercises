@@ -21,9 +21,9 @@ describe('Redo', function () {
             const abi = ['function setValue(uint256) external']
             const iface = new ethers.Interface(abi)
             const value = 100
-            const cdata = iface.encodeFunctionData('setValue(uint256)', [100])
+            const cdata = iface.encodeFunctionData('setValue(uint256)', [value])
             const tx = {
-                to: await proxy.getAddress(),
+                to: await proxy.getAddress(), 
                 data: cdata
             }
             await admin.sendTransaction(tx)
@@ -32,21 +32,21 @@ describe('Redo', function () {
         })
         it('LogicV2', async function () {
             const {proxy, admin, logicV2} = await loadFixture(deployRedoFixture)
-            await proxy.upgradeTo(logicV2.getAddress())
+            await proxy.upgradeTo(await logicV2.getAddress())
             const abi = ['function setValue(uint256) external']
             const iface = new ethers.Interface(abi)
             const value = 100
-            const cdata = iface.encodeFunctionData('setValue(uint256)', [100])
+            const cdata = iface.encodeFunctionData('setValue(uint256)', [value])
             const tx = {
-                to: await proxy.getAddress(),
+                to: await proxy.getAddress(), 
                 data: cdata
             }
             await admin.sendTransaction(tx)
             const val = await proxy.value()
             expect(val).to.be.equal(value * 2)
         })
+        
     })
-    
     
 })
 

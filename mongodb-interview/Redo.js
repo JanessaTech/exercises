@@ -1,5 +1,4 @@
-
-const {default: mongoose, Schema, mongo} = require('mongoose')
+const {default: mongoose, Schema} = require('mongoose')
 
 const bookSchema = new Schema({
     title: {
@@ -37,7 +36,8 @@ const authorSchema = new Schema({
     },
     age: {
         type: Number,
-        min: [18, 'age >= 18']
+        min: [18, 'age >= 18'],
+        require: [true, 'age is required']
     },
     gender: {
         type: String,
@@ -58,7 +58,6 @@ const authorSchema = new Schema({
     },
     toJSON: {virtuals: true}
 })
-
 authorSchema.virtual('books', {
     ref: 'Book',
     localField: '_id',
@@ -68,16 +67,15 @@ authorSchema.virtual('books', {
 const Book = mongoose.model('Book', bookSchema)
 const Author = mongoose.model('Author', authorSchema)
 
-
 function connect() {
-   mongoose.connect('mongodb://127.0.0.1/interview')
-   let db = mongoose.connection
-   db.once('open', () => {
-    console.log('database connected')
-   })
-   db.on('error', (error) => {
-    console.log('database error:', error)
-   })
+    mongoose.connect('mongodb://127.0.0.1/interview')
+    let db = mongoose.connection
+    db.once('open', () => {
+        console.log('database connected')
+    })
+    db.on('error', (error) => {
+        console.log('database failed ', error)
+    })
 }
 
 async function create() {
@@ -124,14 +122,15 @@ async function queryAuthors() {
 // find books, of which the price <= 50, sort by price by ascending sort, 
 // select title and price fields, populate author with these fields shown: firstName lastName gender
 async function queryBooks() {
-    const res = await Book.find({price: {$lte: 50}}).sort({price: 1})
-                            .select({title: 1, price: 1})
-                            .populate('author', 'firstName lastName gender')
-    console.log(res)
+    const res = await Book.find({price : {$lte: 50}})
+                                .sort({price: 1})
+                                .select({title: 1, price: 1})
+                                .populate('author', 'firstName lastName gender')
+    console.log(JSON.stringify(res, null, 2))
 
 }
 async function aggragate() {
-    const agg = await Book.aggregate([
+    const res = await Book.aggregate([
         {
             $lookup: /**
             * from: The target collection.
@@ -149,7 +148,7 @@ async function aggragate() {
            }
         },
         {
-            $unwind: /**
+            $unwind:/**
             * path: Path to the array field.
             * includeArrayIndex: Optional name for index.
             * preserveNullAndEmptyArrays: Optional
@@ -157,7 +156,7 @@ async function aggragate() {
             */
            {
              path: "$R",
-             includeArrayIndex: 'string'
+             preserveNullAndEmptyArrays: true
            }
         },
         {
@@ -166,16 +165,16 @@ async function aggragate() {
             *   include or exclude.
             */
            {
-             price: 1,
-             gender: "$R.gender"
+             price:1,
+             gender:"$R.gender"
            }
         },
         {
-            $match: /**
+            $match:/**
             * query: The query in MQL.
             */
            {
-             price: {$gte: 100}
+             price:{$gte: 100}
            }
         },
         {
@@ -185,13 +184,14 @@ async function aggragate() {
             */
            {
              _id: "$gender",
-             cnt: {
+             sum: {
                $sum: "$price"
              }
            }
         }
     ])
-    console.log(agg)
+
+    console.log(JSON.stringify(res, null, 2))
 }
 
 async function main() {

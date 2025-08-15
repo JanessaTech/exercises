@@ -64,14 +64,10 @@ async function query() {
         {
             $group: {
                 _id: {$dateToString: {format: '%Y-%m-%d', date: '$birtheday'}},
-                cnt: {
-                    $sum: 1
-                }
+                cnt: {$sum: 1}
             }
         }
     ])
-
-    console.log(agg)
 }
 
 async function main() {

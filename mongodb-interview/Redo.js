@@ -60,7 +60,7 @@ async function query1() {
 }
 // pick up documents with score in which there is at least one element which is > 40 and < 110
 async function query2() {
-    const res = await MyArray.find({score: {$elemMatch: {$lt: 110, $gt:40}}})
+    const res = await MyArray.find({score: {$elemMatch: {$gt: 40, $lt:110}}})
     console.log(JSON.stringify(res, null, 2))
 }
 // pick up documents with children in which there is at least one element whose product is 'xyz' and score > 6
@@ -71,7 +71,7 @@ async function query3() {
 
 // pick up the first document, whose score has 60
 async function query4() {
-    const res  = await MyArray.findOne({score: 60})
+    const res = await MyArray.findOne({score: 60})
     console.log(JSON.stringify(res, null, 2))
 }
 

@@ -1,17 +1,19 @@
 const {default: mongoose, Schema} = require('mongoose')
 
-const childSchema = new Schema({
-    product: String,
-    score: Number
-})
-const parentSchema = new Schema({
+const typeSchema = new Schema({
     name: String,
-    score: [Number],
-    tags: [String],
-    children: [childSchema]
+    age: Number,
+    isMale: Boolean,
+    birtheday: Date,
+    nested: {
+        addr: String,
+    },
+    lucky: [Number],
+    mixed: Schema.Types.Mixed,
+    map: Map
 })
 
-const MyArray = mongoose.model('MyArray', parentSchema)
+const MyType = mongoose.model('MyType', typeSchema)
 
 function connect() {
     mongoose.connect('mongodb://127.0.0.1/interview')
@@ -26,70 +28,54 @@ function connect() {
 
 async function create() {
     try {
-        connect()
-        const arr1 = new MyArray({name: 'arr1', 
-                                  score: [10, 50, 100], 
-                                  tags: ["school", "book", "bag", "headphone", "appliance" ],
-                                  children: [{ "product": "abc", "score": 10 },
-                                    { "product": "xyz", "score": 5 }]
-                                })
-        const arr2 = new MyArray({name: 'arr2', 
-                                  score: [60, 90, 120], 
-                                  tags: ["book", "school"],
-                                  children: [{ "product": "abc", "score": 8 },
-                                    { "product": "xyz", "score": 7 }]
-                                })
-        const arr3 = new MyArray({name: 'arr3', 
-                                  score: [200, 300, 400], 
-                                  tags: ["electronics", "school"],
-                                  children: [{ "product": "abc", "score": 7 },
-                                    { "product": "def", "score": 8 }]})
-        await arr1.save()
-        await arr2.save()
-        await arr3.save()
-    } catch (err) {
+        const t1 = new MyType
+        t1.name = 'Jane'
+        t1.age = 10
+        t1.birtheday = new Date()
+        t1.nested.addr = 'xian'
+        t1.lucky = [1, 2, 3, 4]
+        t1.mixed = [{xx: 'aa'}, [12]]
+        t1.map = new Map([['1', 'value1'], ['2', 'value2']])  // the key must be string type
+
+        const t2 = new MyType
+        t2.name = 'Leo'
+        t2.age = 11
+        t2.birtheday = new Date()
+        t2.nested.addr = 'beijing'
+        t2.lucky.unshift(5, 6, 7, 8)  // pay attention to how to insert elements into array
+        t2.mixed = [{xx: 'aa'}, [12]]
+        t2.map = new Map([['3', 'value3'], ['4', 'value4']])  // the key must be string type
+
+        await t1.save()
+        await t2.save()
+    } catch(err) {
         console.log(err)
     }
     console.log('data is created')
 }
 
-// pick up documents with tags which have "school" and "book" in the array
-async function query1() {
-    const res = await MyArray.find({tags: {$all: ["school", "book"]}})
-    console.log(JSON.stringify(res, null, 2))
-}
-// pick up documents with score in which there is at least one element which is > 40 and < 110
-async function query2() {
-    const res = await MyArray.find({score: {$elemMatch: {$gt: 40, $lt:110}}})
-    console.log(JSON.stringify(res, null, 2))
-}
-// pick up documents with children in which there is at least one element whose product is 'xyz' and score > 6
-async function query3() {
-    const res = await MyArray.find({children: {$elemMatch: {product: 'xyz', score: {$gt: 6}}}})
-    console.log(JSON.stringify(res, null, 2))
-}
-
-// pick up the first document, whose score has 60
-async function query4() {
-    const res = await MyArray.findOne({score: 60})
-    console.log(JSON.stringify(res, null, 2))
-}
-
-// pick up all documents, of which score don't have 100
-async function query5() {
-    const res = await MyArray.find({score: {$ne: 100}})
-    console.log(res)
+async function query() {
+    const agg = await MyType.aggregate([
+        {
+           $match: {
+            birtheday: {$gt: new Date("2005-01-01T00:00:00Z")}
+           }
+        },
+        {
+            $group: {
+                _id: {$dateToString: {format: "%Y-%m-%d", date: "$birtheday"}},
+                cnt: {$sum: 1}
+            }
+        }
+    ])
+    console.log(agg)
 }
 
 async function main() {
     try {
         connect()
         //await create()
-        //await query1()
-        //await query2()
-        //await query3()
-        //await query4()
-        await query5()
+        await query()
     } catch (err) {
         console.log(err)
     }
@@ -98,5 +84,4 @@ async function main() {
 main().then().catch((err) => {
     console.log(err)
 })
-
 

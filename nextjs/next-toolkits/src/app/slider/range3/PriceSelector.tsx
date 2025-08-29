@@ -19,13 +19,28 @@ const PriceSelector: React.FC<PriceSelectorProps> = ({min = 0, max = 1000}) => {
     const range = useRef<HTMLDivElement>(null);
     const minValueDivRef = useRef<HTMLDivElement>(null);
     const maxValueDivRef = useRef<HTMLDivElement>(null);
-    const mid = (min + max) / 2
-
+    const midRef = useRef<HTMLInputElement>(null);
+    const midValueDivRef = useRef<HTMLInputElement>(null);
+    const [mid, setMid] = useState((min + max) / 2)
+    console.log('mid ==', mid)
     const getPercent = useCallback(
         (value: number) => Math.round(((value - min) / (max - min)) * 100),
         [min, max]
       );
     
+    useEffect(() => {
+        if (midRef.current) {
+            const percent = getPercent(mid);
+            midRef.current.style.left = `0%`;
+            midRef.current.style.width = `${percent}%`;
+            console.log('mid', mid)
+            console.log('mid percent', percent)
+            if (midValueDivRef.current) {
+                midValueDivRef.current.style.left = `${percent}%`;
+            }
+        }
+    }, [mid])
+
     useEffect(() => {
     if (maxValInputRef.current) {
         const minPercent = getPercent(minVal);
@@ -39,8 +54,6 @@ const PriceSelector: React.FC<PriceSelectorProps> = ({min = 0, max = 1000}) => {
         if (minValueDivRef.current) {
             minValueDivRef.current.style.left = `${minPercent}%`;
         }
-        console.log('minPercent=', minPercent)
-        console.log('maxPercent=', maxPercent)
     }
     }, [minVal, getPercent]);
 
@@ -50,7 +63,8 @@ const PriceSelector: React.FC<PriceSelectorProps> = ({min = 0, max = 1000}) => {
         const maxPercent = getPercent(maxVal);
 
         if (range.current) {
-        range.current.style.width = `${maxPercent - minPercent}%`;
+            range.current.style.left = `${minPercent}%`;
+            range.current.style.width = `${maxPercent - minPercent}%`;
         }
         if (maxValueDivRef.current) {
             maxValueDivRef.current.style.left = `${maxPercent}%`;
@@ -61,12 +75,10 @@ const PriceSelector: React.FC<PriceSelectorProps> = ({min = 0, max = 1000}) => {
     const onChangeLeft = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = Math.min(Number(e.target.value), maxVal - 1);
           setMinVal(value);
-          e.target.value = value.toString();
     }
     const onChangeRight = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = Math.max(Number(e.target.value), minVal + 1);
         setMaxVal(value);
-        e.target.value = value.toString();
     }
 
     const handleReset = () => {
@@ -76,9 +88,9 @@ const PriceSelector: React.FC<PriceSelectorProps> = ({min = 0, max = 1000}) => {
 
     return (
         <div>
-            <div className="flex justify-center items-center flex-col relative text-xs">
+            <div className="flex justify-center flex-col relative text-xs">
                 <div className="w-[300px] h-[200px] bg-zinc-600/30 absolute bottom-0"></div> 
-                <div className="border-dashed border-[1px] border-white h-[200px] box-border"></div>
+                <div ref={midRef} className="border-dashed border-r-[1px] border-white h-[200px] box-border absolute bottom-0"></div>
                 <div className="w-[300px] h-0 relative bg-zinc-900">
                     <Axis/>
                     <div ref={range} className="bg-pink-600/30 h-[200px] absolute bottom-0 group" >
@@ -103,6 +115,7 @@ const PriceSelector: React.FC<PriceSelectorProps> = ({min = 0, max = 1000}) => {
                         ref={maxValInputRef}
                         onChange={onChangeRight}
                         /> 
+                    <div ref={midValueDivRef} className="text-white absolute bottom-[-25px]">{mid}</div>
                     <div ref={minValueDivRef} className="text-white absolute bottom-[-25px]">{minVal}</div>
                     <div ref={maxValueDivRef} className="text-white absolute bottom-[-25px]">{maxVal}</div> 
                 </div>

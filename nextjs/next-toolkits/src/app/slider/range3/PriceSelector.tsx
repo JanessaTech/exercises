@@ -88,7 +88,7 @@ const PriceSelector: React.FC<PriceSelectorProps> = ({min = 0, max = 1000}) => {
 
     return (
         <div>
-            <div className="flex justify-center flex-col relative text-xs">
+            <div className="flex justify-end flex-col relative text-xs">
                 <div className="w-[300px] h-[200px] bg-zinc-600/30 absolute bottom-0"></div> 
                 <div ref={midRef} className="border-dashed border-r-[1px] border-white h-[200px] box-border absolute bottom-0"></div>
                 <div className="w-[300px] h-0 relative bg-zinc-900">
@@ -118,9 +118,6 @@ const PriceSelector: React.FC<PriceSelectorProps> = ({min = 0, max = 1000}) => {
                     <div ref={midValueDivRef} className="text-white absolute bottom-[-25px]">{mid}</div>
                     <div ref={minValueDivRef} className="text-white absolute bottom-[-25px]">{minVal}</div>
                     <div ref={maxValueDivRef} className="text-white absolute bottom-[-25px]">{maxVal}</div> 
-                </div>
-                <div className="h-0 relative">
-                    <div className="py-1 text-white top-[5px] left-[-10px] absolute text-xs">{mid}</div>
                 </div>
             </div>
             <div className="mt-8 flex justify-end items-center text-white">

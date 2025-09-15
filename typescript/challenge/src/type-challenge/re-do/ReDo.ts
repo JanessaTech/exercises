@@ -1,26 +1,21 @@
 import { Alike, Equal, Expect, ExpectExtends, NotAny } from "../test-utils"
 
-type Foo = {
-  name: string
-  age: string
-}
-type Bar = {
-  name: string
-  age: string
-  gender: number
-}
-type Coo = {
-  name: string
-  gender: number
-}
+const tuple = ['tesla', 'model 3', 'model X', 'model Y'] as const
+const tupleNumber = [1, 2, 3, 4] as const
+const sym1 = Symbol(1)
+const sym2 = Symbol(2)
+const tupleSymbol = [sym1, sym2] as const
+const tupleMix = [1, '2', 3, '4', sym1] as const
 
 type cases = [
-  Expect<Equal<Diff<Foo, Bar>, { gender: number }>>,
-  Expect<Equal<Diff<Bar, Foo>, { gender: number }>>,
-  Expect<Equal<Diff<Foo, Coo>, { age: string, gender: number }>>,
-  Expect<Equal<Diff<Coo, Foo>, { age: string, gender: number }>>,
+  Expect<Equal<TupleToObject<typeof tuple>, { 'tesla': 'tesla', 'model 3': 'model 3', 'model X': 'model X', 'model Y': 'model Y' }>>,
+  Expect<Equal<TupleToObject<typeof tupleNumber>, { 1: 1, 2: 2, 3: 3, 4: 4 }>>,
+  Expect<Equal<TupleToObject<typeof tupleSymbol>, { [sym1]: typeof sym1, [sym2]: typeof sym2 }>>,
+  Expect<Equal<TupleToObject<typeof tupleMix>, { 1: 1, '2': '2', 3: 3, '4': '4', [sym1]: typeof sym1 }>>,
 ]
-
-type Diff<T, U> = {
-  [P in keyof (T & U) as P extends keyof (T | U) ? never : P]: (T & U)[P]
+// @ts-expect-error
+type error = TupleToObject<[[1, 2], {}]>
+type t = typeof tupleMix
+type TupleToObject<T extends readonly (string | number | symbol)[]> = {
+  [P in T[number]]: P
 }

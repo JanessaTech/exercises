@@ -10,3 +10,7 @@ type cases = [
 type TupleToNestedObject<T extends unknown[], U> = T extends [infer F extends string, ... infer R]
 ? {[P in F]: TupleToNestedObject<R, U>}
 : U
+
+// type TupleToNestedObject<T extends unknown[], U> = T extends [infer F extends string, ...infer R]
+// ? Record<F, TupleToNestedObject<R, U>>
+// : U

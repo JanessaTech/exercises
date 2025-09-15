@@ -13,46 +13,36 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 contract Redo {
-  bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
-  bytes32 private constant IMPLEMENTATION_SLOT = keccak256('IMPLEMENTATION_SLOT');
-  constructor(address _implementation) {
-    bytes32 slot = IMPLEMENTATION_SLOT;
-    assembly {
-      sstore(slot, _implementation)
-    }
-    slot = ADMIN_SLOT;
-    assembly {
-      sstore(slot, caller())
-    }
+  struct Person {
+    uint256 id;
+    string name;
+  }
+  Person[] people;
+  uint256 idx;
+  mapping(uint256 => uint256) idxMapping;
+  mapping(uint256 => bool) inserted;
+
+  function create(string memory _name) public {
+    uint256 _idx = idx++;
+    people.push(Person({id: _idx, name: _name}));
+    idxMapping[_idx] = people.length - 1;
+    inserted[_idx] = true;
   }
 
-  function admin() public view returns(address adm) {
-    bytes32 slot = ADMIN_SLOT;
-    assembly {
-      adm := mload(slot)
-    }
-  }
-  function implementation() public view returns(address impl) {
-    bytes32 slot = IMPLEMENTATION_SLOT;
-    assembly {
-      impl := mload(slot)
-    }
+  function remove(uint256 _id) public {
+    require(inserted[_id], 'invalid id');
+    uint256 _idx = idxMapping[_id];
+    Person storage last = people[people.length - 1];
+    people[_idx] = last;
+    idxMapping[last.id] = _idx;
+    delete idxMapping[_id];
+    delete inserted[_id];
+    people.pop(); 
   }
 
-  function upgradeTo(address _implementation) public {
-    require(admin() == msg.sender, 'not admin');
-    bytes32 slot = IMPLEMENTATION_SLOT;
-    assembly {
-      sstore(slot, _implementation)
-    }
+  function get(uint256 _id) public view returns(uint256 id, string memory name) {
+    require(inserted[_id], 'invalid id');
+    Person storage person = people[idxMapping[_id]];
+    return (person.id, person.name);
   }
-  function _delegate(address _implementation) private {
-    (bool success, ) = _implementation.delegatecall(msg.data);
-    require(success, 'failed to call delegatecall');
-  }
-
-  fallback() external payable {
-    _delegate(implementation());
-  }
-  receive() external payable {}
 }

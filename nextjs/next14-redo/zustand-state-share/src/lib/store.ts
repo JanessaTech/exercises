@@ -1,4 +1,5 @@
 
+import { notEqual } from 'assert';
 import { BlobOptions } from 'buffer';
 import {create } from 'zustand'
 import {persist, createJSONStorage} from 'zustand/middleware'
@@ -14,20 +15,20 @@ interface NoteState {
 const useAddNote = create<NoteState>()(persist(
     (set) => ({
         notes: [],
-        addNote: (note) => set((state) =>({notes: [...state.notes, note]})),
         isDone: false,
-        setIsDone: (done) => set({isDone: done}),
+        addNote: (note) => set((state) => ({notes: [...state.notes, note]})),
+        setIsDone: (done)=> set({isDone: done}),
         clear: () => {
-            localStorage.removeItem('state_note')
+            localStorage.removeItem('')
             set({notes: []})
         }
     }),
     {
-        name: 'state_note',
+        name: 'note_state', 
         storage: createJSONStorage(() => localStorage),
-        onRehydrateStorage: () =>(state) => {
-            state?.setIsDone(true)
-        }
+       onRehydrateStorage: () => (state) => {
+        state?.setIsDone(true)
+       }
     }
 ))
 

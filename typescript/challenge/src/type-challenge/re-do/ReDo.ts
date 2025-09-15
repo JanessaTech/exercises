@@ -1,28 +1,74 @@
 import { Alike, Equal, Expect, ExpectExtends, NotAny } from "../test-utils"
 
 type cases = [
-  Expect<Equal<Subsequence<[1, 2]>, [] | [1] | [2] | [1, 2]>>,
-  Expect<Equal<Subsequence<[1, 2, 3]>, [] | [1] | [2] | [1, 2] | [3] | [1, 3] | [2, 3] | [1, 2, 3]>>,
-  Expect<Equal<Subsequence<[1, 2, 3, 4, 5]>, [] |
-  [1] | [2] | [3] | [4] | [5] |
-  [1, 2] | [1, 3] | [1, 4] | [1, 5] | [2, 3] | [2, 4] | [2, 5] | [3, 4] | [3, 5] | [4, 5] |
-  [1, 2, 3] | [1, 2, 4] | [1, 2, 5] | [1, 3, 4] | [1, 3, 5] | [1, 4, 5] | [2, 3, 4] | [2, 3, 5] | [2, 4, 5] | [3, 4, 5] |
-  [1, 2, 3, 4] | [1, 2, 3, 5] | [1, 2, 4, 5] | [1, 3, 4, 5] | [2, 3, 4, 5] |
-  [1, 2, 3, 4, 5] >>,
-  Expect<Equal<Subsequence<['a', 'b', 'c']>, [] |
-  ['a'] | ['b'] | ['c'] |
-  ['a', 'b'] | ['a', 'c'] | ['b', 'c'] |
-  ['a', 'b', 'c'] >>,
-  Expect<Equal<Subsequence<['x', 'y']>, [] |
-  ['x'] | ['y'] |
-  ['x', 'y'] >>,
+  Expect<Equal<DeepReadonly<X1>, Expected1>>,
+  Expect<Equal<DeepReadonly<X2>, Expected2>>,
 ]
 
-type Merge<E, L extends unknown[]>  = L extends any
-? [E, ...L]
-: never
+type X1 = {
+  a: () => 22
+  b: string
+  c: {
+    d: boolean
+    e: {
+      g: {
+        h: {
+          i: true
+          j: 'string'
+        }
+        k: 'hello'
+      }
+      l: [
+        'hi',
+        {
+          m: ['hey']
+        },
+      ]
+    }
+  }
+}
 
-type Subsequence<T> = T extends [infer F, ...infer R]
-? Subsequence<R> | Merge<F, Subsequence<R>>
+type X2 = { a: string } | { b: number }
+
+type Expected1 = {
+  readonly a: () => 22
+  readonly b: string
+  readonly c: {
+    readonly d: boolean
+    readonly e: {
+      readonly g: {
+        readonly h: {
+          readonly i: true
+          readonly j: 'string'
+        }
+        readonly k: 'hello'
+      }
+      readonly l: readonly [
+        'hi',
+        {
+          readonly m: readonly ['hey']
+        },
+      ]
+    }
+  }
+}
+
+type Expected2 = { readonly a: string } | { readonly b: number }
+
+type DeepArray<A> = A extends [infer F, ...infer R]
+? [DeepReadonly<F>, ...DeepArray<R>]
 : []
 
+type DeepReadonly<T> = T extends any
+? T extends {[K in any]: unknown}
+  ? {
+   readonly [P in keyof T]: DeepReadonly<T[P]>
+  }
+  : T extends unknown[]
+    ? readonly [...DeepArray<T>]
+    : T
+: never
+
+
+// for test
+type test = DeepReadonly<X1>

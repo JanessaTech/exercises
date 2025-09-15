@@ -1,5 +1,4 @@
 'use client'
-
 import { RecoilRoot } from "recoil"
 
 type RecoilProviderProps = {
@@ -8,9 +7,8 @@ type RecoilProviderProps = {
 const RecoilProvider: React.FC<RecoilProviderProps> = ({children}) => {
     return (
         <RecoilRoot>
-        {children}
+            {children}
         </RecoilRoot>
     )
 }
-
 export default RecoilProvider

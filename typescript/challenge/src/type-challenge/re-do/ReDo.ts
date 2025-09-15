@@ -1,21 +1,26 @@
 import { Alike, Equal, Expect, ExpectExtends, NotAny } from "../test-utils"
 
+type Foo = {
+  name: string
+  age: string
+}
+type Bar = {
+  name: string
+  age: string
+  gender: number
+}
+type Coo = {
+  name: string
+  gender: number
+}
+
 type cases = [
-  Expect<Equal<Unique<[1, 1, 2, 2, 3, 3]>, [1, 2, 3]>>,
-  Expect<Equal<Unique<[1, 2, 3, 4, 4, 5, 6, 7]>, [1, 2, 3, 4, 5, 6, 7]>>,
-  Expect<Equal<Unique<[1, 'a', 2, 'b', 2, 'a']>, [1, 'a', 2, 'b']>>,
-  Expect<Equal<Unique<[string, number, 1, 'a', 1, string, 2, 'b', 2, number]>, [string, number, 1, 'a', 2, 'b']>>,
-  Expect<Equal<Unique<[unknown, unknown, any, any, never, never]>, [unknown, any, never]>>,
+  Expect<Equal<Diff<Foo, Bar>, { gender: number }>>,
+  Expect<Equal<Diff<Bar, Foo>, { gender: number }>>,
+  Expect<Equal<Diff<Foo, Coo>, { age: string, gender: number }>>,
+  Expect<Equal<Diff<Coo, Foo>, { age: string, gender: number }>>,
 ]
 
-type Include<E, L extends unknown[]> =  L extends [infer F, ...infer R]
-? Equal<E, F> extends true 
-  ? true
-  : Include<E, R>
-: false
-
-type Unique<T, acc extends unknown[] = []> = T extends [infer F, ...infer R]
-? Include<F, acc> extends true
-  ? Unique<R, acc>
-  : Unique<R, [...acc, F]>
-: acc
+type Diff<T, U> = {
+  [P in keyof (T & U) as P extends keyof (T | U) ? never : P]: (T & U)[P]
+}

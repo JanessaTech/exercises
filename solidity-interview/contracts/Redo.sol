@@ -12,29 +12,70 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
-contract Redo is ERC1155, Ownable {
-  uint256 public constant SWORD = 1;
-  uint256 public constant POTION = 2;
-  uint256 public constant SHEILD = 3;
+contract Redo {
+  IERC721 nft;
+  uint tokenId;
 
-  constructor(address initialOwner) ERC1155("http://test.com/{id}.json") Ownable(initialOwner) {
-    _mint(msg.sender, SWORD, 1000, '');
-    _mint(msg.sender, POTION, 1000, '');
-    _mint(msg.sender, SHEILD, 1000, '');
+  address owner;
+
+  bool started;
+  uint endAt;
+  uint highestBid;
+  address highestBidder;
+  mapping(address => uint) bids;
+
+  event Start(address from);
+  event Bid(address from, uint amount);
+  event Withdraw(address from, uint amount);
+  event End(address from);
+
+  constructor(address _nft, uint _tokenId) {
+    nft = IERC721(_nft);
+    tokenId = _tokenId;
+    owner = msg.sender;
   }
 
-  function setURI(string memory newuri) public onlyOwner {
-      _setURI(newuri);
+  function start() public {
+    require(msg.sender == owner, 'not owner');
+    require(!started, 'started');
+    started = true;
+    endAt = block.timestamp + 7 days;
+    nft.transferFrom(msg.sender, address(this), tokenId);
+    emit Start(msg.sender);
   }
 
-  function mintBatch(address to, uint[] memory ids, uint[] memory values, bytes memory data) public onlyOwner {
-    require(ids.length == values.length, 'ids.length != values.length');
-    _mintBatch(to, ids, values, data);
-  }
-  function transferBatch(address[] memory recipients, uint id, uint amount) public {
-    require(balanceOf(msg.sender, id) >= recipients.length * amount, 'not enough');
-    for (uint i = 0; i < recipients.length; i++) {
-      safeTransferFrom(msg.sender, recipients[i], id, amount, '');
+  function bid() public payable {
+    require(started, 'not started');
+    require(block.timestamp < endAt, 'ended');
+    require(msg.value > highestBid, 'msg.value <= highestBid');
+    if (highestBidder != address(0)) {
+      bids[highestBidder] += highestBid;
     }
+    highestBid = msg.value;
+    highestBidder = msg.sender;
+    emit Bid(msg.sender, msg.value);
+  }
+
+  function withdraw() public {
+    uint amount = bids[msg.sender];
+    require(amount > 0, 'no eth');
+    bids[msg.sender] = 0;
+    bool sent = payable(msg.sender).send(amount);
+    require(sent, 'failed to withdraw');
+    emit Withdraw(msg.sender, amount);
+  }
+
+  function end() public {
+    require(msg.sender == owner, 'not owner');
+    require(started, 'not started');
+    require(block.timestamp >= endAt, 'not ended');
+    if (highestBidder != address(0)) {
+      nft.transferFrom(address(this), highestBidder, tokenId);
+      bool sent = payable(msg.sender).send(highestBid);
+      require(sent, 'failed to transfer eth to owner');
+    } else {
+      nft.transferFrom(address(this), owner, tokenId);
+    }
+    emit End(msg.sender);
   }
 }

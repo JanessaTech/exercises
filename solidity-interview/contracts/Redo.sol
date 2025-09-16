@@ -12,25 +12,21 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
-contract Redo {
-  bool private locked;
-  mapping(address => uint256) balances;
-  modifier non_reentrant() {
-    require(!locked, 'reentrant');
-    locked = true;
-    _;
-    locked = false;
-  }
+contract Redo is ERC20, AccessControl {
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
 
-  function deposit() public payable non_reentrant {
-    balances[msg.sender] += msg.value;
-  }
+    constructor(address defaultAdmin, address minter, address burner) ERC20("MyToken", "MTK") {
+        _grantRole(DEFAULT_ADMIN_ROLE, defaultAdmin);
+        _grantRole(MINTER_ROLE, minter);
+        _grantRole(BURNER_ROLE, burner);
+    }
 
-  function withdraw() public payable {
-    uint256 amount = balances[msg.sender];
-    require(amount > 0, 'no money');
-    balances[msg.sender] = 0;
-    (bool success, ) = payable(msg.sender).call{value: amount, gas: 2300}('');
-    require(success, 'failed to withdraw');
-  }
+    function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
+        _mint(to, amount);
+    }
+    function burn(address to, uint256 amount) public onlyRole(BURNER_ROLE) {
+      require(balanceOf(to) >= amount, 'no enough to burn');
+      _burn(to, amount);
+    }
 }

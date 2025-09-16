@@ -6,20 +6,28 @@ const { extendEnvironment } = require("hardhat/config");
 
 describe('Redo', function () {
     async function deployRedoFixture() {
-        const [Bob, Alice, ...others] = await ethers.getSigners()
+        const [admin, minter, burner, Bob, non, ...others] = await ethers.getSigners()
         const Redo = await ethers.getContractFactory('Redo')
-        const redo = await Redo.deploy()
-        return {redo, Bob, Alice}
+        const redo = await Redo.deploy(admin.getAddress(), minter.getAddress(), burner.getAddress())
+        return {redo, admin, minter, burner, Bob, non}
     }
-    describe('deposit & withdraw', function () {
-        it('it failed to withdraw', async function () {
-            const {redo, Alice, Bob} = await loadFixture(deployRedoFixture)
-            await expect(redo.connect(Bob).withdraw()).to.be.revertedWith('no money')
+    describe('mint', function () {
+        it('it minted successfully', async function () {
+            const {redo, minter, Bob} = await loadFixture(deployRedoFixture)
+            await expect(redo.connect(minter).mint(Bob.getAddress(), 1000)).not.to.be.reverted
         })
-        it('it withdraw successfully', async function () {
-            const {redo, Alice} = await loadFixture(deployRedoFixture)
-            await redo.connect(Alice).deposit({value: 1000})
-            await expect(redo.connect(Alice).withdraw).not.to.be.reverted
+        it('it failed to mint', async function () {
+            const {redo, non, Bob} = await loadFixture(deployRedoFixture)
+            await expect(redo.connect(non).mint(Bob.getAddress(), 1000)).to.be.revertedWithCustomError(redo, 'AccessControlUnauthorizedAccount')
+        })
+    })
+    describe('burn', function () {
+        it('it burned successfully', async function () {
+            const {redo, minter, burner, Bob} = await loadFixture(deployRedoFixture)
+            await redo.connect(minter).mint(Bob.getAddress(), 1000)
+            await redo.connect(burner).burn(Bob.getAddress(), 300)
+            const balance = await redo.balanceOf(Bob.getAddress())
+            expect(balance).to.be.equal(700)
         })
     })
 

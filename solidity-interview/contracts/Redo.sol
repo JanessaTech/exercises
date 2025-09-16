@@ -13,16 +13,24 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 contract Redo {
-  function sumArray(uint[] memory arr) public pure returns(uint) {
-    uint sum;
-    assembly {
-      let len := mload(arr)
-      let ptr := add(arr, 0x20)
-      for {let i := 0} lt(i, len) { i:= add(i, 1)} {
-        sum := add(sum, mload(ptr))
-        ptr := add(ptr, 0x20)
-      }
-    }
-    return sum;
+  bool private locked;
+  mapping(address => uint256) balances;
+  modifier non_reentrant() {
+    require(!locked, 'reentrant');
+    locked = true;
+    _;
+    locked = false;
+  }
+
+  function deposit() public payable non_reentrant {
+    balances[msg.sender] += msg.value;
+  }
+
+  function withdraw() public payable {
+    uint256 amount = balances[msg.sender];
+    require(amount > 0, 'no money');
+    balances[msg.sender] = 0;
+    (bool success, ) = payable(msg.sender).call{value: amount, gas: 2300}('');
+    require(success, 'failed to withdraw');
   }
 }

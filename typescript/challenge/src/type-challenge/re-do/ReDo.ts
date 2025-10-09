@@ -12,7 +12,19 @@ type cases = [
 type StringToUnion<S> = S extends `${infer F}${infer R}`
 ? F | StringToUnion<R>
 : never
+type ArrayToString<L> = L extends any
+? L extends [infer F, ...infer R]
+  ? `${string &F}${ArrayToString<R>}`
+  : ''
+: never
 
-type AllCombinations<S extends string> = any
+type Com<U, path extends unknown[] = [], acc = never, A = U> = [U] extends [never]
+? ArrayToString<acc | path>
+: U extends any
+  ? Com<Exclude<A, U>, [...path, U], acc | path>
+  : never
+
+type AllCombinations<S extends string> = Com<StringToUnion<S>>
 
 type test = StringToUnion<'AB'>
+type test1 = Com<StringToUnion<'AB'>>

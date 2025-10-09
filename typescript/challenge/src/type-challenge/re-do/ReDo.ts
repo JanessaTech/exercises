@@ -59,14 +59,12 @@ type cases = [
   Expect<Equal<ReplaceKeys<Nodes, 'name', { aa: number }>, NodesNoName>>,
 ]
 
-type ReplaceKeys<U, T, Y> = U extends any
-? {
+
+
+type ReplaceKeys<U, T, Y> = {
   [P in keyof U]: P extends T
     ? P extends keyof Y
       ? Y[P]
       : never
     : U[P]
 }
-: never
-
-//type ReplaceKeys<U, T, Y> = any

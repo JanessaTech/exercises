@@ -17,7 +17,7 @@ type MapTypes<T, M extends {[K in 'mapFrom' | 'mapTo']: any}> = {
   [P in keyof T]: T[P] extends M['mapFrom']
     ? M extends any
       ? M extends {mapFrom: T[P]}
-        ? never
+        ? M['mapTo']
         : never
       : never
     : T[P]

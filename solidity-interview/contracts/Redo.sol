@@ -13,29 +13,51 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 contract Redo {
-  
-  bool private locked;
+  uint256 public value;
 
-  mapping(address => uint) balances;
+  bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
+  bytes32 private constant IMPLEMENTATION_SLOT = keccak256('IMPLEMENTATION_SLOT');
 
-  event Withdraw(address indexed from, uint amount);
-  modifier nonreentrance() {
-    require(!locked, 'reentrance');
-    locked = true;
-    _;
-    locked = false;
+  constructor(address _implementation) {
+    bytes32 slot = IMPLEMENTATION_SLOT;
+    assembly {
+      sstore(slot, _implementation)
+    }
+    slot = ADMIN_SLOT;
+    assembly {
+      sstore(slot, caller())
+    }
   }
 
-  function deposit() public payable  {
-    balances[msg.sender] += msg.value;
-  }
-  function withdraw() public payable nonreentrance {
-    uint amount = balances[msg.sender];
-    require(amount > 0, 'no eth');
-    balances[msg.sender] = 0;
-    (bool success, ) = payable(msg.sender).call{value: amount, gas: 2300}('');
-    require(success, 'failed to withdraw');
-    emit Withdraw(msg.sender, amount);
+  function admin() public view returns(address adm) {
+    bytes32 slot = ADMIN_SLOT;
+    assembly {
+      adm := sload(slot)
+    }
   }
 
+  function implementation() public view returns(address impl) {
+    bytes32 slot = IMPLEMENTATION_SLOT;
+    assembly {
+      impl := sload(slot)
+    }
+  }
+
+  function upgradeTo(address _implementation) public {
+    require(admin() == msg.sender, 'not admin');
+    bytes32 slot = IMPLEMENTATION_SLOT;
+    assembly {
+      sstore(slot, _implementation)
+    }
+  }
+
+  function _delegate(address _implementation) private {
+    (bool success, ) = _implementation.delegatecall(msg.data);
+    require(success, 'failed to call delegatecall');
+  }
+
+  fallback() external payable {
+    _delegate(implementation());
+  }
+  receive() external payable {}
 }

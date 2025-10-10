@@ -1,9 +1,13 @@
 import { Alike, Equal, Expect, ExpectExtends, NotAny } from "../test-utils"
 
-type UnpackPromise<T> = T extends Promise<infer U> 
-                      ? UnpackPromise<U>
-                      : T
+type User = {
+  id : string;
+  name: string;
+  age ?: number;
+  phone ?: string
+}
 
-// 测试
-type NestedPromise = Promise<Promise<string>>;
-type ResolvedType = UnpackPromise<NestedPromise>; // string
+type RequiredTypes<T> = {
+  [K in keyof T] -?: T extends Record<K, T[K]> ? K : never
+}[keyof T]
+type test = RequiredTypes<User>

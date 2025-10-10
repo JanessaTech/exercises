@@ -12,21 +12,30 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
-contract Redo is ERC20, AccessControl {
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
+contract Redo is ERC1155, Ownable {
+    uint public constant SWORD = 1;
+    uint public constant POTION = 2;
+    uint public constant SHEILD = 3;
 
-    constructor(address defaultAdmin, address minter, address burner) ERC20("MyToken", "MTK") {
-        _grantRole(DEFAULT_ADMIN_ROLE, defaultAdmin);
-        _grantRole(MINTER_ROLE, minter);
-        _grantRole(BURNER_ROLE, burner);
+    constructor(address initialOwner) ERC1155("http://test.com/{id}.json") Ownable(initialOwner) {
+      _mint(msg.sender, SWORD, 1000, '');
+      _mint(msg.sender, POTION, 1000, '');
+      _mint(msg.sender, POTION, 1000, '');
     }
 
-    function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
-        _mint(to, amount);
+    function setURI(string memory newuri) public onlyOwner {
+        _setURI(newuri);
     }
-    function burn(address to, uint256 amount) public onlyRole(BURNER_ROLE) {
-      require(balanceOf(to) > amount, 'not enough to burn');
-      _burn(to, amount);
+
+    function mintBatch(address to, uint256[] memory ids, uint256[] memory values, bytes memory data) public onlyOwner {
+      require(ids.length == values.length, 'ids.length != values.length');
+      _mintBatch(to, ids, values, data);
+    }
+
+    function transferBatch(address[] memory recipents, uint id, uint amount) public {
+      require(balanceOf(address(this), id) >= recipents.length * amount);
+      for (uint i = 0; i < recipents.length; i++) {
+        safeTransferFrom(address(this), recipents[i], id, amount, '');
+      }
     }
 }

@@ -12,52 +12,21 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
-contract Redo {
-  uint256 public value;
+contract Redo is ERC20, AccessControl {
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
 
-  bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
-  bytes32 private constant IMPLEMENTATION_SLOT = keccak256('IMPLEMENTATION_SLOT');
-
-  constructor(address _implementation) {
-    bytes32 slot = IMPLEMENTATION_SLOT;
-    assembly {
-      sstore(slot, _implementation)
+    constructor(address defaultAdmin, address minter, address burner) ERC20("MyToken", "MTK") {
+        _grantRole(DEFAULT_ADMIN_ROLE, defaultAdmin);
+        _grantRole(MINTER_ROLE, minter);
+        _grantRole(BURNER_ROLE, burner);
     }
-    slot = ADMIN_SLOT;
-    assembly {
-      sstore(slot, caller())
+
+    function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
+        _mint(to, amount);
     }
-  }
-
-  function admin() public view returns(address adm) {
-    bytes32 slot = ADMIN_SLOT;
-    assembly {
-      adm := sload(slot)
+    function burn(address to, uint256 amount) public onlyRole(BURNER_ROLE) {
+      require(balanceOf(to) > amount, 'not enough to burn');
+      _burn(to, amount);
     }
-  }
-
-  function implementation() public view returns(address impl) {
-    bytes32 slot = IMPLEMENTATION_SLOT;
-    assembly {
-      impl := sload(slot)
-    }
-  }
-
-  function upgradeTo(address _implementation) public {
-    require(admin() == msg.sender, 'not admin');
-    bytes32 slot = IMPLEMENTATION_SLOT;
-    assembly {
-      sstore(slot, _implementation)
-    }
-  }
-
-  function _delegate(address _implementation) private {
-    (bool success, ) = _implementation.delegatecall(msg.data);
-    require(success, 'failed to call delegatecall');
-  }
-
-  fallback() external payable {
-    _delegate(implementation());
-  }
-  receive() external payable {}
 }

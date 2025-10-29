@@ -6,6 +6,17 @@ type NodeA = {
   flag: number
 }
 
+type ReplacedNodeA = {
+  type: 'A'
+  name: number
+  flag: string
+}
+type NoNameNodeA = {
+  type: 'A'
+  flag: number
+  name: never
+}
+
 type NodeB = {
   type: 'B'
   id: number
@@ -18,11 +29,7 @@ type NodeC = {
   flag: number
 }
 
-type ReplacedNodeA = {
-  type: 'A'
-  name: number
-  flag: string
-}
+
 
 type ReplacedNodeB = {
   type: 'B'
@@ -36,11 +43,7 @@ type ReplacedNodeC = {
   flag: string
 }
 
-type NoNameNodeA = {
-  type: 'A'
-  flag: number
-  name: never
-}
+
 
 type NoNameNodeC = {
   type: 'C'
@@ -57,14 +60,11 @@ type cases = [
   Expect<Equal<ReplaceKeys<Nodes, 'name', { aa: number }>, NodesNoName>>,
 ]
 
-type ReplaceKeys<U, T, Y> = U extends any
-? {
+
+type ReplaceKeys<U, T, Y> = {
   [P in keyof U]: P extends T
     ? P extends keyof Y
       ? Y[P]
       : never
     : U[P]
 }
-: never
-
-//type ReplaceKeys<U, T, Y> = any

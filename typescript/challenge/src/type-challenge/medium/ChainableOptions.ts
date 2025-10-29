@@ -48,6 +48,12 @@ type Expected3 = {
 //   get(): any
 // }
 
+// type Chainable<O = {}> = {
+//   option<K extends string, V>(key: K extends keyof O ? never : K, value: V): Chainable<Omit<O, K> & Record<K, V>>
+//   get(): O
+// }
+
+
 type Chainable<O = {}> = {
     option<K  extends string, V>(
         key: K extends keyof O

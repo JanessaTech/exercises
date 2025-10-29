@@ -13,70 +13,50 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 contract Redo {
-  IERC721 nft;
-  uint tokenId;
+  uint256 public value;
+  bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
+  bytes32 private constant IMPLEMENTATION_SLOT = keccak256('IMPLEMENTATION_SLOT');
 
-  address owner;
-
-  bool started;
-  uint endAt;
-
-  address highestBidder;
-  uint highestBid;
-  mapping(address => uint) bids;
-
-  event Start(address indexed from);
-  event Bid(address indexed from, uint amount);
-  event Withdraw(address indexed from, uint amount);
-  event End(address indexed from);
-
-  constructor(address _nft, uint _tokenId) {
-    nft = IERC721(_nft);
-    tokenId = _tokenId;
-    owner = msg.sender;
-  }
-
-  function start() public {
-    require(msg.sender == owner, 'not owner');
-    require(!started, 'started');
-    started = true;
-    endAt = block.timestamp + 7 days;
-    nft.transferFrom(msg.sender, address(this), tokenId);
-    emit Start(msg.sender);
-  }
-
-  function bid() public payable {
-    require(started, 'not started');
-    require(block.timestamp < endAt, 'ended');
-    require(msg.value > highestBid, 'msg.value <= highestBid');
-    if (highestBidder != address(0)) {
-      bids[highestBidder] += highestBid;
+  constructor(address _implementation) {
+    bytes32 slot = IMPLEMENTATION_SLOT;
+    assembly {
+      sstore(slot, _implementation)
     }
-    highestBid = msg.value;
-    highestBidder = msg.sender;
-    emit Bid(msg.sender, msg.value);
-  }
-
-  function withdraw() public {
-    uint amount = bids[msg.sender];
-    require(amount > 0, 'no eth');
-    bids[msg.sender] = 0;
-    bool sent = payable(msg.sender).send(amount);
-    require(sent, 'failed to withdraw');
-    emit Withdraw(msg.sender, amount);
-  }
-
-  function end() public {
-    require(msg.sender == owner, 'not owner');
-    require(started, 'not started');
-    require(block.timestamp >= endAt, 'not ended');
-    if (highestBidder == address(0)) {
-      nft.transferFrom(address(this), owner, tokenId);
-    } else {
-      nft.transferFrom(address(this), highestBidder, tokenId);
-      bool sent = payable(owner).send(highestBid);
-      require(sent, 'failed to sent eth to owner');
+    slot = ADMIN_SLOT;
+    assembly {
+      sstore(slot, caller())
     }
-    emit End(msg.sender);
   }
+
+  function admin() public view returns(address adm) {
+    bytes32 slot = ADMIN_SLOT;
+    assembly {
+      adm := sload(slot)
+    }
+  }
+
+  function implementation() public view returns (address impl) {
+    bytes32 slot = IMPLEMENTATION_SLOT;
+    assembly {
+      impl := sload(slot)
+    }
+  }
+
+  function upgradeTo(address _implemenation) public {
+    require(msg.sender == admin(), 'not admin');
+    bytes32 slot = IMPLEMENTATION_SLOT;
+    assembly {
+      sstore(slot, _implemenation)
+    }
+  }
+
+  function _delegate(address _implementation) private {
+    (bool success, ) = _implementation.delegatecall(msg.data);
+    require(success, 'failed to call delegatecall');
+  }
+
+  fallback() external payable {
+    _delegate(implementation());
+  }
+  receive() external payable {}
 }

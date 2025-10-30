@@ -41,9 +41,43 @@ const useWalletManager = () => {
         };
     }, [])
 
+    const switchTohardhat = async () => {
+        const { ethereum } = window;
+
+        // 首先切换到 Hardhat 网络
+        try {
+        await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x7A69' }], // 31337 的十六进制
+        });
+        } catch (switchError: any) {
+        // 如果网络不存在于 MetaMask，添加它
+        if (switchError?.code === 4902) {
+            await window.ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [
+                    {
+                    chainId: '0x7A69',
+                    chainName: 'Hardhat Local',
+                    rpcUrls: ['http://127.0.0.1:8545/'],
+                    nativeCurrency: {
+                        name: 'Ethereum',
+                        symbol: 'ETH',
+                        decimals: 18,
+                    },
+                    },
+                ],
+                });
+            }
+        }
+    }
+
     const connectWallet = async () => {
         console.log('connectWallet ...')
         if (typeof window !== undefined && typeof window.ethereum !== undefined) {
+            // fix bug in Metamask- sometimes, we cannot switch to hardhat network 
+            // even though the current network in Metamask is hardhat
+            await switchTohardhat() 
             const {ethereum} = window
             const provider = new ethers.BrowserProvider(ethereum)
             await window.ethereum.request({method: 'eth_requestAccounts'})

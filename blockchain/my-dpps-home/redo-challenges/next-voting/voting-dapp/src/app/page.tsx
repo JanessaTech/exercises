@@ -1,14 +1,18 @@
 'use client'
 
-import { IWeb3Conext, useWeb3Context } from "@/components/providers/Web3ContextProvider"
+import { IWeb3Context, useWeb3Context } from "@/components/providers/Web3ContextProvider"
+import { authState } from "@/lib/Atoms"
 import { useRouter } from "next/navigation"
 import React from "react"
+import { useRecoilState } from "recoil"
 
 type LoginProps = {}
 const Login: React.FC<LoginProps> = () => {
+    const [auth, setAuth] = useRecoilState(authState)
     const router = useRouter()
-    const {connectWallet} = useWeb3Context() as IWeb3Conext
-    const onClick = async () => {
+    const {connectWallet} = useWeb3Context() as IWeb3Context
+
+    const onClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
         await connectWallet()
         router.push('/home')
     }

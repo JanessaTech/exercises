@@ -13,16 +13,50 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 contract Redo {
-  function sumArray(uint[] memory arr) pure public returns(uint) {
-    uint sum;
+  uint256 public value;
+  bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
+  bytes32 private constant IMPLEMENTATION_SLOT = keccak256('IMPLEMENTATION_SLOT');
+
+  constructor(address _implementation) {
+    bytes32 slot = IMPLEMENTATION_SLOT;
     assembly {
-      let len := mload(arr)
-      let ptr := add(arr, 0x20)
-      for {let i := 0} lt(i, len) { i := add(i, 1)} {
-        sum := add(mload(ptr), sum)
-        ptr := add(ptr, 0x20)
-      }
+      sstore(slot, _implementation)
     }
-    return sum;
+    slot = ADMIN_SLOT;
+    assembly {
+      sstore(slot, caller())
+    }
   }
+
+  function admin() public view returns(address adm) {
+    bytes32 slot = ADMIN_SLOT;
+    assembly {
+      adm := sload(slot)
+    }
+  }
+
+  function implementation() public view returns(address impl) {
+    bytes32 slot = IMPLEMENTATION_SLOT;
+    assembly {
+      impl := sload(slot)
+    }
+  }
+
+  function upgradeTo(address _implementation) public {
+    require(msg.sender == admin(), 'not admin');
+    bytes32 slot = IMPLEMENTATION_SLOT;
+    assembly {
+      sstore(slot, _implementation)
+    }
+  }
+
+  function _delegate(address _implemation) private {
+    (bool success, ) = _implemation.delegatecall(msg.data);
+    require(success, 'Failed to call delegatecall');
+  }
+
+  fallback() external payable {
+    _delegate(implementation());
+  }
+  receive() external payable {}
 }

@@ -12,14 +12,14 @@ interface NoteState {
 
 const useAddNote = create<NoteState>()(persist(
     (set) => ({
-       notes: [],
-       isDone: false,
-       addNote: (note) => set((state) => ({notes: [...state.notes, note]})),
-       setIsDone: (done) => set({isDone: done}),
-       clear: () => {
-        localStorage.removeItem('note_state')
-        set({notes: []})
-       }
+        notes: [],
+        isDone: false,
+        addNote: (note) => set((state) => ({notes: [...state.notes, note]})),
+        setIsDone: (done) => set({isDone: done}),
+        clear: () => {
+            localStorage.removeItem('note_state')
+            set({notes: []})
+        }
     }),
     {
         name: 'note_state',

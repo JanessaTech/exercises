@@ -10,11 +10,36 @@ describe('Redo', function () {
     return {redo}
    }
 
-   describe('sumArray', function () {
-    it('sumArray', async function () {
+   describe('create', function () {
+    it('create', async function () {
         const {redo} = await loadFixture(deployRedoFxiture)
-        const res = await redo.sumArray([1, 2, 3, 4])
-        expect(res).to.be.equal(10)
+        await redo.create('person0')
+        await redo.create('person1')
+        await redo.create('person2')
+
+        const person0 = await redo.get(0)
+        const person1 = await redo.get(1)
+        const person2 = await redo.get(2)
+
+        expect(person0.name).to.be.equal('person0')
+        expect(person1.name).to.be.equal('person1')
+        expect(person2.name).to.be.equal('person2')
+    })
+   })
+
+   describe('remove', function () {
+    it('remove', async function () {
+        const {redo} = await loadFixture(deployRedoFxiture)
+        await redo.create('person0')
+        await redo.create('person1')
+        await redo.create('person2')
+
+        await redo.remove(1)
+        const person0 = await redo.get(0)
+        const person2 = await redo.get(2)
+        await expect(redo.get(1)).to.be.revertedWith('invalid id')
+        expect(person0.name).to.be.equal('person0')
+        expect(person2.name).to.be.equal('person2')
     })
    })
 

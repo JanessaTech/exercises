@@ -14,8 +14,8 @@ import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/
 
 contract Redo {
   uint256 public value;
-  bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
   bytes32 private constant IMPLEMENTATION_SLOT = keccak256('IMPLEMENTATION_SLOT');
+  bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
 
   constructor(address _implementation) {
     bytes32 slot = IMPLEMENTATION_SLOT;
@@ -34,29 +34,28 @@ contract Redo {
       adm := sload(slot)
     }
   }
-
-  function implementation() public view returns(address impl) {
+  function implemenation() public view returns(address impl) {
     bytes32 slot = IMPLEMENTATION_SLOT;
     assembly {
       impl := sload(slot)
     }
   }
 
-  function upgradeTo(address _implementation) public {
-    require(msg.sender == admin(), 'not admin');
+  function upgradeTo(address newImplementation) public {
+    require(msg.sender == admin(), 'not adim');
     bytes32 slot = IMPLEMENTATION_SLOT;
     assembly {
-      sstore(slot, _implementation)
+      sstore(slot, newImplementation)
     }
   }
 
-  function _delegate(address _implemation) private {
-    (bool success, ) = _implemation.delegatecall(msg.data);
+  function _delegate(address _implemenation) private {
+    (bool success, ) = _implemenation.delegatecall(msg.data);
     require(success, 'Failed to call delegatecall');
   }
 
   fallback() external payable {
-    _delegate(implementation());
+    _delegate(implemenation());
   }
   receive() external payable {}
 }

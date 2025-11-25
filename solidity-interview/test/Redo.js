@@ -5,19 +5,27 @@ const { boolean, any } = require("hardhat/internal/core/params/argumentTypes");
 
 describe('Redo', function () {
    async function deployRedoFxiture() {
-    const [admin, bob, ...others] = await ethers.getSigners()
-    const Redo = await ethers.getContractFactory('Redo')
-    const redo = await Redo.deploy()
-    return {redo, bob}
+    const [admin, bob, bidder1, bidder2] = await ethers.getSigners()
+    const MyERC721 = await ethers.getContractFactory('MyERC721')
+    const erc721 = await MyERC721.deploy('MyERC721', 'MyERC721')
+    const nftId = 1
+    await erc721.mint(bob.getAddress(), nftId)
+    const Auction = await ethers.getContractFactory('Redo', bob)
+    const auction = await Auction.deploy(erc721.getAddress(), nftId)
+    await erc721.connect(bob).approve(auction.getAddress(), nftId)
+    return {auction, bob, bidder1, bidder2, erc721, nftId}
    }
 
-   describe('deposit & withdraw', function () {
-    it('deposit & withdraw', async function () {
-        const {redo, bob} = await loadFixture(deployRedoFxiture)
-        await redo.connect(bob).deposit({value: 1000})
-        await expect(redo.connect(bob).withdraw()).to.emit(redo, 'Withdraw').withArgs(bob.getAddress(), 1000)
+   describe('init', function () {
+    it('init', async function () {
+        const {auction, erc721, nftId, bob} = await loadFixture(deployRedoFxiture)
+        const owner = await erc721.ownerOf(nftId)
+        const spender = await erc721.getApproved(nftId)
+        expect(owner).to.be.equal(await bob.getAddress())
+        expect(spender).to.be.equal(await auction.getAddress())
     })
    })
+
 
    
 })

@@ -32,6 +32,7 @@ contract Redo {
   constructor(address _nft, uint _nftId) {
     nft = IERC721(_nft);
     nftId = _nftId;
+    owner = msg.sender;
   }
 
   function start() public{

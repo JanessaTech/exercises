@@ -55,6 +55,8 @@ async function create() {
     console.log('data is created')
 }
 
+// find the students whose birtheday is greater equal to 20250101
+// then group by birtheday to count how 
 async function query() {
     const agg = await MyType.aggregate([
         {

@@ -201,7 +201,7 @@ async function main() {
         connect()
         //await create()
         //await queryAuthors()
-        //await queryBooks()
+        await queryBooks()
         //await aggragate()
     } catch(err) {
         console.log(err)

@@ -3,16 +3,15 @@ const {default: mongoose, Schema} = require('mongoose')
 const bookSchema = new Schema({
     title: {
         type: String,
-        require:[true, 'title is required']
+        required: [true, 'title is required']
     },
     author: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'Author'
     },
     price: {
         type: Number,
-        min: [0, 'price >= 0'],
-        required: [true, 'price is required']
+        min: [0, 'price >= 0']
     },
     isbn: {
         type: String,
@@ -24,22 +23,19 @@ const bookSchema = new Schema({
             message: props => `${props.value} is invalid`
         }
     }
-
 })
-
 const authorSchema = new Schema({
     firstName: {
         type: String,
-        require: [true, 'firstName is required']
+        required: [true, 'firstName is required']
     },
     lastName: {
         type: String,
-        require: [true, 'lastName is required']
+        required: [true, 'lastName is required']
     },
     age: {
         type: Number,
-        min: [18, 'age >= 18'],
-        require: [true, 'age is required']
+        min:[18, 'age >= 18']
     },
     gender: {
         type: String,
@@ -47,8 +43,8 @@ const authorSchema = new Schema({
             values: ['female', 'male'],
             message: '{VALUE} is not supported'
         },
-        default: 'male',
-        require: [true, 'gender is required']
+        default: 'female',
+        required: [true, 'gender is required']
     }
 }, {
     virtuals: {
@@ -57,8 +53,7 @@ const authorSchema = new Schema({
                 return this.firstName + ' ' + this.lastName
             }
         }
-    },
-    toJSON: {virtuals: true}
+    }, toJSON: {virtuals: true}
 })
 
 authorSchema.virtual('books', {
@@ -67,19 +62,17 @@ authorSchema.virtual('books', {
     foreignField: 'author'
 })
 
-
 const Book = mongoose.model('Book', bookSchema)
 const Author = mongoose.model('Author', authorSchema)
-
 
 function connect() {
     mongoose.connect('mongodb://127.0.0.1/interview')
     let db = mongoose.connection
     db.once('open', () => {
-        console.log('connected to database')
+        console.log('database is connected')
     })
-    db.on('error', (err) => {
-        console.log('database err:', err)
+    db.on('error', (error) => {
+        console.log('database error:', error)
     })
 }
 
@@ -120,19 +113,17 @@ async function create() {
 // find authors, of whihc gender is female and age >= 20, age exists
 // sort by age by ascending sort, populate books
 async function queryAuthors() {
-   const res = await Author.find({$and: [{gender : {$ne: 'male'}, age: {$gte: 20}, age: {$exists: true}}]}).sort({age: 1}).populate('books')
+   const res = await Author.find({$and: [{gender: {$ne: 'male'}, age: {$gte: 20}, age: {$exists: true}}]}).sort({age: 1}).populate('books')
    console.log(JSON.stringify(res, null, 2))
 }
 
 // find books, of which the price <= 50, sort by price by ascending sort, 
 // select title and price fields, populate author with these fields shown: firstName lastName gender
 async function queryBooks() {
-    const res = await Book.find({price: {$lte: 50}})
-                                .sort({price: 1})
+    const res = await Book.find({price: {$gte: 50}}).sort({price: 1})
                                 .select({title: 1, price: 1})
-                                .populate('author', 'firstName lastName gender')
-    console.log(res)
-
+                                .populate('author', 'lastName gender')
+    console.log(JSON.stringify(res, null, 2))
 }
 async function aggragate() {
     const res = await Book.aggregate([
@@ -162,22 +153,22 @@ async function aggragate() {
            {
              path: "$R",
              includeArrayIndex: 'string',
-             preserveNullAndEmptyArrays: false
+             preserveNullAndEmptyArrays: true
            }
         },
         {
-            $project:/**
+            $project: /**
             * specifications: The fields to
             *   include or exclude.
             */
            {
-             title:1,
-             price:1,
+             title: 1,
+             price: 1,
              gender:"$R.gender"
            }
-        },
+        }, 
         {
-            $match: /**
+            $match:/**
             * query: The query in MQL.
             */
            {

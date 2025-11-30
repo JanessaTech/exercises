@@ -20,6 +20,11 @@ function connect() {
     })
 }
 
+async function init() {
+    await Student.collection.drop()
+    await create()
+}
+
 async function create() {
     const stu1 = new Student({name: 'stu1', age: 10, addr: 'xian'})
     const stu2 = new Student({name: 'stu2', age: 20, addr: 'xian'})
@@ -47,6 +52,7 @@ async function update_set() {
 async function main() {
     try {
         connect()
+        await init()
         //await create()
         //await update_inc()
         await update_set()

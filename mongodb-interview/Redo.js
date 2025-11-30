@@ -1,20 +1,13 @@
 const {default: mongoose, Schema} = require('mongoose')
 
-
-const typeSchema = new Schema({
+const studentSchema = new Schema({
     name: String,
     age: Number,
-    isMale: Boolean,
-    birtheday: Date,
-    nested: {
-        addr: String,
-    },
-    lucky: [Number],
-    mixed: Schema.Types.Mixed,
-    map: Map
+    addr: String
 })
 
-const MyType = mongoose.model('MyType', typeSchema)
+const Student = mongoose.model('Student', studentSchema)
+
 
 function connect() {
     mongoose.connect('mongodb://127.0.0.1/interview')
@@ -27,57 +20,42 @@ function connect() {
     })
 }
 
+async function init() {
+    await Student.collection.drop()
+    await create()
+}
+
 async function create() {
+    const stu1 = new Student({name: 'stu1', age: 10, addr: 'xian'})
+    const stu2 = new Student({name: 'stu2', age: 20, addr: 'xian'})
+    const stu3 = new Student({name: 'stu3', age: 30, addr: 'xian'})
     try {
-        const t1 = new MyType
-        t1.name = 'Jane'
-        t1.age = 10
-        t1.birtheday = new Date()
-        t1.nested.addr = 'xian'
-        t1.lucky = [1, 2, 3, 4]
-        t1.mixed = [{xx: 'aa'}, [12]]
-        t1.map = new Map([['1', 'value1'], ['2', 'value2']])  // the key must be string type
-
-        const t2 = new MyType
-        t2.name = 'Leo'
-        t2.age = 11
-        t2.birtheday = new Date()
-        t2.nested.addr = 'beijing'
-        t2.lucky.unshift(5, 6, 7, 8)  // pay attention to how to insert elements into array
-        t2.mixed = [{xx: 'aa'}, [12]]
-        t2.map = new Map([['3', 'value3'], ['4', 'value4']])  // the key must be string type
-
-        await t1.save()
-        await t2.save()
+        await stu1.save()
+        await stu2.save()
+        await stu3.save()
     } catch(err) {
         console.log(err)
     }
-    console.log('data is created')
+    console.log('data is created!')
 }
 
-async function query() {
-    const res = await MyType.aggregate([
-        {
-            $match: {
-                birtheday: {$gte: new Date('2025-01-01T00:00:00Z')}
-            }
-        },
-        {
-            $group: {
-                _id: {$dateToString: {format: "%Y-%m-%d", date: "$birtheday"}},
-                cnt: {$sum: 1}
-            }
-        }
-    ])
-    console.log(res)
+// for stu1, increment age by 2
+async function update_inc() {
+    const res = await Student.findOneAndUpdate({name: 'stu1'}, {$inc: {age:2}}, {new: true})
+    console.log(JSON.stringify(res, null, 2))
 }
-
+// for stu2, set age=40 and add=shanghai
+async function update_set() {
+    const res = await Student.findOneAndUpdate({name: 'stu2'}, {$set: {age: 40, addr: 'xxx'}}, {new: true})
+    console.log(JSON.stringify(res, null, 2))
+}
 async function main() {
     try {
         connect()
-        //await create()
-        await query()
-    } catch (err) {
+        await init()
+        //await update_inc()
+        await update_set()
+    } catch(err) {
         console.log(err)
     }
 }

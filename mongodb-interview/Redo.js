@@ -1,13 +1,10 @@
 const {default: mongoose, Schema} = require('mongoose')
 
-const studentSchema = new Schema({
-    name: String,
-    age: Number,
-    addr: String
+const bulkSchema  = new Schema({
+    _id: Number,
+    data: String
 })
-
-const Student = mongoose.model('Student', studentSchema)
-
+const Bulk = mongoose.model('Bulk', bulkSchema)
 
 function connect() {
     mongoose.connect('mongodb://127.0.0.1/interview')
@@ -20,42 +17,45 @@ function connect() {
     })
 }
 
+async function create() {
+    try {
+        await Bulk.insertMany([
+            {_id: 1, data: 'data1'},
+            {_id: 2, data: 'data2'},
+            {_id: 3, data: 'data3'},
+        ])
+    } catch (err) {
+        console.log(err)
+    }
+    console.log('data is created')
+}
+
 async function init() {
-    await Student.collection.drop()
+    await Bulk.collection.drop()
     await create()
 }
 
-async function create() {
-    const stu1 = new Student({name: 'stu1', age: 10, addr: 'xian'})
-    const stu2 = new Student({name: 'stu2', age: 20, addr: 'xian'})
-    const stu3 = new Student({name: 'stu3', age: 30, addr: 'xian'})
-    try {
-        await stu1.save()
-        await stu2.save()
-        await stu3.save()
-    } catch(err) {
-        console.log(err)
-    }
-    console.log('data is created!')
+async function bulkOp() {
+    await init()
+    const res = await Bulk.bulkWrite([
+        {insertOne: { document : {_id: 4, data: 'date4'}}},
+        {updateOne: {filter: {_id: 2}, update: {$set: {data: 'new data2'}}}},
+        {deleteOne: {filter: {_id: 3}}}
+    ],{ordered: true})
+    console.log(res)
+}
+async function query() {
+    const res = await Bulk.find()
+    console.log(res)
 }
 
-// for stu1, increment age by 2
-async function update_inc() {
-    const res = await Student.findOneAndUpdate({name: 'stu1'}, {$inc: {age:2}}, {new: true})
-    console.log(JSON.stringify(res, null, 2))
-}
-// for stu2, set age=40 and add=shanghai
-async function update_set() {
-    const res = await Student.findOneAndUpdate({name: 'stu2'}, {$set: {age: 40, addr: 'xxx'}}, {new: true})
-    console.log(JSON.stringify(res, null, 2))
-}
 async function main() {
     try {
         connect()
-        await init()
-        //await update_inc()
-        await update_set()
-    } catch(err) {
+        //await create()
+        await bulkOp()
+        await query()
+    } catch (err) {
         console.log(err)
     }
 }

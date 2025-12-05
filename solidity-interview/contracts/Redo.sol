@@ -3,37 +3,28 @@ pragma solidity ^0.8.20;
 // Uncomment this line to use console.log
 import "hardhat/console.sol";
 
-import {ERC1155} from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
-import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+interface ERC20 {
+    function totalSupply() external view returns(uint256);
+    function balanceOf(address owner) external view returns(uint256);
+    function allowance(address owner, address spender) external view returns(uint256);
+    function transfer(address to, uint256 amount) external returns(bool);
+    function approve(address spender, uint256 amount) external returns(bool);
+    function transferFrom(address from, address to, uint256 amount) external returns(bool);
+}
 
-import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+contract Redo is ERC20 {
+    event Mint(address indexed minter, address indexed to, uint256 amount);
+    event Approve(address indexed from, address indexed spender, uint256 amount);
+    event Transfer(address indexed from, address indexed to, uint256 amount);
 
-contract Redo {
+    uint256 public totalSupply;
     string public name;
     string public symbol;
-    uint8 decimals;
-    uint256 totalSupply;
-
-    mapping(address => uint256) _balances;
-    mapping(address => mapping(address => uint256)) _allowances;
+    uint8 public decimals;
+    mapping(address => uint256) public balanceOf;
+    mapping(address => mapping(address => uint256)) public allowance;
     mapping(address => bool) minters;
 
-    bool private locked;
-
-    event Mint(address indexed from, address indexed to, uint256 amount);
-    event Transfer(address indexed from, address indexed to, uint256 amount);
-    event Approve(address indexed from, uint256 amount);
-
-    modifier non_reentrant() {
-        require(!locked, 'try to reentrant');
-        locked = true;
-        _;
-        locked = false;
-    }
     modifier onlyMinter() {
         require(minters[msg.sender], 'not minter');
         _;
@@ -46,42 +37,37 @@ contract Redo {
         minters[msg.sender] = true;
     }
 
-    function mint(address to, uint256 amount) public onlyMinter {
-        _balances[to] += amount;
-        totalSupply += amount;
-        emit Mint(msg.sender, to, amount);
-    }
-
-    function transfer(address to, uint256 amount) public {
+    function mint(address to, uint256 amount) external onlyMinter {
         require(to != address(0), 'to is zero address');
-        require(_balances[msg.sender] >= amount, 'no enough balance');
-        _balances[msg.sender] -= amount;
-        _balances[to] += amount;
+        totalSupply += amount;
+        balanceOf[to] += amount;
+        emit Transfer(address(0), to, amount);
+    }
+
+    function transfer(address to, uint256 amount) external returns(bool){
+        require(to != address(0), 'to is zero address');
+        require(balanceOf[msg.sender] >= amount, 'not enough balance');
+        balanceOf[msg.sender] -= amount;
+        balanceOf[to] += amount;
         emit Transfer(msg.sender, to, amount);
+        return true;
     }
 
-    function safeTransfer(address to, uint256 amount) public non_reentrant {
-        transfer(to, amount);
+    function approve(address spender, uint256 amount) external returns(bool){
+        require(spender != address(0), 'spender is zero address');
+        allowance[msg.sender][spender] = amount;
+        emit Approve(msg.sender, spender, amount);
+        return true;
     }
-
-    function approve(address to, uint256 amount) public {
-        _allowances[msg.sender][to] = amount;
-        emit Approve(msg.sender, amount);
-    }
-
-    function transferFrom(address from, address to, uint256 amount) public {
+    function transferFrom(address from, address to, uint256 amount) external returns(bool) {
         require(from != address(0), 'from is zero address');
         require(to != address(0), 'to is zero address');
-        require(_balances[from] >= amount, 'no enough balance');
-        require(_allowances[from][msg.sender] >= amount, 'no enough allowance');
-        _balances[from] -= amount;
-        _balances[to] += amount;
-        _allowances[from][msg.sender] -= amount;
+        require(balanceOf[from] >= amount, 'not enough balance');
+        require(allowance[from][msg.sender] >= amount,'not enough allowance');
+        balanceOf[from] -= amount;
+        balanceOf[to] += amount;
+        allowance[from][msg.sender] -= amount;
         emit Transfer(from, to, amount);
+        return true;
     }
-
-    function balanceOf(address owner) public view returns(uint256) {
-        return _balances[owner];
-    }
-
 }

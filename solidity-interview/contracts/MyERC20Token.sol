@@ -17,7 +17,7 @@ contract MyERC20Token {
 
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
-    event Minter(address indexed minter, address indexed to, uint256 amount);
+    event Mint(address indexed minter, address indexed to, uint256 amount);
 
     modifier onlyMinter() {
         require(minters[msg.sender], 'not a minter');
@@ -44,7 +44,7 @@ contract MyERC20Token {
     function mint(address to, uint256 amount) public onlyMinter {
         totalSupply += amount;
         _balances[to] += amount;
-        emit Minter(msg.sender, to, amount);
+        emit Mint(msg.sender, to, amount);
         emit Transfer(address(0), to, amount);
     }
 

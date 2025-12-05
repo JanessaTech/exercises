@@ -12,29 +12,76 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
-contract Redo is ERC1155, Ownable {
-    uint public constant SWORD = 1;
-    uint public constant POTION = 2;
-    uint public constant SHIELD = 3;
+contract Redo {
+    string public name;
+    string public symbol;
+    uint8 decimals;
+    uint256 totalSupply;
 
-    constructor(address initialOwner) ERC1155("https://token-cdn-domain/{id}.json") Ownable(initialOwner) {
-        _mint(msg.sender, SWORD, 1000, '');
-        _mint(msg.sender, POTION, 1000, '');
-        _mint(msg.sender, SHIELD, 1000, '');
+    mapping(address => uint256) _balances;
+    mapping(address => mapping(address => uint256)) _allowances;
+    mapping(address => bool) minters;
+
+    bool private locked;
+
+    event Mint(address indexed from, address indexed to, uint256 amount);
+    event Transfer(address indexed from, address indexed to, uint256 amount);
+    event Approve(address indexed from, uint256 amount);
+
+    modifier non_reentrant() {
+        require(!locked, 'try to reentrant');
+        locked = true;
+        _;
+        locked = false;
+    }
+    modifier onlyMinter() {
+        require(minters[msg.sender], 'not minter');
+        _;
     }
 
-    function mintInbatch(address to, uint[] memory ids, uint[] memory values, bytes memory data) onlyOwner public {
-        require(ids.length == values.length, 'ids.length != values.length');
-        _mintBatch(to, ids, values, data);
+    constructor(string memory _name, string memory _symbol, uint8 _decimals) {
+        name = _name;
+        symbol = _symbol;
+        decimals = _decimals;
+        minters[msg.sender] = true;
     }
 
-    function setURI(string memory newuri) public onlyOwner {
-        _setURI(newuri);
+    function mint(address to, uint256 amount) public onlyMinter {
+        _balances[to] += amount;
+        totalSupply += amount;
+        emit Mint(msg.sender, to, amount);
     }
-    function transferInBatch(address[] memory recipients, uint id, uint amount) public {
-        require(balanceOf(msg.sender, id) >= recipients.length * amount, 'no enough');
-        for (uint i = 0; i < recipients.length; i++) {
-            safeTransferFrom(msg.sender, recipients[i], id, amount, '');
-        }
+
+    function transfer(address to, uint256 amount) public {
+        require(to != address(0), 'to is zero address');
+        require(_balances[msg.sender] >= amount, 'no enough balance');
+        _balances[msg.sender] -= amount;
+        _balances[to] += amount;
+        emit Transfer(msg.sender, to, amount);
     }
+
+    function safeTransfer(address to, uint256 amount) public non_reentrant {
+        transfer(to, amount);
+    }
+
+    function approve(address to, uint256 amount) public {
+        _allowances[msg.sender][to] = amount;
+        emit Approve(msg.sender, amount);
+    }
+
+    function transferFrom(address from, address to, uint256 amount) public {
+        require(from != address(0), 'from is zero address');
+        require(to != address(0), 'to is zero address');
+        require(_balances[from] >= amount, 'no enough balance');
+        require(_allowances[from][msg.sender] >= amount, 'no enough allowance');
+        _balances[from] -= amount;
+        _balances[to] += amount;
+        _allowances[from][msg.sender] -= amount;
+        emit Transfer(from, to, amount);
+    }
+
+    function balanceOf(address owner) public view returns(uint256) {
+        return _balances[owner];
+    }
+
 }

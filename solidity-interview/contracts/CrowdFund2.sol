@@ -8,9 +8,7 @@ import "hardhat/console.sol";
 contract CrowdFund2 {
     uint256 targetAmount;
     address owner;
-    bool started;
     uint256 deadline;
-    uint256 duration;
 
     uint256 raised;
     mapping(address => uint256) contributions;
@@ -26,10 +24,6 @@ contract CrowdFund2 {
         require(msg.sender == owner, 'not owner');
         _;
     }
-    modifier onlyStarted() {
-        require(started, 'not started');
-        _;
-    }
     modifier onlyEnded() {
         require(block.timestamp >= deadline, 'not end');
         _;
@@ -37,16 +31,11 @@ contract CrowdFund2 {
 
     constructor(uint256 _targetAmount, uint256 _duration) {
         targetAmount = _targetAmount;
-        duration= _duration;
+        deadline = block.timestamp + _duration * 1 days;
         owner = msg.sender;
     }
 
-    function start() public onlyOwner {
-        started = true;
-        deadline = block.timestamp + duration * 1 days;
-    }
-
-    function contribute() public payable onlyStarted {
+    function contribute() public payable {
         require(block.timestamp < deadline, 'ended');
         require(msg.value > 0, 'msg.value = 0');
         contributions[msg.sender] += msg.value;
@@ -55,13 +44,16 @@ contract CrowdFund2 {
         emit Contribute(msg.sender, msg.value);
     }
 
-    function claim() public onlyOwner onlyStarted onlyEnded {
+    function claim() public onlyOwner onlyEnded {
         require(!claimed, 'claimed');
 
         claimed = true;
         isSuccess = raised >= targetAmount;
         if (isSuccess) {
             payable(owner).transfer(raised);
+            emit Claim(msg.sender, raised);
+        } else {
+            emit Claim(msg.sender, 0);
         }
         // if (raised >= targetAmount) {
         //     isSuccess = true;
@@ -74,7 +66,7 @@ contract CrowdFund2 {
         // emit Claim(msg.sender, 0);
     }
 
-    function refund() public onlyStarted onlyEnded {
+    function refund() public onlyEnded {
         require(claimed, 'not claimed');
         require(!isSuccess, 'success');
 
@@ -90,7 +82,6 @@ contract CrowdFund2 {
     }
 
     function getStatus () public view returns(string memory) {
-        if (!started) return "NOT STARTED";
         if (block.timestamp < deadline) return "ACTIVE";
         if (!claimed) return "PENDING_CLAIMED";
         if (isSuccess) return "SUCCESS";

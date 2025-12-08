@@ -5,48 +5,51 @@ import "hardhat/console.sol";
 
 
 contract Redo {
-    struct Entry {
-        address user;
-        uint256 score;
-    }
-    Entry[3] top3;
-    mapping(address => uint256) scores;
+    uint256 public value;
+    bytes32 private constant IMPLEMENATION_SLOT = keccak256('IMPLEMENATION_SLOT');
+    bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
 
-    function updateScore(uint256 score) public {
-        address user = msg.sender;
-        scores[user] = score;
-        int256 idx = -1;
-        for (uint256 i = 0; i < 3; i++) {
-            if (top3[i].user == user) {
-                idx = int256(i);
-                break;
-            }
+    constructor(address _implementation) {
+        bytes32 slot = IMPLEMENATION_SLOT;
+        assembly {
+            sstore(slot, _implementation)
         }
-        if (idx >= 0) {
-            top3[uint256(idx)].score  = score;
-            bubbleSort(uint256(idx));
-        } else if (score > top3[2].score) {
-            top3[2] = Entry(user, score);
-            bubbleSort(2);
+        slot = ADMIN_SLOT;
+        assembly {
+            sstore(slot, caller())
         }
     }
 
-    function bubbleSort(uint256 index) public {
-        while (index > 0 && top3[index].score > top3[index - 1].score) {
-            Entry memory tmp = top3[index];
-            top3[index] = top3[index - 1];
-            top3[index - 1] = tmp;
-            index--;
-        }
-        while(index < 2 && top3[index].score < top3[index + 1].score) {
-            Entry memory tmp = top3[index];
-            top3[index] = top3[index + 1];
-            top3[index + 1] = tmp;
-            index++;
+    function admin() public view returns(address adm) {
+        bytes32 slot = ADMIN_SLOT;
+        assembly {
+            adm := sload(slot)
         }
     }
 
-    function getTop3() public view returns(Entry[3] memory) {
-        return top3;
+    function implementation() public view returns(address imp) {
+        bytes32 slot = IMPLEMENATION_SLOT;
+        assembly {
+            imp := sload(slot)
+        }
     }
+
+    function upgradeTo(address _implemantion) public {
+        require(admin() == msg.sender, 'not admin');
+        bytes32 slot = IMPLEMENATION_SLOT;
+        assembly {
+            sstore(slot, _implemantion)
+        }
+    }
+
+    function _delegate(address _implementation) private {
+        (bool success, ) = _implementation.delegatecall(msg.data);
+        require(success, 'failed to call delegatecall');
+
+    }
+
+    fallback() external payable {
+        _delegate(implementation());
+    }
+    receive() external payable {}
 }

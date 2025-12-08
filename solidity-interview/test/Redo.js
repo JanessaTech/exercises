@@ -4,25 +4,46 @@ const {loadFixture, time, takeSnapshot} = require("@nomicfoundation/hardhat-tool
 const { boolean, any } = require("hardhat/internal/core/params/argumentTypes");
 const { extendEnvironment, extendProvider } = require("hardhat/config");
 
-describe('LeaderBoard', function () {
+describe('Redo', function () {
     async function deployFixture() {
-        const [user1, user2, user3, user4, user5, ...others] = await ethers.getSigners()
-        const LeaderBoard = await ethers.getContractFactory('Redo')
-        const leaderBoard = await LeaderBoard.deploy()
-        return {leaderBoard, user1, user2, user3, user4, user5}
+        const [admin, nonadmin, ...others] = await ethers.getSigners()
+        const LogicV1 = await ethers.getContractFactory('LogicV1')
+        const logicV1 = await LogicV1.deploy()
+        const LogicV2 = await ethers.getContractFactory('LogicV2')
+        const logicV2 = await LogicV2.deploy()
+        const Proxy = await ethers.getContractFactory('Redo')
+        const proxy = await Proxy.deploy(logicV1.getAddress())
+        return {proxy, logicV1, logicV2, admin, nonadmin}
     }
-    describe('updateScore', function () {
-        it('updateScore', async function () {
-            const {leaderBoard, user1, user2, user3, user4, user5} = await loadFixture(deployFixture)
-            await leaderBoard.connect(user1).updateScore(1)
-            await leaderBoard.connect(user2).updateScore(5)
-            await leaderBoard.connect(user3).updateScore(4)
-            await leaderBoard.connect(user4).updateScore(7)
-            await leaderBoard.connect(user5).updateScore(6)
-            const top3 = await leaderBoard.getTop3()
-            expect(top3[0][0]).to.be.equal(await user4.getAddress())
-            expect(top3[1][0]).to.be.equal(await user5.getAddress())
-            expect(top3[2][0]).to.be.equal(await user2.getAddress())
+    describe('logicV1 & logicV2', function () {
+        it('logicV1', async function () {
+            const {proxy, admin} = await loadFixture(deployFixture)
+            const abi = ['function setValue(uint256 _value) external']
+            const iface = new ethers.Interface(abi)
+            const value = 100
+            const cdata = iface.encodeFunctionData('setValue(uint256)', [value])
+            const tx = {
+                to: await proxy.getAddress(),
+                data: cdata
+            }
+            await admin.sendTransaction(tx)
+            const val = await proxy.value()
+            expect(val).to.be.equal(value)
+        })
+        it('logicV2', async function () {
+            const {proxy, admin, logicV2} = await loadFixture(deployFixture)
+            await proxy.upgradeTo(logicV2.getAddress())
+            const abi = ['function setValue(uint256 _value) external']
+            const iface = new ethers.Interface(abi)
+            const value = 100
+            const cdata = iface.encodeFunctionData('setValue(uint256)', [value])
+            const tx = {
+                to: await proxy.getAddress(),
+                data: cdata
+            }
+            await admin.sendTransaction(tx)
+            const val = await proxy.value()
+            expect(val).to.be.equal(value * 2)
         })
     })
 })

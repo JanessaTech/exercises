@@ -3,59 +3,50 @@ pragma solidity ^0.8.20;
 // Uncomment this line to use console.log
 import "hardhat/console.sol";
 
-interface ERC20 {
-    function totalSupply() external view returns(uint256);
-    function balanceOf(address owner) external view returns(uint256);
-    function allowance(address from, address spender) external view returns(uint256);
-    function transfer(address to, uint256 amount) external returns(bool);
-    function approve(address spender, uint256 amount) external returns(bool);
-    function transferFrom(address from, address to, uint256 amount) external returns(bool);
-}
 
-contract Redo is ERC20 {
-    uint256 public totalSupply;
-    string public name;
-    string public symbol;
-    uint8 decimals;
+contract Redo {
+    struct Entry {
+        address user;
+        uint256 score;
+    }
+    Entry[3] top3;
+    mapping(address => uint256) scores;
 
-    mapping(address => bool) minters;
-    mapping(address => uint256) public balanceOf;
-    mapping(address => mapping(address => uint256)) public allowance;
-
-    constructor(string memory _name, string memory _symbol, uint8 _decimals) {
-        name = _name;
-        symbol = _symbol;
-        decimals = _decimals;
-        minters[msg.sender] = true;
+    function updateScore(uint256 score) public {
+        address user = msg.sender;
+        scores[user] = score;
+        int256 idx = -1;
+        for (uint256 i = 0; i < 3; i++) {
+            if (top3[i].user == user) {
+                idx = int256(i);
+                break;
+            }
+        }
+        if (idx >= 0) {
+            top3[uint256(idx)].score  = score;
+            bubbleSort(uint256(idx));
+        } else if (score > top3[2].score) {
+            top3[2] = Entry(user, score);
+            bubbleSort(2);
+        }
     }
 
-    function mint(address to, uint256 amount) external {
-        require(minters[msg.sender], 'not minter');
-        require(to != address(0), 'to is zero address');
-        balanceOf[to] = amount;
-        totalSupply += amount;
+    function bubbleSort(uint256 index) public {
+        while (index > 0 && top3[index].score > top3[index - 1].score) {
+            Entry memory tmp = top3[index];
+            top3[index] = top3[index - 1];
+            top3[index - 1] = tmp;
+            index--;
+        }
+        while(index < 2 && top3[index].score < top3[index + 1].score) {
+            Entry memory tmp = top3[index];
+            top3[index] = top3[index + 1];
+            top3[index + 1] = tmp;
+            index++;
+        }
     }
 
-    function transfer(address to, uint256 amount) external returns(bool) {
-        require(to != address(0), 'to is zero');
-        require(balanceOf[msg.sender] >= amount, 'no enough balance');
-        balanceOf[msg.sender] -= amount;
-        balanceOf[msg.sender] += amount;
-        return true;
-    }
-
-    function approve(address spender, uint256 amount) external returns(bool){
-        require(spender != address(0), 'spender is zero address');
-        allowance[msg.sender][spender] = amount;
-        return true;
-    }
-    function transferFrom(address from, address to, uint256 amount) external returns(bool){
-        require(from != address(0), 'from is zero');
-        require(to != address(0), 'to is zero');
-        require(balanceOf[from] >= amount, 'no enough balance');
-        require(allowance[from][msg.sender] >= amount, 'no enough allowance');
-        balanceOf[from] -= amount;
-        balanceOf[to] += amount;
-        allowance[from][msg.sender] -= amount;
+    function getTop3() public view returns(Entry[3] memory) {
+        return top3;
     }
 }

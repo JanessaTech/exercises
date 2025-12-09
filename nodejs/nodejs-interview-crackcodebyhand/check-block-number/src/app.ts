@@ -67,7 +67,7 @@ app.get('/api/v1/transaction/:hash', validate(txSchema.getDetails), async (req: 
 
 const handleValidationError = (error: Error, req: Request, res: Response, next: NextFunction) => {
     if (error instanceof ValidationError) {
-        sendError(res, 'Failed to validation')
+        sendError(res, error.message)
     } else {
         return next(error)
     }

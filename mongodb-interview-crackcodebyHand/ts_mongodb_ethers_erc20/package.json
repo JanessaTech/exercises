@@ -1,0 +1,11 @@
+{
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@types/mongoose": "^5.11.97",
+    "ethers": "^6.16.0",
+    "mongoose": "^9.0.1"
+  }
+}

@@ -69,7 +69,7 @@ const handleValidationError = (error: Error, req: Request, res: Response, next: 
     if (error instanceof ValidationError) {
         sendError(res, error.message)
     } else {
-        return next(error)
+        next(error)
     }
 }
 

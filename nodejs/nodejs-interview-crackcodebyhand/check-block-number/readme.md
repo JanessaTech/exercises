@@ -11,6 +11,7 @@ npm install express
 npm install typescript @types/node @types/express --save-dev
 npm install ts-node --save-dev
 npm install ethers
+npm install yup
 ```
 2. config script in package.json
 ```

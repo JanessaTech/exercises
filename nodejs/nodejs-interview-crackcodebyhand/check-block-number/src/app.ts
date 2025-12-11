@@ -9,6 +9,13 @@ const provider = new ethers.JsonRpcProvider('https://eth.llamarpc.com')
 
 app.use(express.json())
 
+class TransactionError extends Error {
+    constructor(message: string) {
+        super(message)
+        this.name = this.constructor.name
+    }
+}
+
 const sendSuccess = (res: Response, data: any, code: number = 200) => {
     res.status(code).json({
         success: true, 
@@ -42,12 +49,12 @@ app.get('/api/v1/transaction/:hash', validate(txSchema.getDetails), async (req: 
     try {
         const hash = req.params.hash
         const tx = await provider.getTransaction(hash)
-        if (!tx) throw new Error('Transaction not found')
+        if (!tx) throw new TransactionError('Transaction not found')
         let receipt = null
         if (tx.blockNumber) {
             receipt = await provider.getTransactionReceipt(hash)
         }
-        if (!receipt) throw new Error('Failed to get receipt')
+        if (!receipt) throw new TransactionError('Failed to get receipt')
         const payload = {
             hash: tx.hash,
             from: tx.from,
@@ -65,6 +72,14 @@ app.get('/api/v1/transaction/:hash', validate(txSchema.getDetails), async (req: 
     }
 })
 
+const handleTransactionError = (error: Error, req: Request, res: Response, next: NextFunction) => {
+    if (error instanceof TransactionError) {
+        sendError(res, error.message)
+    } else {
+        next(error)
+    }
+}
+
 const handleValidationError = (error: Error, req: Request, res: Response, next: NextFunction) => {
     if (error instanceof ValidationError) {
         sendError(res, error.message)
@@ -77,6 +92,7 @@ const handleInternalError = (error: Error, req: Request, res: Response, next: Ne
     sendError(res, 'Internal Error')
 }
 
+app.use(handleTransactionError)
 app.use(handleValidationError)
 app.use(handleInternalError)
 

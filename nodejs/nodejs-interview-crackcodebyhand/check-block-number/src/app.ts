@@ -89,7 +89,7 @@ const handleValidationError = (error: Error, req: Request, res: Response, next: 
 }
 
 const handleInternalError = (error: Error, req: Request, res: Response, next: NextFunction) => {
-    sendError(res, 'Internal Error')
+    sendError(res, error.message)
 }
 
 app.use(handleTransactionError)

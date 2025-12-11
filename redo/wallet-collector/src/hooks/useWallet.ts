@@ -1,4 +1,5 @@
 import { ethers } from "ethers"
+import { type } from "os"
 import { useEffect, useState } from "react"
 
 const useWallet = () => {
@@ -6,9 +7,8 @@ const useWallet = () => {
     const [balance, setBalance] = useState('')
     const [chainId, setChainId] = useState(1)
     const [isConnecting, setIsConnecting] = useState(false)
-    const [error, setError] = useState('')
 
-    const provider = window.ethereum ? new ethers.BrowserProvider(window.ethereum): null
+    const provider = typeof window?.ethereum === undefined ? null : new ethers.BrowserProvider(window.ethereum)
 
     useEffect(() => {
         (async () => {
@@ -17,38 +17,34 @@ const useWallet = () => {
     }, [account, chainId])
 
     const fetchAccountInfo = async () => {
-        if (!provider || !account) return
+        if (!provider || account) return
         try {
             const balance = await provider.getBalance(account)
-            const chainId = Number((await provider.getNetwork()).chainId)
             setBalance(ethers.formatEther(balance))
-            setChainId(chainId)
-        } catch (error) {
-            console.log('failed to fetch account info:', error)
+        } catch(error) {
+            console.log('failed to fetch account info: ', error)
         }
+        
     }
 
     const connect = async () => {
-        if (typeof window?.ethereum === undefined) {
-            setError('Pls install MetaMask')
+        if (typeof window.ethereum === undefined) {
+            console.log('Pls install MetaMask')
             return
         }
-
         try {
-            setError('')
             setIsConnecting(true)
             const accounts = await window.ethereum.request({method: 'eth_requestAccounts'}) as string[]
             if (accounts && accounts.length) {
                 setAccount(accounts[0])
             }
-        } catch(error: any) {
-            setError(error.message || 'Failed to connect')
-        } finally{
+        } catch(error) {
+            console.log('failed to connect wallet:', error)
+        } finally {
             setIsConnecting(false)
         }
-
+        
     }
-
     const disconnect = async () => {
         setAccount('')
         setBalance('')
@@ -56,22 +52,19 @@ const useWallet = () => {
 
     useEffect(() => {
         if (typeof window?.ethereum === undefined) return
-
-        window.ethereum.on('chainChanged', (network: string) => {
-            setChainId(Number(chainId))
-        })
         window.ethereum.on('accountsChanged', (accounts: string[]) => {
             setAccount(accounts[0])
         })
-
+        window.ethereum.on('chainChanged', (network: string) => {
+            setChainId(Number(network))
+        })
         return () => {
             window.ethereum.removeAllListeners()
         }
     }, [])
 
-    return {account, balance, chainId, isConnecting, connected: !!account, error,
-            connect, disconnect
-            }
+    return {account, balance, chainId, isConnecting, connected: !!account, connect, disconnect}
+
 }
 
 export default useWallet

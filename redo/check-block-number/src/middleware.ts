@@ -1,6 +1,5 @@
-import yup from 'yup'
+import * as yup from "yup"
 import {Request, Response, NextFunction} from 'express'
-
 export const validate = (schema: yup.AnySchema) => {
     return (req: Request, res: Response, next: NextFunction) => {
         try {

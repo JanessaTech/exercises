@@ -11,7 +11,7 @@ export default function Home() {
   const [transfers, setTransfers] = useState<TransferEvent[]>([])
   
   const {getBalance, getRecentTransfers} = useHook(tokenAddress, walletAddress)
-  
+  const format = (address: string) => `${address.slice(0, 10)}...${address.slice(-5)}`
 
   useEffect(() => {
     (async () => {
@@ -35,11 +35,27 @@ export default function Home() {
                 <div>to: {t.to}</div>
                 <div>value: {t.value.toString()}</div>
                 <div>blockNumber: {t.blockNumber}</div>
-                <div>tx: {t.transactionHash}</div>
+                <div>tx: {t.txHash}</div>
+                <div>logIndex: {t.logIndex}</div>
               </div>
             ))
           }
         </div>
+        {/* <div className="grid grid-cols-6 gap-1">
+            <div>from</div> <div>to</div> <div>value</div> <div>blockNumber</div> <div>txHash</div> <div>logIndex</div>
+              {
+                transfers.map((transfer) => (
+                  <>
+                  <div>{format(transfer.from)}</div>
+                  <div>{format(transfer.to)}</div>
+                  <div>{transfer.value.toString()}</div>
+                  <div>{transfer.blockNumber}</div>
+                  <div>{format(transfer.txHash)}</div>
+                  <div>{transfer.logIndex}</div>
+                  </>
+                ))
+              }
+        </div> */}
       </div>
     </div>
   );

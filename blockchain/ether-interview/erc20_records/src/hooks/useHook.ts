@@ -5,9 +5,10 @@ import { ethers } from "ethers"
 export interface TransferEvent {
     from: string;
     to: string;
-    value: bigint,
+    value: bigint;
     blockNumber: number;
-    transactionHash: string;
+    txHash: string;
+    logIndex: number
 }
 
 const useHook = (tokenAddress: `0x${string}`, walletAddress: `0x${string}`) => {
@@ -49,7 +50,8 @@ const useHook = (tokenAddress: `0x${string}`, walletAddress: `0x${string}`) => {
                                                 to: to,
                                                 value: args[2],
                                                 blockNumber: e.blockNumber,
-                                                transactionHash: e.transactionHash
+                                                txHash: e.transactionHash,
+                                                logIndex: e.index
                                             } as TransferEvent
                                         }).filter((transfer) : transfer is TransferEvent => transfer !== null)
             const recentTransfers: TransferEvent[] = allTransfers.slice(-10)

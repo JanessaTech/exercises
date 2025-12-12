@@ -1,6 +1,6 @@
 'use client'
 
-import useHook, { TransferEvent } from "@/hooks/useHook";
+import useHook, { TransferEventType } from "@/hooks/useHook";
 import { useEffect, useState } from "react";
 
 const tokenAddress = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
@@ -8,7 +8,7 @@ const walletAddress = '0x3A9b127e87295D90Ac0136eBa0aaA39DB185d341'
 
 export default function Home() {
   const [balance, setBalance] = useState('')
-  const [transfers, setTransfers] = useState<TransferEvent[]>([])
+  const [transfers, setTransfers] = useState<TransferEventType[]>([])
   
   const {getBalance, getRecentTransfers} = useHook(tokenAddress, walletAddress)
   const format = (address: string) => `${address.slice(0, 10)}...${address.slice(-5)}`
@@ -18,7 +18,7 @@ export default function Home() {
       const balance = await getBalance()
       const transfers = await getRecentTransfers()
       setBalance(balance)
-      if (transfers) setTransfers(transfers)
+      setTransfers(transfers)
     })()
   }, [])
 

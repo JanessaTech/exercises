@@ -2,7 +2,7 @@ import { erc20abi } from "@/config/abi"
 import { EventLog, Log } from "ethers"
 import { ethers } from "ethers"
 
-export interface TransferEvent {
+export interface TransferEventType {
     from: string;
     to: string;
     value: bigint;
@@ -31,34 +31,29 @@ const useHook = (tokenAddress: `0x${string}`, walletAddress: `0x${string}`) => {
 
     const getRecentTransfers = async (offset: number = 2) => {
         try {
-            const currentBlock = await provider.getBlockNumber()
-            const fromBlock = currentBlock - offset
-            const transferEvents:(Log | EventLog)[] = await tokenContract.queryFilter(
+            const curBlock = await provider.getBlockNumber()
+            const fromBlock = curBlock - offset
+            const rawLogs: (Log | EventLog)[] = await tokenContract.queryFilter(
                 'Transfer',
-                fromBlock, currentBlock
+                fromBlock, curBlock
             )
-            const allTransfers = transferEvents
-                                        .map((e: Log | EventLog) => {
-                                            if (!('args' in e) || !(e?.args)) {
-                                                return null
-                                            }
-                                            const args = e.args as any
-                                            const from = args[0]?.toLowerCase()
-                                            const to = args[1]?.toLowerCase()
-                                            return {
-                                                from: from,
-                                                to: to,
-                                                value: args[2],
-                                                blockNumber: e.blockNumber,
-                                                txHash: e.transactionHash,
-                                                logIndex: e.index
-                                            } as TransferEvent
-                                        }).filter((transfer) : transfer is TransferEvent => transfer !== null)
-            const recentTransfers: TransferEvent[] = allTransfers.slice(-10)
-            return recentTransfers
-        } catch(error: any) {
-            console.log('failed to get recent transfer records', error)
+            const parsedLogs = rawLogs.map((log: (Log | EventLog)) => {
+                if (!('args' in log) || !(log?.args)) return null
+                const [from, to, value] = log.args
+                return {
+                    from: from,
+                    to: to, 
+                    value: value,
+                    blockNumber: log.blockNumber,
+                    txHash: log.transactionHash,
+                    logIndex: log.index
+                } as TransferEventType
+            }).filter((log): log is TransferEventType => log !== null)
+            return parsedLogs.slice(-10)
+        } catch(error) {
+            console.log('failed to get recent transfer:', error)
         }
+        return []
     }
     return {getBalance, getRecentTransfers}
 }

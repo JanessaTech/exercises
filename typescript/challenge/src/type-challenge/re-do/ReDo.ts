@@ -1,26 +1,23 @@
 import { Alike, Equal, Expect, ExpectExtends, NotAny } from "../test-utils"
 
 type cases = [
-  Expect<Equal<ReplaceAll<'foobar', 'bar', 'foo'>, 'foofoo'>>,
-  Expect<Equal<ReplaceAll<'foobar', 'bag', 'foo'>, 'foobar'>>,
-  Expect<Equal<ReplaceAll<'foobarbar', 'bar', 'foo'>, 'foofoofoo'>>,
-  Expect<Equal<ReplaceAll<'t y p e s', ' ', ''>, 'types'>>,
-  Expect<Equal<ReplaceAll<'foobarbar', '', 'foo'>, 'foobarbar'>>,
-  Expect<Equal<ReplaceAll<'barfoo', 'bar', 'foo'>, 'foofoo'>>,
-  Expect<Equal<ReplaceAll<'foobarfoobar', 'ob', 'b'>, 'fobarfobar'>>,
-  Expect<Equal<ReplaceAll<'foboorfoboar', 'bo', 'b'>, 'foborfobar'>>,
-  Expect<Equal<ReplaceAll<'', '', ''>, ''>>,
+  Expect<Equal<Unique<[1, 1, 2, 2, 3, 3]>, [1, 2, 3]>>,
+  Expect<Equal<Unique<[1, 2, 3, 4, 4, 5, 6, 7]>, [1, 2, 3, 4, 5, 6, 7]>>,
+  Expect<Equal<Unique<[1, 'a', 2, 'b', 2, 'a']>, [1, 'a', 2, 'b']>>,
+  Expect<Equal<Unique<[string, number, 1, 'a', 1, string, 2, 'b', 2, number]>, [string, number, 1, 'a', 2, 'b']>>,
+  Expect<Equal<Unique<[unknown, unknown, any, any, never, never]>, [unknown, any, never]>>,
 ]
 
+type Include<L, E> = L extends [infer F, ...infer R]
+? Equal<F, E> extends true
+  ? true
+  : Include<R, E>
+: false
 
 
 
-type test = ReplaceAll<'foobar', 'bar', 'foo'>
-
-type ReplaceAll<S extends string, From extends string, To extends string, acc extends string= ''> =  From extends ''
-? S
-: S extends ''
-  ? acc
-  : S extends `${infer L}${From}${infer R}`
-    ? ReplaceAll<R, From, To, `${acc}${L}${To}`>
-    : ReplaceAll<'', From, To, `${acc}${S}`>
+type Unique<T, acc extends unknown[] = []> = T extends [infer F, ...infer R]
+? Include<acc, F> extends true
+  ? Unique<R, acc>
+  : Unique<R, [...acc, F]>
+: acc

@@ -23,13 +23,15 @@ contract PersonArrayDemo {
     }
     function remove(uint _id) public {
         require(inserted[_id], 'invalid id');
-        uint _idx = idxMapping[_id];
+        uint256 _idx = idxMapping[_id];
         Person storage last = persons[persons.length - 1];
-        persons[_idx] = Person({id: last.id, name: last.name});
-        idxMapping[last.id] = _idx;
+        if (last.id != _id) {
+            persons[_idx] = last;
+            idxMapping[last.id] = _idx;
+        }
+        persons.pop();
         delete idxMapping[_id];
         delete inserted[_id];
-        persons.pop();
     }
     function getAll() public view returns(Person[] memory) {
         return persons;

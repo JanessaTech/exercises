@@ -20,3 +20,5 @@ type cases = [
     ? AnyOf<R>
     : true
   : false
+
+  //type AnyOf<T> = any

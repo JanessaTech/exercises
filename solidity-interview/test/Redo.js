@@ -6,41 +6,25 @@ const { extendEnvironment, extendProvider } = require("hardhat/config");
 
 describe('Redo', function () {
     async function deployFixture() {
-        const Redo = await ethers.getContractFactory('Redo')
-        const redo = await Redo.deploy()
-        return {redo}
-
+        const [admin, bob, user1, user2, ...others] = await ethers.getSigners()
+        const MyERC721 = await ethers.getContractFactory('MyERC721')
+        const erc721 = await MyERC721.deploy('MyERC721', 'MyERC721')
+        const nftId = 1
+        await erc721.mint(bob.getAddress(), nftId)
+        const Aution = await ethers.getContractFactory('Redo')
+        const auction = await Aution.deploy(erc721.getAddress(), nftId)
+        await erc721.connect(bob).approve(auction.getAddress(), nftId)
+        return {auction, bob, erc721, user1, user2, nftId}
     }
-    describe('create/remove', function () {
-        it('create', async function () {
-           const {redo} = await loadFixture(deployFixture)
-           await redo.create('person0')
-           await redo.create('person1')
-           await redo.create('person2')
-
-           const person0 = await redo.get(0)
-           const person1 = await redo.get(1)
-           const person2 = await redo.get(2)
-           expect(person0.name).to.be.equal('person0')
-           expect(person1.name).to.be.equal('person1')
-           expect(person2.name).to.be.equal('person2')
+    describe('init', function () {
+        it('init', async function () {
+           const {auction, erc721, nftId, bob} = await loadFixture(deployFixture)
+           const owner = await erc721.ownerOf(nftId)
+           const spender = await erc721.getApproved(nftId)
+           expect(owner).to.be.equal(await bob.getAddress())
+           expect(spender).to.be.equal(await auction.getAddress())
         })
-        it('remove', async function () {
-            const {redo} = await loadFixture(deployFixture)
-            await redo.create('person0')
-            await redo.create('person1')
-            await redo.create('person2')
-            await redo.create('person3')
-            await redo.remove(1)
-            await redo.remove(2)
-
-            const person0 = await redo.get(0)
-            const person3 = await redo.get(3)
-            await expect(redo.get(1)).to.be.revertedWith('invalid id')
-            await expect(redo.get(2)).to.be.revertedWith('invalid id')
-            expect(person0.name).to.be.equal('person0')
-            expect(person3.name).to.be.equal('person3')
-        })
+        
     })
 })
 

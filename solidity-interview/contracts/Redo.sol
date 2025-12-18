@@ -2,6 +2,7 @@
 pragma solidity ^0.8.20;
 // Uncomment this line to use console.log
 import "hardhat/console.sol";
+import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 contract Redo {
     struct Person {
@@ -19,6 +20,7 @@ contract Redo {
         idxMapping[_idx] = people.length - 1;
         inserted[_idx] = true;
     }
+
     function remove(uint256 _id) public {
         require(inserted[_id], 'invalid id');
         uint256 _idx = idxMapping[_id];
@@ -30,11 +32,5 @@ contract Redo {
         people.pop();
         delete idxMapping[_id];
         delete inserted[_id];
-    }
-
-    function get(uint256 _id) public view returns(uint256 id, string memory name) {
-        require(inserted[_id], 'invalid id');
-        Person storage person = people[idxMapping[_id]];
-        return (person.id, person.name);
     }
 }

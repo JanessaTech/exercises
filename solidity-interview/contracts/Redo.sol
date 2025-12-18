@@ -3,7 +3,6 @@ pragma solidity ^0.8.20;
 // Uncomment this line to use console.log
 import "hardhat/console.sol";
 
-
 contract Redo {
     uint256 public value;
     bytes32 private constant IMPLEMENATION_SLOT = keccak256('IMPLEMENATION_SLOT');
@@ -18,6 +17,7 @@ contract Redo {
         assembly {
             sstore(slot, caller())
         }
+
     }
 
     function admin() public view returns(address adm) {
@@ -34,22 +34,24 @@ contract Redo {
         }
     }
 
-    function upgradeTo(address _implemantion) public {
-        require(admin() == msg.sender, 'not admin');
+    function upgradeTo(address _implementation) public {
+        require(msg.sender == admin(), 'not admin');
         bytes32 slot = IMPLEMENATION_SLOT;
         assembly {
-            sstore(slot, _implemantion)
+            sstore(slot, _implementation)
         }
     }
 
     function _delegate(address _implementation) private {
         (bool success, ) = _implementation.delegatecall(msg.data);
         require(success, 'failed to call delegatecall');
-
     }
 
     fallback() external payable {
         _delegate(implementation());
     }
-    receive() external payable {}
+
+    receive() external payable {
+
+    }
 }

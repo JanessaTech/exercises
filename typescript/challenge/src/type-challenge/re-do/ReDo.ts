@@ -2,74 +2,25 @@ import { Alike, Equal, Expect, ExpectExtends, NotAny } from "../test-utils"
 
   
 type cases = [
-  Expect<Equal<DeepReadonly<X1>, Expected1>>,
-  Expect<Equal<DeepReadonly<X2>, Expected2>>,
+  Expect<Equal<KebabCase<'FooBarBaz'>, 'foo-bar-baz'>>,
+  Expect<Equal<KebabCase<'fooBarBaz'>, 'foo-bar-baz'>>,
+  Expect<Equal<KebabCase<'foo-bar'>, 'foo-bar'>>,
+  Expect<Equal<KebabCase<'foo_bar'>, 'foo_bar'>>,
+  Expect<Equal<KebabCase<'Foo-Bar'>, 'foo--bar'>>,
+  Expect<Equal<KebabCase<'ABC'>, 'a-b-c'>>,
+  Expect<Equal<KebabCase<'-'>, '-'>>,
+  Expect<Equal<KebabCase<''>, ''>>,
+  Expect<Equal<KebabCase<'😎'>, '😎'>>,
 ]
 
-type X1 = {
-  a: () => 22
-  b: string
-  c: {
-    d: boolean
-    e: {
-      g: {
-        h: {
-          i: true
-          j: 'string'
-        }
-        k: 'hello'
-      }
-      l: [
-        'hi',
-        {
-          m: ['hey']
-        },
-      ]
-    }
-  }
-}
 
-type X2 = { a: string } | { b: number }
+type UPPERCASE = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'G' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z'
 
-type Expected1 = {
-  readonly a: () => 22
-  readonly b: string
-  readonly c: {
-    readonly d: boolean
-    readonly e: {
-      readonly g: {
-        readonly h: {
-          readonly i: true
-          readonly j: 'string'
-        }
-        readonly k: 'hello'
-      }
-      readonly l: readonly [
-        'hi',
-        {
-          readonly m: readonly ['hey']
-        },
-      ]
-    }
-  }
-}
-
-type Expected2 = { readonly a: string } | { readonly b: number }
-
-type DeepArray<A> = A extends [infer F, ...infer R]
-? [DeepReadonly<F>, ...DeepArray<R>]
-: []
-
-type DeepReadonly<T> =  T extends any
-?  T extends {[K in any]: unknown}
-  ? {readonly [P in keyof T]: DeepReadonly<T[P]>}
-  : T extends unknown[]
-    ? readonly [...DeepArray<T>]
-    : T
-: never 
-
-
-
-// for test
-type test = DeepReadonly<X1>
+type KebabCase<T extends string, acc extends string = ''> =  T extends `${infer F}${infer R}`
+? F extends UPPERCASE
+  ? acc extends ''
+    ? KebabCase<R, `${Lowercase<F>}`>
+    : KebabCase<R, `${acc}-${Lowercase<F>}`>
+  : KebabCase<R, `${acc}${F}`>
+: acc
 

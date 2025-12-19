@@ -57,6 +57,9 @@ type NodeA = {
     Expect<Equal<ReplaceKeys<Nodes, 'name', { aa: number }>, NodesNoName>>,
   ]
 
+
+
+
   type ReplaceKeys<U, T, Y> = U extends any
   ? {
     [P in keyof U]: P extends T
@@ -66,5 +69,3 @@ type NodeA = {
       : U[P]
   }
   : never
-
-  //type ReplaceKeys<U, T, Y> = any

@@ -1,4 +1,4 @@
-import { ethers,  Log} from "ethers";
+import { Log, ethers } from "ethers";
 import { ERC20_ABI } from "./abi";
 import mongoose from "mongoose";
 import TransferLog from "./TransferModel";
@@ -6,21 +6,22 @@ import TransferLog from "./TransferModel";
 type TransferLogType = {
     eventName: string;
     from: string;
-    to: string;
-    value: string;//wei;
+    to:string;
+    value: string;
     blockNumber: number;
-    txhash: string;
-    logIndex: number;
+    txHash: string;
+    logIndex: number
 }
 
 class TransferLogParser {
-    private provider:ethers.JsonRpcProvider
+    private provider: ethers.JsonRpcProvider
     private iface = new ethers.Interface(ERC20_ABI)
+
     constructor(rpc: string) {
         this.provider = new ethers.JsonRpcProvider(rpc)
     }
 
-    async processBlockNumber(blockNumber: number) {
+    async processBlock(blockNumber: number) {
         try {
             const [block, logs] = await Promise.all([
                 this.provider.getBlock(blockNumber),
@@ -30,57 +31,61 @@ class TransferLogParser {
                 })
             ])
             if (!block) throw new Error('block not found')
-            console.log(`${logs.length} logs for block ${blockNumber}`)
-            const allTransfers = logs.map(async (log) => {
+            console.log(`${logs.length} logs in block ${blockNumber}`)
+            const allTransfer = logs.map(async (log) => {
                 try {
-                    const parsedLog = this.parseLog(log)
+                    const parsedLog = await this.parseLog(log)
                     if (parsedLog) {
                         await this.save(parsedLog)
                         return true
                     }
-                } catch(err){
-                    console.log('failed to parse log:', err)
-                    console.log('log:', log)
+                } catch(err) {
+                    console.error('Failed to save log:', log)
+                    console.error('due to: ', err)
                     return false
                 }
                 return false
+                
             })
-            const results = await Promise.allSettled(allTransfers)
-            const processedAccount = results.filter((r) => r.status === 'fulfilled' && r.value == true).length
-            console.log(`${processedAccount} logs are saved`)
-        } catch (error) {
-            console.log(`Failed to process block ${blockNumber}`)
+
+            const results = await Promise.allSettled(allTransfer)
+            const cnt = results.filter((r) => r.status === 'fulfilled' && r.value === true).length
+            console.log(`${cnt} logs are saved`)
+        } catch(error) {
+            console.error('failed to process block ', blockNumber)
         }
+
     }
 
-    private async save(log: TransferLogType) {
-        await TransferLog.findOneAndUpdate(
-            {txhash: log.txhash, logIndex: log.logIndex},
-            log,
-            {upsert: true, new: true, setDefaultsOnInsert: true}
-        )
-    }
-
-    private parseLog(log: Log) {
+    private async parseLog(log: Log) {
         const parsedLog = this.iface.parseLog({topics: log.topics, data: log.data})
         if (!parsedLog || parsedLog.name !== 'Transfer') return null
         const [from, to, value] = parsedLog.args
         return {
-            eventName: 'Transfer', 
+            eventName: 'Transfer',
             from: (from as string).toLowerCase(),
             to: (to as string).toLowerCase(),
-            value: value.toString(),
+            value: value.toString,
             blockNumber: log.blockNumber,
-            txhash: log.transactionHash,
+            txHash: log.transactionHash,
             logIndex: log.index
         } as TransferLogType
+    }
+
+    private async save(log: TransferLogType) {
+        await TransferLog.findOneAndUpdate(
+            {txHash: log.txHash, logIndex: log.logIndex},
+            log, 
+            {upsert: true, new: true, setDefaultsOnInsert: true}
+        )
     }
 }
 
 async function main() {
-    await mongoose.connect('mongodb://127.0.0.1/shousi') 
+    await mongoose.connect('mongodb://127.0.0.1/shousi')
     const parser = new TransferLogParser('https://eth.llamarpc.com')
-    await parser.processBlockNumber(24052856)
+    await parser.processBlock(24052856)
 }
-
-main().catch((e) => console.error(e))
+main().catch((e) => {
+    console.log(e)
+})

@@ -102,7 +102,7 @@ class TransferLogParser {
 async function main() {
     await mongoose.connect('mongodb://127.0.0.1/shousi')
     const parser = new TransferLogParser('https://eth.llamarpc.com')
-    await parser.processBlock(23980953)
+    await parser.processBlock(24052856)
 }
 
 main().catch((err) => console.log(err))

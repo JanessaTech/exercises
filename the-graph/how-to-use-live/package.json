@@ -1,5 +1,30 @@
 {
+  "name": "how-to-use-live",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/app.ts",
+    "build": "tsc",
+    "server": "node dist/app.js",
+    "codegen": "graphclient build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "graphclient serve-dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^5.2.1",
+    "graphql-request": "^7.4.0",
+    "graphql-ws": "^6.0.6",
+    "ws": "^8.18.3"
+  },
   "devDependencies": {
+    "@graphprotocol/client-cli": "^3.0.7",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.3",
+    "@types/ws": "^8.18.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }

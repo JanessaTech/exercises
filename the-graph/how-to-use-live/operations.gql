@@ -1,0 +1,20 @@
+query GetPoolLiveData($poolId: ID!) @live {
+  pools(where: { id: $poolId }) {
+    id
+    liquidity
+    tick
+    token0 {
+      symbol
+    }
+    token1 {
+      symbol
+    }
+  }
+}
+
+query GetPoolSnapshot($poolId: ID!) {
+  pools(where: { id: $poolId }) {
+    id
+    liquidity
+  }
+}

@@ -7,14 +7,14 @@ enum WebSocketReadyState {
     CLOSED = 3
 }
 
-interface WebSocketConfig {
+export interface WebSocketConfig {
     url: string;
     maxReconnectAttempts: number;
     reconnectInterval : number;
     heartbeatInterval?: number;
 }
 
-interface WebSocketMessage {
+export interface WebSocketMessage {
     type: string;
     channel?: string;
     subscriptionId?: string;
@@ -29,9 +29,9 @@ interface Subscription {
 }
 
 // for extension
-interface SubscriptionOptions {}
+export interface SubscriptionOptions {}
 
-class WebSocketClient {
+export class WebSocketClient {
     private ws: WebSocket | null = null
     private isConnecting: boolean = false;
     private config!: WebSocketConfig;
@@ -194,7 +194,7 @@ class WebSocketClient {
     subscribe(
         channel: string,
         callback: (payload: any, fullData?: WebSocketMessage) => void,
-        options: SubscriptionOptions = {}
+        options?: SubscriptionOptions
         ): string {
             const subscriptionId = this.generateId()
             this.subscriptions.set(subscriptionId, {channel, callback, options})

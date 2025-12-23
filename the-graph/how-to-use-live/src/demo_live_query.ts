@@ -1,4 +1,4 @@
-import {getBuiltGraphSDK, getBuiltGraphClient} from '../.graphclient'
+import {getBuiltGraphSDK} from '../.graphclient'
 
 async function main() {
   const sdk = getBuiltGraphSDK()

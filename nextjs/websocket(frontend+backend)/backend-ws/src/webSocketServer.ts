@@ -1,7 +1,6 @@
 import express, {Request, Response, NextFunction} from 'express'
 import http from 'http'
 import WebSocket from 'ws'
-import { v4 as uuidv4 } from 'uuid';
 
 const app = express()
 const server = http.createServer(app)
@@ -10,13 +9,16 @@ const PORT = 3100
 
 const subscriptions  = new Map<string, Set<{ws: WebSocket, subscriptionId: string}>>()
 const reverseSubscriptions = new Map<WebSocket, Set<string>>()
+const wsIdMap = new Map<WebSocket, string>()
 
 wss.on('connection', (ws: WebSocket) => {
     console.log('A client is connected')
     // generate an ID for each ws
-    const connectionId = uuidv4();
-    (ws as any).connectionId = connectionId;
 
+    //const connectionId = uuidv4()
+    const connectionId = `conn_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
+    
+    wsIdMap.set(ws, connectionId)
     ws.on('message', (data: Buffer) => {
         try {
             const message = JSON.parse(data.toString())
@@ -35,7 +37,7 @@ wss.on('connection', (ws: WebSocket) => {
                 const clients = subscriptions.get(channel)
                 if (clients) {
                     for (let client of clients) {
-                        if ((client.ws as any).connectionId && (client.ws as any).connectionId === ((ws as any).connectionId)) {
+                        if (wsIdMap.get(ws) && wsIdMap.get(ws) === wsIdMap.get(client.ws)) {
                             clients.delete(client)
                         }
                     }
@@ -45,6 +47,7 @@ wss.on('connection', (ws: WebSocket) => {
                 }
             })
             reverseSubscriptions.delete(ws)
+            wsIdMap.delete(ws)
         }
     })
 
@@ -132,10 +135,10 @@ app.get('/status', (req: Request, res: Response, next: NextFunction) => {
         const payload = {
             subscriptions:  Array.from(subscriptions.entries()).map(([channel, clients]) => ({
                 channel: channel,
-                clients: [...clients].map((client) => ({ws: (client.ws as any)?.connectionId, subscriptionId: client.subscriptionId}))
+                clients: [...clients].map((client) => ({ws: wsIdMap.get(client.ws), subscriptionId: client.subscriptionId}))
             })),
             reverseSubscriptions: Array.from(reverseSubscriptions).map(([ws, channels]) => ({
-                ws: (ws as any).connectionId,
+                ws: wsIdMap.get(ws),
                 channels: channels
             }))
         }
@@ -145,6 +148,7 @@ app.get('/status', (req: Request, res: Response, next: NextFunction) => {
         next(error)    
     }
 })
+    
 
 const sendSuccess = (res: Response, data: any, code: number = 200) => {
     res.status(code).json({
@@ -160,6 +164,7 @@ const sendError = (res: Response, message: string, code: number = 500) => {
         message: message
     })
 }
+    
 
 const handleError = (error: Error, req: Request, res: Response, next: NextFunction) => {
     sendError(res, error.message)

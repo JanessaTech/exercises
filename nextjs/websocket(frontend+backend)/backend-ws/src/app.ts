@@ -38,3 +38,4 @@ const handleError = (error: Error, req: Request, res: Response, next: NextFuncti
 app.use(handleError)
 
 app.listen(3100, () => console.log('API ready'))
+

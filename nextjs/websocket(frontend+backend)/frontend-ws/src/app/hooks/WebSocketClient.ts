@@ -72,7 +72,7 @@ export class WebSocketClient {
 
             this.messageQueue = []
             //this.resubscribeAll()
-            this.startHeartbeat()
+            //this.startHeartbeat()
         }
 
         this.ws.onmessage = (event: MessageEvent) => {
@@ -172,22 +172,15 @@ export class WebSocketClient {
         return `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
     }
 
-    private send(message: WebSocketMessage): boolean {
+    private send(message: WebSocketMessage) {
         if (!this.ws || this.ws.readyState !== WebSocketReadyState.OPEN) {
-            if (message.type === 'SUBSCRIBE' || message.type === 'UNSUBSCRIBE') {
-                this.messageQueue.push(message)
-            }
-            return false
+            throw new Error('Failed to send meesage when ws is empty or readyState is not open')
         }
         try {
             this.ws.send(JSON.stringify(message))
-            return true
         } catch(error) {
             console.error('failed to send message:', error)
-            if (message.type === 'SUBSCRIBE' || message.type === 'UNSUBSCRIBE') {
-                this.messageQueue.push(message)
-            }
-            return false
+            throw error
         }
     }
 
@@ -197,28 +190,28 @@ export class WebSocketClient {
         options?: SubscriptionOptions
         ): string {
             const subscriptionId = this.generateId()
-            this.subscriptions.set(subscriptionId, {channel, callback, options})
-
             const subscribeMsg: WebSocketMessage = {
                 type: 'SUBSCRIBE',
                 channel: channel,
                 subscriptionId: subscriptionId
             }
             this.send(subscribeMsg)
-        return subscriptionId
+            this.subscriptions.set(subscriptionId, {channel, callback, options})
+            console.log('subscribe is successful')
+            return subscriptionId
     }
 
-    unsubscribe(subscriptionId: string): boolean {
+    unsubscribe(subscriptionId: string): void {
         const subscription = this.subscriptions.get(subscriptionId)
-        if (!subscription) return false
+        if (!subscription) throw new Error('no subscription found')
         const unsubscribeMsg: WebSocketMessage = {
             type: 'UNSUBSCRIBE',
             channel: subscription.channel,
             subscriptionId: subscriptionId
         }
         this.send(unsubscribeMsg)
+        console.log('unsubscribe is successful')
         this.subscriptions.delete(subscriptionId)
-        return true
     }
 
     getConnectionState(): string {

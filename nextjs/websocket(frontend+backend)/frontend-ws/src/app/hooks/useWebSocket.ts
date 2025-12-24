@@ -1,15 +1,33 @@
 import { useEffect, useState } from "react"
 import { SubscriptionOptions, WebSocketClient, WebSocketConfig, WebSocketMessage } from "./WebSocketClient"
 
-
 const useWebSocket = (config: WebSocketConfig) => {
     const [client, setClient] = useState<WebSocketClient | undefined>(undefined)
+    const [isConnected, setIsConnected] = useState(false)
+    const [subscriptionCount, setSubscriptionCount] = useState(0)
 
     useEffect(() => {
         if (typeof window === undefined) return
 
         const client = new WebSocketClient(config)
+        console.log('websocket client is created')
         setClient(client)
+
+        const checkStateInterval = setInterval(() => {
+            if (client) {
+                const state = client.getConnectionState()
+                setIsConnected(state === 'OPEN')
+                setSubscriptionCount(client.getSubscriptionCount())
+            } else {
+                console.log('waiting for the creation of the client')
+            }
+        }, 1000)
+
+        return () => {
+            clearInterval(checkStateInterval)
+            client.close(1000, 'destory websocket manually')
+            setClient(undefined)
+        }
 
     }, [])
 
@@ -20,14 +38,19 @@ const useWebSocket = (config: WebSocketConfig) => {
             const subscriptionId = client.subscribe(channel, callback, options)
             return subscriptionId
         } else {
-            console.error('not found client')
+            throw new Error('client is not found')
             
         }
-        return 'error'
     }
-    const unsubscribe = () => {
-        
+    const unsubscribe = (subscriptionId: string) => {
+        if (client) {
+            client.unsubscribe(subscriptionId)
+        } else {
+            throw new Error('client is not found')
+        }
     }
+
+    return {subscribe, unsubscribe, isConnected, subscriptionCount}
 }
 
 export default useWebSocket

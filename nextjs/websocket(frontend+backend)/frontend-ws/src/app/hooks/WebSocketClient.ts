@@ -70,7 +70,6 @@ export class WebSocketClient {
             this.reconnectAttempts = 0
             console.log('Connected to websocket!')
 
-            this.messageQueue = []
             //this.resubscribeAll()
             //this.startHeartbeat()
         }
@@ -232,6 +231,10 @@ export class WebSocketClient {
 
     getSubscriptionCount(): number {
         return this.subscriptions.size;
+    }
+
+    getSubscriptions():Map<string, Subscription> {
+        return this.subscriptions
     }
     close(code: number = 1000, reason: string = 'normal close'): void {
         console.log(`close websocke manually.code: ${code}, reason: ${reason}`)

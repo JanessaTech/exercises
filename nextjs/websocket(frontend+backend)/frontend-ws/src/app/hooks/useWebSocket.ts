@@ -50,7 +50,15 @@ const useWebSocket = (config: WebSocketConfig) => {
         }
     }
 
-    return {subscribe, unsubscribe, isConnected, subscriptionCount}
+    const getSubscriptions = () => {
+        if (client) {
+            return client.getSubscriptions()
+        } else {
+            throw new Error('client is not found')
+        }
+    }
+
+    return {subscribe, unsubscribe, getSubscriptions, isConnected, subscriptionCount}
 }
 
 export default useWebSocket

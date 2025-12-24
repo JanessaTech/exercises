@@ -1,8 +1,11 @@
+
 import { ethers } from 'ethers'
 import express, {Request, Response, NextFunction} from 'express'
 import { validate } from './middleware'
 import { txSchema } from './schema'
 import {ValidationError} from 'yup'
+
+
 
 const app = express()
 app.use(express.json())
@@ -10,21 +13,20 @@ app.use(express.json())
 const provider = new ethers.JsonRpcProvider('https://eth.rpc.blxrbdn.com')
 
 class TransactionError extends Error {
-    constructor(message: string) {
-        super(message)
+    constructor(msg: string) {
+        super(msg)
         this.name = this.constructor.name
     }
 }
 
-const sendSucess = (res: Response, data: any, code: number = 200) => {
+const sendSuccess = (res: Response, data: any, code: number = 200) => {
     res.status(code).json({
         success: true,
         code: code,
         data: data
     })
 }
-
-const sendError = (res: Response, message: string, code: number = 500) => {
+const sendError = (res: Response, message: string, code: number = 200) => {
     res.status(code).json({
         success: false,
         code: code,
@@ -32,45 +34,50 @@ const sendError = (res: Response, message: string, code: number = 500) => {
     })
 }
 
-app.use('/api/v1/block/height', async (req: Request, res: Response, next: NextFunction) => {
+app.use('/api/v1/block/height',async (req: Request, res: Response, next: NextFunction) => {
     try {
         const blockNumber = await provider.getBlockNumber()
-        const payload = {
+        const paylaod = {
             blockNumber: blockNumber,
-            timestamp: new Date().toISOString(),
             network: 'ethereum'
         }
-        sendSucess(res, payload)
+        sendSuccess(res, paylaod)
     } catch(error) {
-        console.log('failed to get block number:', error)
         next(error)
     }
 })
-
-app.use('/api/v1/transaction/:hash',validate(txSchema.getTxDetails), async (req: Request, res: Response, next: NextFunction) => {
+app.use('/api/v1/transaction/:hash', validate(txSchema.getTxDetails), async (req: Request, res: Response, next: NextFunction) => {
     try {
         const hash = req.params.hash
         const tx = await provider.getTransaction(hash)
-        if (!tx) throw new TransactionError('transaction not found')
+        if (!tx) throw new TransactionError('tx not found')
         let receipt = null
         if (tx.blockNumber) {
             receipt = await provider.getTransactionReceipt(hash)
         }
-        if (!receipt) throw new TransactionError('receipt not found')
+        if (!receipt) return new Error('receipt not found')
         const payload = {
-            txhash: hash,
+            hash: hash,
             from: tx.from,
-            to: tx.to, 
+            to: tx.to,
             value: tx.value.toString(),
-            blockHash: tx.blockHash,
             blockNumber: tx.blockNumber,
+            blockHash: tx.blockHash,
             status: receipt.status
         }
-        sendSucess(res, payload)
+        sendSuccess(res, payload)
     } catch (error) {
         next(error)
     }
 })
+
+const handleValidationError = (error: Error, req: Request, res: Response, next: NextFunction) => {
+    if (error instanceof ValidationError) {
+        sendError(res, error.message )
+    } else {
+        next(error)
+    }
+}
 
 const handleTransactionError = (error: Error, req: Request, res: Response, next: NextFunction) => {
     if (error instanceof TransactionError) {
@@ -80,21 +87,12 @@ const handleTransactionError = (error: Error, req: Request, res: Response, next:
     }
 }
 
-const handleValidationError = (error: Error, req:Request, res: Response, next: NextFunction) => {
-    if (error instanceof ValidationError) {
-        sendError(res, error.message)
-    } else {
-        next(error)
-    }
-}
-
-const handleDefaultError = (error: Error, req: Request, res: Response, next: NextFunction) => {
+const handleError = (error: Error, req: Request, res: Response, next: NextFunction) => {
     sendError(res, error.message)
 }
 
-app.use(handleTransactionError)
 app.use(handleValidationError)
-app.use(handleDefaultError)
-
+app.use(handleTransactionError)
+app.use(handleError)
 
 app.listen(3100, () => console.log('API ready'))

@@ -2,7 +2,6 @@ import express, {Request, Response, NextFunction} from 'express'
 import http from 'http'
 import WebSocket from 'ws'
 import { v4 as uuidv4 } from 'uuid';
-import { channel } from 'diagnostics_channel';
 
 const app = express()
 const server = http.createServer(app)
@@ -30,7 +29,23 @@ wss.on('connection', (ws: WebSocket) => {
 
     ws.on('close', () => {
         console.log('A client is disconnected')
-
+        const channels = reverseSubscriptions.get(ws)
+        if (channels) {
+            channels.forEach((channel) => {
+                const clients = subscriptions.get(channel)
+                if (clients) {
+                    for (let client of clients) {
+                        if ((client.ws as any).connectionId && (client.ws as any).connectionId === ((ws as any).connectionId)) {
+                            clients.delete(client)
+                        }
+                    }
+                    if (clients.size === 0) {
+                        subscriptions.delete(channel)
+                    }
+                }
+            })
+            reverseSubscriptions.delete(ws)
+        }
     })
 
 })

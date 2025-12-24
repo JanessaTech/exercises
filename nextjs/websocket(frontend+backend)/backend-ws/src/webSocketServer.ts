@@ -14,11 +14,9 @@ const wsIdMap = new Map<WebSocket, string>()
 wss.on('connection', (ws: WebSocket) => {
     console.log('A client is connected')
     // generate an ID for each ws
-
-    //const connectionId = uuidv4()
     const connectionId = `conn_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
-    
     wsIdMap.set(ws, connectionId)
+
     ws.on('message', (data: Buffer) => {
         try {
             const message = JSON.parse(data.toString())
@@ -46,9 +44,9 @@ wss.on('connection', (ws: WebSocket) => {
                     }
                 }
             })
-            reverseSubscriptions.delete(ws)
-            wsIdMap.delete(ws)
         }
+        reverseSubscriptions.delete(ws)
+        wsIdMap.delete(ws)
     })
 
 })
@@ -184,3 +182,5 @@ server.listen(PORT, () => {
         /broadcast?channel=<channelName>&message=<message> - broadcast messages
     `)
 })
+
+//npm run start_ws

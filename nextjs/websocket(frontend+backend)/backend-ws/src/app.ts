@@ -39,3 +39,5 @@ app.use(handleError)
 
 app.listen(3100, () => console.log('API ready'))
 
+// npm run start
+

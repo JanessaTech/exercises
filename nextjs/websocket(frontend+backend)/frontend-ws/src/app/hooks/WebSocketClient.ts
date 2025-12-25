@@ -24,7 +24,7 @@ export interface WebSocketMessage {
 
 interface Subscription {
     channel: string;
-    callback: (payload: any, fullData?: WebSocketMessage) => void; 
+    callback: (fullData: WebSocketMessage) => void; 
     options?: SubscriptionOptions
 }
 
@@ -46,6 +46,11 @@ export class WebSocketClient {
         this.config = _config
         this.messageQueue = []
         this.subscriptions = new Map<string, Subscription>()
+        if (typeof window !== undefined) {
+            this.connect()
+        } else {
+            console.log('Not in window, skip to connect to ws')
+        }
     }
 
     private connect(): void {
@@ -53,6 +58,7 @@ export class WebSocketClient {
         this.isConnecting = true
 
         try {
+            this.ws = new WebSocket(this.config.url)
             this.setupEventListeners()
         } catch (error) {
             console.error('Failed to create websocket:', error)
@@ -63,8 +69,6 @@ export class WebSocketClient {
 
     private setupEventListeners(): void {
         if (!this.ws) return
-        this.ws = new WebSocket(this.config.url)
-
         this.ws.onopen = (event: Event) => {
             this.isConnecting = false
             this.reconnectAttempts = 0
@@ -159,7 +163,7 @@ export class WebSocketClient {
         if (data.type === 'DATA_UPDATE' && data.subscriptionId) {
             const subcription = this.subscriptions.get(data.subscriptionId)
             if (subcription?.callback) {
-                subcription.callback(data.payload, data)
+                subcription.callback(data)
             }
             return
         }
@@ -185,7 +189,7 @@ export class WebSocketClient {
 
     subscribe(
         channel: string,
-        callback: (payload: any, fullData?: WebSocketMessage) => void,
+        callback: (fullData: WebSocketMessage) => void,
         options?: SubscriptionOptions
         ): string {
             const subscriptionId = this.generateId()
@@ -217,15 +221,15 @@ export class WebSocketClient {
         if (!this.ws) return 'NOT_INITIALIZED'
         switch (this.ws.readyState) {
             case WebSocketReadyState.CONNECTING:
-        return 'CONNECTING';
-      case WebSocketReadyState.OPEN:
-        return 'OPEN';
-      case WebSocketReadyState.CLOSING:
-        return 'CLOSING';
-      case WebSocketReadyState.CLOSED:
-        return 'CLOSED';
-      default:
-        return 'UNKNOWN';
+                return 'CONNECTING';
+            case WebSocketReadyState.OPEN:
+                return 'OPEN';
+            case WebSocketReadyState.CLOSING:
+                return 'CLOSING';
+            case WebSocketReadyState.CLOSED:
+                return 'CLOSED';
+            default:
+                return 'UNKNOWN';
         }
     }
 
@@ -236,8 +240,9 @@ export class WebSocketClient {
     getSubscriptions():Map<string, Subscription> {
         return this.subscriptions
     }
+
     close(code: number = 1000, reason: string = 'normal close'): void {
-        console.log(`close websocke manually.code: ${code}, reason: ${reason}`)
+        console.log(`close websocket manually.code: ${code}, reason: ${reason}`)
         
         this.clearHeartbeat()
         

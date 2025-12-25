@@ -1,21 +1,22 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { SubscriptionOptions, WebSocketClient, WebSocketConfig, WebSocketMessage } from "./WebSocketClient"
 
 const useWebSocket = (config: WebSocketConfig) => {
-    const [client, setClient] = useState<WebSocketClient | undefined>(undefined)
     const [isConnected, setIsConnected] = useState(false)
     const [subscriptionCount, setSubscriptionCount] = useState(0)
+    const wsRef = useRef<WebSocketClient | null>(null)
 
     useEffect(() => {
         if (typeof window === undefined) return
 
         const client = new WebSocketClient(config)
         console.log('websocket client is created')
-        setClient(client)
+        wsRef.current = client
 
         const checkStateInterval = setInterval(() => {
             if (client) {
                 const state = client.getConnectionState()
+                console.log('ws state:', state)
                 setIsConnected(state === 'OPEN')
                 setSubscriptionCount(client.getSubscriptionCount())
             } else {
@@ -26,35 +27,33 @@ const useWebSocket = (config: WebSocketConfig) => {
         return () => {
             clearInterval(checkStateInterval)
             client.close(1000, 'destory websocket manually')
-            setClient(undefined)
         }
-
     }, [])
 
     const subscribe = (channel: string, 
-                callback: (payload: any, fullData?: WebSocketMessage) => void,  
+                callback: (fullData: WebSocketMessage) => void,  
                 options?: SubscriptionOptions) => {
-        if (client) {
-            const subscriptionId = client.subscribe(channel, callback, options)
+        if (wsRef?.current) {
+            const subscriptionId = wsRef.current!.subscribe(channel, callback, options)
             return subscriptionId
         } else {
-            throw new Error('client is not found')
+            throw new Error('ws client is not found')
             
         }
     }
     const unsubscribe = (subscriptionId: string) => {
-        if (client) {
-            client.unsubscribe(subscriptionId)
+        if (wsRef?.current) {
+            wsRef.current?.unsubscribe(subscriptionId)
         } else {
-            throw new Error('client is not found')
+            throw new Error('ws client is not found')
         }
     }
 
     const getSubscriptions = () => {
-        if (client) {
-            return client.getSubscriptions()
+        if (wsRef?.current) {
+            return  wsRef.current?.getSubscriptions()
         } else {
-            throw new Error('client is not found')
+            throw new Error('ws client is not found')
         }
     }
 

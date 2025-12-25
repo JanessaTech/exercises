@@ -87,6 +87,9 @@ function unsubscribe(ws: WebSocket, channel: string, subscriptionId: string) {
                 break
             }
         }
+        if (clients.size === 0) {
+            subscriptions.delete(channel)
+        }
     }
     const channels = reverseSubscriptions.get(ws)
     if(channels) {
@@ -137,7 +140,7 @@ app.get('/status', (req: Request, res: Response, next: NextFunction) => {
             })),
             reverseSubscriptions: Array.from(reverseSubscriptions).map(([ws, channels]) => ({
                 ws: wsIdMap.get(ws),
-                channels: channels
+                channels: Array.from(channels)
             }))
         }
         sendSuccess(res, payload)

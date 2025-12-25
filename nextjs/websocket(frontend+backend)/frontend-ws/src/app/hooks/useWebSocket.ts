@@ -73,20 +73,11 @@ const useWebSocket = (config: WebSocketConfig) => {
         }
     }
 
-    const getMessages = () => {
-        if (wsRef?.current) {
-            return wsRef.current?.getMessages()
-        } else {
-            return new Map<string, WebSocketMessage>
-        }
-    }
-
     return {connect, 
             disconnect, 
             subscribe, 
             unsubscribe, 
             getSubscriptions, 
-            getMessages, 
             isConnected, subscriptionCount}
 }
 

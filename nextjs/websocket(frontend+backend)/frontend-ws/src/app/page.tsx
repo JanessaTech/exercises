@@ -10,13 +10,22 @@ export default function Home() {
       maxReconnectAttempts: 5, 
       reconnectInterval: 2}
 
-  const {connect, disconnect, subscribe, unsubscribe, getSubscriptions, getMessages, 
+  const {connect, disconnect, subscribe, unsubscribe, getSubscriptions, 
         isConnected, subscriptionCount} = useWebSocket(config)
   const [channel, setChannel] = useState('')
   const [subscriptionId, setSubscriptionId] = useState('')
+  const [latestMessageMap, setLatestMessageMap] = useState<Map<string, WebSocketMessage>>()
 
   const callback = (fullData: WebSocketMessage) => {
     console.log('Received fulldata:', fullData)
+    console.log('latestMessageMap = ', latestMessageMap)
+    setLatestMessageMap(prevMap => {
+      const newMap = new Map(prevMap);
+      if (fullData?.subscriptionId) {
+        newMap.set(fullData.subscriptionId, fullData);
+      }
+      return newMap
+    })
   }
 
   const handleSubscribe = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -56,6 +65,11 @@ export default function Home() {
     setSubscriptionId(value)
   }
 
+  const handleDisconnect = () => {
+    setLatestMessageMap(undefined)
+    disconnect()
+  }
+
   const mapEntries = Array.from(getSubscriptions().entries());
 
   return (
@@ -64,7 +78,7 @@ export default function Home() {
       <div>
         <div>
           <span className="font-semibold">isConnected:</span><span>{isConnected.toString()}</span>
-          <button onClick={isConnected ? () => disconnect() : () => connect()}
+          <button onClick={isConnected ? () => handleDisconnect() : () => connect()}
             className="px-2 py-1 rounded-full bg-zinc-300 ml-3 font-semibold hover:bg-zinc-400 active:bg-zinc-500">
               {isConnected ? 'disconnect' : 'connect'}
           </button>
@@ -85,7 +99,7 @@ export default function Home() {
         <div className="font-semibold">subscriptionId</div><div className="font-semibold">channel</div><div className="font-semibold">latest message</div>
         {
           mapEntries.map(([subscriptionId, subscription], index) => {
-            const data = getMessages().get(subscriptionId)
+            const data = latestMessageMap?.get(subscriptionId)
             return (
               <>
                 <div key={`${index}-0`}>{subscriptionId}</div>

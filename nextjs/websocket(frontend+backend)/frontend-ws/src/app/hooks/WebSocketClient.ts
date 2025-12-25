@@ -41,12 +41,10 @@ export class WebSocketClient {
     private manualStop: boolean = false;
     
     private subscriptions!: Map<string, Subscription>
-    private messageMap!: Map<string, WebSocketMessage>
 
     constructor(_config: WebSocketConfig) {
         this.config = _config
         this.subscriptions = new Map<string, Subscription>()
-        this.messageMap = new Map()
     }
 
 
@@ -133,12 +131,12 @@ export class WebSocketClient {
     }
 
     private handleMessage(data: WebSocketMessage): void {
+        console.log('handleMessage:', data)
         if (data.type === 'DATA_UPDATE' && data.subscriptionId) {
             const subcription = this.subscriptions.get(data.subscriptionId)
             if (subcription?.callback) {
                 subcription.callback(data)
             }
-            this.messageMap.set(data.subscriptionId, data)
             return
         }
         // deal with the rest of types
@@ -194,7 +192,6 @@ export class WebSocketClient {
         }
     
         this.subscriptions.clear();
-        this.messageMap.clear();
         this.manualStop = true;
     }
 
@@ -251,10 +248,4 @@ export class WebSocketClient {
     getSubscriptions():Map<string, Subscription> {
         return this.subscriptions
     }
-
-    getMessages(): Map<string, WebSocketMessage> {
-        return this.messageMap
-    }
-
-    
 }

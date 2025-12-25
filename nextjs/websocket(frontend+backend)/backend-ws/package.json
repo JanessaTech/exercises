@@ -4,7 +4,6 @@
   "main": "index.js",
   "scripts": {
     "start": "npx ts-node src/app.ts",
-    "start_ws": "npx ts-node src/webSocketServer.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

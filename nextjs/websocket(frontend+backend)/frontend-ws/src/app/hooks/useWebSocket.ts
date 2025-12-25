@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { SubscriptionOptions, WebSocketClient, WebSocketConfig, WebSocketMessage } from "./WebSocketClient"
+import { Subscription, SubscriptionOptions, WebSocketClient, WebSocketConfig, WebSocketMessage } from "./WebSocketClient"
 
 const useWebSocket = (config: WebSocketConfig) => {
     const [isConnected, setIsConnected] = useState(false)
@@ -26,9 +26,25 @@ const useWebSocket = (config: WebSocketConfig) => {
 
         return () => {
             clearInterval(checkStateInterval)
-            client.close(1000, 'destory websocket manually')
+            client.disconnect(3000, 'destory websocket by running clearance in useEffect')
         }
     }, [])
+
+    const connect = () => {
+        if (wsRef?.current) {
+            wsRef.current!.connect()
+        } else {
+            throw new Error('ws client is not found')
+        }
+    }
+
+    const disconnect = () => {
+        if (wsRef?.current) {
+            wsRef.current!.disconnect(3001, 'close websocket manually')
+        } else {
+            throw new Error('ws client is not found')
+        }
+    }
 
     const subscribe = (channel: string, 
                 callback: (fullData: WebSocketMessage) => void,  
@@ -53,11 +69,25 @@ const useWebSocket = (config: WebSocketConfig) => {
         if (wsRef?.current) {
             return  wsRef.current?.getSubscriptions()
         } else {
-            throw new Error('ws client is not found')
+            return new Map<string, Subscription>
         }
     }
 
-    return {subscribe, unsubscribe, getSubscriptions, isConnected, subscriptionCount}
+    const getMessages = () => {
+        if (wsRef?.current) {
+            return wsRef.current?.getMessages()
+        } else {
+            return new Map<string, WebSocketMessage>
+        }
+    }
+
+    return {connect, 
+            disconnect, 
+            subscribe, 
+            unsubscribe, 
+            getSubscriptions, 
+            getMessages, 
+            isConnected, subscriptionCount}
 }
 
 export default useWebSocket

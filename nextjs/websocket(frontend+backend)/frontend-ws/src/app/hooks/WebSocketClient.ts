@@ -22,7 +22,7 @@ export interface WebSocketMessage {
     timestamp?: number
 }
 
-interface Subscription {
+export interface Subscription {
     channel: string;
     callback: (fullData: WebSocketMessage) => void; 
     options?: SubscriptionOptions
@@ -38,34 +38,17 @@ export class WebSocketClient {
     private reconnectAttempts : number = 0;
     private reconnectTimer?: NodeJS.Timeout;
     private heartbeatTimer?: NodeJS.Timeout;
+    private manualStop: boolean = false;
     
-    private messageQueue!: WebSocketMessage[]
     private subscriptions!: Map<string, Subscription>
+    private messageMap!: Map<string, WebSocketMessage>
 
     constructor(_config: WebSocketConfig) {
         this.config = _config
-        this.messageQueue = []
         this.subscriptions = new Map<string, Subscription>()
-        if (typeof window !== undefined) {
-            this.connect()
-        } else {
-            console.log('Not in window, skip to connect to ws')
-        }
+        this.messageMap = new Map()
     }
 
-    private connect(): void {
-        if (this.isConnecting || this.ws?.readyState === WebSocketReadyState.OPEN) return
-        this.isConnecting = true
-
-        try {
-            this.ws = new WebSocket(this.config.url)
-            this.setupEventListeners()
-        } catch (error) {
-            console.error('Failed to create websocket:', error)
-            this.isConnecting = false
-            this.handleReconnect()
-        }
-    }
 
     private setupEventListeners(): void {
         if (!this.ws) return
@@ -74,7 +57,6 @@ export class WebSocketClient {
             this.reconnectAttempts = 0
             console.log('Connected to websocket!')
 
-            //this.resubscribeAll()
             //this.startHeartbeat()
         }
 
@@ -101,6 +83,10 @@ export class WebSocketClient {
                 console.log('websocket is closed successfully, exit')
                 return
             }
+            if (this.manualStop) {
+                console.log('websocket is closed manually, exit')
+                return
+            }
             console.log('websocket is closed unexpected, reconnecting ...')
             this.handleReconnect()
         }
@@ -122,19 +108,6 @@ export class WebSocketClient {
         this.reconnectTimer = setTimeout(() => {
             this.connect()
         }, delay)
-    }
-
-    private resubscribeAll(): void {
-        if (this.subscriptions.size === 0) return
-        console.log(`re-subscribe ${this.subscriptions.size} channels`)
-        this.subscriptions.forEach((subscription, subscriptionId) => {
-            const resubscribeMsg: WebSocketMessage = {
-                type: 'SUBSCRIBE',
-                channel: subscription.channel,
-                subscriptionId: subscriptionId
-            }
-            this.send(resubscribeMsg)
-        })
     }
 
     private startHeartbeat(): void {
@@ -165,6 +138,7 @@ export class WebSocketClient {
             if (subcription?.callback) {
                 subcription.callback(data)
             }
+            this.messageMap.set(data.subscriptionId, data)
             return
         }
         // deal with the rest of types
@@ -185,6 +159,43 @@ export class WebSocketClient {
             console.error('failed to send message:', error)
             throw error
         }
+    }
+
+    connect(): void {
+        if (typeof window === undefined) {
+            console.log('Not in window, skip to connect to ws')
+            return
+        }
+        if (this.isConnecting || this.ws?.readyState === WebSocketReadyState.OPEN) return
+        this.isConnecting = true
+        this.manualStop = false
+
+        try {
+            this.ws = new WebSocket(this.config.url)
+            this.setupEventListeners()
+        } catch (error) {
+            console.error('Failed to create websocket:', error)
+            this.isConnecting = false
+            this.handleReconnect()
+        }
+    }
+
+    disconnect(code: number = 3000, reason: string = 'normal close'): void {
+        console.log(`close websocket manually.code: ${code}, reason: ${reason}`)
+        
+        this.clearHeartbeat()
+        
+        if (this.reconnectTimer) {
+          clearTimeout(this.reconnectTimer);
+        }
+    
+        if (this.ws) {
+          this.ws.close(code, reason);
+        }
+    
+        this.subscriptions.clear();
+        this.messageMap.clear();
+        this.manualStop = true;
     }
 
     subscribe(
@@ -241,20 +252,9 @@ export class WebSocketClient {
         return this.subscriptions
     }
 
-    close(code: number = 1000, reason: string = 'normal close'): void {
-        console.log(`close websocket manually.code: ${code}, reason: ${reason}`)
-        
-        this.clearHeartbeat()
-        
-        if (this.reconnectTimer) {
-          clearTimeout(this.reconnectTimer);
-        }
+    getMessages(): Map<string, WebSocketMessage> {
+        return this.messageMap
+    }
+
     
-        if (this.ws) {
-          this.ws.close(code, reason);
-        }
-    
-        this.subscriptions.clear();
-        this.messageQueue = [];
-      }
 }

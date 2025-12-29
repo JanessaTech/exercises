@@ -1,18 +1,18 @@
 import { erc20abi } from "@/config/abi"
 import { ethers } from "ethers"
+import { off } from "process"
 
-export type TransferLogType = {
-    from: string;
-    to: string;
-    value: string;
-    blockNumber: number;
-    txHash: string;
-    logIndex: number;
+export type TransferLogType  = {
+    from: string,
+    to: string,
+    value: string,
+    blockNumber: number,
+    transactionHash: string,
+    logIndex: number
 }
 
 const useERC20Hook = (tokenAddress: `0x${string}`, walletAddress: `0x${string}`) => {
     const provider = new ethers.JsonRpcProvider('https://eth.llamarpc.com')
-    //const provider = new ethers.JsonRpcProvider('https://eth.rpc.blxrbdn.com')
     const contract = new ethers.Contract(tokenAddress, erc20abi, provider)
 
     const getBalance = async () => {
@@ -21,12 +21,12 @@ const useERC20Hook = (tokenAddress: `0x${string}`, walletAddress: `0x${string}`)
             const decimals = await contract.decimals()
             return ethers.formatUnits(balance, decimals)
         } catch(error) {
-            console.log('failed to get balance', error)
+            console.log('failed to get balance')
             return ''
         }
     }
 
-    const getRecentTransfers  = async (offset: number = 2) => {
+    const getRecentTransfers = async (offset: number = 2) => {
         try {
             const curBlock = await provider.getBlockNumber()
             const fromBlock = curBlock - offset
@@ -35,19 +35,19 @@ const useERC20Hook = (tokenAddress: `0x${string}`, walletAddress: `0x${string}`)
                 fromBlock, curBlock
             )
             const parsedLogs = rawLogs.map((log) => {
-                if (!('args' in log) || !(log?.args)) return null
+                if (!('args' in log) || (!(log?.args))) return null
                 const [from, to, value] = log.args
                 return {
                     from: from,
                     to: to,
                     value: value.toString(),
                     blockNumber: log.blockNumber,
-                    txHash: log.blockHash,
+                    transactionHash: log.transactionHash,
                     logIndex: log.index
                 } as TransferLogType
-            }).filter((t): t is TransferLogType => t !== null)
-            return parsedLogs.slice(-10)
-        } catch (error) {
+            }).filter((t): t is  TransferLogType => t !== null).slice(-10)
+            return parsedLogs
+        } catch(error) {
             console.log('failed to get recent transfers', error)
             return []
         }

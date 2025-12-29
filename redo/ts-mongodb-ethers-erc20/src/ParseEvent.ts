@@ -98,5 +98,6 @@ async function main() {
     const parser = new TransferLogParser('https://eth.llamarpc.com')
     await parser.processBlock(24052856)
 }
+
 main().catch(e => console.error(e))
 

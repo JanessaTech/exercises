@@ -1,16 +1,16 @@
 import { ethers, Log } from "ethers"
-import mongoose from "mongoose"
 import { ERC20_ABI } from "./abi"
+import mongoose from "mongoose"
 import TransferLog from "./TransferModel";
 
 type TransferLogType = {
-    eventName: string;
+    eventName: string,
     from: string;
     to: string;
-    value: string; //wei
-    blockNumber: number;
+    value: string;// wei
+    blockNumber: number,
     txHash: string;
-    logIndex: number
+    logIndex: number;
 }
 
 class TransferLogParser {
@@ -20,7 +20,6 @@ class TransferLogParser {
     constructor(rpc: string) {
         this.provider = new ethers.JsonRpcProvider(rpc)
     }
-
     async processBlock(blockNumber: number) {
         try {
             const [block, logs] = await Promise.all([
@@ -28,42 +27,38 @@ class TransferLogParser {
                 this.provider.getLogs({
                     fromBlock: blockNumber, toBlock: blockNumber,
                     topics: [ethers.id('Transfer(address,address,uint256)')]
-                })
-            ])
-            if (!block) throw new Error('the block not found')
+                })])
+            if (!block) return new Error('bo block found')
             console.log(`${logs.length} logs in block ${blockNumber}`)
-
-            const allTransfer = logs.map(async (log) => {
+            const alltransfers = logs.map(async (log) => {
                 try {
-                    const parsedLog = this.parseLog(log)
-                    if (parsedLog) {
-                        await this.save(parsedLog)
+                    const parsed = this.parseLog(log)
+                    if (parsed) {
+                        await this.save(parsed)
                         return true
                     }
-                } catch (err) {
-                    console.error('failed to save log: ', err)
-                    console.log('log:', log)
+                } catch(error) {
+                    console.error('failed to save log:', error)
+                    console.error('log:', log)
                 }
                 return false
-                
             })
-
-            const results  = await Promise.allSettled(allTransfer)
-            const cnt = results.filter((r) => r.status === 'fulfilled' && r.value === true).length
-            console.log(`${cnt} logs are saved`)
-        } catch(error){
-            console.error('failed to process block:', blockNumber, 'due to:', error)
+            const results = await Promise.allSettled(alltransfers)
+            const savedCnt = results.filter((r) => r.status === 'fulfilled' && r.value === true).length
+            console.log(`${savedCnt} logs ared saved`)
+        } catch(error) {
+            console.error('failed to process block', error)
         }
     }
 
-    private parseLog(log: Log){
-        const parsedLog = this.iface.parseLog({topics: log.topics, data: log.data})
+    private parseLog(log: Log) {
+        const parsedLog = this.iface.parseLog({data: log.data, topics: log.topics})
         if (!parsedLog || parsedLog.name !== 'Transfer') return null
         const [from, to, value] = parsedLog.args
         return {
-            eventName:'Transfer',
+            eventName: 'Transfer',
             from: (from as string).toLowerCase(),
-            to: (to as string).toLowerCase(),
+            to: (to as string).toLocaleLowerCase(),
             value: value.toString(),
             blockNumber: log.blockNumber,
             txHash: log.transactionHash,
@@ -81,10 +76,9 @@ class TransferLogParser {
 }
 
 async function main() {
+    const parser= new TransferLogParser('https://eth.llamarpc.com')
     await mongoose.connect('mongodb://127.0.0.1/shousi')
-    const parser = new TransferLogParser('https://eth.llamarpc.com')
     await parser.processBlock(24052856)
 }
-main().catch((e) => {
-    console.error(e)
-})
+
+main().catch((e) => console.error(e))

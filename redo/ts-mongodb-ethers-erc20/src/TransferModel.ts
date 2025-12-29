@@ -1,11 +1,11 @@
 import mongoose, {Schema, Document} from "mongoose";
 
-interface ITransferLog extends Document{
-    eventName: string,
+interface ITransferLog extends Document {
+    eventName: string;
     from: string;
     to: string;
-    value: string;// wei
-    blockNumber: number,
+    value: string;//wei
+    blockNumber: number;
     txHash: string;
     logIndex: number;
 }
@@ -17,7 +17,7 @@ const transferSchema = new Schema({
     value: {type: String, required: true},
     blockNumber: {type: Number, required: true, index: true},
     txHash: {type: String, lowercase: true, required: true, index: true},
-    logIndex: {type: Number, required: true}
+    logIndex: {type: Number, required: true},
 })
 transferSchema.index(
     {txHash: 1, logIndex: 1},
@@ -26,4 +26,3 @@ transferSchema.index(
 
 const TransferLog = mongoose.model<ITransferLog>('TransferLog', transferSchema)
 export default TransferLog
-

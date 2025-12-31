@@ -1,20 +1,13 @@
-query GetPoolLiveData($poolId: ID!) @live {
-  pools(where: { id: $poolId }) {
-    id
-    liquidity
-    tick
-    token0 {
-      symbol
-    }
-    token1 {
-      symbol
-    }
-  }
+fragment PoolLiveDataFields on Pool {
+  liquidity
+  tick
+  sqrtPrice
+  feeTier
+  id
 }
 
-query GetPoolSnapshot($poolId: ID!) {
-  pools(where: { id: $poolId }) {
-    id
-    liquidity
+query GetMultipleArbitrumPoolLiveData($poolIds: [ID!]!) @live(interval: 5000) {
+  uniswapv3_arbitrum: pools(where: { id_in: $poolIds }) {
+    ...PoolLiveDataFields
   }
 }

@@ -1,5 +1,5 @@
 import { gql } from 'graphql-request'
-import {execute} from '../.graphclient'
+import {execute} from '../.graphclient-ethereum'
 
 const myQuery = gql`
   query getPoolData($id: String!) {

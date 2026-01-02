@@ -223,20 +223,34 @@ async function main() {
             "0xc473e2aee3441bf9240be85eb122abb059a3b57c",
             "0x42fc852a750ba93d5bf772ecdc857e87a86403a9"]
 
-            const arbitrumPoolIdsChainConfig: ChainConfig = {
-                chainName: 'arbitrum',
-                enabled: true,
-                graphClientDir:'../lib/arbitrum/.graphclient',
-                queryName: 'GetMultipleArbitrumPoolLiveData',
-                poolIds: arbitrumPoolIds,
-                maxRetries: 5,
-                retryInterval: 10
-            } 
+        const arbitrumPoolIdsChainConfig: ChainConfig = {
+            chainName: 'arbitrum',
+            enabled: true,
+            graphClientDir:'../lib/arbitrum/.graphclient',
+            queryName: 'GetMultipleArbitrumPoolLiveData',
+            poolIds: arbitrumPoolIds,
+            maxRetries: 5,
+            retryInterval: 10
+        } 
 
 
-        
+    const ethereumSepoliaPoolIds = ["0xfeed501c2b21d315f04946f85fc6416b640240b5",
+        "0x3289680dd4d6c10bb19b899729cda5eef58aeff1",
+        "0x6ce0896eae6d4bd668fde41bb784548fb8f59b50",
+        "0x6418eec70f50913ff0d756b48d32ce7c02b47c47"] 
+    const ethereumSepoliaChainConfig: ChainConfig = {
+        chainName: 'ethereum_sepolia',
+        enabled: true,
+        graphClientDir:'../lib/ethereum_sepolia/.graphclient',
+        queryName: 'GetMultipleEthereumSepoliaPoolLiveData',
+        poolIds: ethereumSepoliaPoolIds,
+        maxRetries: 5,
+        retryInterval: 10
+    }
+            
     //const chainMonitor = new ChainMonitor(ethereumChainConfig)
-    const chainMonitor = new ChainMonitor(arbitrumPoolIdsChainConfig)
+    //const chainMonitor = new ChainMonitor(arbitrumPoolIdsChainConfig)
+    const chainMonitor = new ChainMonitor(ethereumSepoliaChainConfig)
     chainMonitor.start()
 }
 

@@ -1,11 +1,11 @@
-import {getBuiltGraphSDK as ethereumSDK} from '../.graphclient-ethereum'
-import {getBuiltGraphSDK as arbitrumSDK} from '../.graphclient-arbitrum'
+import {getBuiltGraphSDK as ethereumSDK} from '../lib/ethereum/.graphclient'
+import {getBuiltGraphSDK as arbitrumSDK} from '../lib/arbitrum/.graphclient'
 
 async function main() {
   const ethereum_sdk = ethereumSDK()
   const arbitrum_sdk = arbitrumSDK()
   // chainId=1
-  /*
+  
   const poolIds_ethereum = ["0xe0554a476a092703abdb3ef35c80e0d76d32939f", 
     "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
     "0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8",
@@ -33,7 +33,7 @@ async function main() {
     for await (const result of ethereumStream) {
       console.log('[Ethereum]', result.uniswapv3_ethereum);
     }
-  })().catch(console.error); */
+  })().catch(console.error); 
   
    
     // chainId=42161

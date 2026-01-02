@@ -1,6 +1,6 @@
 import express,{Request, Response, NextFunction} from 'express';
 import {createPoolDataSubscription} from './subscription'
-import {execute} from '../.graphclient-ethereum'
+import {execute} from '../lib/ethereum/.graphclient'
 
 const app = express();
 const PORT = process.env.PORT || 3100;

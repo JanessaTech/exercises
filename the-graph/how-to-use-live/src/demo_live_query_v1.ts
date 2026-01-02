@@ -1,4 +1,4 @@
-import {getBuiltGraphSDK} from '../.graphclient-ethereum'
+import {getBuiltGraphSDK} from '../lib/ethereum/.graphclient'
 /**
  * 
  * operations.gql

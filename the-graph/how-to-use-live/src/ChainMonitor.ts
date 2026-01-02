@@ -5,7 +5,7 @@ type PoolDetails = {
     liquidity: string;
     tick:number;
     sqrtPriceX96: string;
-    fee: string;
+    fee: number;
 }
 type PoolUpdate  = {
     chainName: string;
@@ -97,10 +97,21 @@ class ChainMonitor extends EventEmitter {
                     break
                 }
                 const chainKey = `uniswapv3_${this.config.chainName}`
-                const poolData = result[chainKey]
-
-                console.info(`[Monitor<${this.config.chainName}>] poolData=`, poolData)
-                this.lastUpdateTime = Date.now()
+                const poolData = result[chainKey] as any[]
+                const timeNow = Date.now()
+                const poolUpdate: PoolUpdate = {
+                    chainName: this.config.chainName,
+                    timestamp: timeNow,
+                    pools: poolData.map((e) => ({id: e.id,
+                        liquidity: e.liquidity,
+                        tick:Number(e.tick),
+                        sqrtPriceX96: e.sqrtPrice,
+                        fee: Number(e.feeTier)}) 
+                    )
+                }
+                console.info(`[Monitor<${this.config.chainName}>] poolUpdate=`, poolUpdate)
+                this.emit('data', poolUpdate)
+                this.lastUpdateTime = timeNow
                 this.retryCount = 0
             }
         } catch (error) {
@@ -149,7 +160,7 @@ class ChainMonitor extends EventEmitter {
 }
 
 async function main() {
-    const poolIds = ["0xe0554a476a092703abdb3ef35c80e0d76d32939f", 
+    const ethereumPoolIds = ["0xe0554a476a092703abdb3ef35c80e0d76d32939f", 
         "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
         "0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8",
         "0x7bea39867e4169dbe237d55c8242a8f2fcdcc387",
@@ -169,17 +180,58 @@ async function main() {
         "0xc5af84701f98fa483ece78af83f11b6c38aca71d",
         "0x4d1ad4a9e61bc0e5529d64f38199ccfca56f5a42",
         "0x7161e6f4babc4ec23e78865c09f1e5c095f84e47"] 
-        const chainConfig: ChainConfig = {
+        const ethereumChainConfig: ChainConfig = {
             chainName: 'ethereum',
             enabled: true,
             graphClientDir:'../lib/ethereum/.graphclient',
             queryName: 'GetMultipleEthereumPoolLiveData',
-            poolIds: poolIds,
+            poolIds: ethereumPoolIds,
             maxRetries: 5,
             retryInterval: 10
         }
+
+        const arbitrumPoolIds = ["0xc35ab4ee32198d3f7e82f9e5aa66daafb7a73c6e",
+            "0x46c47c8daabca3e15bf238cda365894046bafa23",
+            "0x2c089ee1080b091fb3b73df94f7840b33fbca020",
+            "0x0779450b087a86c40e074ac00a65eabe1cbc0f87",
+            "0x31fa55e03bad93c7f8affdd2ec616ebfde246001",
+            "0xa961f0473da4864c5ed28e00fcc53a3aab056c1b",
+            "0x2e630136c42bc72f1285743347ba77a75077aff4",
+            "0x7cf803e8d82a50504180f417b8bc7a493c0a0503",
+            "0x9264e764e6d5d252a5c17c457c9bb059b8831bb1",
+            "0xd46c8a1940113ae64f960b7aa12ef5dcab0ffe0e",
+            "0xbff936a43e6fe6f891789be66043bcc8effee938",
+            "0x03a3be7ab4aa263d42d63b6cc594f4fb3d3f3951",
+            "0x2f5e87c9312fa29aed5c179e456625d79015299c",
+            "0x149e36e72726e0bcea5c59d40df2c43f60f5a22d",
+            "0x99dfc0126ed31e0169fc32db6b89adf9fee9a77e",
+            "0xbd65e976bd6b0b59232144c7966e1065024b874c",
+            "0x0e4831319a50228b9e450861297ab92dee15b44f",
+            "0x6985cb98ce393fce8d6272127f39013f61e36166",
+            "0x719826896832c9deaa868272f2dd55cf1e5ca3e7",
+            "0xfab99b9bdcd3eae784595dee64ac97879f9c3179",
+            "0x64085bd18cc11bd853d1f065d09299635bdc6f2d",
+            "0x803b90b0fdc44065c2442df3c5afb93e4d15c2fa",
+            "0xd6ee3e36e0f11a60ee880703946f33275f59a723",
+            "0x6f38e884725a116c9c7fbf208e79fe8828a2595f",
+            "0xc6962004f452be9203591991d15f6b388e09e8d0",
+            "0xc473e2aee3441bf9240be85eb122abb059a3b57c",
+            "0x42fc852a750ba93d5bf772ecdc857e87a86403a9"]
+
+            const arbitrumPoolIdsChainConfig: ChainConfig = {
+                chainName: 'arbitrum',
+                enabled: true,
+                graphClientDir:'../lib/arbitrum/.graphclient',
+                queryName: 'GetMultipleArbitrumPoolLiveData',
+                poolIds: arbitrumPoolIds,
+                maxRetries: 5,
+                retryInterval: 10
+            } 
+
+
         
-    const chainMonitor = new ChainMonitor(chainConfig)
+    //const chainMonitor = new ChainMonitor(ethereumChainConfig)
+    const chainMonitor = new ChainMonitor(arbitrumPoolIdsChainConfig)
     chainMonitor.start()
 }
 

@@ -5,7 +5,7 @@ async function main() {
   const ethereum_sdk = ethereumSDK()
   const arbitrum_sdk = arbitrumSDK()
   // chainId=1
-  
+  /*
   const poolIds_ethereum = ["0xe0554a476a092703abdb3ef35c80e0d76d32939f", 
     "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
     "0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8",
@@ -35,7 +35,7 @@ async function main() {
     }
   })().catch(console.error); 
   
-   
+   */
     // chainId=42161
     const poolIds_arbitrum = ["0xc35ab4ee32198d3f7e82f9e5aa66daafb7a73c6e",
                     "0x46c47c8daabca3e15bf238cda365894046bafa23",

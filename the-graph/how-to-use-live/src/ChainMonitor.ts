@@ -17,12 +17,12 @@ interface ChainMonitorEvents {
     'data': (update: PoolUpdate) => void;
 }
 
-interface ChainMonitor {
+export interface ChainMonitor {
     on<U extends keyof ChainMonitorEvents>(event: U, listener: ChainMonitorEvents[U]): this;
     emit<U extends keyof ChainMonitorEvents>(event: U, ...args: Parameters<ChainMonitorEvents[U]>): boolean
 }
 
-interface ChainConfig {
+export interface ChainConfig {
     chainName: string;
     enabled: boolean;
     graphClientDir: string;
@@ -37,7 +37,7 @@ export interface MonitorConfig {
 }
 
 
-class ChainMonitor extends EventEmitter {
+export class ChainMonitor extends EventEmitter {
     private config: ChainConfig
     private sdk: any
 
@@ -51,16 +51,21 @@ class ChainMonitor extends EventEmitter {
     constructor(chainConfig: ChainConfig) {
         super()
         this.config = chainConfig
-        this.sdk = this.load()
+        this.sdk = this.init()
         this.isRunning = false
     }
 
-    private load() {
+    public getName() {
+        return this.config.chainName
+    }
+
+    private init() {
         try {
             const sdk = require(this.config.graphClientDir)
+            console.log(`[Monitor<${this.config.chainName}>] Created sdk successfully`)
             return sdk.getBuiltGraphSDK ? sdk.getBuiltGraphSDK() : sdk;
         } catch(error) {
-            console.error(`[Monitor<${this.config.chainName}>] Failed to load sdk due to: ${error}`)
+            console.error(`[Monitor<${this.config.chainName}>] Failed to init sdk due to: ${error}`)
             throw new Error(`[Monitor<${this.config.chainName}>] Graph Client not found for chain ${this.config.chainName}. Run g'raphclient build' first`)
         }
     }
@@ -109,7 +114,7 @@ class ChainMonitor extends EventEmitter {
                         fee: Number(e.feeTier)}) 
                     )
                 }
-                console.info(`[Monitor<${this.config.chainName}>] poolUpdate=`, poolUpdate)
+                //console.info(`[Monitor<${this.config.chainName}>] poolUpdate=`, poolUpdate)
                 this.emit('data', poolUpdate)
                 this.lastUpdateTime = timeNow
                 this.retryCount = 0

@@ -1,9 +1,11 @@
 import {getBuiltGraphSDK as ethereumSDK} from '../lib/ethereum/.graphclient'
 import {getBuiltGraphSDK as arbitrumSDK} from '../lib/arbitrum/.graphclient'
+import {getBuiltGraphSDK as sepoliaSDK} from '../lib/ethereum_sepolia/.graphclient'
 
 async function main() {
   const ethereum_sdk = ethereumSDK()
   const arbitrum_sdk = arbitrumSDK()
+  const sepolia_sdk = sepoliaSDK()
   // chainId=1
   /*
   const poolIds_ethereum = ["0xe0554a476a092703abdb3ef35c80e0d76d32939f", 
@@ -36,6 +38,7 @@ async function main() {
   })().catch(console.error); 
   
    */
+  /*
     // chainId=42161
     const poolIds_arbitrum = ["0xc35ab4ee32198d3f7e82f9e5aa66daafb7a73c6e",
                     "0x46c47c8daabca3e15bf238cda365894046bafa23",
@@ -69,6 +72,18 @@ async function main() {
       (async () => {
         for await (const result of arbitrumStream) {
           console.log('[Arbitrum]', result.uniswapv3_arbitrum);
+        }
+      })().catch(console.error);  */
+
+    // chainId=11155111
+    const poolIds_sepolia = ["0xfeed501c2b21d315f04946f85fc6416b640240b5",
+      "0x3289680dd4d6c10bb19b899729cda5eef58aeff1",
+      "0x6ce0896eae6d4bd668fde41bb784548fb8f59b50",
+      "0x6418eec70f50913ff0d756b48d32ce7c02b47c47"]
+      const sepoliaStream = await sepolia_sdk.GetMultipleEthereumSepoliaPoolLiveData({ poolIds: poolIds_sepolia });
+      (async () => {
+        for await (const result of sepoliaStream) {
+          console.log('[ethereum_sepolia]', result.uniswapv3_ethereum_sepolia);
         }
       })().catch(console.error);  
 }

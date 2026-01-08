@@ -6,40 +6,17 @@ const { extendEnvironment, extendProvider } = require("hardhat/config");
 
 describe('Redo', function () {
     async function deployFixture() {
+       const [admin , bob, ...others] = await ethers.getSigners()
        const Redo = await ethers.getContractFactory('Redo')
        const redo = await Redo.deploy()
-       return {redo}
+       return {redo, admin , bob}
     }
-    describe('create', function () {
-        it('create', async function () {
-           const {redo} = await loadFixture(deployFixture)
-           await redo.create('person0')
-           await redo.create('person1')
-           await redo.create('person2')
+    describe('deposit & withdraw', function () {
+        it('deposit & withdraw', async function () {
+           const {redo, bob} = await loadFixture(deployFixture)
+           await redo.connect(bob).deposit({value: 1000})
 
-           const person0 = await redo.get(0)
-           const person1 = await redo.get(1)
-           const person2 = await redo.get(2)
-
-           expect(person0.name).to.be.equal('person0')
-           expect(person1.name).to.be.equal('person1')
-           expect(person2.name).to.be.equal('person2')
-        })
-    })
-
-    describe('remove', function () {
-        it('remove', async function () {
-            const {redo} = await loadFixture(deployFixture)
-            await redo.create('person0')
-            await redo.create('person1')
-            await redo.create('person2')
-            await redo.remove(1)
-
-            const person0 = await redo.get(0)
-            const person2 = await redo.get(2)
-            await expect(redo.get(1)).to.be.revertedWith('invalid id')
-            expect(person0.name).to.be.equal('person0')
-            expect(person2.name).to.be.equal('person2')
+           await expect(redo.connect(bob).withdraw()).to.emit(redo, 'Withdraw').withArgs(bob.getAddress(), 1000)
         })
     })
 })

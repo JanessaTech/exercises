@@ -79,6 +79,6 @@
 
 @layer components {
   .card {
-    @apply rounded-md shadow-md border-zinc-200 border-[2px] bg-white overflow-hidden hover:shadow-xl cursor-pointer relative
+    @apply rounded-md shadow-md overflow-hidden hover:shadow-2xl relative cursor-pointer
   }
 }

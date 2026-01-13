@@ -1,4 +1,4 @@
-import { JsonRpcProvider, Log, ethers } from "ethers";
+import { Log, ethers } from "ethers";
 import { ERC20_ABI } from "./abi";
 import mongoose from "mongoose";
 import TransferLog from "./TransferModel";
@@ -6,15 +6,15 @@ import TransferLog from "./TransferModel";
 type TransferLogType = {
     eventName: string;
     from: string;
-    to: string;
-    value: string;//wei
+    to:string;
+    value:string;
     blockNumber: number;
     txHash: string;
-    logIndex: number;
+    logIndex: number
 }
 
-class TransferLogParser {
-    private provider !: JsonRpcProvider
+class ParserTransfer {
+    private provider: ethers.JsonRpcProvider
     private iface = new ethers.Interface(ERC20_ABI)
 
     constructor(rpc: string) {
@@ -29,47 +29,32 @@ class TransferLogParser {
                     fromBlock: blockNumber, toBlock: blockNumber,
                     topics: [ethers.id('Transfer(address,address,uint256)')]
                 })
-            ]
-            )
-            if (!block) throw new Error('not block found')
+            ])
+            if (!block) throw Error('no block found')
             console.log(`${logs.length} logs are in block ${blockNumber}`)
-            // const alltransfer = logs.map(async (log) => {
-            //     try {
-            //         const parsedLog = this.parseLog(log)
-            //         if (parsedLog) {
-            //             await this.save(parsedLog)
-            //             return true
-            //         }
-            //     } catch(err) {
-            //         console.error('failed to save log:', err)
-            //         console.error('log:', log)
-            //     }
-            //     return false
-            // })
-
-            const alltransfer = logs.map(async (log) => {
+            const allTransfers = logs.map(async (log) => {
                 try {
-                    const parsedLog = this.parseLog(log)
-                    if(parsedLog) {
-                        await this.save(parsedLog)
+                    const parsed = this.parseLog(log)
+                    if (parsed) {
+                        await this.save(parsed)
                         return true
                     }
                 } catch(err) {
-                    console.log('failed to parse log:', err)
-                    console.log('log:', log)
+                    console.error(`Failed to parse log:`, log)
+                    console.error(`due to: `, err)
                 }
                 return false
             })
 
-            const results =await Promise.allSettled(alltransfer)
-            const savedcnt = results.filter((r) => r.status === 'fulfilled' && r.value === true).length
-            console.log(`${savedcnt} logs are saved`)
+            const results = await Promise.allSettled(allTransfers)
+            const cnt = results.filter((r) => r.status === 'fulfilled' && r.value === true).length
+            console.log(`${cnt} logs are saved`)
         } catch(error) {
-            console.log('failed to process block', blockNumber)
+            console.error(`Failed to process block ${blockNumber} due to:`, error)
         }
     }
 
-    private parseLog(log: Log) {
+    parseLog(log: Log) {
         const parsedLog = this.iface.parseLog({data: log.data, topics: log.topics})
         if (!parsedLog || parsedLog.name !== 'Transfer') return null
         const [from, to, value] = parsedLog.args
@@ -84,7 +69,7 @@ class TransferLogParser {
         } as TransferLogType
     }
 
-    private async save(log: TransferLogType) {
+    async save(log: TransferLogType) {
         await TransferLog.findOneAndUpdate(
             {txHash: log.txHash, logIndex: log.logIndex},
             log,
@@ -95,9 +80,7 @@ class TransferLogParser {
 
 async function main() {
     await mongoose.connect('mongodb://127.0.0.1/shousi')
-    const parser = new TransferLogParser('https://eth.llamarpc.com')
-    await parser.processBlock(24052856)
+    const parser = new ParserTransfer('https://eth.llamarpc.com')
+    await parser.processBlock(24224007)
 }
-
-main().catch(e => console.error(e))
-
+main().catch((e) => console.error(e))

@@ -1,5 +1,7 @@
+
+
 import { ethers } from 'ethers'
-import express, {Request, Response, NextFunction} from 'express'
+import express, {Request, Response, NextFunction}from 'express'
 import { validate } from './middleware'
 import { txSchema } from './schema'
 import {ValidationError} from 'yup'
@@ -10,23 +12,22 @@ app.use(express.json())
 const provider = new ethers.JsonRpcProvider('https://eth.rpc.blxrbdn.com')
 
 class TransactionError extends Error {
-    constructor(message: string) {
-        super(message)
+    constructor(msg: string) {
+        super(msg)
         this.name = this.constructor.name
     }
 }
 
 const sendSuccess = (res: Response, data: any, code: number = 200) => {
     res.status(code).json({
-        success: true, 
+        success: true,
         code: code,
         data: data
     })
 }
-
-const sendError = (res: Response, message: string, code: number = 200) => {
+const sendError = (res: Response, message: string, code: number = 500) => {
     res.status(code).json({
-        success: false, 
+        success: false,
         code: code,
         message: message
     })
@@ -35,15 +36,16 @@ const sendError = (res: Response, message: string, code: number = 200) => {
 app.get('/api/v1/block/height', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const blockNumber = await provider.getBlockNumber()
-        const payload = {
-            blockNumber: blockNumber
+        const payload ={
+            blockNumber: blockNumber,
+            timestamp: Date.now()
         }
         sendSuccess(res, payload)
-    } catch (error) {
+    } catch( error) {
         next(error)
     }
 })
-app.get('/api/v1/transaction/:hash', validate(txSchema.getTxDetails), async (req: Request, res: Response, next: NextFunction) => {
+app.get('/api/v1/transaction/:hash', validate(txSchema.getdetails), async (req: Request, res: Response, next: NextFunction) => {
     try {
         const hash = req.params.hash
         const tx = await provider.getTransaction(hash)
@@ -52,17 +54,16 @@ app.get('/api/v1/transaction/:hash', validate(txSchema.getTxDetails), async (req
         if (tx.blockNumber) {
             receipt = await provider.getTransactionReceipt(hash)
         }
-        if (!receipt) throw new TransactionError('receipt not found')
+        if (!receipt) throw new TransactionError('tx not found')
         const payload = {
             hash: hash,
-            blockNumber: tx.blockNumber,
             from: tx.from,
             to: tx.to,
             value: tx.value.toString(),
             status: receipt.status
         }
         sendSuccess(res, payload)
-    } catch (error) {
+    } catch( error) {
         next(error)
     }
 })

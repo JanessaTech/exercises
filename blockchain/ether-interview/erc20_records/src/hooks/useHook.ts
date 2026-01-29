@@ -12,7 +12,7 @@ export interface TransferEventType {
 }
 
 const useHook = (tokenAddress: `0x${string}`, walletAddress: `0x${string}`) => {
-    const provider = new ethers.JsonRpcProvider('https://eth.llamarpc.com')
+    const provider = new ethers.JsonRpcProvider('https://eth-mainnet.public.blastapi.io')
     const tokenContract = new ethers.Contract(tokenAddress, erc20abi, provider)
 
     const getBalance = async () => {

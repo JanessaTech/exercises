@@ -62,7 +62,7 @@ export default function Home() {
             <Link href='#' className="text-xl py-2 px-3 rounded-full border-2 border-red-400 hover:text-white hover:bg-red-500 transition ease-in-out duration-200 ml-3">Logout</Link>
           </div>
           <div>
-            <div className="text-6xl font-semibold">Receipes</div>
+            <div className="text-6xl font-semibold">Recipes</div>
             <div className="text-gray-400 italic">Janessa</div>
           </div>
           <div>

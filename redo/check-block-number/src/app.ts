@@ -1,22 +1,21 @@
 
-
 import { ethers } from 'ethers'
-import express, {Request, Response, NextFunction}from 'express'
+import express, {Request, Response, NextFunction} from 'express'
 import { validate } from './middleware'
-import { txSchema } from './schema'
+import { TransactionSchema } from './schema'
 import {ValidationError} from 'yup'
 
 const app = express()
 app.use(express.json())
 
-const provider = new ethers.JsonRpcProvider('https://eth.rpc.blxrbdn.com')
-
 class TransactionError extends Error {
-    constructor(msg: string) {
-        super(msg)
+    constructor(message: string) {
+        super(message)
         this.name = this.constructor.name
     }
 }
+
+const provider = new ethers.JsonRpcProvider('https://eth.rpc.blxrbdn.com')
 
 const sendSuccess = (res: Response, data: any, code: number = 200) => {
     res.status(code).json({
@@ -25,6 +24,7 @@ const sendSuccess = (res: Response, data: any, code: number = 200) => {
         data: data
     })
 }
+
 const sendError = (res: Response, message: string, code: number = 500) => {
     res.status(code).json({
         success: false,
@@ -36,34 +36,34 @@ const sendError = (res: Response, message: string, code: number = 500) => {
 app.get('/api/v1/block/height', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const blockNumber = await provider.getBlockNumber()
-        const payload ={
+        const payload = {
             blockNumber: blockNumber,
             timestamp: Date.now()
         }
         sendSuccess(res, payload)
-    } catch( error) {
+    } catch(error) {
         next(error)
     }
 })
-app.get('/api/v1/transaction/:hash', validate(txSchema.getdetails), async (req: Request, res: Response, next: NextFunction) => {
+app.get('/api/v1/transaction/:hash', validate(TransactionSchema.getDetail), async (req: Request, res: Response, next: NextFunction) => {
     try {
         const hash = req.params.hash
         const tx = await provider.getTransaction(hash)
-        if (!tx) throw new TransactionError('tx not found')
         let receipt = null
+        if (!tx) throw new TransactionError('not found tx')
         if (tx.blockNumber) {
             receipt = await provider.getTransactionReceipt(hash)
         }
-        if (!receipt) throw new TransactionError('tx not found')
+        if (!receipt) new TransactionError('not found receipt')
         const payload = {
             hash: hash,
             from: tx.from,
             to: tx.to,
             value: tx.value.toString(),
-            status: receipt.status
+            status: receipt?.status
         }
         sendSuccess(res, payload)
-    } catch( error) {
+    } catch(error) {
         next(error)
     }
 })
@@ -92,4 +92,4 @@ app.use(handleValidationError)
 app.use(handleTransactionError)
 app.use(handleError)
 
-app.listen(3100, () => console.log('API ready'))
+app.listen(3100, () => {console.log('API ready')})

@@ -1,7 +1,6 @@
 import * as yup from 'yup'
-
-export const txSchema = {
-    getdetails: yup.object({
+export const TransactionSchema = {
+    getDetail: yup.object({
         params: yup.object({
             hash: yup.string().required('hash is required').matches(/^0x[0-9a-fA-F]{64}$/, 'hash is invalid')
         })

@@ -10,7 +10,7 @@ contract Redo {
         assembly {
             let len := mload(arr)
             let ptr := add(arr, 0x20)
-            for {let i := 0} lt(i, len) { i := add(i, 1)} {
+            for {let i := 0} lt(i, len) {i := add(i, 1)} {
                 sum := add(sum, mload(ptr))
                 ptr := add(ptr, 0x20)
             }

@@ -5,52 +5,39 @@ import "hardhat/console.sol";
 import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 contract Redo {
-    uint256 public value;
+    struct Person {
+        uint id;
+        string name;
+    }
+    uint idx;
+    Person[] people;
+    mapping(uint=> uint) idxMapping;
+    mapping(uint => bool) inserted;
 
-    
-    bytes32 private constant ADMIN_SLOT = keccak256('ADMIN_SLOT');
-    bytes32 private constant IMPLEMENTATION_SLOT = keccak256('IMPLEMENTATION_SLOT');
+    function create(string memory _name) public {
+        uint _idx = idx;
+        idx++;
+        people.push(Person({id: _idx, name: _name}));
+        idxMapping[_idx] = people.length - 1;
+        inserted[_idx] = true;
+    }
 
-    constructor(address _implementation) {
-        bytes32 slot = IMPLEMENTATION_SLOT;
-        assembly {
-            sstore(slot, _implementation)
+    function remove(uint _id) public {
+        require(inserted[_id], 'invalid id');
+        uint _idx = idxMapping[_id];
+        Person storage last = people[people.length - 1];
+        if (last.id != _id) {
+            people[_idx] = last;
+            idxMapping[last.id] = _idx;
         }
-        slot = ADMIN_SLOT;
-        assembly {
-            sstore(slot, caller())
-        }
-    }
+        people.pop();
+        delete idxMapping[_id];
+        delete inserted[_id];
 
-    function admin() public view returns(address adm) {
-        bytes32 slot = ADMIN_SLOT;
-        assembly {
-            adm := sload(slot)
-        }
     }
-
-    function implementation() public view returns(address imp) {
-        bytes32 slot = IMPLEMENTATION_SLOT;
-        assembly {
-            imp := sload(slot)
-        }
+    function get(uint _id) public view returns(uint id, string memory name) {
+        require(inserted[_id], 'invalid id');
+        Person storage person = people[idxMapping[_id]];
+        return (person.id, person.name);
     }
-
-    function upgradeTo(address _implementation) public {
-        require(admin() == msg.sender, 'not admin');
-        bytes32 slot = IMPLEMENTATION_SLOT;
-        assembly {
-            sstore(slot, _implementation)
-        }
-    }
-
-    function _delegate(address _implementation) private {
-        (bool success, )  = _implementation.delegatecall(msg.data);
-        require(success, 'failed to call delegatecall');
-    }
-
-    fallback() external payable {
-        _delegate(implementation());
-    }
-    receive() external payable {}
 }

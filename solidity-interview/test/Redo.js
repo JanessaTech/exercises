@@ -6,42 +6,51 @@ const { extendEnvironment, extendProvider } = require("hardhat/config");
 
 describe('Redo', function () {
     async function deployFixture() {
-       const Redo = await ethers.getContractFactory('Redo')
-       const redo  = await Redo.deploy()
-       return {redo}
+       const [admin, ...others] = await ethers.getSigners()
+       const LogicV1 = await ethers.getContractFactory('LogicV1')
+       const logicV1 = await LogicV1.deploy()
+       const LogicV2 = await ethers.getContractFactory('LogicV2')
+       const logicV2 = await LogicV2.deploy()
+
+       const Proxy = await ethers.getContractFactory('Redo')
+       const proxy  = await Proxy.deploy(logicV1.getAddress())
+       return {proxy, admin, logicV1, logicV2}
     }
-    describe('create & remove', function () {
-        it('create', async function () {
-           const {redo} = await loadFixture(deployFixture)
-           await redo.create('person0')
-           await redo.create('person1')
-           await redo.create('person2')
 
-           const person0 = await redo.get(0)
-           const person1 = await redo.get(1)
-           const person2 = await redo.get(2)
-           expect(person0.name).to.be.equal('person0')
-           expect(person1.name).to.be.equal('person1')
-           expect(person2.name).to.be.equal('person2')
+    describe('logicV1 & logicV2', function () {
+        it('logicV1', async function () {
+            const {proxy, admin} = await loadFixture(deployFixture)
+            const abi = ['function setValue(uint256 _value) external']
+            const iface = new ethers.Interface(abi)
+            const value = 100
+            const cdata = iface.encodeFunctionData('setValue(uint256)', [value])
+            const tx = {
+                to: proxy.getAddress(),
+                data: cdata
+            }
+            await admin.sendTransaction(tx)
+            const val = await proxy.value()
+            expect(val).to.be.equal(value)
+
         })
-        it('remove', async function () {
-            const {redo} = await loadFixture(deployFixture)
-            await redo.create('person0')
-            await redo.create('person1')
-            await redo.create('person2')
-            await redo.create('person3')
+        it('logicV2', async function () {
+            const {proxy, admin, logicV2} = await loadFixture(deployFixture)
+            await proxy.upgradeTo(logicV2.getAddress())
+            const abi = ['function setValue(uint256 _value) external']
+            const iface = new ethers.Interface(abi)
+            const value = 100
+            const cdata = iface.encodeFunctionData('setValue(uint256)', [value])
+            const tx = {
+                to: proxy.getAddress(),
+                data: cdata
+            }
+            await admin.sendTransaction(tx)
+            const val = await proxy.value()
+            expect(val).to.be.equal(value * 2)
 
-            await redo.remove(3)
-            await redo.remove(1)
-
-            const person0 = await redo.get(0)
-            const person2 = await redo.get(2)
-            expect(person0.name).to.be.equal('person0')
-            expect(person2.name).to.be.equal('person2')
-            await expect(redo.get(1)).to.be.revertedWith('invalid id')
-            await expect(redo.get(3)).to.be.revertedWith('invalid id')
         })
     })
+    
 })
 
 

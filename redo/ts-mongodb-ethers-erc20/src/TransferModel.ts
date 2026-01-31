@@ -1,28 +1,27 @@
 import mongoose, {Schema, Document} from "mongoose";
 
-interface ITransferLog extends Document{
+interface ITransferLog extends Document {
     eventName: string;
     from: string;
-    to:string;
-    value:string;
+    to: string;
+    value: string;
+    hash: string;
     blockNumber: number;
-    txHash: string;
     logIndex: number
 }
 
 const transferLogSchema = new Schema({
     eventName: {type: String, default: 'Transfer'},
-    from: {type: String, lowercase: true, index: true, required: true},
-    to: {type: String, lowercase: true, index: true, required: true},
-    value: {type: String, required: true},
-    blockNumber: {type: Number, index: true, required: true},
-    txHash: {type: String, lowercase: true, index: true, required: true},
-    logIndex: {type: Number, index: true, required: true}
+    from: {type: String, lowercase: true, required: true, index: true},
+    to: {type: String, lowercase: true, required: true, index: true},
+    value: {type: String, required: true,},
+    hash: {type: String, lowercase: true, required: true, index: true},
+    blockNumber: {type: Number, required: true, index: true},
+    logIndex: {type: Number, required: true, index: true},
 })
 transferLogSchema.index(
-    {txHash: 1, logIndex: 1},
-    {unique: true, name: 'unique_transfer_log'}
+    {hash: 1, logIndex: 1},
+    {unique: true, name: 'unique-transfer-log'}
 )
 
-const TransferLog = mongoose.model<ITransferLog>('TransferLog', transferLogSchema)
-export default TransferLog
+export const TransferLog = mongoose.model<ITransferLog>('TransferLog', transferLogSchema)

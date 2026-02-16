@@ -1,8 +1,8 @@
+import { timeStamp } from 'console'
 import { ethers } from 'ethers'
 import express, {Request, Response, NextFunction} from 'express'
-import { clearScreenDown } from 'readline'
 import { validate } from './middleware'
-import { TxSchema } from './schema'
+import { txSchema } from './schema'
 import {ValidationError} from 'yup'
 
 const app = express()
@@ -24,14 +24,16 @@ const sendSuccess = (res: Response, data: any, code: number = 200) => {
         data: data
     })
 }
-const sendError = (res: Response, message: string, code: number = 500) => 
+
+const sendError = (res: Response, message: string, code: number = 200) => {
     res.status(code).json({
         success: false,
         code: code,
         message: message
-})
+    })
+}
 
-app.get('/api/v1/block/height', async (req:Request, res: Response, next: NextFunction) => {
+app.get('/api/v1/block/height',  async (req: Request, res: Response, next: NextFunction) => {
     try {
         const blockNumber = await provider.getBlockNumber()
         const payload = {
@@ -39,30 +41,31 @@ app.get('/api/v1/block/height', async (req:Request, res: Response, next: NextFun
             timestamp: Date.now()
         }
         sendSuccess(res, payload)
-    } catch(error) {
+    } catch (error) {
         next(error)
     }
 })
-app.get('/api/v1/transaction/:hash', validate(TxSchema.getDetails), async (req:Request, res: Response, next: NextFunction) => {
+
+app.get('/api/v1/transaction/:hash', validate(txSchema.getDetails), async (req: Request, res: Response, next: NextFunction) => {
     try {
         const hash = req.params.hash
         const tx = await provider.getTransaction(hash)
-        if (!tx) throw new TransactionError('tx not found')
+        if (!tx) throw new TransactionError('no tx found')
         let receipt = null
         if (tx.blockNumber) {
             receipt = await provider.getTransactionReceipt(hash)
         }
-        if (!receipt) throw new TransactionError('receipt not found')
+        if (!receipt) throw new TransactionError('no receipt found')
         const payload = {
-         hash: hash,
-         from: tx.from,
-         to: tx.to,
-         value: tx.value.toString(),
-         blockNumber: tx.blockNumber,
-         status: receipt.status
+            hash: hash,
+            from: tx.from,
+            to: tx.to,
+            value: tx.value.toString(),
+            blockNumber: tx.blockNumber
         }
+
         sendSuccess(res, payload)
-    } catch(error) {
+    } catch (error) {
         next(error)
     }
 })
@@ -82,6 +85,7 @@ const handleTransactionError = (error: Error, req: Request, res: Response, next:
         next(error)
     }
 }
+
 const handleError = (error: Error, req: Request, res: Response, next: NextFunction) => {
     sendError(res, error.message)
 }
@@ -89,5 +93,5 @@ const handleError = (error: Error, req: Request, res: Response, next: NextFuncti
 app.use(handleValidationError)
 app.use(handleTransactionError)
 app.use(handleError)
-
 app.listen(3100, () => console.log('API ready'))
+

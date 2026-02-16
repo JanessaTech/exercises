@@ -6,7 +6,7 @@ export const validate = (schema: AnySchema) => {
         try {
             schema.validateSync({body: req.body, params: req.params, query: req.query}, {abortEarly: true, stripUnknown: true})
             next()
-        } catch(error) {
+        } catch (error) {
             next(error)
         }
     }

@@ -1,9 +1,9 @@
-import { timeStamp } from 'console'
+
 import { ethers } from 'ethers'
 import express, {Request, Response, NextFunction} from 'express'
 import { validate } from './middleware'
 import { txSchema } from './schema'
-import {ValidationError} from 'yup'
+import { ValidationError} from 'yup'
 
 const app = express()
 app.use(express.json())
@@ -33,7 +33,8 @@ const sendError = (res: Response, message: string, code: number = 200) => {
     })
 }
 
-app.get('/api/v1/block/height',  async (req: Request, res: Response, next: NextFunction) => {
+
+app.use('/api/v1/block/height', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const blockNumber = await provider.getBlockNumber()
         const payload = {
@@ -41,16 +42,16 @@ app.get('/api/v1/block/height',  async (req: Request, res: Response, next: NextF
             timestamp: Date.now()
         }
         sendSuccess(res, payload)
-    } catch (error) {
+    } catch(error) {
         next(error)
     }
 })
 
-app.get('/api/v1/transaction/:hash', validate(txSchema.getDetails), async (req: Request, res: Response, next: NextFunction) => {
+app.use('/api/v1/transaction/:hash', validate(txSchema.getDetails), async (req: Request, res: Response, next: NextFunction) => {
     try {
         const hash = req.params.hash
         const tx = await provider.getTransaction(hash)
-        if (!tx) throw new TransactionError('no tx found')
+        if (!tx) throw new TransactionError('tx is not found')
         let receipt = null
         if (tx.blockNumber) {
             receipt = await provider.getTransactionReceipt(hash)
@@ -63,9 +64,8 @@ app.get('/api/v1/transaction/:hash', validate(txSchema.getDetails), async (req: 
             value: tx.value.toString(),
             blockNumber: tx.blockNumber
         }
-
         sendSuccess(res, payload)
-    } catch (error) {
+    } catch(error) {
         next(error)
     }
 })
@@ -78,6 +78,7 @@ const handleValidationError = (error: Error, req: Request, res: Response, next: 
     }
 }
 
+
 const handleTransactionError = (error: Error, req: Request, res: Response, next: NextFunction) => {
     if (error instanceof TransactionError) {
         sendError(res, error.message)
@@ -85,13 +86,14 @@ const handleTransactionError = (error: Error, req: Request, res: Response, next:
         next(error)
     }
 }
-
 const handleError = (error: Error, req: Request, res: Response, next: NextFunction) => {
     sendError(res, error.message)
 }
 
+
 app.use(handleValidationError)
 app.use(handleTransactionError)
 app.use(handleError)
-app.listen(3100, () => console.log('API ready'))
-
+app.listen(3100, () => {
+    console.log('API ready')
+})

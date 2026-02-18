@@ -10,24 +10,23 @@ type cases = [
 ]
 
 
-type StringToUnion<S> = S extends `${infer F}${infer R}`
-? F | StringToUnion<R>
-: never
-
-type ArrayToString<A extends unknown[]> = A extends any
+type ArrayToString<A> = A extends any
 ? A extends [infer F, ...infer R]
   ? `${string &F}${ArrayToString<R>}`
   : ''
 : never
 
+type StringToUnion<S> = S extends `${infer F}${infer R}`
+?  F | StringToUnion<R>
+: never
+
 type Com<U, path extends unknown[] = [], acc = never, A = U> = [U] extends [never]
-? acc | path
+? ArrayToString<acc | path>
 : U extends any
   ? Com<Exclude<A, U>, [...path, U], acc | path>
   : never
 
-type AllCombinations<S extends string> = ArrayToString<Com<StringToUnion<S>>>
+type AllCombinations<S extends string> = Com<StringToUnion<S>>
 
 type test = StringToUnion<'AB'>
 type test1 = Com<StringToUnion<'AB'>>
-type test2 = ArrayToString<Com<StringToUnion<'AB'>>>

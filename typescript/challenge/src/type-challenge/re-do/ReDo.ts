@@ -1,23 +1,71 @@
 import { Alike, Equal, Expect, ExpectExtends, NotAny } from "../test-utils"
 
+type NodeA = {
+  type: 'A'
+  name: string
+  flag: number
+}
+
+type NodeB = {
+  type: 'B'
+  id: number
+  flag: number
+}
+
+type NodeC = {
+  type: 'C'
+  name: string
+  flag: number
+}
+
+type ReplacedNodeA = {
+  type: 'A'
+  name: number
+  flag: string
+}
+
+type ReplacedNodeB = {
+  type: 'B'
+  id: number
+  flag: string
+}
+
+type ReplacedNodeC = {
+  type: 'C'
+  name: number
+  flag: string
+}
+
+type NoNameNodeA = {
+  type: 'A'
+  flag: number
+  name: never
+}
+
+type NoNameNodeC = {
+  type: 'C'
+  flag: number
+  name: never
+}
+
+type Nodes = NodeA | NodeB | NodeC
+type ReplacedNodes = ReplacedNodeA | ReplacedNodeB | ReplacedNodeC
+type NodesNoName = NoNameNodeA | NoNameNodeC | NodeB
+
 type cases = [
-  Expect<Equal<MapTypes<{ stringToArray: string }, { mapFrom: string, mapTo: [] }>, { stringToArray: [] }>>,
-  Expect<Equal<MapTypes<{ stringToNumber: string }, { mapFrom: string, mapTo: number }>, { stringToNumber: number }>>,
-  Expect<Equal<MapTypes<{ stringToNumber: string, skipParsingMe: boolean }, { mapFrom: string, mapTo: number }>, { stringToNumber: number, skipParsingMe: boolean }>>,
-  Expect<Equal<MapTypes<{ date: string }, { mapFrom: string, mapTo: Date } | { mapFrom: string, mapTo: null }>, { date: null | Date }>>,
-  Expect<Equal<MapTypes<{ date: string }, { mapFrom: string, mapTo: Date | null }>, { date: null | Date }>>,
-  Expect<Equal<MapTypes<{ fields: Record<string, boolean> }, { mapFrom: Record<string, boolean>, mapTo: string[] }>, { fields: string[] }>>,
-  Expect<Equal<MapTypes<{ name: string }, { mapFrom: boolean, mapTo: never }>, { name: string }>>,
-  Expect<Equal<MapTypes<{ name: string, date: Date }, { mapFrom: string, mapTo: boolean } | { mapFrom: Date, mapTo: string }>, { name: boolean, date: string }>>,
+  Expect<Equal<ReplaceKeys<Nodes, 'name' | 'flag', { name: number, flag: string }>, ReplacedNodes>>,
+  Expect<Equal<ReplaceKeys<Nodes, 'name', { aa: number }>, NodesNoName>>,
 ]
 
 
-type MapTypes<T, M extends {[K in 'mapFrom' | 'mapTo']: any}> = {
-  [P in keyof T]: T[P] extends M['mapFrom']
-    ? M extends any
-      ? M extends {mapFrom: T[P]}
-        ? M['mapTo']
-        : never
+
+
+type ReplaceKeys<U, T, Y> = U extends any
+? {
+  [ K in keyof U]: K extends T
+    ? K extends keyof Y
+      ? Y[K]
       : never
-    : T[P]
+    : U[K]
 }
+: never
